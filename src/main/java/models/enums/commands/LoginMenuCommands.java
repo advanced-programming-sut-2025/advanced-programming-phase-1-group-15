@@ -2,9 +2,10 @@ package models.enums.commands;
 
 public enum LoginMenuCommands implements Commands {
     REGISTER_REGEX("^\\s*register\\s+-u\\s+(?<username>\\S+)\\s+-p\\s+(?<password>\\S+)\\s+(?<passwordConfirm>\\S+)\\s+-n\\s+(?<nickname>\\S+)\\s+-e\\s+(?<email>\\S+)\\s+-g\\s+(?<gender>\\S+)\\s*$"),
-    LOGIN_REGEX("login -u <username> -p <password> –stay-logged-in"),
-    FORGET_PASSWORD_REGEX("forget password -u <username>"),
-    ANSWER_REGEX("answer -a <answer>");
+    PICK_QUESTION_REGEX("^\\s*pick\\s+question\\s+-q\\s+(?<questionNumber>\\d+)\\s+-a\\s+(?<answer>.+?)\\s+-c\\s+(?<answerConfirm>.+?)\\s*$"),
+    LOGIN_REGEX("^\\s*login\\s+-u\\s+(?<username>\\S+)\\s+-p\\s+(?<password>\\S+)\\s*(–stay-logged-in)?\\s*$"),
+    FORGET_PASSWORD_REGEX("^\\s*forget\\s+password\\s+-u\\s+(?<username>\\S+)\\s*$"),
+    ANSWER_REGEX("^\\s*answer\\s+-a\\s+(?<answer>.+?)\\s*$");
 
     private final String regex;
     LoginMenuCommands(String regex) { this.regex = regex; }

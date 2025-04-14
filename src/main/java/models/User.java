@@ -2,8 +2,6 @@ package models;
 
 import models.enums.Gender;
 
-import java.util.ArrayList;
-
 public class User {
     protected String username;
     protected String password;
@@ -11,7 +9,8 @@ public class User {
     protected String email;
     protected Gender gender;
 
-    protected ArrayList<String> securityQuestions = new ArrayList<>();
+    protected int securityQuestionNumber;
+    protected String securityQuestionAnswer;
 
     protected int maxEarnedCoins;
     protected int gameCount;
@@ -51,11 +50,18 @@ public class User {
         this.gender = gender;
     }
 
-    public ArrayList<String> getSecurityQuestions() {
-        return securityQuestions;
+    public int getSecurityQuestionNumber() {
+        return securityQuestionNumber;
     }
-    public void setSecurityQuestions(ArrayList<String> securityQuestions) {
-        this.securityQuestions = securityQuestions;
+    public void setSecurityQuestionNumber(int securityQuestionNumber) {
+        this.securityQuestionNumber = securityQuestionNumber;
+    }
+
+    public String getSecurityQuestionAnswer() {
+        return securityQuestionAnswer;
+    }
+    public void setSecurityQuestionAnswer(String securityQuestionAnswer) {
+        this.securityQuestionAnswer = securityQuestionAnswer;
     }
 
     public User() {

@@ -41,6 +41,30 @@ public class LoginMenu implements AppMenu {
         return null;
     }
 
+    public static void securityQuestionMenu(Scanner scanner) {
+        System.out.println("Please choose and answer one of the below security questions for further authentication: ");
+        for(String question : App.securityQuestions) {
+            System.out.println(question);
+        }
+
+        Result result = new Result(false, "");
+        while(!result.success()) {
+            String command = scanner.nextLine().trim();
+            if(LoginMenuCommands.PICK_QUESTION_REGEX.matches(command)) {
+                Matcher matcher = LoginMenuCommands.PICK_QUESTION_REGEX.matcher(command);
+                int questionNumber = matcher.matches() ? Integer.parseInt(matcher.group("questionNumber")) : 0;
+                String answer = matcher.group("answer");
+                String answerConfirm = matcher.group("answerConfirm");
+
+                result = LoginMenuController.pickQuestion(questionNumber, answer, answerConfirm);
+                System.out.println(result.message());
+            }
+            else {
+                System.out.println("invalid command");
+            }
+        }
+    }
+
     public void run(Scanner scanner) {
         String command = scanner.nextLine().trim();
 
@@ -77,16 +101,43 @@ public class LoginMenu implements AppMenu {
                     if(username != null) {
                         result = LoginMenuController.registerUser(username, password, passwordConfirm, nickname, email, gender);
                         System.out.println(result.message());
+
+                        if(result.success()) {
+                            securityQuestionMenu(scanner);
+                        }
                     }
                 }
-                else if(result.message().contains("password")) {
+                else if(result.message().contains("characters")) {
                     password = passwordMenu(scanner);
                     if(password != null) {
                         result = LoginMenuController.registerUser(username, password, password, nickname, email, gender);
                         System.out.println(result.message());
+
+                        if(result.success()) {
+                            securityQuestionMenu(scanner);
+                        }
                     }
                 }
             }
+            else {
+                securityQuestionMenu(scanner);
+            }
+        }
+
+        else if(LoginMenuCommands.LOGIN_REGEX.matches(command)) {
+            Matcher matcher = LoginMenuCommands.LOGIN_REGEX.matcher(command);
+
+            String username = matcher.matches() ? matcher.group("username") : null;
+            String password = matcher.group("password");
+
+            Result result = LoginMenuController.loginUser(username, password, false);
+            System.out.println(result.message());
+        }
+
+        else if(LoginMenuCommands.FORGET_PASSWORD_REGEX.matches(command)) {
+            Matcher matcher = LoginMenuCommands.FORGET_PASSWORD_REGEX.matcher(command);
+
+            String username = matcher.matches() ? matcher.group("username") : null;
         }
 
         else {

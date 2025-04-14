@@ -5,6 +5,8 @@ import models.Result;
 import models.User;
 import models.enums.Gender;
 import models.enums.commands.LoginMenuCommands;
+import views.AppView;
+import views.MainMenu;
 
 import java.security.SecureRandom;
 
@@ -34,6 +36,7 @@ public class LoginMenuController {
 
         User user = new User(username, password, nickname, email, gender);
         App.users.add(user);
+        App.currentUser = user;
 
         return new Result(true, "user registered successfully!");
     }
@@ -56,12 +59,31 @@ public class LoginMenuController {
         return password.toString();
     }
 
-    public static Result pickQuestion(int questionNumber, String answer, String confirmedAnswer) {
-        return null;
+    public static Result pickQuestion(int questionNumber, String answer, String answerConfirm) {
+        if(questionNumber > 5 || questionNumber < 1) {
+            return new Result(false, "invalid question number!");
+        }
+        else if(!answer.equals(answerConfirm)) {
+            return new Result(false, "answer confirmation doesn't match!");
+        }
+
+        App.currentUser.setSecurityQuestionNumber(questionNumber);
+        App.currentUser.setSecurityQuestionAnswer(answer);
+        return new Result(true, "Thanks! your answer has been submitted successfully.");
     }
 
     public static Result loginUser(String username, String password, boolean stayLoggedIn) {
-        return null;
+        User user = App.getUserByUsername(username);
+        if(user == null) {
+            return new Result(false, "username not found!");
+        }
+        else if(!password.equals(user.getPassword())) {
+            return new Result(false, "password doesn't match!");
+        }
+
+        App.currentUser = user;
+        AppView.currentMenu = new MainMenu();
+        return new Result(true, "user logged in successfully!");
     }
 
     public static Result forgetPassword(String username) {

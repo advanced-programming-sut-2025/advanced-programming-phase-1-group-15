@@ -6,6 +6,10 @@ public class App {
     public static ArrayList<User> users = new ArrayList<>();
     public static User currentUser;
 
+    public static final String[] securityQuestions = {"1) What is your favorite color?",
+    "2) Where were you born?", "3) What is your favorite food?",
+    "4) Who is your favorite historical figure?", "5) What is your dream job?"};
+
     public static ArrayList<Game> recentGames = new ArrayList<>();
     public static Game currentGame;
 
