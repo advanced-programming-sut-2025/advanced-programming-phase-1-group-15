@@ -67,7 +67,7 @@ public class LoginMenuController {
             return new Result(false, "answer confirmation doesn't match!");
         }
 
-        App.currentUser.setSecurityQuestionNumber(questionNumber);
+        App.currentUser.setSecurityQuestion(App.securityQuestions[questionNumber - 1]);
         App.currentUser.setSecurityQuestionAnswer(answer);
         return new Result(true, "Thanks! your answer has been submitted successfully.");
     }
@@ -86,7 +86,18 @@ public class LoginMenuController {
         return new Result(true, "user logged in successfully!");
     }
 
-    public static Result forgetPassword(String username) {
-        return null;
+    public static Result forgetPassword(String password, User user) {
+        if(password.length() < 8) {
+            return new Result(false, "password must be at least 8 characters.");
+        }
+        else if(LoginMenuCommands.checkPasswordContainsWhitespace(password)) {
+            return new Result(false, "password should not contain any whitespace.");
+        }
+        else if(!LoginMenuCommands.checkPasswordContainsSpecialCharacter(password)) {
+            return new Result(false, "password doesn't have any special characters!");
+        }
+
+        user.setPassword(password);
+        return new Result(true, "Your password has been changed successfully!");
     }
 }

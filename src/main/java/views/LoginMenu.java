@@ -3,6 +3,7 @@ package views;
 import controllers.LoginMenuController;
 import models.App;
 import models.Result;
+import models.User;
 import models.enums.Gender;
 import models.enums.commands.Commands;
 import models.enums.commands.LoginMenuCommands;
@@ -61,6 +62,31 @@ public class LoginMenu implements AppMenu {
             }
             else {
                 System.out.println("invalid command");
+            }
+        }
+    }
+
+    public static void forgetPasswordMenu(Scanner scanner, String username) {
+        User user = App.getUserByUsername(username);
+        if(user == null) {
+            System.out.println("username not found!");
+        }
+        else {
+            System.out.println(user.getSecurityQuestion());
+            String answer = scanner.nextLine().trim();
+
+            if(answer.equals(user.getSecurityQuestionAnswer())) {
+                Result result = new Result(false, "");
+                while(!result.success()) {
+                    System.out.println("Please choose your new password: ");
+                    String password = scanner.nextLine().trim();
+
+                    result = LoginMenuController.forgetPassword(password, user);
+                    System.out.println(result.message());
+                }
+            }
+            else {
+                System.out.println("wrong answer! you may try again.");
             }
         }
     }
@@ -138,6 +164,8 @@ public class LoginMenu implements AppMenu {
             Matcher matcher = LoginMenuCommands.FORGET_PASSWORD_REGEX.matcher(command);
 
             String username = matcher.matches() ? matcher.group("username") : null;
+
+            forgetPasswordMenu(scanner, username);
         }
 
         else {

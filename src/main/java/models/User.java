@@ -9,11 +9,11 @@ public class User {
     protected String email;
     protected Gender gender;
 
-    protected int securityQuestionNumber;
+    protected String securityQuestion;
     protected String securityQuestionAnswer;
 
-    protected int maxEarnedCoins;
-    protected int gameCount;
+    protected int maxEarnedGold = 0;
+    protected int gameCount = 0;
 
     public String getUsername() {
         return username;
@@ -50,11 +50,11 @@ public class User {
         this.gender = gender;
     }
 
-    public int getSecurityQuestionNumber() {
-        return securityQuestionNumber;
+    public String getSecurityQuestion() {
+        return securityQuestion;
     }
-    public void setSecurityQuestionNumber(int securityQuestionNumber) {
-        this.securityQuestionNumber = securityQuestionNumber;
+    public void setSecurityQuestion(String securityQuestion) {
+        this.securityQuestion = securityQuestion;
     }
 
     public String getSecurityQuestionAnswer() {
@@ -62,6 +62,20 @@ public class User {
     }
     public void setSecurityQuestionAnswer(String securityQuestionAnswer) {
         this.securityQuestionAnswer = securityQuestionAnswer;
+    }
+
+    public int getMaxEarnedGold() {
+        return maxEarnedGold;
+    }
+    public void setMaxEarnedGold(int maxEarnedGold) {
+        this.maxEarnedGold = maxEarnedGold;
+    }
+
+    public int getGameCount() {
+        return gameCount;
+    }
+    public void setGameCount(int gameCount) {
+        this.gameCount = gameCount;
     }
 
     public User() {
@@ -76,8 +90,10 @@ public class User {
         this.gender = gender;
     }
 
-    public void userInfo() {
-
+    @Override
+    public String toString() {
+        return "username: " + username + "\nnickname: " + nickname +
+                "\nmax earned gold: " + maxEarnedGold + "\ngame count: " + gameCount;
     }
 }
 

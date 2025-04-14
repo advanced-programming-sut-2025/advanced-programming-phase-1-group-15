@@ -30,6 +30,15 @@ public enum LoginMenuCommands implements Commands {
         return false;
     }
 
+    public static boolean checkPasswordContainsWhitespace(String password) {
+        for(char c : password.toCharArray()) {
+            if(Character.isWhitespace(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean checkEmailFormat(String email) {
         String emailRegex = "^(?!.*\\.\\.)[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]{2,})+$";
 
