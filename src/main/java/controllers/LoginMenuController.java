@@ -38,20 +38,24 @@ public class LoginMenuController {
         App.users.add(user);
         App.currentUser = user;
 
-        return new Result(true, "user registered successfully!");
+        return new Result(true, "User registered successfully!");
     }
 
     public static String randomPasswordGenerator() {
         final String UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         final String LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
         final String DIGITS = "0123456789";
-        final String SPECIAL_CHARACTERS = "!@#$%^&*()-_=+[]{}|;:,.<>?";
+        final String SPECIAL_CHARACTERS = "?><,\"';:\\/|][}{+=)(*&^%$#!";
         final String ALL_CHARACTERS = UPPERCASE + LOWERCASE + DIGITS + SPECIAL_CHARACTERS;
 
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder(8);
 
-        for (int i = 0; i < 8; i++) {
+        password.append(UPPERCASE.charAt(random.nextInt(UPPERCASE.length())));
+        password.append(LOWERCASE.charAt(random.nextInt(LOWERCASE.length())));
+        password.append(DIGITS.charAt(random.nextInt(DIGITS.length())));
+        password.append(SPECIAL_CHARACTERS.charAt(random.nextInt(SPECIAL_CHARACTERS.length())));
+        for (int i = 4; i < 8; i++) {
             int index = random.nextInt(ALL_CHARACTERS.length());
             password.append(ALL_CHARACTERS.charAt(index));
         }
@@ -83,7 +87,7 @@ public class LoginMenuController {
 
         App.currentUser = user;
         AppView.currentMenu = new MainMenu();
-        return new Result(true, "user logged in successfully!");
+        return new Result(true, "User logged in successfully! You are now in main menu.");
     }
 
     public static Result forgetPassword(String password, User user) {

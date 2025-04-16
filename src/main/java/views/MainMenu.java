@@ -17,12 +17,17 @@ public class MainMenu implements AppMenu {
         else if(MainMenuCommands.LOGOUT_REGEX.matches(command)) {
             App.currentUser = null;
             AppView.currentMenu = new LoginMenu();
+            System.out.println("User logged out successfully.");
         }
 
         else if(Commands.checkSwitchRegex(command)) {
             String menuName = Commands.menuName(command);
             if(menuName.equals("profile menu")) {
                 AppView.currentMenu = new ProfileMenu();
+                System.out.println("You are now in profile menu!");
+            }
+            else {
+                System.out.println("invalid menu name!");
             }
         }
 

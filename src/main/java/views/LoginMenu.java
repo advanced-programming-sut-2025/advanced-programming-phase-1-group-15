@@ -83,6 +83,14 @@ public class LoginMenu implements AppMenu {
 
                     result = LoginMenuController.forgetPassword(password, user);
                     System.out.println(result.message());
+
+                    if(!result.success()) {
+                        password = passwordMenu(scanner);
+                        if(password != null) {
+                            result = LoginMenuController.forgetPassword(password, user);
+                            System.out.println(result.message());
+                        }
+                    }
                 }
             }
             else {
@@ -103,9 +111,7 @@ public class LoginMenu implements AppMenu {
         }
 
         else if(Commands.checkSwitchRegex(command)) {
-            String menuName = Commands.menuName(command);
-            AppView.changeMenu(menuName);
-            System.out.println("You are now in " + menuName + "!");
+            System.out.println("You can't switch to other menus when you are in register menu!");
         }
 
         else if(LoginMenuCommands.REGISTER_REGEX.matches(command)) {
