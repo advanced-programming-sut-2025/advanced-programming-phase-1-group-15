@@ -27,6 +27,13 @@ public class Game implements TimeObserver {
         map.build();
     }
 
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
     public boolean isFinished() {
         return finished;
     }

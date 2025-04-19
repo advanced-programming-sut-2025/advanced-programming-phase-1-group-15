@@ -78,10 +78,6 @@ public class User {
         this.gameCount = gameCount;
     }
 
-    public User() {
-
-    }
-
     public User(String username, String password, String nickname, String email, Gender gender) {
         this.username = username;
         this.password = password;

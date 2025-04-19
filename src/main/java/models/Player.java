@@ -17,6 +17,8 @@ public class Player extends User {
     private Position position;
     private FarmType farmType;
 
+    private int mapNumber;
+
     private int gold;
     private int wood;
 
@@ -39,6 +41,10 @@ public class Player extends User {
     private HashMap<Player,PlayerFriendShip> friendships = new HashMap<>();
     private Player couple;
 
+    public Player(User user) {
+        super(user.getUsername(), user.getPassword(), user.getNickname(), user.getEmail(), user.getGender());
+    }
+
     public Position getPosition() {
         return position;
     }
@@ -51,6 +57,13 @@ public class Player extends User {
     }
     public void setFarmType(FarmType farmType) {
         this.farmType = farmType;
+    }
+
+    public int getMapNumber() {
+        return mapNumber;
+    }
+    public void setMapNumber(int mapNumber) {
+        this.mapNumber = mapNumber;
     }
 
     public int getGold() {
