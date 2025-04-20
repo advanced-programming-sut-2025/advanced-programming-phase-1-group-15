@@ -77,12 +77,17 @@ public class MainMenu implements AppMenu {
 
             if(result.success()) {
                 mapMenu(scanner);
+                AppView.currentMenu = new GameMenu(App.currentGame);
             }
         }
 
         else if(MainMenuCommands.LOAD_GAME_REGEX.matches(command)) {
             Result result = MainMenuController.loadGame();
             System.out.println(result.message());
+
+            if(result.success()) {
+                AppView.currentMenu = new GameMenu(App.currentGame);
+            }
         }
 
         else {

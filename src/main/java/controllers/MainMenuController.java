@@ -48,6 +48,7 @@ public class MainMenuController {
         }
 
         Game game = new Game(players);
+        game.setMainPlayer(players.get(0));
         App.currentGame = game;
         App.recentGames.add(game);
 
@@ -59,11 +60,12 @@ public class MainMenuController {
             for (Player player : game.getPlayers()) {
                 if (player.getUsername().equals(App.currentUser.getUsername())) {
                     App.currentGame = game;
-                    return new Result(true, "game is now loaded successfully!");
+                    game.setMainPlayer(player);
+                    return new Result(true, "game loaded successfully!");
                 }
             }
         }
 
-        return new Result(false, "no game loaded!");
+        return new Result(false, "you are not part of any game!");
     }
 }

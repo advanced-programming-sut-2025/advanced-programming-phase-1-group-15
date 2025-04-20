@@ -23,6 +23,7 @@ public class Player extends User {
     private int wood;
 
     private int energy;
+    private int energyConsumed;
     private boolean fainted;
 
     private BackPack Inventory;
@@ -85,6 +86,13 @@ public class Player extends User {
     }
     public void setEnergy(int energy) {
         this.energy = energy;
+    }
+
+    public boolean isLocked() {
+        return energyConsumed >= 50;
+    }
+    public void unlock() {
+        energyConsumed = 0;
     }
 
     public boolean isFainted() {

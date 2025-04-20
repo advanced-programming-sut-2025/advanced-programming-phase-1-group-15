@@ -72,10 +72,10 @@ public class DateAndTime {
     }
 
     public void nextHour(){
-
+        this.hour++;
     }
     public void nextNHours(int n){
-
+        this.hour += n;
     }
 
     public int getYear() {
