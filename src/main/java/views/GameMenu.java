@@ -8,7 +8,6 @@ import models.Result;
 import models.enums.commands.CheatCodeCommands;
 import models.enums.commands.Commands;
 import models.enums.commands.GameMenuCommands;
-import models.time.DateAndTime;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -89,7 +88,6 @@ public class GameMenu implements AppMenu {
             else if(GameMenuCommands.DAY_OF_WEEK_REGEX.matches(command)) {
                 System.out.println(game.getDateAndTime().displayDayOfWeek());
             }
-
             else if(CheatCodeCommands.ADVANCE_TIME_REGEX.matches(command)) {
                 Matcher matcher = CheatCodeCommands.ADVANCE_TIME_REGEX.matcher(command);
 
@@ -104,6 +102,21 @@ public class GameMenu implements AppMenu {
                 int days = matcher.matches() ? Integer.parseInt(matcher.group("days")) : 0;
 
                 Result result = CheatCodeController.cheatAdvanceDate(days);
+                System.out.println(result.message());
+            }
+
+            else if(command.equals("weather")) {
+                System.out.println(game.getWeather().displayWeather());
+            }
+            else if(GameMenuCommands.WEATHER_FORECAST_REGEX.matches(command)) {
+                System.out.println(game.getWeather().displayForecast());
+            }
+            else if(CheatCodeCommands.WEATHER_SET_REGEX.matches(command)) {
+                Matcher matcher = CheatCodeCommands.WEATHER_SET_REGEX.matcher(command);
+
+                String weatherType = matcher.matches() ? matcher.group("weatherType") : "";
+
+                Result result = CheatCodeController.cheatSetWeather(weatherType);
                 System.out.println(result.message());
             }
 

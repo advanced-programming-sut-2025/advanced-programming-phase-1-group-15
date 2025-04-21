@@ -68,6 +68,7 @@ public class DateAndTime {
             this.day++;
         }
         nextDayOfWeek();
+        notifyObservers();
     }
     public void nextNDays(int n) {
         for(int i = 0; i < n; i++) {
@@ -76,7 +77,7 @@ public class DateAndTime {
     }
 
     public void nextHour(){
-        if(hour == 18) {
+        if(hour == 17) {
             hour = 9;
             nextDay();
         }

@@ -2,53 +2,74 @@ package models.weather;
 
 import models.map.Position;
 import models.time.DateAndTime;
+import models.time.Season;
 import models.time.TimeObserver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class WeatherManagement implements TimeObserver {
-//        private final WeatherManagement instance = new WeatherManagement(WeatherOption.SUNNY);
-////
-//////    private WeatherManagement (WeatherOption currentWeather){
-//////        DateAndTime dateAndTime = DateAndTime.getInstance();
-//////        dateAndTime.addObserver(this);
-//////        this.currentWeather = currentWeather;
-//////    }
-//
-////    public WeatherManagement getInstance(){
-////        return instance;
-////    }
-
-    WeatherOption currentWeather;
-    WeatherOption tomorrowWeather;
-
-    @Override
-    public void update(DateAndTime dateAndTime) {
-        // if day is changed , currentWeather will be tomorrow weather
-        // and tomorrow weather will be predicted
-    }
+    private WeatherOption currentWeather = WeatherOption.SUNNY;
+    private WeatherOption tomorrowWeather = WeatherOption.SUNNY;
 
     List<WeatherObserver> observers = new ArrayList<>();
     public void addObserver(WeatherObserver observer) {
         observers.add(observer);
     }
-
     public void removeObserver(WeatherObserver observer) {
         observers.remove(observer);
     }
-
     private void notifyObservers() {
         for (WeatherObserver observer : observers) {
             observer.update(currentWeather);
         }
     }
 
-    private void predictWeather(DateAndTime tomorrow) {
+    @Override
+    public void update(DateAndTime dateAndTime) {
+        currentWeather = tomorrowWeather;
+        predictWeather(dateAndTime);
+        notifyObservers();
+    }
 
+    private void predictWeather(DateAndTime dateAndTime) {
+        Random rand = new Random();
+        Season season = dateAndTime.getSeason();
+
+        List<WeatherOption> possibleWeathers = new ArrayList<>();
+        switch (season) {
+            case SPRING, SUMMER, AUTUMN -> {
+                possibleWeathers.add(WeatherOption.SUNNY);
+                possibleWeathers.add(WeatherOption.RAINY);
+                possibleWeathers.add(WeatherOption.STORM);
+            }
+            case WINTER -> {
+                possibleWeathers.add(WeatherOption.SUNNY);
+                possibleWeathers.add(WeatherOption.SNOW);
+            }
+        }
+
+        if(rand.nextBoolean()) {
+            tomorrowWeather = WeatherOption.SUNNY;
+        }
+        else {
+            tomorrowWeather = possibleWeathers.get(rand.nextInt(possibleWeathers.size()));
+        }
+    }
+
+    public void setForecast(WeatherOption weather) {
+        tomorrowWeather = weather;
     }
 
     public void setThor(Position position) {
 
+    }
+
+    public String displayWeather() {
+        return currentWeather.displayWeather();
+    }
+    public String displayForecast() {
+        return "forecast: " + tomorrowWeather.displayWeather();
     }
 }

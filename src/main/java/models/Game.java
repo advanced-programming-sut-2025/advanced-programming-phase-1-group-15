@@ -5,6 +5,7 @@ import models.map.Position;
 import models.relation.Trade;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
+import models.weather.WeatherManagement;
 
 import java.util.ArrayList;
 
@@ -14,7 +15,8 @@ public class Game implements TimeObserver {
     private Player mainPlayer;
     private Player currentPlayer;
 
-    private final DateAndTime dateAndTime = new DateAndTime();
+    private final DateAndTime dateAndTime;
+    private final WeatherManagement weather;
 
     private Map map;
     private ArrayList<Trade> trades = new ArrayList<>();
@@ -24,6 +26,11 @@ public class Game implements TimeObserver {
     public Game(ArrayList<Player> players) {
         this.players = players;
         this.currentPlayer = players.get(0);
+
+        dateAndTime = new DateAndTime();
+        weather = new WeatherManagement();
+        dateAndTime.addObserver(weather);
+
         map = new Map();
         map.build();
     }
@@ -55,6 +62,9 @@ public class Game implements TimeObserver {
 
     public DateAndTime getDateAndTime() {
         return dateAndTime;
+    }
+    public WeatherManagement getWeather() {
+        return weather;
     }
 
     public boolean isFinished() {
