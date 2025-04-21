@@ -120,6 +120,13 @@ public class GameMenu implements AppMenu {
                 System.out.println(result.message());
             }
 
+            else if(GameMenuCommands.PRINT_MAP_REGEX.matches(command)) {
+                game.getMap().printMap();
+            }
+            else if(GameMenuCommands.MAP_GUIDE_REGEX.matches(command)) {
+                game.getMap().mapGuide();
+            }
+
             else {
                 System.out.println("invalid command");
             }

@@ -18,7 +18,8 @@ public class Game implements TimeObserver {
     private final DateAndTime dateAndTime;
     private final WeatherManagement weather;
 
-    private Map map;
+    private final Map map;
+
     private ArrayList<Trade> trades = new ArrayList<>();
 
     private boolean finished = false;
@@ -74,12 +75,10 @@ public class Game implements TimeObserver {
         this.finished = true;
     }
 
-    public void printMap(Position position, int size) {
-
+    public Map getMap() {
+        return map;
     }
-    public void guide() {
 
-    }
     public void showTrades() {
 
     }
