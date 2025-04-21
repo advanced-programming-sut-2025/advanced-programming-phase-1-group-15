@@ -8,17 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherManagement implements TimeObserver {
-    private final WeatherManagement instance = new WeatherManagement(WeatherOption.SUNNY);
-
-    private WeatherManagement (WeatherOption currentWeather){
-        DateAndTime dateAndTime = DateAndTime.getInstance();
-        dateAndTime.addObserver(this);
-        this.currentWeather = currentWeather;
-    }
-
-    public WeatherManagement getInstance(){
-        return instance;
-    }
+//        private final WeatherManagement instance = new WeatherManagement(WeatherOption.SUNNY);
+////
+//////    private WeatherManagement (WeatherOption currentWeather){
+//////        DateAndTime dateAndTime = DateAndTime.getInstance();
+//////        dateAndTime.addObserver(this);
+//////        this.currentWeather = currentWeather;
+//////    }
+//
+////    public WeatherManagement getInstance(){
+////        return instance;
+////    }
 
     WeatherOption currentWeather;
     WeatherOption tomorrowWeather;

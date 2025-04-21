@@ -1,11 +1,25 @@
 package controllers;
 
+import models.App;
 import models.Result;
 import models.map.Position;
 
 public class CheatCodeController {
     public static Result cheatAdvanceTime(int hours) {
-        return null;
+        if(hours < 0) {
+            return new Result(false, "you can't travel back in time!");
+        }
+
+        App.currentGame.getDateAndTime().nextNHours(hours);
+        return new Result(true, App.currentGame.getDateAndTime().displayDateTime());
+    }
+    public static Result cheatAdvanceDate(int days) {
+        if(days < 0) {
+            return new Result(false, "you can't travel back in time!");
+        }
+
+        App.currentGame.getDateAndTime().nextNDays(days);
+        return new Result(true, App.currentGame.getDateAndTime().displayDateTime());
     }
 
     public static Result cheatThor(Position position) {

@@ -2,12 +2,9 @@ package models;
 
 import models.map.Map;
 import models.map.Position;
-import models.map.Tile;
 import models.relation.Trade;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
-import models.weather.WeatherObserver;
-import models.weather.WeatherOption;
 
 import java.util.ArrayList;
 
@@ -16,6 +13,8 @@ public class Game implements TimeObserver {
     private ArrayList<Player> players = new ArrayList<>();
     private Player mainPlayer;
     private Player currentPlayer;
+
+    private final DateAndTime dateAndTime = new DateAndTime();
 
     private Map map;
     private ArrayList<Trade> trades = new ArrayList<>();
@@ -46,8 +45,16 @@ public class Game implements TimeObserver {
         int currentIndex = players.indexOf(currentPlayer);
         int nextIndex = (currentIndex + 1) % players.size();
 
+        if(nextIndex == 0) {
+            dateAndTime.nextHour();
+        }
+
         currentPlayer.unlock();
         currentPlayer = players.get(nextIndex);
+    }
+
+    public DateAndTime getDateAndTime() {
+        return dateAndTime;
     }
 
     public boolean isFinished() {

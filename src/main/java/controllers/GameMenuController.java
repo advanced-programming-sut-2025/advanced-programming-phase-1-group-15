@@ -4,22 +4,6 @@ import models.Result;
 import models.map.Position;
 
 public class GameMenuController {
-    public static Result startNewGame(String command) {
-        return null;
-    }
-    public static Result loadGame() {
-        return null;
-    }
-    public static Result exitGame() {
-        return null;
-    }
-    public static Result terminateGame() {
-        return null;
-    }
-    public static Result nextTurn() {
-        return null;
-    }
-
     public static Result removeFromInventory(String name, int number) {
         return null;
     }

@@ -1,13 +1,17 @@
 package views;
 
+import controllers.CheatCodeController;
 import models.App;
 import models.Game;
 import models.Player;
 import models.Result;
+import models.enums.commands.CheatCodeCommands;
 import models.enums.commands.Commands;
 import models.enums.commands.GameMenuCommands;
+import models.time.DateAndTime;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
 
 public class GameMenu implements AppMenu {
     private final Game game;
@@ -68,6 +72,39 @@ public class GameMenu implements AppMenu {
                     App.currentGame = null;
                     AppView.currentMenu = new MainMenu();
                 }
+            }
+
+            else if(command.equals("time")) {
+                System.out.println(game.getDateAndTime().displayHour());
+            }
+            else if(command.equals("date")) {
+                System.out.println(game.getDateAndTime().displayDate());
+            }
+            else if(command.equals("datetime")) {
+                System.out.println(game.getDateAndTime().displayDateTime());
+            }
+            else if(command.equals("season")) {
+                System.out.println(game.getDateAndTime().displaySeason());
+            }
+            else if(GameMenuCommands.DAY_OF_WEEK_REGEX.matches(command)) {
+                System.out.println(game.getDateAndTime().displayDayOfWeek());
+            }
+
+            else if(CheatCodeCommands.ADVANCE_TIME_REGEX.matches(command)) {
+                Matcher matcher = CheatCodeCommands.ADVANCE_TIME_REGEX.matcher(command);
+
+                int hours = matcher.matches() ? Integer.parseInt(matcher.group("hours")) : 0;
+
+                Result result = CheatCodeController.cheatAdvanceTime(hours);
+                System.out.println(result.message());
+            }
+            else if(CheatCodeCommands.ADVANCE_DATE_REGEX.matches(command)) {
+                Matcher matcher = CheatCodeCommands.ADVANCE_DATE_REGEX.matcher(command);
+
+                int days = matcher.matches() ? Integer.parseInt(matcher.group("days")) : 0;
+
+                Result result = CheatCodeController.cheatAdvanceDate(days);
+                System.out.println(result.message());
             }
 
             else {

@@ -4,90 +4,127 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DateAndTime {
-    private static final DateAndTime instance = new DateAndTime(0,Season.SPRING, DaysOfWeek.MONDAY,1,9);
     private List<TimeObserver> observers = new ArrayList<>();
 
     public void addObserver(TimeObserver observer) {
         observers.add(observer);
     }
-
     public void removeObserver(TimeObserver observer) {
         observers.remove(observer);
     }
-
     private void notifyObservers() {
         for (TimeObserver observer : observers) {
             observer.update(this);
         }
     }
 
-    private int year;
-    private Season season;
-    private DaysOfWeek daysOfWeek;
-    private int day;
-    private int hour;
-
-    private DateAndTime(int year, Season season, DaysOfWeek daysOfWeek, int day, int hour) {
-        this.year = year;
-        this.season = season;
-        this.daysOfWeek = daysOfWeek;
-        this.day = day;
-        this.hour = hour;
-    }
-
-    public static DateAndTime getInstance() {
-        return instance;
-    }
+    private int year = 0;
+    private Season season = Season.SPRING;
+    private DaysOfWeek dayOfWeek = DaysOfWeek.MONDAY;
+    private int day = 1;
+    private int hour = 9;
 
     public void nextYear(){
-        this.year++;
+        year++;
     }
 
     public void nextSeason() {
-        if(this.season == Season.SUMMER) {
-            this.season = Season.AUTUMN;
-        }
-        else if(this.season == Season.AUTUMN) {
-            this.season = Season.WINTER;
-        }
-        else if(this.season == Season.WINTER) {
-            this.season = Season.SPRING;
+        if(season == Season.SUMMER) {
+            season = Season.AUTUMN;
+        } else if(season == Season.AUTUMN) {
+            season = Season.WINTER;
+        } else if(season == Season.WINTER) {
+            season = Season.SPRING;
             nextYear();
-        }
-        else {
-            this.season = Season.SUMMER;
+        } else if(season == Season.SPRING) {
+            season = Season.SUMMER;
         }
     }
 
     public void nextDayOfWeek() {
-
+        if (dayOfWeek == DaysOfWeek.MONDAY) {
+            dayOfWeek = DaysOfWeek.TUESDAY;
+        } else if (dayOfWeek == DaysOfWeek.TUESDAY) {
+            dayOfWeek = DaysOfWeek.WEDNESDAY;
+        } else if (dayOfWeek == DaysOfWeek.WEDNESDAY) {
+            dayOfWeek = DaysOfWeek.THURSDAY;
+        } else if (dayOfWeek == DaysOfWeek.THURSDAY) {
+            dayOfWeek = DaysOfWeek.FRIDAY;
+        } else if (dayOfWeek == DaysOfWeek.FRIDAY) {
+            dayOfWeek = DaysOfWeek.SATURDAY;
+        } else if (dayOfWeek == DaysOfWeek.SATURDAY) {
+            dayOfWeek = DaysOfWeek.SUNDAY;
+        } else if (dayOfWeek == DaysOfWeek.SUNDAY) {
+            dayOfWeek = DaysOfWeek.MONDAY;
+        }
     }
 
     public void nextDay() {
-        this.day++;
+        if(day == 28) {
+            day = 1;
+            nextSeason();
+        }
+        else {
+            this.day++;
+        }
         nextDayOfWeek();
     }
     public void nextNDays(int n) {
-
+        for(int i = 0; i < n; i++) {
+            nextDay();
+        }
     }
 
     public void nextHour(){
-        this.hour++;
+        if(hour == 18) {
+            hour = 9;
+            nextDay();
+        }
+        else {
+            this.hour++;
+        }
     }
     public void nextNHours(int n){
-        this.hour += n;
+        for(int i = 0; i < n; i++) {
+            nextHour();
+        }
     }
 
     public int getYear() {
         return year;
     }
+    public String displayYear() {
+        return "year: " + year;
+    }
+
     public Season getSeason() {
         return season;
     }
+    public String displaySeason() {
+        return "season: " + season.displaySeason();
+    }
+
     public int getDay() {
         return day;
     }
+    public String displayDay() {
+        return "day: " + day;
+    }
+    public String displayDayOfWeek() {
+        return dayOfWeek.displayDayOfWeek();
+    }
+
     public int getHour() {
         return hour;
+    }
+    public String displayHour() {
+        return hour + ":00";
+    }
+
+    public String displayDate() {
+        return displayDay() + " " + displaySeason() + " " + displayYear();
+    }
+    public String displayDateTime() {
+        return displayHour() + " " + displayDate();
     }
 }
