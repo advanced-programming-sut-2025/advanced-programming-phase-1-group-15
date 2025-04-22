@@ -54,7 +54,7 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
         }
 
         for(Area area : innerAreas){
-            area.build();
+            //area.build();
         }
     }
 //

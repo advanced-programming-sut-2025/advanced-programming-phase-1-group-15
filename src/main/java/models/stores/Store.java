@@ -12,6 +12,5 @@ public class Store extends Area {
 
     @Override
     public void build() {
-
     }
 }
