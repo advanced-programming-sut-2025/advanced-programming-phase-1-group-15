@@ -6,9 +6,20 @@ import models.farming.Tree;
 import java.util.ArrayList;
 
 public class Farm extends Area {
-    private final int number;
-    public Farm(int number) {
-        this.number = number;
+    public static int nextId =0 ;
+    private int Id;
+
+    public Farm(ArrayList<ArrayList<Tile>> FarmTiles , int firstCol, int lastCol, int firstRow, int lastRow) {
+        this.Id = nextId;
+        nextId ++;
+        this.tiles = tiles;
+        for(int row = firstRow; row <= lastRow; row++) {
+            for(int col = firstCol; col <= lastCol; col++) {
+                Tile tile = FarmTiles.get(col).get(row);
+                tile.setArea(this);
+            }
+        }
+
     }
 
 

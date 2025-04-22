@@ -10,8 +10,6 @@ public class Store extends Area {
     protected int opensAt;
     protected int closesAt;
 
-
-
     @Override
     public void build() {
 

@@ -2,6 +2,7 @@ package models;
 
 import models.map.Map;
 import models.map.Position;
+import models.map.Tile;
 import models.relation.Trade;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
@@ -18,6 +19,7 @@ public class Game implements TimeObserver {
     private final DateAndTime dateAndTime;
     private final WeatherManagement weather;
 
+    private ArrayList<ArrayList<Tile>> mapTiles;
     private final Map map;
 
     private ArrayList<Trade> trades = new ArrayList<>();
@@ -32,8 +34,9 @@ public class Game implements TimeObserver {
         weather = new WeatherManagement();
         dateAndTime.addObserver(weather);
 
-        map = new Map();
-        map.build();
+        Tile.buildMapTiles(mapTiles);
+        map = new Map(mapTiles,0,Map.COLS,0,Map.ROWS);
+        //map.
     }
 
     public ArrayList<Player> getPlayers() {
