@@ -205,7 +205,10 @@ public enum TreeType {
         System.out.println("Base Price: " + basePrice + " coins");
         System.out.println("Edible: " + (edible ? "Yes" : "No"));
         System.out.println("Energy Restored: " + energy);
-        System.out.println("Growing Season: " + season);
+        if(season.size() > 1)
+            System.out.println("Growing Season: " + "Special");
+        else
+            System.out.println("Growing Season: " + season);
         System.out.println("-----------------------------");
     }
 }
