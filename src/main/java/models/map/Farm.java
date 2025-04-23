@@ -19,6 +19,7 @@ public class Farm extends Area {
     private final int number;
 
     public Farm(ArrayList<ArrayList<Tile>> farmTiles, int number) {
+        this.areaType = AreaType.FARM;
         this.number = number;
         this.tiles = farmTiles;
 
@@ -49,9 +50,13 @@ public class Farm extends Area {
     public void build() {
         innerAreas = new ArrayList<>();
 
-        innerAreas.add(new Lake());
-        innerAreas.add(new GreenHouse());
-        innerAreas.add(new House());
-        innerAreas.add(new Quarry());
+        innerAreas.add(new Lake(getSubArea(tiles, Lake.coordinates[number - 1][0], Lake.coordinates[number - 1][1], Lake.coordinates[number - 1][2], Lake.coordinates[number - 1][3])));
+        innerAreas.add(new House(getSubArea(tiles, House.coordinates[number - 1][0], House.coordinates[number - 1][1], House.coordinates[number - 1][2], House.coordinates[number - 1][3])));
+        innerAreas.add(new GreenHouse(getSubArea(tiles, GreenHouse.coordinates[number - 1][0], GreenHouse.coordinates[number - 1][1], GreenHouse.coordinates[number - 1][2], GreenHouse.coordinates[number - 1][3])));
+        innerAreas.add(new Quarry(getSubArea(tiles, Quarry.coordinates[number - 1][0], Quarry.coordinates[number - 1][1], Quarry.coordinates[number - 1][2], Quarry.coordinates[number - 1][3])));
+
+        for(Area innerArea : innerAreas){
+            innerArea.build();
+        }
     }
 }

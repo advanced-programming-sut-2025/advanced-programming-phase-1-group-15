@@ -6,7 +6,6 @@ import models.cooking.FoodType;
 import models.crafting.CraftItemType;
 import models.map.Farm;
 import models.relation.PlayerFriendShip;
-import models.map.FarmType;
 import models.map.Position;
 import models.tools.BackPack;
 import models.tools.Tool;
@@ -23,7 +22,7 @@ public class Player extends User {
     private int gold;
     private int wood;
 
-    private int energy;
+    private int energy = 200;
     private int energyConsumed;
     private boolean fainted;
 

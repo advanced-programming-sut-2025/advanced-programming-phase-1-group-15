@@ -52,9 +52,18 @@ public class Tile {
     }
 
     public char character() {
-        if(objectInTile == null) {
-            return '.';
+        if(area.areaType.equals(AreaType.LAKE)) {
+            return '~';
         }
-        return '*';
+        else if(area.areaType.equals(AreaType.HOUSE)) {
+            return 'H';
+        }
+        else if(area.areaType.equals(AreaType.GREENHOUSE)) {
+            return 'G';
+        }
+        else if(area.areaType.equals(AreaType.QUARRY)) {
+            return '#';
+        }
+        return '.';
     }
 }

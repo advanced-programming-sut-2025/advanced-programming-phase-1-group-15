@@ -28,6 +28,7 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
     public static int COLS = 100;
 
     public Map(ArrayList<ArrayList<Tile>> mapTiles) {
+        this.areaType = AreaType.MAP;
         this.tiles = mapTiles;
         for(int row = 0; row < ROWS; row++) {
             for(int col = 0; col < COLS; col++) {
@@ -59,13 +60,14 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
     }
 
     public void printMap() {
+        System.out.print(' ');
         for(int i =0; i < 100; i++){
-            System.out.print("_");
+            System.out.print('_');
         }
         System.out.println();
 
         for(int i = 0; i < ROWS; i++){
-            System.out.print("|");
+            System.out.print('|');
             for(int j = 0; j < COLS; j++){
                 Tile tile = tiles.get(i).get(j);
                 boolean playerFound = false;
@@ -82,12 +84,13 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
                     System.out.print(tile.character());
                 }
             }
-            System.out.print("|");
+            System.out.print('|');
             System.out.println();
         }
 
+        System.out.print(' ');
         for(int i =0; i < 100; i++){
-            System.out.print("_");
+            System.out.print('_');
         }
         System.out.println();
     }
@@ -99,5 +102,9 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
         System.out.println("horizontal borders _");
         System.out.println("vertical borders |");
         System.out.println("empty tile .");
+        System.out.println("house H");
+        System.out.println("lake ~");
+        System.out.println("Greenhouse G");
+        System.out.println("Quarry #");
     }
 }

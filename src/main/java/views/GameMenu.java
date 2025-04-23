@@ -128,6 +128,10 @@ public class GameMenu implements AppMenu {
                 game.getMap().mapGuide();
             }
 
+            else if(GameMenuCommands.SHOW_ENERGY_REGEX.matches(command)) {
+                System.out.println(game.getCurrentPlayer().getEnergy());
+            }
+
             else {
                 System.out.println("invalid command");
             }
