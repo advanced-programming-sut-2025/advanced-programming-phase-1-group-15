@@ -16,11 +16,11 @@ public class Game implements TimeObserver {
     private Player mainPlayer;
     private Player currentPlayer;
 
-    private final DateAndTime dateAndTime;
-    private final WeatherManagement weather;
+    private DateAndTime dateAndTime;
+    private WeatherManagement weather;
 
     private ArrayList<ArrayList<Tile>> mapTiles;
-    private final Map map;
+    private Map map;
 
     private ArrayList<Trade> trades = new ArrayList<>();
 
@@ -29,14 +29,15 @@ public class Game implements TimeObserver {
     public Game(ArrayList<Player> players) {
         this.players = players;
         this.currentPlayer = players.get(0);
-
+    }
+    public void build() {
         dateAndTime = new DateAndTime();
         weather = new WeatherManagement();
         dateAndTime.addObserver(weather);
 
-        Tile.buildMapTiles(mapTiles);
-        map = new Map(mapTiles,0,Map.COLS,0,Map.ROWS);
-        //map.
+        mapTiles = Tile.buildMapTiles();
+        map = new Map(mapTiles);
+        map.build();
     }
 
     public ArrayList<Player> getPlayers() {

@@ -4,6 +4,7 @@ import models.animals.Animal;
 import models.cooking.Food;
 import models.cooking.FoodType;
 import models.crafting.CraftItemType;
+import models.map.Farm;
 import models.relation.PlayerFriendShip;
 import models.map.FarmType;
 import models.map.Position;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 
 public class Player extends User {
     private Position position;
-    private FarmType farmType;
+    private Farm farm;
 
     private int mapNumber;
 
@@ -53,11 +54,11 @@ public class Player extends User {
         this.position = position;
     }
 
-    public FarmType getFarmType() {
-        return farmType;
+    public Farm getFarm() {
+        return farm;
     }
-    public void setFarmType(FarmType farmType) {
-        this.farmType = farmType;
+    public void setFarm(Farm farm) {
+        this.farm = farm;
     }
 
     public int getMapNumber() {

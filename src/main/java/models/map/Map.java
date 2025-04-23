@@ -1,5 +1,7 @@
 package models.map;
 
+import models.App;
+import models.Player;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 import models.weather.WeatherObserver;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
   (0,2) (1,2) (2,2) (3,2)
   (0,3) (1,3) (2,3) (3,3)
 
-  x : culoumn
+  x : column
   y : row
 
 */
@@ -25,42 +27,27 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
     public static int ROWS = 50;
     public static int COLS = 100;
 
-    public Map(ArrayList<ArrayList<Tile>> mapTiles , int firstCol, int lastCol, int firstRow, int lastRow) {
-        tiles = mapTiles;
-        for(int row = firstRow; row <= lastRow; row++) {
-            for(int col = firstCol; col <= lastCol; col++) {
-                Tile tile = mapTiles.get(col).get(row);
+    public Map(ArrayList<ArrayList<Tile>> mapTiles) {
+        this.tiles = mapTiles;
+        for(int row = 0; row < ROWS; row++) {
+            for(int col = 0; col < COLS; col++) {
+                Tile tile = tiles.get(row).get(col);
                 tile.setArea(this);
             }
         }
     }
 
-    public Map(){}
-
     public void build() {
-
-        int[] firstIndex = {1,70};
-        int[] lastIndex = {1,70};
-
         innerAreas = new ArrayList<>();
-        for(int i=0; i<1; i++){
-            for(int j=0; j<1; j++){
-                int firstCol = firstIndex[i];
-                int lastCol = lastIndex[i];
-                int firstRow = firstIndex[j];;
-                int lastRow = lastIndex[j];
-                innerAreas.add(new Farm(getSubArea(tiles,firstCol,lastCol,firstRow,lastRow),firstCol,lastCol,firstRow,lastRow));
-            }
+
+        for (int i = 0; i < Farm.coordinates.length; i++) {
+            innerAreas.add(new Farm(getSubArea(tiles, Farm.coordinates[i][0], Farm.coordinates[i][1], Farm.coordinates[i][2], Farm.coordinates[i][3]), i + 1));
         }
 
-        for(Area area : innerAreas){
-            //area.build();
+        for(Area innerArea : innerAreas){
+            innerArea.build();
         }
     }
-//
-//    public ArrayList<ArrayList<Tile>> getMapTiles() {
-//        return mapTiles;
-//    }
 
     @Override
     public void update(DateAndTime dateAndTime) {
@@ -71,18 +58,46 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
 
     }
 
-//    public void printMap() {
-//        for(int i = 0; i < ROWS; i++){
-//            for(int j = 0; j < COLS; j++){
-//                System.out.print(mapTiles.get(i).get(j).print());
-//            }
-//            System.out.println();
-//        }
-//    }
+    public void printMap() {
+        for(int i =0; i < 100; i++){
+            System.out.print("_");
+        }
+        System.out.println();
+
+        for(int i = 0; i < ROWS; i++){
+            System.out.print("|");
+            for(int j = 0; j < COLS; j++){
+                Tile tile = tiles.get(i).get(j);
+                boolean playerFound = false;
+
+                for(int p = 0; p < App.currentGame.getPlayers().size(); p++) {
+                    Player player = App.currentGame.getPlayers().get(p);
+                    if(player.getPosition().equals(tile.getPosition())) {
+                        System.out.print((char) ('a' + p));
+                        playerFound = true;
+                        break;
+                    }
+                }
+                if(!playerFound) {
+                    System.out.print(tile.character());
+                }
+            }
+            System.out.print("|");
+            System.out.println();
+        }
+
+        for(int i =0; i < 100; i++){
+            System.out.print("_");
+        }
+        System.out.println();
+    }
 
     public void mapGuide() {
         System.out.println("Map Guide: ");
+        System.out.println("(players are shown by characters 'a' to 'd' based on their original order in game)");
         System.out.println("--------------------");
+        System.out.println("horizontal borders _");
+        System.out.println("vertical borders |");
         System.out.println("empty tile .");
     }
 }

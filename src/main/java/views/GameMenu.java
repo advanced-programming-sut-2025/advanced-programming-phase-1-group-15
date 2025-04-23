@@ -17,6 +17,7 @@ public class GameMenu implements AppMenu {
 
     public GameMenu(Game game) {
         this.game = game;
+        game.build();
         System.out.println("\"" + game.getCurrentPlayer().getUsername() + "\" it's your turn to begin the game.");
     }
 

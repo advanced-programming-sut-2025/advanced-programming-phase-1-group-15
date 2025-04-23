@@ -13,14 +13,17 @@ public class Tile {
         this.area = null;
     }
 
-    public static void buildMapTiles(ArrayList<ArrayList<Tile>> mapTiles) {
-        mapTiles = new ArrayList<>();
-        for(int row = 0; row < Map.ROWS; row++) {
-            for(int col = 0; col < Map.COLS; col++) {
-                mapTiles.add(new ArrayList<>());
+    public static ArrayList<ArrayList<Tile>> buildMapTiles() {
+        ArrayList<ArrayList<Tile>> mapTiles = new ArrayList<>();
+
+        for (int row = 0; row < Map.ROWS; row++) {
+            mapTiles.add(new ArrayList<>());
+            for (int col = 0; col < Map.COLS; col++) {
                 mapTiles.get(row).add(new Tile(col, row));
             }
         }
+
+        return mapTiles;
     }
 
     public Position getPosition() {
@@ -48,7 +51,7 @@ public class Tile {
         return false;
     }
 
-    public char print() {
+    public char character() {
         if(objectInTile == null) {
             return '.';
         }
