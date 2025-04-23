@@ -81,7 +81,7 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
                     }
                 }
                 if(!playerFound) {
-                    System.out.print(tile.character());
+                    tile.print();
                 }
             }
             System.out.print('|');
@@ -104,7 +104,9 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
         System.out.println("empty tile .");
         System.out.println("house H");
         System.out.println("lake ~");
-        System.out.println("Greenhouse G");
-        System.out.println("Quarry #");
+        System.out.println("greenhouse G");
+        System.out.println("quarry #");
+        System.out.println("tree T");
+        System.out.println("stone O");
     }
 }

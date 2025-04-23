@@ -2,6 +2,8 @@ package models.map;
 
 import models.App;
 import models.Player;
+import models.farming.Tree;
+import models.foraging.Stone;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -57,6 +59,32 @@ public class Farm extends Area {
 
         for(Area innerArea : innerAreas){
             innerArea.build();
+        }
+
+        Random rand = new Random();
+        int treesCount = rand.nextInt(6) + 7;
+        int stonesCount = rand.nextInt(6) + 7;
+        for(int i = 0; i < treesCount; i++) {
+            while(true) {
+                int randomRow = rand.nextInt(tiles.size());
+                int randomCol = rand.nextInt(tiles.get(randomRow).size());
+                Tile randomTile = tiles.get(randomRow).get(randomCol);
+                if(randomTile.getArea().areaType.equals(AreaType.FARM)) {
+                    randomTile.put(new Tree());
+                    break;
+                }
+            }
+        }
+        for(int i = 0; i < stonesCount; i++) {
+            while(true) {
+                int randomRow = rand.nextInt(tiles.size());
+                int randomCol = rand.nextInt(tiles.get(randomRow).size());
+                Tile randomTile = tiles.get(randomRow).get(randomCol);
+                if(randomTile.getArea().areaType.equals(AreaType.FARM)) {
+                    randomTile.put(new Stone());
+                    break;
+                }
+            }
         }
     }
 }

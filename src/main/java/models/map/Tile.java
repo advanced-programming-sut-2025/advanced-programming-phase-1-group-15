@@ -1,5 +1,8 @@
 package models.map;
 
+import models.farming.Tree;
+import models.foraging.Stone;
+
 import java.util.ArrayList;
 
 public class Tile {
@@ -51,19 +54,29 @@ public class Tile {
         return false;
     }
 
-    public char character() {
+    public void print() {
         if(area.areaType.equals(AreaType.LAKE)) {
-            return '~';
+            PrintInColor.printInBlue('~');
         }
         else if(area.areaType.equals(AreaType.HOUSE)) {
-            return 'H';
+            System.out.print('H');
         }
         else if(area.areaType.equals(AreaType.GREENHOUSE)) {
-            return 'G';
+            PrintInColor.printInGreen('G');
         }
         else if(area.areaType.equals(AreaType.QUARRY)) {
-            return '#';
+            PrintInColor.printInBrown('Q');
         }
-        return '.';
+        else if(objectInTile != null) {
+            if(objectInTile instanceof Tree) {
+                PrintInColor.printInBrightGreen('T');
+            }
+            else if(objectInTile instanceof Stone) {
+                PrintInColor.printInBrightGray('O');
+            }
+        }
+        else {
+            System.out.print('.');
+        }
     }
 }

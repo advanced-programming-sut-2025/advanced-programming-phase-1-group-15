@@ -1,5 +1,5 @@
 package models.map;
 
 public enum AreaType {
-    MAP, FARM, GREENHOUSE, HOUSE, LAKE, QUARRY
+    MAP, FARM, HOUSE, LAKE, GREENHOUSE, QUARRY
 }
