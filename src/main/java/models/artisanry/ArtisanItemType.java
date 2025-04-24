@@ -1,10 +1,6 @@
 package models.artisanry;
-
-import models.Player;
 import models.crafting.CraftItemType;
-import models.Game;
 import models.tools.BackPackable;
-
 import java.util.HashMap;
 
 public enum ArtisanItemType {
