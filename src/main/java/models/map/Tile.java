@@ -50,6 +50,12 @@ public class Tile {
         return area.areaType;
     }
 
+    public boolean isWalkable(){
+        AreaType type = getAreaType();
+        if(type.equals(AreaType.LAKE)) return false;
+        return objectInTile == null;
+    }
+
     public boolean isAdjacent(Tile otherTile) {
         return (Math.abs(position.x - otherTile.position.x) <= 1) && (Math.abs(position.y - otherTile.position.y) <= 1);
     }

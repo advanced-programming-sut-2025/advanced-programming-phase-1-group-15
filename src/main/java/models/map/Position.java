@@ -9,6 +9,14 @@ public class Position {
         this.y = y;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
 
     public boolean equals(Position position) {
         return x == position.x && y == position.y;

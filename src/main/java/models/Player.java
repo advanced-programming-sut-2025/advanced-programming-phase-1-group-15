@@ -38,6 +38,16 @@ public class Player extends User implements TimeObserver {
     private int foragingAbility = 0;
     private int fishingAbility = 0;
 
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    private Game game;
+
     private ArrayList<CraftItemType> availableCrafts = new ArrayList<>();
     private ArrayList<FoodType> availableFoods = new ArrayList<>();
 
@@ -65,9 +75,10 @@ public class Player extends User implements TimeObserver {
         this.position = homePosition;
     }
 
-    public int calculateWalkingEnergy(Position position) {
-        return 0;
+    public int calculateWalkingEnergy(Position nextPosition) {
+        return game.getMap().findShortestPath(position, nextPosition);
     }
+
     public void walk(Position position) {
         int energyNeeded = calculateWalkingEnergy(position);
 

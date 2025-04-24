@@ -28,6 +28,9 @@ public class Game implements TimeObserver {
 
     public Game(ArrayList<Player> players) {
         this.players = players;
+        for(Player player : players) {
+            player.setGame(this);
+        }
         this.currentPlayer = players.get(0);
     }
     public void build() {
