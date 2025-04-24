@@ -19,7 +19,7 @@ public class GameMenuController {
         }
         else if(tile.getAreaType().equals(AreaType.FARM)) {
             Farm farm = (Farm) tile.getArea();
-            if(!App.currentGame.getCurrentPlayer().equals(farm.getPlayer())) {
+            if(!App.currentGame.getCurrentPlayer().equals(farm.getOwner())) {
                 return new Result(false, "you cannot enter other players' territory.");
             }
         }

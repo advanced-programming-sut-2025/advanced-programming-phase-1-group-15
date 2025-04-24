@@ -19,7 +19,6 @@ public abstract class Area {
             return parentArea.getOwner();
         return this.owner;
     }
-
     public void setOwner(Player owner) {
         this.owner = owner;
     }
@@ -29,8 +28,8 @@ public abstract class Area {
     }
 
     public Area() {
-    }
 
+    }
     public Area(ArrayList<ArrayList<Tile>> tiles) {
         this.tiles = tiles;
     }

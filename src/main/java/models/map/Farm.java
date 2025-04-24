@@ -23,18 +23,12 @@ public class Farm extends Area {
         this.number = number;
         this.tiles = farmTiles;
 
-        Random rand = new Random();
         for (Player player : App.currentGame.getPlayers()) {
             if (player.getMapNumber() == number) {
+                player.setHome(new Position(House.playerCoordinates[number - 1][0], House.playerCoordinates[number - 1][1]));
                 player.setFarm(this);
-                System.out.println(player.getFarm());
-                this.owner = player;
 
-                int randomRow = rand.nextInt(farmTiles.size());
-                int randomCol = rand.nextInt(farmTiles.get(randomRow).size());
-                Tile randomTile = farmTiles.get(randomRow).get(randomCol);
-                player.setPosition(randomTile.getPosition());
-                System.out.println(randomTile.getPosition().x + ", " + randomTile.getPosition().y);
+                this.owner = player;
             }
         }
 
@@ -57,6 +51,7 @@ public class Farm extends Area {
 
         for(Area innerArea : innerAreas){
             innerArea.build();
+            innerArea.setParentArea(this);
         }
 
         Random rand = new Random();
@@ -67,7 +62,7 @@ public class Farm extends Area {
                 int randomRow = rand.nextInt(tiles.size());
                 int randomCol = rand.nextInt(tiles.get(randomRow).size());
                 Tile randomTile = tiles.get(randomRow).get(randomCol);
-                if(randomTile.getArea().areaType.equals(AreaType.FARM)) {
+                if(randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
                     randomTile.put(new Tree());
                     break;
                 }
@@ -78,7 +73,7 @@ public class Farm extends Area {
                 int randomRow = rand.nextInt(tiles.size());
                 int randomCol = rand.nextInt(tiles.get(randomRow).size());
                 Tile randomTile = tiles.get(randomRow).get(randomCol);
-                if(randomTile.getArea().areaType.equals(AreaType.FARM)) {
+                if(randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
                     randomTile.put(new Stone());
                     break;
                 }

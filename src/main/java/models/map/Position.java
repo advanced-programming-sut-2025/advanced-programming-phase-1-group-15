@@ -18,8 +18,4 @@ public class Position {
     public String toString() {
         return "(" + x + "," + y + ")";
     }
-
-    public int taxiCapDistance( Position other){
-        return Math.abs(x - other.x) + Math.abs(y - other.y);
-    }
 }

@@ -37,10 +37,7 @@ public class Tile {
         objectInTile = object;
     }
     public boolean isEmpty() {
-        if (objectInTile == null) {
-            return true;
-        }
-        return false;
+        return objectInTile == null;
     }
 
     public void setArea(Area area) {
@@ -49,10 +46,12 @@ public class Tile {
     public Area getArea() {
         return area;
     }
+    public AreaType getAreaType() {
+        return area.areaType;
+    }
 
-    public boolean isAdjacent(Tile tile) {
-        int taxiCapDistance = this.position.taxiCapDistance(tile.position);
-        return taxiCapDistance == 1;
+    public boolean isAdjacent(Tile otherTile) {
+        return (Math.abs(position.x - otherTile.position.x) <= 1) && (Math.abs(position.y - otherTile.position.y) <= 1);
     }
 
     public void print() {

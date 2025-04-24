@@ -5,7 +5,6 @@ import models.cooking.Food;
 import models.cooking.FoodType;
 import models.crafting.CraftItemType;
 import models.map.Farm;
-import models.map.Tile;
 import models.relation.PlayerFriendShip;
 import models.map.Position;
 import models.time.DateAndTime;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player extends User implements TimeObserver {
+    private Position homePosition;
     private Position position;
     private Farm farm;
 
@@ -27,6 +27,7 @@ public class Player extends User implements TimeObserver {
 
     private int energy = 200;
     private int energyConsumed;
+    private boolean unlimitedEnergy;
     private boolean fainted;
 
     private BackPack Inventory;
@@ -45,8 +46,6 @@ public class Player extends User implements TimeObserver {
     private HashMap<Player,PlayerFriendShip> friendships = new HashMap<>();
     private Player couple;
 
-    private Tile currentTile;
-
     public Player(User user) {
         super(user.getUsername(), user.getPassword(), user.getNickname(), user.getEmail(), user.getGender());
     }
@@ -56,6 +55,29 @@ public class Player extends User implements TimeObserver {
     }
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+    public void setHome(Position homePosition) {
+        this.homePosition = homePosition;
+        this.position = this.homePosition;
+    }
+    public void goHome() {
+        this.position = homePosition;
+    }
+
+    public int calculateWalkingEnergy(Position position) {
+        return 0;
+    }
+    public void walk(Position position) {
+        int energyNeeded = calculateWalkingEnergy(position);
+
+        if(energyNeeded > energy) {
+            faint();
+        }
+        else {
+            subtractEnergy(energyNeeded);
+            setPosition(position);
+        }
     }
 
     public Farm getFarm() {
@@ -92,19 +114,33 @@ public class Player extends User implements TimeObserver {
     public void setEnergy(int energy) {
         this.energy = energy;
     }
+    public void subtractEnergy(int amount) {
+        if(!unlimitedEnergy) {
+            energyConsumed += amount;
+            energy -= amount;
+        }
+    }
 
     public boolean isLocked() {
-        return energyConsumed >= 50;
+        return !unlimitedEnergy && energyConsumed >= 50;
     }
     public void unlock() {
-        energyConsumed = 0;
+        if(isLocked()) {
+            energyConsumed = 0;
+        }
+    }
+
+    public void unlimitedEnergy() {
+        unlimitedEnergy = true;
+        energy = Integer.MAX_VALUE;
     }
 
     public boolean isFainted() {
         return fainted;
     }
-    public void faint(boolean fainted) {
-        this.fainted = fainted;
+    public void faint() {
+        energy = 0;
+        fainted = true;
     }
 
     public BackPack getInventory() {
@@ -163,9 +199,6 @@ public class Player extends User implements TimeObserver {
         this.couple = couple;
     }
 
-    public void walk(Position position) {
-
-    }
     public void eat(Food food) {
 
     }
@@ -191,6 +224,15 @@ public class Player extends User implements TimeObserver {
 
     @Override
     public void update(DateAndTime dateAndTime) {
-
+        if(dateAndTime.getHour() == 9) {
+            if(fainted) {
+                fainted = false;
+                energy = 150;
+            }
+            else {
+                energy = 200;
+                goHome();
+            }
+        }
     }
 }

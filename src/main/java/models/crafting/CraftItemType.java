@@ -118,5 +118,4 @@ public enum CraftItemType {
         this.levelRequired = levelRequired;
         this.price = price;
     }
-
 }

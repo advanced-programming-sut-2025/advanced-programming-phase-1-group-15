@@ -3,7 +3,6 @@ package models;
 import java.util.Random;
 
 public class RandomGenerator {
-
     private static final RandomGenerator instance = new RandomGenerator();
 
     public static RandomGenerator getInstance() {
@@ -15,5 +14,4 @@ public class RandomGenerator {
     public int randomInt(int min, int max) {
         return rand.nextInt((max - min) + 1) + min;
     }
-
 }
