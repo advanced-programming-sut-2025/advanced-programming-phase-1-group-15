@@ -22,21 +22,21 @@ public class Player extends User implements TimeObserver {
 
     private int mapNumber;
 
-    private int gold;
-    private int wood;
+    private int gold = 0;
+    private int wood = 0;
 
     private int energy = 200;
-    private int energyConsumed;
-    private boolean unlimitedEnergy;
-    private boolean fainted;
+    private int energyConsumed = 0;
+    private boolean unlimitedEnergy = false;
+    private boolean fainted = false;
 
-    private BackPack Inventory;
-    private Tool CurrentTool;
+    private BackPack Inventory = new BackPack();
+    private Tool CurrentTool = null;
 
-    private int farmingAbility;
-    private int miningAbility;
-    private int foragingAbility;
-    private int fishingAbility;
+    private int farmingAbility = 0;
+    private int miningAbility = 0;
+    private int foragingAbility = 0;
+    private int fishingAbility = 0;
 
     private ArrayList<CraftItemType> availableCrafts = new ArrayList<>();
     private ArrayList<FoodType> availableFoods = new ArrayList<>();

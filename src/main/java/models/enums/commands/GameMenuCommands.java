@@ -11,6 +11,7 @@ public enum GameMenuCommands implements Commands {
     SHOW_ENERGY_REGEX("^\\s*energy\\s+show\\s*$"),
     WALK_REGEX("^\\s*walk\\s+-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$"),
     INVENTORY_SHOW_REGEX("^\\s*inventory\\s+show\\s*$"),
+    INVENTORY_TRASH_REGEX("^\\s*inventory\\s+trash\\s+-i\\s+(?<itemName>\\S+)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),
     BUILD_BUILDING_REGEX("build -a <building_name> -l <x , y>"),
     BUY_ANIMAL_REGEX("buy animal -a <animal> -n <name>"),
     PET_ANIMAL_REGEX("pet -n <name>"),

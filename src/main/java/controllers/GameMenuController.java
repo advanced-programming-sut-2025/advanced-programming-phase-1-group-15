@@ -40,7 +40,7 @@ public class GameMenuController {
         return new Result(true, "moved to position " + position.toString() + " successfully.");
     }
 
-    public static Result removeFromInventory(String name, int number) {
+    public static Result removeFromInventory(String itemName, int count) {
         return null;
     }
     public static Result equipItem(String name) {
