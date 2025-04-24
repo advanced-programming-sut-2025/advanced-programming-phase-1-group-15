@@ -8,6 +8,7 @@ import models.weather.WeatherObserver;
 import models.weather.WeatherOption;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -118,12 +119,12 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
         System.out.println("stone O");
     }
 
-    private static boolean isValidPosition(int x, int y) {
+    private static boolean isValidPosition(int y, int x) {
         return x >= 0 && x < COLS && y >= 0 && y < ROWS;
     }
 
     private static boolean isValidPosition(Position pos) {
-        return isValidPosition(pos.getX(), pos.getY());
+        return isValidPosition(pos.getY(), pos.getX());
     }
 
     public int findShortestPath (Position start,Position end){
@@ -142,8 +143,10 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
         final int[] deltaY = {1,0,-1};
 
         int[][] distance = new int[ROWS][COLS];
-        for(int[] row:distance) for(int col:row) row[col] = -1; // -1 means it is not visited
-        distance[start.getX()][start.getY()] = 0;
+        for (int[] row : distance) {
+            Arrays.fill(row, -1); // -1 means unvisited
+        }
+        distance[start.getY()][start.getX()] = 0;
         Queue<Position> toBeChecked = new LinkedList<>();
         toBeChecked.add(start);
 
@@ -156,13 +159,13 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
                     int newY = current.getY() + deltaY[j];
 
                     if(newX == end.getX() && newY == end.getY()) {
-                        return distance[current.getX()][current.getY()]+Math.abs(deltaX[i])+Math.abs(deltaY[j]);
+                        return distance[current.getY()][current.getX()]+1;
                     }
 
-                    if (isValidPosition(newX, newY) && distance[newY][newX] == -1) {
+                    if (isValidPosition(newY, newX) && distance[newY][newX] == -1) {
                         Tile neighbor = getTile(new Position(newX, newY));
                         if (neighbor.isWalkable()) {
-                            distance[newY][newX] = distance[current.getX()][current.getY()] + 1;
+                            distance[newY][newX] = distance[current.getY()][current.getX()] + 1;
                             toBeChecked.add(new Position(newX, newY));
                         }
                     }
