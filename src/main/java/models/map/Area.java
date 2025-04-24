@@ -28,4 +28,8 @@ public abstract class Area {
 
 
     public abstract void build();
+
+    public AreaType getAreaType() {
+        return areaType;
+    }
 }

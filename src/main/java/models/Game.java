@@ -33,7 +33,11 @@ public class Game implements TimeObserver {
     public void build() {
         dateAndTime = new DateAndTime();
         weather = new WeatherManagement();
+
         dateAndTime.addObserver(weather);
+        for(Player player : players) {
+            dateAndTime.addObserver(player);
+        }
 
         mapTiles = Tile.buildMapTiles();
         map = new Map(mapTiles);
@@ -54,8 +58,20 @@ public class Game implements TimeObserver {
         this.mainPlayer = mainPlayer;
     }
     public void nextTurn() {
+        boolean allFainted = true;
+        for(Player player : players) {
+            allFainted = allFainted && player.isFainted();
+        }
+        if(allFainted) {
+            dateAndTime.nextDay();
+            return;
+        }
+
         int currentIndex = players.indexOf(currentPlayer);
         int nextIndex = (currentIndex + 1) % players.size();
+        while (players.get(nextIndex).isFainted()) {
+            nextIndex = (nextIndex + 1) % players.size();
+        }
 
         if(nextIndex == 0) {
             dateAndTime.nextHour();
@@ -79,6 +95,9 @@ public class Game implements TimeObserver {
         this.finished = true;
     }
 
+    public Tile getTile(int x, int y) {
+        return mapTiles.get(y).get(x);
+    }
     public Map getMap() {
         return map;
     }

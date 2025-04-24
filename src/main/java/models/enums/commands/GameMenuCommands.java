@@ -9,6 +9,8 @@ public enum GameMenuCommands implements Commands {
     PRINT_MAP_REGEX("^\\s*print\\s+map\\s*$"),
     MAP_GUIDE_REGEX("^\\s*help\\s+reading\\s+map\\s*$"),
     SHOW_ENERGY_REGEX("^\\s*energy\\s+show\\s*$"),
+    WALK_REGEX("^\\s*walk\\s+-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$"),
+    INVENTORY_SHOW_REGEX("^\\s*inventory\\s+show\\s*$"),
     BUILD_BUILDING_REGEX("build -a <building_name> -l <x , y>"),
     BUY_ANIMAL_REGEX("buy animal -a <animal> -n <name>"),
     PET_ANIMAL_REGEX("pet -n <name>"),

@@ -67,6 +67,8 @@ public class DateAndTime {
         else {
             this.day++;
         }
+
+        this.hour = 9;
         nextDayOfWeek();
         notifyObservers();
     }

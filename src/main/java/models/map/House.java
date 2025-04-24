@@ -11,6 +11,12 @@ public class House extends Area {
             {5, 9, 3, 7}, //MAP 3
             {25, 29, 0, 4}   //MAP 4
     };
+    public static int[][] playerCoordinates = {
+            {5, 6},   //MAP 1
+            {65, 14}, //MAP 2
+            {67, 35}, //MAP 3
+            {88, 33}   //MAP 4
+    };
 
     private ArrayList<Fridgable> fridge = new ArrayList<>();
 

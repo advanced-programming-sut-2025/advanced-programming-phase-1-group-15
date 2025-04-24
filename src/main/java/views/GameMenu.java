@@ -1,6 +1,7 @@
 package views;
 
 import controllers.CheatCodeController;
+import controllers.GameMenuController;
 import models.App;
 import models.Game;
 import models.Player;
@@ -128,8 +129,46 @@ public class GameMenu implements AppMenu {
                 game.getMap().mapGuide();
             }
 
+            else if(GameMenuCommands.WALK_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.WALK_REGEX.matcher(command);
+
+                int x = matcher.matches() ? Integer.parseInt(matcher.group("x")) : 0;
+                int y = Integer.parseInt(matcher.group("y"));
+
+                Result result = GameMenuController.walk(x, y);
+                System.out.println(result.message());
+
+                if(result.success()) {
+                    command = scanner.nextLine().trim();
+                    if(command.equalsIgnoreCase("y")) {
+                        result = GameMenuController.setPosition(x, y);
+                        System.out.println(result.message());
+
+                        if(!result.success()) {
+                            game.nextTurn();
+                        }
+                    }
+                }
+            }
+
             else if(GameMenuCommands.SHOW_ENERGY_REGEX.matches(command)) {
-                System.out.println(game.getCurrentPlayer().getEnergy());
+                System.out.println("energy: " + game.getCurrentPlayer().getEnergy());
+            }
+            else if(CheatCodeCommands.ENERGY_SET_REGEX.matches(command)) {
+                Matcher matcher = CheatCodeCommands.ENERGY_SET_REGEX.matcher(command);
+
+                int value = matcher.matches() ? Integer.parseInt(matcher.group("value")) : 0;
+
+                Result result = CheatCodeController.cheatSetEnergy(value);
+                System.out.println(result.message());
+            }
+            else if(CheatCodeCommands.ENERGY_UNLIMITED_REGEX.matches(command)) {
+                Result result = CheatCodeController.cheatUnlimitedEnergy();
+                System.out.println(result.message());
+            }
+
+            else if(GameMenuCommands.INVENTORY_SHOW_REGEX.matches(command)) {
+
             }
 
             else {

@@ -1,6 +1,7 @@
 package models.stores;
 
 import models.map.Area;
+import models.map.Tile;
 import models.tools.BackPackable;
 
 import java.util.ArrayList;

@@ -36,6 +36,19 @@ public class CheatCodeController {
         return new Result(true, "Tomorrow's forecast changed to " + App.currentGame.getWeather().displayForecast());
     }
 
+    public static Result cheatSetEnergy(int value) {
+        if(value < 0 || value > 200) {
+            return new Result(false, "choose between [0,200]");
+        }
+
+        App.currentGame.getCurrentPlayer().setEnergy(value);
+        return new Result(true, "energy: " + App.currentGame.getCurrentPlayer().getEnergy());
+    }
+    public static Result cheatUnlimitedEnergy() {
+        App.currentGame.getCurrentPlayer().unlimitedEnergy();
+        return new Result(true, "energy: " + App.currentGame.getCurrentPlayer().getEnergy());
+    }
+
     public static Result cheatThor(Position position) {
         return null;
     }
