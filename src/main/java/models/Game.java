@@ -101,6 +101,9 @@ public class Game implements TimeObserver {
     public Tile getTile(int x, int y) {
         return mapTiles.get(y).get(x);
     }
+    public Tile getTile(Position position) {
+        return mapTiles.get(position.y).get(position.x);
+    }
     public Map getMap() {
         return map;
     }

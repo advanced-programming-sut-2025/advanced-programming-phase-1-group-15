@@ -1,6 +1,6 @@
 package models.tools;
 
-import models.map.Position;
+import models.map.Tile;
 
 public class Shear extends Tool implements BackPackable {
     public Shear() {
@@ -14,7 +14,7 @@ public class Shear extends Tool implements BackPackable {
     }
 
     @Override
-    public void use(Position position) {
+    public void use(Tile tile) {
 
     }
 }

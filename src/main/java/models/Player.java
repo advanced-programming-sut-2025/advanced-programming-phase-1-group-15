@@ -10,6 +10,7 @@ import models.map.Position;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 import models.tools.BackPack;
+import models.tools.BackPackable;
 import models.tools.Tool;
 
 import java.util.ArrayList;
@@ -230,12 +231,6 @@ public class Player extends User implements TimeObserver {
 
     }
 
-    public void showInventory() {
-
-    }
-    public void showTools() {
-
-    }
     public void showCrafts() {
 
     }

@@ -9,6 +9,9 @@ public class BackPack {
     private int Capacity;
     private HashMap<BackPackable, Integer> items = new HashMap<>();
 
+    public BackPack() {
+        items.put(new Hoe(), 1);
+    }
 
     public HashMap<BackPackable, Integer> getItems() {
         return items;
@@ -50,14 +53,26 @@ public class BackPack {
 
     public String display() {
         if(items.isEmpty()) {
-            return "You don't have any items in your inventory";
+            return "You don't have any items in your inventory\n";
         }
 
         StringBuilder display = new StringBuilder();
         display.append("BackPack: \n");
         for(BackPackable item : items.keySet()) {
-            display.append(item.getName()); display.append(" ");
-            display.append(items.get(item)); display.append("\n");
+            display.append(item.getName()).append(" ");
+            display.append(items.get(item)).append("\n");
+        }
+
+        return display.toString();
+    }
+
+    public String showTools() {
+        StringBuilder display = new StringBuilder();
+
+        for(BackPackable item : items.keySet()) {
+            if(item instanceof Tool) {
+                display.append(item.getName()).append("\n");
+            }
         }
 
         return display.toString();

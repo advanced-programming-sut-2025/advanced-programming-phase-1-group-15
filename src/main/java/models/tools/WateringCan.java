@@ -1,6 +1,6 @@
 package models.tools;
 
-import models.map.Position;
+import models.map.Tile;
 
 public class WateringCan extends Tool {
     public WateringCan() {
@@ -14,7 +14,7 @@ public class WateringCan extends Tool {
     }
 
     @Override
-    public void use(Position position) {
+    public void use(Tile tile) {
 
     }
 }

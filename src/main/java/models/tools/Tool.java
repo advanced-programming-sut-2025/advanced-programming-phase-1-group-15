@@ -1,6 +1,6 @@
 package models.tools;
 
-import models.map.Position;
+import models.map.Tile;
 
 public class Tool implements BackPackable {
     protected ToolType toolType;
@@ -10,13 +10,15 @@ public class Tool implements BackPackable {
     protected boolean upgradable;
     protected ToolLevel toolLevel;
 
-    protected int energyConsume;
+    public int calculateEnergyConsume() {
+        return 0;
+    }
 
-    public void upgrade() {
+    public void use(Tile tile) {
 
     }
 
-    public void use(Position position) {
+    public void upgrade() {
 
     }
 

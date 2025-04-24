@@ -5,6 +5,7 @@ import models.Player;
 import models.Result;
 import models.map.*;
 import models.tools.BackPackable;
+import models.tools.Tool;
 
 public class GameMenuController {
     public static Player getCurrentPlayer() {
@@ -53,25 +54,53 @@ public class GameMenuController {
             return new Result(false, "You don't have that item.");
         }
         else if(count > availableCount) {
-            return new Result(false, "You only have " + count + " " + itemName + " in your inventory.");
+            return new Result(false, "You only have " + count + " " + item.getName() + " in your inventory.");
         }
 
         if(count == -1) {
             getCurrentPlayer().getInventory().removeFromBackPack(item);
-            return new Result(true, "You removed item " + itemName + " from your inventory.");
+            return new Result(true, "You removed item " + item.getName() + " from your inventory.");
         }
         else {
             getCurrentPlayer().getInventory().removeCountFromBackPack(item, count);
-            return new Result(true, "You removed item " + count + " " + itemName + " from your inventory.");
+            return new Result(true, "You removed item " + count + " " + item.getName() + " from your inventory.");
         }
     }
 
-    public static Result equipItem(String name) {
-        return null;
-    }
+    public static Result equipTool(String toolName) {
+        Tool tool = (Tool) getCurrentPlayer().getInventory().getItemByName(toolName);
 
-    public static Result craftItem(String craftName) {
-        return null;
+        if(tool == null) {
+            return new Result(false, "You don't have that tool.");
+        }
+
+        getCurrentPlayer().setCurrentTool(tool);
+        return new Result(true, "equipped tool " + tool.getName() + " successfully.");
+    }
+    public static Result showCurrentTool() {
+        Tool tool = getCurrentPlayer().getCurrentTool();
+        if(tool == null) {
+            return new Result(false, "you're not holding any tool!");
+        }
+
+        return new Result(true, tool.getName());
+    }
+    public static Result upgradeTool(String toolName) {
+        Tool tool = (Tool) getCurrentPlayer().getInventory().getItemByName(toolName);
+
+        if(tool == null) {
+            return new Result(false, "You don't have that tool.");
+        }
+
+        return new Result(true, "Tool upgraded successfully.");
+    }
+    public static Result useTool(int dx, int dy) {
+        Tool tool = getCurrentPlayer().getCurrentTool();
+        Position usePosition = new Position(getCurrentPlayer().getPosition().x + dx, getCurrentPlayer().getPosition().y + dy);
+
+        tool.use(App.currentGame.getTile(usePosition));
+        getCurrentPlayer().subtractEnergy(tool.calculateEnergyConsume());
+        return new Result(true, "used tool " + tool.getName() + " successfully.");
     }
 
     public static Result plant(String seedName, Position position) {

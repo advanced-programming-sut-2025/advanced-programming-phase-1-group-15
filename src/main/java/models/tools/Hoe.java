@@ -1,11 +1,22 @@
 package models.tools;
 
-import models.map.Position;
+import models.map.Tile;
 
 public class Hoe extends Tool {
     public Hoe() {
         this.toolType = ToolType.HOE;
-        this.toolLevel = ToolLevel.COOPER;
+        this.toolLevel = ToolLevel.NORMAL;
+    }
+
+    @Override
+    public int calculateEnergyConsume() {
+        return switch (toolLevel) {
+            case NORMAL -> 5;
+            case COOPER -> 4;
+            case IRON -> 3;
+            case GOLD -> 2;
+            case IRIDIUM -> 1;
+        };
     }
 
     @Override
@@ -14,7 +25,7 @@ public class Hoe extends Tool {
     }
 
     @Override
-    public void use(Position position) {
+    public void use(Tile tile) {
 
     }
 }

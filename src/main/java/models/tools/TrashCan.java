@@ -1,6 +1,6 @@
 package models.tools;
 
-import models.map.Position;
+import models.map.Tile;
 
 public class TrashCan extends Tool {
     public TrashCan() {
@@ -14,7 +14,7 @@ public class TrashCan extends Tool {
     }
 
     @Override
-    public void use(Position position) {
+    public void use(Tile tile) {
 
     }
 }

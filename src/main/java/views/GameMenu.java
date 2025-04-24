@@ -168,7 +168,7 @@ public class GameMenu implements AppMenu {
             }
 
             else if(GameMenuCommands.INVENTORY_SHOW_REGEX.matches(command)) {
-                System.out.println(game.getCurrentPlayer().getInventory().display());
+                System.out.print(game.getCurrentPlayer().getInventory().display());
             }
             else if(GameMenuCommands.INVENTORY_TRASH_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.INVENTORY_TRASH_REGEX.matcher(command);
@@ -178,6 +178,38 @@ public class GameMenu implements AppMenu {
 
                 Result result = GameMenuController.removeFromInventory(itemName, number);
                 System.out.println(result.message());
+            }
+
+            else if(GameMenuCommands.EQUIP_TOOL_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.EQUIP_TOOL_REGEX.matcher(command);
+
+                String toolName = matcher.matches() ? matcher.group("toolName") : "";
+
+                Result result = GameMenuController.equipTool(toolName);
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.SHOW_CURRENT_TOOL_REGEX.matches(command)) {
+                Result result = GameMenuController.showCurrentTool();
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.SHOW_ALL_TOOLS_REGEX.matches(command)) {
+                System.out.print(game.getCurrentPlayer().getInventory().showTools());
+            }
+            else if(GameMenuCommands.TOOL_UPGRADE_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.TOOL_UPGRADE_REGEX.matcher(command);
+
+                String toolName = matcher.matches() ? matcher.group("toolName") : "";
+
+                Result result = GameMenuController.upgradeTool(toolName);
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.TOOL_USE_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.TOOL_USE_REGEX.matcher(command);
+
+                int dx = matcher.matches() ? Integer.parseInt(matcher.group("dx")) : 0;
+                int dy = Integer.parseInt(matcher.group("dy"));
+
+                Result result = GameMenuController.useTool(dx, dy);
             }
 
             else {
