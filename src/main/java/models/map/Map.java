@@ -42,11 +42,13 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
         innerAreas = new ArrayList<>();
 
         for(int i = 0; i < Farm.coordinates.length; i++) {
-            innerAreas.add(new Farm(getSubArea(tiles, Farm.coordinates[i][0], Farm.coordinates[i][1], Farm.coordinates[i][2], Farm.coordinates[i][3]), i + 1));
+            innerAreas.add(new Farm(getSubArea(tiles, Farm.coordinates[i][0],
+                    Farm.coordinates[i][1], Farm.coordinates[i][2], Farm.coordinates[i][3]), i + 1));
         }
 
         for(Area innerArea : innerAreas){
             innerArea.build();
+            innerArea.setParentArea(this);
         }
     }
 

@@ -1,5 +1,7 @@
 package models.map;
 
+import models.Player;
+
 import java.util.ArrayList;
 
 public abstract class Area {
@@ -7,10 +9,28 @@ public abstract class Area {
     protected ArrayList<ArrayList<Tile>> tiles;
 
     protected ArrayList<Area> innerAreas;
+    protected Area parentArea;
+
+    protected Player owner = null;
+
+    public Player getOwner() {
+        if(this.getClass().equals(Map.class)) return null;
+        if(this.owner == null)
+            return parentArea.getOwner();
+        return this.owner;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
+
+    public void setParentArea(Area parentArea) {
+        this.parentArea = parentArea;
+    }
 
     public Area() {
-
     }
+
     public Area(ArrayList<ArrayList<Tile>> tiles) {
         this.tiles = tiles;
     }
