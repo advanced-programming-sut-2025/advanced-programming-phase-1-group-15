@@ -3,7 +3,7 @@ package models.tools;
 import models.map.Position;
 
 public class Tool implements BackPackable {
-    protected String name;
+    protected ToolType toolType;
 
     protected int price;
 
@@ -18,5 +18,10 @@ public class Tool implements BackPackable {
 
     public void use(Position position) {
 
+    }
+
+    @Override
+    public String getName() {
+        return toolType.name().toLowerCase().replaceAll("_", " ");
     }
 }

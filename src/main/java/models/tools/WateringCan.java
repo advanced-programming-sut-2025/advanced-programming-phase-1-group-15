@@ -4,7 +4,7 @@ import models.map.Position;
 
 public class WateringCan extends Tool {
     public WateringCan() {
-        this.name = "Shear";
+        this.toolType = ToolType.WATERING_CAN;
         this.toolLevel = ToolLevel.COOPER;
     }
 

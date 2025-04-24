@@ -4,7 +4,7 @@ import models.map.Position;
 
 public class Hoe extends Tool {
     public Hoe() {
-        this.name = "Shear";
+        this.toolType = ToolType.HOE;
         this.toolLevel = ToolLevel.COOPER;
     }
 

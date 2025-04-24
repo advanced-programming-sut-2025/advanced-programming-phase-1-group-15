@@ -34,9 +34,13 @@ public class Player extends User implements TimeObserver {
     private Tool CurrentTool = null;
 
     private int farmingAbility = 0;
+    private int farmingLevel = 0;
     private int miningAbility = 0;
+    private int miningLevel = 0;
     private int foragingAbility = 0;
+    private int foragingLevel = 0;
     private int fishingAbility = 0;
+    private int fishingLevel = 0;
 
     public void setGame(Game game) {
         this.game = game;
@@ -171,29 +175,41 @@ public class Player extends User implements TimeObserver {
     public int getFarmingAbility() {
         return farmingAbility;
     }
-    public void setFarmingAbility(int farmingAbility) {
-        this.farmingAbility = farmingAbility;
+    public void upgradeFarmingAbility(int amount) {
+        this.farmingAbility += amount;
+        if(farmingAbility > 100 * farmingLevel + 50 && farmingLevel != 4) {
+            farmingLevel++;
+        }
     }
 
     public int getMiningAbility() {
         return miningAbility;
     }
-    public void setMiningAbility(int miningAbility) {
-        this.miningAbility = miningAbility;
+    public void upgradeMiningAbility(int amount) {
+        this.miningAbility += amount;
+        if(miningAbility > 100 * miningLevel + 50 && miningLevel != 4) {
+            miningLevel++;
+        }
     }
 
     public int getForagingAbility() {
         return foragingAbility;
     }
-    public void setForagingAbility(int foragingAbility) {
-        this.foragingAbility = foragingAbility;
+    public void upgradeForagingAbility(int amount) {
+        this.foragingAbility += amount;
+        if(foragingAbility > 100 * foragingLevel + 50 && foragingLevel != 4) {
+            foragingLevel++;
+        }
     }
 
     public int getFishingAbility() {
         return fishingAbility;
     }
-    public void setFishingAbility(int fishingAbility) {
-        this.fishingAbility = fishingAbility;
+    public void upgradeFishingAbility(int amount) {
+        this.fishingAbility += amount;
+        if(fishingAbility > 100 * fishingLevel + 50 && fishingLevel != 4) {
+            fishingLevel++;
+        }
     }
 
     public ArrayList<Animal> getAnimals() {

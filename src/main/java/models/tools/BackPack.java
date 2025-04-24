@@ -21,6 +21,29 @@ public class BackPack {
         Capacity = capacity;
     }
 
+    public BackPackable getItemByName(String name) {
+        for (BackPackable item : items.keySet()) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+    public int getItemCount(String name) {
+        BackPackable item = getItemByName(name);
+        return items.getOrDefault(item, 0);
+    }
+
+    public void addToBackPack(BackPackable item, int amount) {
+        items.put(item, items.getOrDefault(item, 0) + amount);
+    }
+    public void removeCountFromBackPack(BackPackable item, int amount) {
+        items.put(item, items.get(item) - amount);
+    }
+    public void removeFromBackPack(BackPackable item) {
+        items.remove(item);
+    }
+
     public void upgrade() {
 
     }
@@ -33,7 +56,7 @@ public class BackPack {
         StringBuilder display = new StringBuilder();
         display.append("BackPack: \n");
         for(BackPackable item : items.keySet()) {
-            display.append(item); display.append(" ");
+            display.append(item.getName()); display.append(" ");
             display.append(items.get(item)); display.append("\n");
         }
 

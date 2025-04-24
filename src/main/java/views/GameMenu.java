@@ -174,7 +174,7 @@ public class GameMenu implements AppMenu {
                 Matcher matcher = GameMenuCommands.INVENTORY_TRASH_REGEX.matcher(command);
 
                 String itemName = matcher.matches() ? matcher.group("itemName") : "";
-                int number = matcher.matches() ? Integer.parseInt(matcher.group("count")) : -1;
+                int number = matcher.group("count") != null ? Integer.parseInt(matcher.group("count")) : -1;
 
                 Result result = GameMenuController.removeFromInventory(itemName, number);
                 System.out.println(result.message());

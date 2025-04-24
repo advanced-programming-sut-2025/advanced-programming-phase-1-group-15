@@ -4,7 +4,7 @@ import models.map.Position;
 
 public class Scythe extends Tool {
     public Scythe() {
-        this.name = "Shear";
+        this.toolType = ToolType.SCYTHE;
         this.toolLevel = ToolLevel.COOPER;
     }
 

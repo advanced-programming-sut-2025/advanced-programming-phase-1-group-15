@@ -4,7 +4,7 @@ import models.map.Position;
 
 public class Axe extends Tool {
     public Axe() {
-        this.name = "Shear";
+        this.toolType = ToolType.AXE;
         this.toolLevel = ToolLevel.COOPER;
     }
 

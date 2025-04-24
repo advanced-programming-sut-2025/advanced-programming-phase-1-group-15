@@ -4,7 +4,7 @@ import models.map.Position;
 
 public class TrashCan extends Tool {
     public TrashCan() {
-        this.name = "Shear";
+        this.toolType = ToolType.TRASH_CAN;
         this.toolLevel = ToolLevel.COOPER;
     }
 

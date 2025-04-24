@@ -4,7 +4,7 @@ import models.map.Position;
 
 public class MilkPail extends Tool {
     public MilkPail() {
-        this.name = "Shear";
+        this.toolType = ToolType.MILK_PAIL;
         this.toolLevel = ToolLevel.COOPER;
     }
 

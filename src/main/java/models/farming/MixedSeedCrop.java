@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public enum MixedSeedCrop implements BackPackable {
+public enum MixedSeedCrop {
     CAULIFLOWER(new ArrayList<>(List.of(Season.SPRING))),
     PARSNIP(new ArrayList<>(List.of(Season.SPRING))),
     POTATO(new ArrayList<>(List.of(Season.SPRING))),
@@ -29,5 +29,4 @@ public enum MixedSeedCrop implements BackPackable {
     MixedSeedCrop(ArrayList<Season> season) {
         this.season = season;
     }
-
 }

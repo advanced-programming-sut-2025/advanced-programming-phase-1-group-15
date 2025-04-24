@@ -4,7 +4,7 @@ import models.map.Position;
 
 public class FishingPole extends Tool {
     public FishingPole() {
-        this.name = "Shear";
+        this.toolType = ToolType.FISHING_POLE;
         this.toolLevel = ToolLevel.COOPER;
     }
 

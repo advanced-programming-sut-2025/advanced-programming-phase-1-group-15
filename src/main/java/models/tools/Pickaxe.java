@@ -4,7 +4,7 @@ import models.map.Position;
 
 public class Pickaxe extends Tool {
     public Pickaxe() {
-        this.name = "Shear";
+        this.toolType = ToolType.PICKAXE;
         this.toolLevel = ToolLevel.COOPER;
     }
 
