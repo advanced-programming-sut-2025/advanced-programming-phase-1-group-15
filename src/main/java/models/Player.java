@@ -31,7 +31,7 @@ public class Player extends User implements TimeObserver {
     private boolean unlimitedEnergy = false;
     private boolean fainted = false;
 
-    private BackPack Inventory = new BackPack();
+    private BackPack inventory = new BackPack();
     private Tool CurrentTool = null;
 
     private int farmingAbility = 0;
@@ -161,10 +161,10 @@ public class Player extends User implements TimeObserver {
     }
 
     public BackPack getInventory() {
-        return Inventory;
+        return inventory;
     }
-    public void setInventory(BackPack inventory) {
-        Inventory = inventory;
+    public void addToBackPack(BackPackable bp, int count) {
+        inventory.addToBackPack(bp, count);
     }
 
     public Tool getCurrentTool() {

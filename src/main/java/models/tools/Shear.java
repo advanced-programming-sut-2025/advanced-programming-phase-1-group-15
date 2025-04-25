@@ -14,7 +14,7 @@ public class Shear extends Tool implements BackPackable {
     }
 
     @Override
-    public void use(Tile tile) {
-
+    public BackPackable use(Tile tile) {
+        return null;
     }
 }

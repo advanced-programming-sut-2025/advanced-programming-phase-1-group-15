@@ -117,9 +117,16 @@ public class GameMenuController {
             return new Result(false, "You can't use hoe on a tile which is not empty.");
         }
 
-        tool.use(useTile);
-        getCurrentPlayer().subtractEnergy(tool.calculateEnergyConsume());
-        return new Result(true, "used tool " + tool.getName() + " on  tile " + usePosition);
+        getCurrentPlayer().subtractEnergy(tool.calculateEnergyConsume(useTile));
+        BackPackable receivedItem = tool.use(useTile);
+        if(receivedItem != null) {
+            getCurrentPlayer().addToBackPack(receivedItem, 1);
+            return new Result(true, "used tool " + tool.getName() + " on tile " + usePosition + "\n" +
+                    receivedItem.getName() + " added to your inventory");
+        }
+        else {
+            return new Result(true, "used tool " + tool.getName() + " on tile " + usePosition);
+        }
     }
 
     public static Result plant(String seedName, Position position) {

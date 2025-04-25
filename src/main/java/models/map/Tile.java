@@ -35,8 +35,14 @@ public class Tile {
         return position;
     }
 
+    public Tilable getObjectInTile() {
+        return objectInTile;
+    }
     public void put(Tilable object) {
         objectInTile = object;
+    }
+    public void empty() {
+        objectInTile = null;
     }
     public boolean isEmpty() {
         return objectInTile == null;
@@ -68,6 +74,9 @@ public class Tile {
 
     public void plow() {
         plowed = true;
+    }
+    public void unplow() {
+        plowed = false;
     }
 
     public void print() {

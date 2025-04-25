@@ -1,6 +1,5 @@
 package models.tools;
 
-import models.map.Position;
 import models.map.Tile;
 
 public class Axe extends Tool {
@@ -15,7 +14,7 @@ public class Axe extends Tool {
     }
 
     @Override
-    public void use(Tile tile) {
-
+    public BackPackable use(Tile tile) {
+        return null;
     }
 }

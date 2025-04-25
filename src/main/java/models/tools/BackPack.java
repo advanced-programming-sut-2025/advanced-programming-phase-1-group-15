@@ -11,6 +11,7 @@ public class BackPack {
 
     public BackPack() {
         items.put(new Hoe(), 1);
+        items.put(new Pickaxe(), 1);
     }
 
     public HashMap<BackPackable, Integer> getItems() {

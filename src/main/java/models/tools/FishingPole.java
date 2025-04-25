@@ -14,7 +14,7 @@ public class FishingPole extends Tool {
     }
 
     @Override
-    public void use(Tile tile) {
-
+    public BackPackable use(Tile tile) {
+        return null;
     }
 }

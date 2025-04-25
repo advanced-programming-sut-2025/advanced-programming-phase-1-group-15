@@ -11,12 +11,12 @@ public class Tool implements BackPackable {
     protected boolean upgradable;
     protected ToolLevel toolLevel;
 
-    public int calculateEnergyConsume() {
+    public int calculateEnergyConsume(Tile tile) {
         return 0;
     }
 
-    public void use(Tile tile) {
-
+    public BackPackable use(Tile tile) {
+        return null;
     }
 
     public void upgrade() {

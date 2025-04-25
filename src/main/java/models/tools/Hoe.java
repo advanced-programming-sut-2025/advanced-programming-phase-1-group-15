@@ -6,11 +6,11 @@ public class Hoe extends Tool {
     public Hoe() {
         this.toolType = ToolType.HOE;
         this.toolLevel = ToolLevel.NORMAL;
-        this.description = "prepare your land for planting crops.";
+        this.description = "Prepare your land for planting crops.";
     }
 
     @Override
-    public int calculateEnergyConsume() {
+    public int calculateEnergyConsume(Tile tile) {
         return switch (toolLevel) {
             case NORMAL -> 5;
             case COOPER -> 4;
@@ -26,7 +26,8 @@ public class Hoe extends Tool {
     }
 
     @Override
-    public void use(Tile tile) {
+    public BackPackable use(Tile tile) {
         tile.plow();
+        return null;
     }
 }
