@@ -9,4 +9,9 @@ public class ArtisanItem implements BackPackable {
     public String getName() {
         return artisanItemType.name().toLowerCase().replaceAll("_", " ");
     }
+
+    @Override
+    public String getDescription() {
+        return artisanItemType.description;
+    }
 }

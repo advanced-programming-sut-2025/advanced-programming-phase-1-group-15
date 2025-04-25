@@ -210,6 +210,7 @@ public class GameMenu implements AppMenu {
                 int dy = Integer.parseInt(matcher.group("dy"));
 
                 Result result = GameMenuController.useTool(dx, dy);
+                System.out.println(result.message());
             }
 
             else {

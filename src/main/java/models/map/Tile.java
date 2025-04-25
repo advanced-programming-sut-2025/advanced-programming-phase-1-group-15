@@ -10,6 +10,8 @@ public class Tile {
     private Tilable objectInTile;
     private Area area;
 
+    boolean plowed = false;
+
     public Tile(int x, int y) {
         this.position = new Position(x, y);
         this.objectInTile = null;
@@ -52,12 +54,20 @@ public class Tile {
 
     public boolean isWalkable(){
         AreaType type = getAreaType();
-        if(type.equals(AreaType.LAKE)) { return false;}
+
+        if(type.equals(AreaType.LAKE)) {
+            return false;
+        }
+
         return objectInTile == null;
     }
 
     public boolean isAdjacent(Tile otherTile) {
         return (Math.abs(position.x - otherTile.position.x) <= 1) && (Math.abs(position.y - otherTile.position.y) <= 1);
+    }
+
+    public void plow() {
+        plowed = true;
     }
 
     public void print() {
@@ -82,7 +92,12 @@ public class Tile {
             }
         }
         else {
-            System.out.print('.');
+            if(plowed) {
+                System.out.print('X');
+            }
+            else {
+                System.out.print('.');
+            }
         }
     }
 }

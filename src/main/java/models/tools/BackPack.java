@@ -60,7 +60,8 @@ public class BackPack {
         display.append("BackPack: \n");
         for(BackPackable item : items.keySet()) {
             display.append(item.getName()).append(" ");
-            display.append(items.get(item)).append("\n");
+            display.append(items.get(item)).append(" \"");
+            display.append(item.getDescription()).append("\"\n");
         }
 
         return display.toString();

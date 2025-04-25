@@ -10,4 +10,9 @@ public class CraftItem implements Tilable, BackPackable {
     public String getName() {
         return craftItemType.name().toLowerCase().replaceAll("_", " ");
     }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
 }

@@ -4,6 +4,7 @@ import models.map.Tile;
 
 public class Tool implements BackPackable {
     protected ToolType toolType;
+    protected String description;
 
     protected int price;
 
@@ -25,5 +26,10 @@ public class Tool implements BackPackable {
     @Override
     public String getName() {
         return toolType.name().toLowerCase().replaceAll("_", " ");
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 }

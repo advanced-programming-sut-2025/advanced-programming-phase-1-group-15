@@ -6,6 +6,7 @@ public class Hoe extends Tool {
     public Hoe() {
         this.toolType = ToolType.HOE;
         this.toolLevel = ToolLevel.NORMAL;
+        this.description = "prepare your land for planting crops.";
     }
 
     @Override
@@ -26,6 +27,6 @@ public class Hoe extends Tool {
 
     @Override
     public void use(Tile tile) {
-
+        tile.plow();
     }
 }

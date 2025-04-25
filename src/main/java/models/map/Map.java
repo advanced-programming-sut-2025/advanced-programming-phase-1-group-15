@@ -119,25 +119,15 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
         System.out.println("stone O");
     }
 
-    private static boolean isValidPosition(int x, int y) {
-        return x >= 0 && x < COLS && y >= 0 && y < ROWS;
+    public static boolean isBoundValid(Position pos) {
+        return pos.x >= 0 && pos.x < COLS && pos.y >= 0 && pos.y < ROWS;
     }
 
-    private static boolean isValidPosition(Position pos) {
-        return isValidPosition(pos.getX(), pos.getY());
-    }
-
-    public int findShortestPath (Player player, Position start,Position end){
-        if(!isValidPosition(start)) return -1;
-        if(!isValidPosition(end)) return -1;
+    public int findShortestPath(Player player, Position start, Position end){
         if(start.equals(end)) return 0;
 
         Tile startTile = getTile(start);
         Tile endTile = getTile(end);
-
-        if (!startTile.isWalkable() || !endTile.isWalkable()) {
-            return -1;
-        }
 
         final int[] deltaX = {-1,0,1};
         final int[] deltaY = {1,0,-1};
@@ -146,37 +136,38 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
         for (int[] row : distance) {
             Arrays.fill(row, -1); // -1 means unvisited
         }
-        distance[start.getY()][start.getX()] = 0;
+
+        distance[start.y][start.x] = 0;
         Queue<Position> toBeChecked = new LinkedList<>();
         toBeChecked.add(start);
 
         while(!toBeChecked.isEmpty()) {
             Position current = toBeChecked.poll();
-            for(int i=0;i<3;i++){
-                for(int j=0;j<3;j++){
+            for(int i = 0; i < 3; i++){
+                for(int j = 0; j < 3; j++){
                     if(deltaX[i] == 0 && deltaY[j] == 0) continue;
-                    int newX = current.getX() + deltaX[i];
-                    int newY = current.getY() + deltaY[j];
+                    int newX = current.x + deltaX[i];
+                    int newY = current.y + deltaY[j];
+                    Position newPosition = new Position(newX, newY);
 
-                    if(newX == end.getX() && newY == end.getY()) {
-                        return distance[current.getY()][current.getX()]+1;
+                    if(newX == end.x && newY == end.y) {
+                        return distance[current.getY()][current.getX()] + 1;
                     }
 
-                    if (isValidPosition(newX, newY) && distance[newY][newX] == -1) {
-                        Tile neighbor = getTile(new Position(newX, newY));
-                        if(neighbor.getAreaType().equals(AreaType.LAKE)) continue;
-                        if (neighbor.isWalkable()) {
+                    if(isBoundValid(newPosition) && distance[newY][newX] == -1) {
+                        Tile neighbor = getTile(newPosition);
+                        if(neighbor.isWalkable()) {
                             Player owner = neighbor.getArea().getOwner();
                             if(owner == null || owner.equals(player)) {
                                 distance[newY][newX] = distance[current.getY()][current.getX()] + 1;
-                                toBeChecked.add(new Position(newX, newY));
+                                toBeChecked.add(newPosition);
                             }
                         }
                     }
                 }
             }
         }
+
         return -1;
     }
-
 }

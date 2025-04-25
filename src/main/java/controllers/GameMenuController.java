@@ -5,6 +5,7 @@ import models.Player;
 import models.Result;
 import models.map.*;
 import models.tools.BackPackable;
+import models.tools.Hoe;
 import models.tools.Tool;
 
 public class GameMenuController {
@@ -13,7 +14,7 @@ public class GameMenuController {
     }
     
     public static Result walk(int x, int y) {
-        if(x >= 100 || y >= 50 || x < 0 || y < 0) {
+        if(x >= Map.COLS || y >= Map.ROWS || x < 0 || y < 0) {
             return new Result(false, "you are out of bounds!");
         }
 
@@ -33,6 +34,9 @@ public class GameMenuController {
 
         int energyNeeded = getCurrentPlayer().calculateWalkingEnergy(new Position(x, y));
 
+        if(energyNeeded == -1) {
+            return new Result(false, "tile is unreachable!");
+        }
         return new Result(true, energyNeeded + " energy would be consumed. Do you agree? (y/n)");
     }
 
@@ -96,11 +100,26 @@ public class GameMenuController {
     }
     public static Result useTool(int dx, int dy) {
         Tool tool = getCurrentPlayer().getCurrentTool();
+        if(tool == null) {
+            return new Result(false, "choose a tool first");
+        }
         Position usePosition = new Position(getCurrentPlayer().getPosition().x + dx, getCurrentPlayer().getPosition().y + dy);
+        if(!Map.isBoundValid(usePosition)) {
+            return new Result(false, "you are out of bounds!");
+        }
 
-        tool.use(App.currentGame.getTile(usePosition));
+        Tile useTile = App.currentGame.getTile(usePosition);
+
+        if(useTile.getAreaType().equals(AreaType.LAKE)) {
+            return new Result(false, "you can't use tools on a lake tile!");
+        }
+        else if(tool instanceof Hoe && !useTile.isEmpty()) {
+            return new Result(false, "You can't use hoe on a tile which is not empty.");
+        }
+
+        tool.use(useTile);
         getCurrentPlayer().subtractEnergy(tool.calculateEnergyConsume());
-        return new Result(true, "used tool " + tool.getName() + " successfully.");
+        return new Result(true, "used tool " + tool.getName() + " on  tile " + usePosition);
     }
 
     public static Result plant(String seedName, Position position) {

@@ -9,4 +9,9 @@ public class Food implements Fridgable, BackPackable {
     public String getName() {
         return foodType.name().toLowerCase().replaceAll("_", " ");
     }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
 }

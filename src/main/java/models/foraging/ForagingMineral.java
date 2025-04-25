@@ -10,4 +10,9 @@ public class ForagingMineral implements Tilable, BackPackable {
     public String getName() {
         return foragingMineralType.name().toLowerCase().replaceAll("_", " ");
     }
+
+    @Override
+    public String getDescription() {
+        return foragingMineralType.description;
+    }
 }
