@@ -7,7 +7,7 @@ import java.util.List;
 
 public enum Crops{
     BLUE_JAZZ(
-            CropSeed.JAZZ_SEED,
+            CropSeeds.JAZZ_SEED,
             new ArrayList<>(Arrays.asList(1,2,2,2)),
             7,
             true,
@@ -19,7 +19,7 @@ public enum Crops{
             false
     ),
     CARROT(
-            CropSeed.CARROT_SEED,
+            CropSeeds.CARROT_SEED,
             new ArrayList<>(Arrays.asList(1,1,1)),
             3,
             true,
@@ -31,7 +31,7 @@ public enum Crops{
             false
     ),
     CAULIFLOWER(
-            CropSeed.CAULIFLOWER_SEED,
+            CropSeeds.CAULIFLOWER_SEED,
             new ArrayList<>(Arrays.asList(1,2,4,4,1)),
             12,
             true,
@@ -43,7 +43,7 @@ public enum Crops{
             true
     ),
     COFFEE_BEEN(
-            CropSeed.CAULIFLOWER_SEED,
+            CropSeeds.CAULIFLOWER_SEED,
             new ArrayList<>(Arrays.asList(1,2,2,3,2)),
             10,
             false,
@@ -55,7 +55,7 @@ public enum Crops{
             false
     ),
     GARLIC(
-            CropSeed.GARLIC_SEED,
+            CropSeeds.GARLIC_SEED,
             new ArrayList<>(Arrays.asList(1,1,1,1)),
             4,
             true,
@@ -67,7 +67,7 @@ public enum Crops{
             false
     ),
     GREEN_BEEN(
-            CropSeed.BEAN_STARTER,
+            CropSeeds.BEAN_STARTER,
             new ArrayList<>(Arrays.asList(1,1,1,3,4)),
             10,
             false,
@@ -79,7 +79,7 @@ public enum Crops{
             false
     ),
     PARSNIP(
-            CropSeed.PARSNIP_SEED,
+            CropSeeds.PARSNIP_SEED,
             new ArrayList<>(Arrays.asList(1,1,1,1)),
             4,
             true,
@@ -91,7 +91,7 @@ public enum Crops{
             false
     ),
     KALE(
-            CropSeed.KALE_SEED,
+            CropSeeds.KALE_SEED,
             new ArrayList<>(Arrays.asList(1,2,2,1)),
             6,
             true,
@@ -103,7 +103,7 @@ public enum Crops{
             false
     ),
     POTATO(
-            CropSeed.POTATO_SEED,
+            CropSeeds.POTATO_SEED,
             new ArrayList<>(Arrays.asList(1,1,1,2,1)),
             6,
             true,
@@ -115,7 +115,7 @@ public enum Crops{
             false
     ),
     RHUBARB(
-            CropSeed.RHUBARB_SEED,
+            CropSeeds.RHUBARB_SEED,
             new ArrayList<>(Arrays.asList(2,2,2,3,4)),
             13,
             true,
@@ -127,7 +127,7 @@ public enum Crops{
             false
     ),
     STRAWBERRY(
-            CropSeed.STRAWBERRY_SEED,
+            CropSeeds.STRAWBERRY_SEED,
             new ArrayList<>(Arrays.asList(1,1,2,2,2)),
             8,
             false,
@@ -139,7 +139,7 @@ public enum Crops{
             false
     ),
     TULIP(
-            CropSeed.TULIP_BULB,
+            CropSeeds.TULIP_BULB,
             new ArrayList<>(Arrays.asList(1,1,2,2)),
             6,
             true,
@@ -151,7 +151,7 @@ public enum Crops{
             false
     ),
     UN_MILLED_RICE(
-            CropSeed.RICE_SHOT,
+            CropSeeds.RICE_SHOT,
             new ArrayList<>(Arrays.asList(1,2,2,3)),
             8,
             true,
@@ -163,7 +163,7 @@ public enum Crops{
             false
     ),
     BLUEBERRY(
-            CropSeed.BLUEBERRY_SEED,
+            CropSeeds.BLUEBERRY_SEED,
             new ArrayList<>(Arrays.asList(1,3,3,4,2)),
             13,
             false,
@@ -175,7 +175,7 @@ public enum Crops{
             false
     ),
     CORN(
-            CropSeed.CORN_SEED,
+            CropSeeds.CORN_SEED,
             new ArrayList<>(Arrays.asList(2,3,3,3,3)),
             14,
             false,
@@ -187,7 +187,7 @@ public enum Crops{
             false
     ),
     HOPS(
-            CropSeed.HOPS_STARTER,
+            CropSeeds.HOPS_STARTER,
             new ArrayList<>(Arrays.asList(1,1,2,3,4)),
             11,
             false,
@@ -199,7 +199,7 @@ public enum Crops{
             false
     ),
     HOT_PEPPER(
-            CropSeed.PEPPER_SEED,
+            CropSeeds.PEPPER_SEED,
             new ArrayList<>(Arrays.asList(1,1,1,1,1)),
             5,
             false,
@@ -211,7 +211,7 @@ public enum Crops{
             false
     ),
     MELON(
-            CropSeed.MELON_SEED,
+            CropSeeds.MELON_SEED,
             new ArrayList<>(Arrays.asList(1,2,3,3,3)),
             12,
             true,
@@ -223,7 +223,7 @@ public enum Crops{
             true
     ),
     POPPY(
-            CropSeed.POPPY_SEED,
+            CropSeeds.POPPY_SEED,
             new ArrayList<>(Arrays.asList(1,2,2,2)),
             7,
             true,
@@ -235,7 +235,7 @@ public enum Crops{
             false
     ),
     RADISH(
-            CropSeed.RADISH_SEED,
+            CropSeeds.RADISH_SEED,
             new ArrayList<>(Arrays.asList(2,1,2,1)),
             6,
             true,
@@ -247,7 +247,7 @@ public enum Crops{
             false
     ),
     RED_CABBAGE(
-            CropSeed.RED_CABBAGE_SEED,
+            CropSeeds.RED_CABBAGE_SEED,
             new ArrayList<>(Arrays.asList(2,1,2,2,2)),
             9,
             true,
@@ -259,7 +259,7 @@ public enum Crops{
             false
     ),
     STAR_FRUIT(
-            CropSeed.STAR_FRUIT_SEED,
+            CropSeeds.STAR_FRUIT_SEED,
             new ArrayList<>(Arrays.asList(2,3,2,3,3)),
             13,
             true,
@@ -271,7 +271,7 @@ public enum Crops{
             false
     ),
     SUMMER_SPANGLE(
-            CropSeed.SPANGLE_SEED,
+            CropSeeds.SPANGLE_SEED,
             new ArrayList<>(Arrays.asList(1,2,3,1)),
             8,
             true,
@@ -283,7 +283,7 @@ public enum Crops{
             false
     ),
     SUMMER_SQUASH(
-            CropSeed.SUMMER_SQUASH_SEED,
+            CropSeeds.SUMMER_SQUASH_SEED,
             new ArrayList<>(Arrays.asList(1,1,1,2,1)),
             6,
             false,
@@ -295,7 +295,7 @@ public enum Crops{
             false
     ),
     SUNFLOWER(
-            CropSeed.SUNFLOWER_SEED,
+            CropSeeds.SUNFLOWER_SEED,
             new ArrayList<>(Arrays.asList(1,2,3,2)),
             8,
             true, 0,
@@ -306,7 +306,7 @@ public enum Crops{
             false
     ),
     TOMATO(
-            CropSeed.TOMATO_SEED,
+            CropSeeds.TOMATO_SEED,
             new ArrayList<>(Arrays.asList(2,2,2,2,3)),
             11,
             false, 4,
@@ -317,7 +317,7 @@ public enum Crops{
             false
     ),
     WHEAT(
-            CropSeed.WHEAT_SEED,
+            CropSeeds.WHEAT_SEED,
             new ArrayList<>(Arrays.asList(1,1,1,1)),
             4,
             true, 0,
@@ -328,7 +328,7 @@ public enum Crops{
             false
     ),
     AMARANTH(
-            CropSeed.AMARANTH_SEED,
+            CropSeeds.AMARANTH_SEED,
             new ArrayList<>(Arrays.asList(1,2,2,2)),
             7,
             true, 0,
@@ -339,7 +339,7 @@ public enum Crops{
             false
     ),
     ARTICHOKE(
-            CropSeed.ARTICHOKE_SEED,
+            CropSeeds.ARTICHOKE_SEED,
             new ArrayList<>(Arrays.asList(2,2,1,2,1)),
             8,
             true, 0,
@@ -350,7 +350,7 @@ public enum Crops{
             false
     ),
     BEET(
-            CropSeed.BEET_SEED,
+            CropSeeds.BEET_SEED,
             new ArrayList<>(Arrays.asList(1,1,2,2)),
             6,
             true, 0,
@@ -361,7 +361,7 @@ public enum Crops{
             false
     ),
     BOK_CHOY(
-            CropSeed.BOK_CHOY_SEED,
+            CropSeeds.BOK_CHOY_SEED,
             new ArrayList<>(Arrays.asList(1,1,1,1)),
             4,
             true, 0,
@@ -372,7 +372,7 @@ public enum Crops{
             false
     ),
     BROCCOLI(
-            CropSeed.BROCCOLI_SEED,
+            CropSeeds.BROCCOLI_SEED,
             new ArrayList<>(Arrays.asList(2,2,2,2)),
             8,
             false, 4,
@@ -383,7 +383,7 @@ public enum Crops{
             false
     ),
     CRANBERRY(
-            CropSeed.CRANBERRY_SEED,
+            CropSeeds.CRANBERRY_SEED,
             new ArrayList<>(Arrays.asList(1,2,1,1,2)),
             7,
             false, 5,
@@ -394,7 +394,7 @@ public enum Crops{
             false
     ),
     EGGPLANT(
-            CropSeed.EGGPLANT_SEED,
+            CropSeeds.EGGPLANT_SEED,
             new ArrayList<>(Arrays.asList(1,1,1,1)),
             5,
             false, 3,
@@ -405,7 +405,7 @@ public enum Crops{
             false
     ),
     FAIRY_ROSE(
-            CropSeed.FAIRY_SEED,
+            CropSeeds.FAIRY_SEED,
             new ArrayList<>(Arrays.asList(1,4,4,3)),
             12,
             true, 0,
@@ -416,7 +416,7 @@ public enum Crops{
             false
     ),
     GRAPE(
-            CropSeed.GRAPE_STARTER,
+            CropSeeds.GRAPE_STARTER,
             new ArrayList<>(Arrays.asList(1,1,2,3,3)),
             10,
             false, 3,
@@ -427,7 +427,7 @@ public enum Crops{
             false
     ),
     PUMPKIN(
-            CropSeed.PUMPKIN_SEED,
+            CropSeeds.PUMPKIN_STARTER,
             new ArrayList<>(Arrays.asList(1,2,3,4,3)),
             13,
             true, 0,
@@ -438,7 +438,7 @@ public enum Crops{
             true
     ),
     YAM(
-            CropSeed.YAM_SEED,
+            CropSeeds.YAM_SEED,
             new ArrayList<>(Arrays.asList(1,3,3,3)),
             10,
             true, 0,
@@ -449,7 +449,7 @@ public enum Crops{
             false
     ),
     SWEET_GEM_BERRY(
-            CropSeed.RARE_SEED,
+            CropSeeds.RARE_SEED,
             new ArrayList<>(Arrays.asList(2,4,4,6,6)), 24,
             true, 0,
             3000,
@@ -459,7 +459,7 @@ public enum Crops{
             false
     ),
     POWDER_MELON(
-            CropSeed.POWDER_MELON_SEED,
+            CropSeeds.POWDER_MELON_SEED,
             new ArrayList<>(Arrays.asList(1,2,1,2,1)), 7,
             true, 0,
             60,
@@ -469,7 +469,7 @@ public enum Crops{
             true
     ),
     ANCIENT_FRUIT(
-            CropSeed.ANCIENT_SEED,
+            CropSeeds.ANCIENT_SEED,
             new ArrayList<>(Arrays.asList(2,7,7,7,5)), 28,
             false, 7,
             550,
@@ -478,7 +478,8 @@ public enum Crops{
             new ArrayList<>(List.of(Season.AUTUMN , Season.SPRING , Season.SUMMER)),
             false
     );
-    private final CropSeed seedType;
+    private final CropSeeds source;
+    private final ArrayList<Integer> stages;
     private final int totalHarvestTime;
     private final boolean OneTime;
     private final int RegrowthTime;
@@ -488,7 +489,7 @@ public enum Crops{
     private final boolean CanBecomeGiant;
     private final int energy;
     Crops(
-            CropSeed seedType,
+            CropSeeds seedType,
             ArrayList<Integer> stages,
     int totalHarvestTime,
     boolean OneTime,
@@ -499,7 +500,8 @@ public enum Crops{
     ArrayList<Season> season,
     boolean CanBecomeGiant
     ) {
-        this.seedType = seedType;
+        this.source = seedType;
+        this.stages = stages;
         this.OneTime = OneTime;
         this.totalHarvestTime = totalHarvestTime;
         this.RegrowthTime = RegrowthTime;
@@ -508,5 +510,73 @@ public enum Crops{
         this.edible = edible;
         this.CanBecomeGiant = CanBecomeGiant;
         this.energy = energy;
+    }
+
+    public String getName(){
+        return name();
+    }
+
+    public static Crops getByName(String name) {
+        String lowerName = name.trim().toLowerCase();
+        switch (lowerName) {
+            case "blue jazz": return BLUE_JAZZ;
+            case "carrot": return CARROT;
+            case "cauliflower": return CAULIFLOWER;
+            case "coffee been": return COFFEE_BEEN;
+            case "garlic": return GARLIC;
+            case "green been": return GREEN_BEEN;
+            case "parsnip": return PARSNIP;
+            case "kale": return KALE;
+            case "potato": return POTATO;
+            case "rhubarb": return RHUBARB;
+            case "strawberry": return STRAWBERRY;
+            case "tulip": return TULIP;
+            case "un milled rice": return UN_MILLED_RICE;
+            case "blueberry": return BLUEBERRY;
+            case "corn": return CORN;
+            case "hops": return HOPS;
+            case "hot pepper": return HOT_PEPPER;
+            case "melon": return MELON;
+            case "poppy": return POPPY;
+            case "radish": return RADISH;
+            case "red cabbage": return RED_CABBAGE;
+            case "star fruit": return STAR_FRUIT;
+            case "summer spangle": return SUMMER_SPANGLE;
+            case "summer squash": return SUMMER_SQUASH;
+            case "sunflower": return SUNFLOWER;
+            case "tomato": return TOMATO;
+            case "wheat": return WHEAT;
+            case "amaranth": return AMARANTH;
+            case "artichoke": return ARTICHOKE;
+            case "beet": return BEET;
+            case "bok choy": return BOK_CHOY;
+            case "broccoli": return BROCCOLI;
+            case "cranberry": return CRANBERRY;
+            case "eggplant": return EGGPLANT;
+            case "fairy rose": return FAIRY_ROSE;
+            case "grape": return GRAPE;
+            case "pumpkin": return PUMPKIN;
+            case "yam": return YAM;
+            case "sweet gem berry": return SWEET_GEM_BERRY;
+            case "powder melon": return POWDER_MELON;
+            case "ancient fruit": return ANCIENT_FRUIT;
+            default: return null;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return  getName()+": \n"+
+                "source= " + source + '\n' +
+                ", stages= " + stages + '\n' +
+                ", totalHarvestTime= " + totalHarvestTime + '\n' +
+                ", OneTime= " + OneTime + '\n' +
+                ", RegrowthTime= " + RegrowthTime + '\n' +
+                ", basePrice= " + basePrice + '\n' +
+                ", season= " + season + '\n' +
+                ", edible= " + edible + '\n' +
+                ", CanBecomeGiant= " + CanBecomeGiant + '\n' +
+                ", energy= " + energy + '\n' +
+                "-------------------------------------";
     }
 }

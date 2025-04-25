@@ -213,6 +213,12 @@ public class GameMenu implements AppMenu {
                 System.out.println(result.message());
             }
 
+            else if(GameMenuCommands.CRAFT_INFO.matches(command)) {
+                Matcher matcher = GameMenuCommands.CRAFT_INFO.matcher(command);
+                matcher.matches();
+                System.out.println(GameMenuController.showCraftInfo(matcher.group("craft_name")));
+            }
+
             else {
                 System.out.println("invalid command");
             }

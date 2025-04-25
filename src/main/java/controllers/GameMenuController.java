@@ -3,6 +3,7 @@ package controllers;
 import models.App;
 import models.Player;
 import models.Result;
+import models.farming.Crops;
 import models.map.*;
 import models.tools.BackPackable;
 import models.tools.Hoe;
@@ -127,6 +128,13 @@ public class GameMenuController {
         else {
             return new Result(true, "used tool " + tool.getName() + " on tile " + usePosition);
         }
+    }
+
+    public static Result showCraftInfo(String name) {
+        Crops crop = Crops.getByName(name);
+        if(crop == null)
+            return new Result(false,"no crop with this name exists!");
+        return new Result(true,crop.toString());
     }
 
     public static Result plant(String seedName, Position position) {

@@ -10,6 +10,7 @@ public class ForagingCrop implements Tilable, TimeObserver {
     public ForagingCropsType getForagingCropsType() {
         return foragingCropsType;
     }
+
     public void setForagingCropsType(ForagingCropsType foragingCropsType) {
         this.foragingCropsType = foragingCropsType;
     }

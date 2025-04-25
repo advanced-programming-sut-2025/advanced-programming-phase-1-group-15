@@ -137,5 +137,4 @@ public enum ForagingCropsType {
         this.energy = energy;
     }
 
-
 }

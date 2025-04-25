@@ -20,7 +20,8 @@ public enum GameMenuCommands implements Commands {
     BUILD_BUILDING_REGEX("build -a <building_name> -l <x , y>"),
     BUY_ANIMAL_REGEX("buy animal -a <animal> -n <name>"),
     PET_ANIMAL_REGEX("pet -n <name>"),
-    SHOW_ANIMALS_REGEX("animals");
+    SHOW_ANIMALS_REGEX("animals"),
+    CRAFT_INFO("^\\s*craftinfo\\s+-n\\s+(?<craft_name>\\S+)\\s*$");
 
     private final String regex;
     GameMenuCommands(String regex) {
