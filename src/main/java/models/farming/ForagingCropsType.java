@@ -136,4 +136,6 @@ public enum ForagingCropsType {
         this.basePrice = basePrice;
         this.energy = energy;
     }
+
+
 }

@@ -31,7 +31,7 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
     public static int COLS = 100;
 
     public Tile getTile(Position pos) {
-        return tiles.get(pos.getX()).get(pos.getY());
+        return tiles.get(pos.getY()).get(pos.getX());
     }
 
     public Map(ArrayList<ArrayList<Tile>> mapTiles) {
@@ -70,7 +70,7 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
 
     public void printMap() {
         System.out.print(' ');
-        for(int i =0; i < 100; i++){
+        for(int i =0; i < COLS; i++){
             System.out.print('_');
         }
         System.out.println();
@@ -119,15 +119,15 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
         System.out.println("stone O");
     }
 
-    private static boolean isValidPosition(int y, int x) {
+    private static boolean isValidPosition(int x, int y) {
         return x >= 0 && x < COLS && y >= 0 && y < ROWS;
     }
 
     private static boolean isValidPosition(Position pos) {
-        return isValidPosition(pos.getY(), pos.getX());
+        return isValidPosition(pos.getX(), pos.getY());
     }
 
-    public int findShortestPath (Position start,Position end){
+    public int findShortestPath (Player player, Position start,Position end){
         if(!isValidPosition(start)) return -1;
         if(!isValidPosition(end)) return -1;
         if(start.equals(end)) return 0;
@@ -162,11 +162,15 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
                         return distance[current.getY()][current.getX()]+1;
                     }
 
-                    if (isValidPosition(newY, newX) && distance[newY][newX] == -1) {
+                    if (isValidPosition(newX, newY) && distance[newY][newX] == -1) {
                         Tile neighbor = getTile(new Position(newX, newY));
+                        if(neighbor.getAreaType().equals(AreaType.LAKE)) continue;
                         if (neighbor.isWalkable()) {
-                            distance[newY][newX] = distance[current.getY()][current.getX()] + 1;
-                            toBeChecked.add(new Position(newX, newY));
+                            Player owner = neighbor.getArea().getOwner();
+                            if(owner == null || owner.equals(player)) {
+                                distance[newY][newX] = distance[current.getY()][current.getX()] + 1;
+                                toBeChecked.add(new Position(newX, newY));
+                            }
                         }
                     }
                 }

@@ -52,7 +52,7 @@ public class Tile {
 
     public boolean isWalkable(){
         AreaType type = getAreaType();
-        if(type.equals(AreaType.LAKE)) return false;
+        if(type.equals(AreaType.LAKE)) { return false;}
         return objectInTile == null;
     }
 

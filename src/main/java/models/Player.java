@@ -80,8 +80,8 @@ public class Player extends User implements TimeObserver {
         this.position = homePosition;
     }
 
-    public int calculateWalkingEnergy(Position nextPosition) {
-        return game.getMap().findShortestPath(position, nextPosition);
+    public int calculateWalkingEnergy( Position nextPosition) {
+        return game.getMap().findShortestPath(this,position, nextPosition);
     }
 
     public void walk(Position position) {
