@@ -1,5 +1,10 @@
 package models.artisanry;
+import models.crafting.CraftItem;
 import models.crafting.CraftItemType;
+import models.farming.Crop;
+import models.farming.Crops;
+import models.farming.ForagingSeeds;
+import models.farming.ForagingSeedsType;
 import models.tools.BackPackable;
 import java.util.HashMap;
 
@@ -14,13 +19,13 @@ public enum ArtisanItemType {
             "An aged fermented liquid used in many cooking recipes.",
             13,
             10,
-            new HashMap<>(),
+            new HashMap<>() {{put(new Crop(Crops.WHEAT), 1); }},
             100),
     COFFEE(CraftItemType.KEG,
             "It smells delicious. This is sure to give you a boost.",
             75,
             2,
-            new HashMap<>(),
+            new HashMap<>() {{put(new ForagingSeeds(ForagingSeedsType.COFFEE_BEAN), 5);}},
             150),
     JUICE(CraftItemType.KEG,
             "A sweet, nutritious beverage.",

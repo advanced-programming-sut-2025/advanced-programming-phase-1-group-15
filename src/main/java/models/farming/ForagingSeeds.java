@@ -10,6 +10,10 @@ public class ForagingSeeds implements Tilable, BackPackable, TimeObserver {
     boolean fertilized;
     int notWateredDays;
 
+    public ForagingSeeds(ForagingSeedsType foragingSeedsType) {
+        this.foragingSeedsType = foragingSeedsType;
+    }
+
     public void water() {
 
     }
