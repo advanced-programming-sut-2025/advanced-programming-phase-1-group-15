@@ -13,7 +13,9 @@ public class ForagingCrop implements Tilable, BackPackable, TimeObserver {
     public ForagingCropsType getForagingCropsType() {
         return foragingCropsType;
     }
-
+    public int getMoney(){
+        return this.foragingCropsType.basePrice;
+    }
     public void setForagingCropsType(ForagingCropsType foragingCropsType) {
         this.foragingCropsType = foragingCropsType;
     }

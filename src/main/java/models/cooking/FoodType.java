@@ -153,7 +153,7 @@ public enum FoodType {
             new HashMap<>(){{
                 put(new Crop(Crops.BLUEBERRY),1);
                 put(new Crop(Crops.MELON),1);
-                put(new Tree(TreeType.APRICOT_TREE).getTreeType().fruitType, 1);
+                //put(new Tree(TreeType.APRICOT_TREE).getTreeType().fruitType, 1);
             }},
             263,
             false,

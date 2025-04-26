@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public enum TreeType {
+public enum TreeType  {
     APRICOT_TREE(
             SeedType.APRICOT_SAPLING,
             new ArrayList<>(Arrays.asList(7,7,7,7)),
@@ -194,7 +194,6 @@ public enum TreeType {
         this.energy = energy;
         this.season = season;
     }
-
     public void displayInfo() {
         System.out.println("Tree Type: " + this.name().replace("_", " "));
         System.out.println("Seed Type: " + seedType);
@@ -211,5 +210,6 @@ public enum TreeType {
             System.out.println("Growing Season: " + season);
         System.out.println("-----------------------------");
     }
+
 }
 
