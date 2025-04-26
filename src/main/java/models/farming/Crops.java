@@ -579,4 +579,8 @@ public enum Crops{
                 ", energy= " + energy + '\n' +
                 "-------------------------------------";
     }
+
+    public int getBasePrice() {
+        return basePrice;
+    }
 }

@@ -12,4 +12,9 @@ public class Stone extends ForagingMineral implements Tilable {
     public String getDescription() {
         return "just stone!";
     }
+
+    @Override
+    public int getPrice() {
+        return 0;
+    }
 }

@@ -8,7 +8,7 @@ import models.map.Tile;
 public class Scythe extends Tool {
     public Scythe() {
         this.toolType = ToolType.SCYTHE;
-        this.toolLevel = ToolLevel.COOPER;
+        this.toolLevel = ToolLevel.NORMAL;
         this.description = "used for harvesting crops.";
     }
 

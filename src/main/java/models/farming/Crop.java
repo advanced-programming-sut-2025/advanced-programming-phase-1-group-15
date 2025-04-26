@@ -20,11 +20,16 @@ public class Crop implements Tilable, BackPackable, Harvestable {
 
     @Override
     public String getName() {
-        return cropType.name().toLowerCase().replace("_", " ");
+        return cropType.name().toLowerCase().replaceAll("_", " ");
     }
 
     @Override
     public String getDescription() {
         return "";
+    }
+
+    @Override
+    public int getPrice() {
+        return cropType.getBasePrice();
     }
 }

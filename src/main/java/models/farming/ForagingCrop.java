@@ -30,4 +30,9 @@ public class ForagingCrop implements Tilable, BackPackable, TimeObserver {
     public String getDescription() {
         return "";
     }
+
+    @Override
+    public int getPrice() {
+        return foragingCropsType.basePrice;
+    }
 }

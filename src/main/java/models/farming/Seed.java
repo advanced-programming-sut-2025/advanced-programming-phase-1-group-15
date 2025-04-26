@@ -19,4 +19,9 @@ public class Seed implements Tilable, BackPackable {
     public String getDescription() {
         return "";
     }
+
+    @Override
+    public int getPrice() {
+        return 0;
+    }
 }

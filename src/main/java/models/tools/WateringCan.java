@@ -51,7 +51,24 @@ public class WateringCan extends Tool {
 
     @Override
     public void upgrade() {
-
+        switch (toolLevel) {
+            case NORMAL -> {
+                capacity = 55;
+                toolLevel = ToolLevel.COOPER;
+            }
+            case COOPER -> {
+                capacity = 70;
+                toolLevel = ToolLevel.IRON;
+            }
+            case IRON -> {
+                capacity = 85;
+                toolLevel = ToolLevel.GOLD;
+            }
+            case GOLD -> {
+                capacity = 100;
+                toolLevel = ToolLevel.IRIDIUM;
+            }
+        }
     }
 
     @Override

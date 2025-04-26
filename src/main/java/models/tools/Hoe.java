@@ -25,22 +25,27 @@ public class Hoe extends Tool {
 
     @Override
     public void upgrade() {
-
+        switch (toolLevel) {
+            case NORMAL -> toolLevel = ToolLevel.COOPER;
+            case COOPER -> toolLevel = ToolLevel.IRON;
+            case IRON -> toolLevel = ToolLevel.GOLD;
+            case GOLD -> toolLevel = ToolLevel.IRIDIUM;
+        }
     }
 
     @Override
     public String use(Tile tile, Player user) {
-        if(calculateEnergyConsume(tile, user) > user.getEnergy()) {
+        int energyConsume = calculateEnergyConsume(tile, user);
+        if(energyConsume > user.getEnergy()) {
             return "you do not have enough energy to use this tool.";
         }
         else if(!tile.getAreaType().equals(AreaType.FARM) && !tile.getAreaType().equals(AreaType.GREENHOUSE)) {
-            user.subtractEnergy(calculateEnergyConsume(tile, user));
+            user.subtractEnergy(energyConsume);
             return "you can only use hoe on your farm or greenhouse tiles.";
         }
 
         tile.plow();
-        int energyConsume = calculateEnergyConsume(tile, user);
         user.subtractEnergy(energyConsume);
-        return "tile " + tile + " plowed!\n" + energyConsume + " energy has been consumed.";
+        return "tile " + tile.getPosition() + " plowed!\n" + energyConsume + " energy has been consumed.";
     }
 }

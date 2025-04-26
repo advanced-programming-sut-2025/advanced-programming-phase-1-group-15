@@ -44,7 +44,12 @@ public class Pickaxe extends Tool {
 
     @Override
     public void upgrade() {
-
+        switch (toolLevel) {
+            case NORMAL -> toolLevel = ToolLevel.COOPER;
+            case COOPER -> toolLevel = ToolLevel.IRON;
+            case IRON -> toolLevel = ToolLevel.GOLD;
+            case GOLD -> toolLevel = ToolLevel.IRIDIUM;
+        }
     }
 
     @Override

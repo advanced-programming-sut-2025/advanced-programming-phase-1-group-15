@@ -14,4 +14,9 @@ public class Food implements Fridgable, BackPackable {
     public String getDescription() {
         return "";
     }
+
+    @Override
+    public int getPrice() {
+        return foodType.price;
+    }
 }

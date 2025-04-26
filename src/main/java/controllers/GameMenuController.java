@@ -12,6 +12,7 @@ import models.map.*;
 import models.tools.BackPackable;
 import models.tools.Hoe;
 import models.tools.Tool;
+import models.tools.TrashCan;
 
 public class GameMenuController {
     public static Player getCurrentPlayer() {
@@ -63,16 +64,21 @@ public class GameMenuController {
             return new Result(false, "You don't have that item.");
         }
         else if(count > availableCount) {
-            return new Result(false, "You only have " + count + " " + item.getName() + " in your inventory.");
+            return new Result(false, "You only have " + availableCount + " " + item.getName() + " in your inventory.");
         }
 
+        TrashCan trashCan = getCurrentPlayer().getTrashCan();
         if(count == -1) {
+            int returnedAmount = trashCan.use(item, availableCount, getCurrentPlayer());
             getCurrentPlayer().getInventory().removeFromBackPack(item);
-            return new Result(true, "You removed item " + item.getName() + " from your inventory.");
+            return new Result(true, item.getName() + " moved to trash can.\n" +
+                    returnedAmount + " gold added to your account.");
         }
         else {
+            int returnedAmount = trashCan.use(item, count, getCurrentPlayer());
             getCurrentPlayer().getInventory().removeCountFromBackPack(item, count);
-            return new Result(true, "You removed " + count + " " + item.getName() + " from your inventory.");
+            return new Result(true, count + " " + item.getName() + " moved to trash can.\n" +
+                    returnedAmount + " gold added to your account.");
         }
     }
 

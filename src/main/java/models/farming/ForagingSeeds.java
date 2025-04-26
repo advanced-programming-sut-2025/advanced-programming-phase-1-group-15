@@ -31,4 +31,9 @@ public class ForagingSeeds implements Tilable, BackPackable, TimeObserver {
     public String getDescription() {
         return "";
     }
+
+    @Override
+    public int getPrice() {
+        return 0;
+    }
 }

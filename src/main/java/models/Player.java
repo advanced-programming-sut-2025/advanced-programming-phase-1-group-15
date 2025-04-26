@@ -12,7 +12,9 @@ import models.time.TimeObserver;
 import models.tools.BackPack;
 import models.tools.BackPackable;
 import models.tools.Tool;
+import models.tools.TrashCan;
 
+import javax.sound.midi.Track;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -32,7 +34,8 @@ public class Player extends User implements TimeObserver {
     private boolean fainted = false;
 
     private BackPack inventory = new BackPack();
-    private Tool CurrentTool = null;
+    private TrashCan trashCan = new TrashCan();
+    private Tool currentTool = null;
 
     private int farmingAbility = 0;
     private int farmingLevel = 0;
@@ -114,8 +117,11 @@ public class Player extends User implements TimeObserver {
     public int getGold() {
         return gold;
     }
-    public void setGold(int gold) {
-        this.gold = gold;
+    public void addGold(int gold) {
+        this.gold += gold;
+    }
+    public void subtractGold(int gold) {
+        this.gold -= gold;
     }
 
     public int getWood() {
@@ -164,14 +170,20 @@ public class Player extends User implements TimeObserver {
         return inventory;
     }
     public void addToBackPack(BackPackable bp, int count) {
-        inventory.addToBackPack(bp, count);
+        if(!inventory.checkFilled()) {
+            inventory.addToBackPack(bp, count);
+        }
+    }
+
+    public TrashCan getTrashCan() {
+        return trashCan;
     }
 
     public Tool getCurrentTool() {
-        return CurrentTool;
+        return currentTool;
     }
     public void setCurrentTool(Tool currentTool) {
-        CurrentTool = currentTool;
+        this.currentTool = currentTool;
     }
 
     public int getFarmingAbility() {

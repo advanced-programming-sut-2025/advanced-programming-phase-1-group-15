@@ -2,29 +2,27 @@ package models.tools;
 
 import java.util.HashMap;
 
-public class BackPack {
-    private boolean big;
-    private boolean deluxe;
-
-    private int Capacity;
+public class BackPack extends Tool {
+    private int itemsCount;
+    private int capacity;
     private HashMap<BackPackable, Integer> items = new HashMap<>();
 
     public BackPack() {
+        this.toolType = ToolType.BACKPACK;
+        this.toolLevel = ToolLevel.NORMAL;
+        this.itemsCount = 0;
+        this.capacity = 12;
+        this.description = "use to carry your inventory.";
+
         items.put(new Hoe(), 1);
         items.put(new Pickaxe(), 1);
         items.put(new Axe(), 1);
         items.put(new WateringCan(), 1);
+        items.put(new Scythe(), 1);
     }
 
     public HashMap<BackPackable, Integer> getItems() {
         return items;
-    }
-
-    public int getCapacity() {
-        return Capacity;
-    }
-    public void setCapacity(int capacity) {
-        Capacity = capacity;
     }
 
     public BackPackable getItemByName(String name) {
@@ -40,6 +38,9 @@ public class BackPack {
         return items.getOrDefault(item, 0);
     }
 
+    public boolean checkFilled() {
+        return itemsCount == capacity;
+    }
     public void addToBackPack(BackPackable item, int amount) {
         for(BackPackable bp : items.keySet()) {
             if (bp.getName().equalsIgnoreCase(item.getName())) {
@@ -49,16 +50,32 @@ public class BackPack {
         }
 
         items.put(item, amount);
+        itemsCount++;
     }
+
     public void removeCountFromBackPack(BackPackable item, int amount) {
+        if(amount == items.get(item)) {
+            removeFromBackPack(item);
+        }
         items.put(item, items.get(item) - amount);
     }
     public void removeFromBackPack(BackPackable item) {
         items.remove(item);
+        itemsCount--;
     }
 
+    @Override
     public void upgrade() {
-
+        switch (toolLevel) {
+            case NORMAL -> {
+                capacity = 24;
+                toolLevel = ToolLevel.LARGE;
+            }
+            case LARGE -> {
+                capacity = Integer.MAX_VALUE;
+                toolLevel = ToolLevel.DELUXE;
+            }
+        }
     }
 
     public String display() {
@@ -67,10 +84,10 @@ public class BackPack {
         }
 
         StringBuilder display = new StringBuilder();
-        display.append("BackPack: \n");
+        display.append("BackPack: (").append(toolLevel).append(" ").append(itemsCount).append("/").append(capacity).append(")\n");
         for(BackPackable item : items.keySet()) {
             display.append(item.getName()).append(" ");
-            display.append(items.get(item)).append(" \"");
+            display.append(items.get(item)).append("    \"");
             display.append(item.getDescription()).append("\"\n");
         }
 
@@ -81,8 +98,8 @@ public class BackPack {
         StringBuilder display = new StringBuilder();
 
         for(BackPackable item : items.keySet()) {
-            if(item instanceof Tool) {
-                display.append(item.getName()).append("\n");
+            if(item instanceof Tool tool) {
+                display.append(tool.getName()).append("    Level: ").append(toolLevel).append("\n");
             }
         }
 

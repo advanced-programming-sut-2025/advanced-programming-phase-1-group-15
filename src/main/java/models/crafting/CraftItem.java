@@ -15,4 +15,9 @@ public class CraftItem implements Tilable, BackPackable {
     public String getDescription() {
         return "";
     }
+
+    @Override
+    public int getPrice() {
+        return craftItemType.price;
+    }
 }

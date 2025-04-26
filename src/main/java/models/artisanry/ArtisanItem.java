@@ -14,4 +14,9 @@ public class ArtisanItem implements BackPackable {
     public String getDescription() {
         return artisanItemType.description;
     }
+
+    @Override
+    public int getPrice() {
+        return artisanItemType.sellPrice;
+    }
 }

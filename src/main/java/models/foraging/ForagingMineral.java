@@ -15,4 +15,9 @@ public class ForagingMineral implements Tilable, BackPackable {
     public String getDescription() {
         return foragingMineralType.description;
     }
+
+    @Override
+    public int getPrice() {
+        return foragingMineralType.sellPrice;
+    }
 }
