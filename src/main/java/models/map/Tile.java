@@ -7,6 +7,11 @@ import java.util.ArrayList;
 
 public class Tile {
     private final Position position;
+
+    public void setObjectInTile(Tilable objectInTile) {
+        this.objectInTile = objectInTile;
+    }
+
     private Tilable objectInTile;
     private Area area;
 

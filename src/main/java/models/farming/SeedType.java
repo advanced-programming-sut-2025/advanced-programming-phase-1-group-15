@@ -14,5 +14,25 @@ public enum SeedType {
     PINE_CONES,
     MAHOGANY_SEEDS,
     MUSHROOM_TREE_SEEDS,
-    MYSTIC_TREE_SEEDS
+    MYSTIC_TREE_SEEDS;
+
+    public static TreeType getTreeOfSeedType(SeedType seedType) {
+        switch (seedType) {
+            case APRICOT_SAPLING: return TreeType.APRICOT_TREE;
+            case CHERRY_SAPLING: return TreeType.CHERRY_TREE;
+            case BANANA_SAPLING: return TreeType.BANANA_TREE;
+            case MANGO_SAPLING: return TreeType.MANGO_TREE;
+            case ORANGE_SAPLING: return TreeType.ORANGE_TREE;
+            case PEACH_SAPLING: return TreeType.PEACH_TREE;
+            case APPLE_SAPLING: return TreeType.APPLE_TREE;
+            case POMEGRANATE_SAPLING: return TreeType.POMEGRANATE_TREE;
+            case ACORNS: return TreeType.OAK_TREE;
+            case MAPLE_SEEDS: return TreeType.MAPLE_TREE;
+            case PINE_CONES: return TreeType.PINE_TREE;
+            case MAHOGANY_SEEDS: return TreeType.MAHOGANY_TREE;
+            case MUSHROOM_TREE_SEEDS: return TreeType.MUSHROOM_TREE;
+            case MYSTIC_TREE_SEEDS: return TreeType.MYSTIC_TREE;
+            default: return null;
+        }
+    }
 }

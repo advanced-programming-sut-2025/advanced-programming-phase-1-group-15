@@ -14,6 +14,12 @@ public class Tree implements Tilable, TimeObserver {
         this.treeType = treeType;
     }
 
+    public Tree(TreeType treeType) {
+        this.treeType = treeType;
+    }
+
+    public Tree(){}  // TODO: should be checked
+
     @Override
     public void update(DateAndTime dateAndTime) {
 

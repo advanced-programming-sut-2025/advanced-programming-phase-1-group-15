@@ -43,7 +43,7 @@ public enum Crops{
             true
     ),
     COFFEE_BEEN(
-            CropSeeds.CAULIFLOWER_SEED,
+            CropSeeds.COFFEE_SEED,
             new ArrayList<>(Arrays.asList(1,2,2,3,2)),
             10,
             false,
