@@ -177,6 +177,9 @@ public class Player extends User implements TimeObserver {
     public int getFarmingAbility() {
         return farmingAbility;
     }
+    public int getFarmingLevel() {
+        return farmingLevel;
+    }
     public void upgradeFarmingAbility(int amount) {
         this.farmingAbility += amount;
         if(farmingAbility > 100 * farmingLevel + 50 && farmingLevel != 4) {
@@ -186,6 +189,9 @@ public class Player extends User implements TimeObserver {
 
     public int getMiningAbility() {
         return miningAbility;
+    }
+    public int getMiningLevel() {
+        return miningLevel;
     }
     public void upgradeMiningAbility(int amount) {
         this.miningAbility += amount;
@@ -197,6 +203,9 @@ public class Player extends User implements TimeObserver {
     public int getForagingAbility() {
         return foragingAbility;
     }
+    public int getForagingLevel() {
+        return foragingLevel;
+    }
     public void upgradeForagingAbility(int amount) {
         this.foragingAbility += amount;
         if(foragingAbility > 100 * foragingLevel + 50 && foragingLevel != 4) {
@@ -206,6 +215,9 @@ public class Player extends User implements TimeObserver {
 
     public int getFishingAbility() {
         return fishingAbility;
+    }
+    public int getFishingLevel() {
+        return fishingLevel;
     }
     public void upgradeFishingAbility(int amount) {
         this.fishingAbility += amount;

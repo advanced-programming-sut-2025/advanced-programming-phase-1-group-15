@@ -39,7 +39,14 @@ public class BackPack {
     }
 
     public void addToBackPack(BackPackable item, int amount) {
-        items.put(item, items.getOrDefault(item, 0) + amount);
+        for(BackPackable bp : items.keySet()) {
+            if (bp.getName().equalsIgnoreCase(item.getName())) {
+                items.put(bp, items.get(bp) + amount);
+                return;
+            }
+        }
+
+        items.put(item, amount);
     }
     public void removeCountFromBackPack(BackPackable item, int amount) {
         items.put(item, items.get(item) - amount);

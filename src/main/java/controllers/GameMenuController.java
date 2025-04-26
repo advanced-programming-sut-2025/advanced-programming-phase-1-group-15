@@ -72,7 +72,7 @@ public class GameMenuController {
         }
         else {
             getCurrentPlayer().getInventory().removeCountFromBackPack(item, count);
-            return new Result(true, "You removed item " + count + " " + item.getName() + " from your inventory.");
+            return new Result(true, "You removed " + count + " " + item.getName() + " from your inventory.");
         }
     }
 
@@ -115,23 +115,7 @@ public class GameMenuController {
 
         Tile useTile = App.currentGame.getTile(usePosition);
 
-        if(useTile.getAreaType().equals(AreaType.LAKE)) {
-            return new Result(false, "you can't use tools on a lake tile!");
-        }
-        else if(tool instanceof Hoe && !useTile.isEmpty()) {
-            return new Result(false, "You can't use hoe on a tile which is not empty.");
-        }
-
-        getCurrentPlayer().subtractEnergy(tool.calculateEnergyConsume(useTile));
-        BackPackable receivedItem = tool.use(useTile);
-        if(receivedItem != null) {
-            getCurrentPlayer().addToBackPack(receivedItem, 1);
-            return new Result(true, "used tool " + tool.getName() + " on tile " + usePosition + "\n" +
-                    receivedItem.getName() + " added to your inventory");
-        }
-        else {
-            return new Result(true, "used tool " + tool.getName() + " on tile " + usePosition);
-        }
+        return new Result(true, tool.use(useTile, getCurrentPlayer()));
     }
 
     public static Result showCropInfo(String name) {

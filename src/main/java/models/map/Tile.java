@@ -83,6 +83,9 @@ public class Tile {
     public void unplow() {
         plowed = false;
     }
+    public boolean isPlowed() {
+        return plowed;
+    }
 
     public void print() {
         if(area.areaType.equals(AreaType.LAKE)) {

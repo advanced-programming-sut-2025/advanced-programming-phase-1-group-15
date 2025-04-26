@@ -22,7 +22,7 @@ public enum GameMenuCommands implements Commands {
     PET_ANIMAL_REGEX("pet -n <name>"),
     SHOW_ANIMALS_REGEX("animals"),
     PLANT_SEED("^\\s*plant\\s+-s\\s+(?<seed>.+\\S)\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*$"),
-    CROP_INFO("^\\s*craftinfo\\s+-n\\s+(?<craft_name>\\S+)\\s*$");
+    CROP_INFO("^\\s*craftinfo\\s+-n\\s+(?<craftName>\\S+)\\s*$");
 
     private final String regex;
     GameMenuCommands(String regex) {

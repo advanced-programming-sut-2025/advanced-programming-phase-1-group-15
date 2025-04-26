@@ -1,5 +1,6 @@
 package models.tools;
 
+import models.Player;
 import models.map.Tile;
 
 public class Tool implements BackPackable {
@@ -11,11 +12,11 @@ public class Tool implements BackPackable {
     protected boolean upgradable;
     protected ToolLevel toolLevel;
 
-    public int calculateEnergyConsume(Tile tile) {
+    public int calculateEnergyConsume(Tile tile, Player user) {
         return 0;
     }
 
-    public BackPackable use(Tile tile) {
+    public String use(Tile tile, Player user) {
         return null;
     }
 

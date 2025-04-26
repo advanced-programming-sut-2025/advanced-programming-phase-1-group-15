@@ -1,5 +1,6 @@
 package models.tools;
 
+import models.Player;
 import models.foraging.ForagingMineral;
 import models.map.Tile;
 
@@ -7,33 +8,33 @@ public class Pickaxe extends Tool {
     public Pickaxe() {
         this.toolType = ToolType.PICKAXE;
         this.toolLevel = ToolLevel.NORMAL;
-        this.description = "Can break small rocks anywhere.";
+        this.description = "can break small rocks anywhere";
     }
 
     public boolean successfulAttempt(Tile tile) {
         if(tile.isEmpty()) {
-            return true;
+            return tile.isPlowed();
         }
         else return tile.getObjectInTile() instanceof ForagingMineral;
     }
 
     @Override
-    public int calculateEnergyConsume(Tile tile) {
+    public int calculateEnergyConsume(Tile tile, Player user) {
         if(successfulAttempt(tile)) {
             return switch (toolLevel) {
-                case NORMAL -> 5;
-                case COOPER -> 4;
-                case IRON -> 3;
-                case GOLD -> 2;
-                case IRIDIUM -> 1;
+                case NORMAL -> user.getMiningLevel() == 4 ? 4 : 5;
+                case COOPER -> user.getMiningLevel() == 4 ? 3 : 4;
+                case IRON -> user.getMiningLevel() == 4 ? 2 : 3;
+                case GOLD -> user.getMiningLevel() == 4 ? 1 : 2;
+                case IRIDIUM -> user.getMiningLevel() == 4 ? 0 : 1;
             };
         }
         else {
             return switch (toolLevel) {
-                case NORMAL -> 4;
-                case COOPER -> 3;
-                case IRON -> 2;
-                case GOLD -> 1;
+                case NORMAL -> user.getMiningLevel() == 4 ? 3 : 4;
+                case COOPER -> user.getMiningLevel() == 4 ? 2 : 3;
+                case IRON -> user.getMiningLevel() == 4 ? 1 : 2;
+                case GOLD -> user.getMiningLevel() == 4 ? 0 : 1;
                 case IRIDIUM -> 0;
             };
         }
@@ -45,21 +46,32 @@ public class Pickaxe extends Tool {
     }
 
     @Override
-    public BackPackable use(Tile tile) {
-        if(tile.isEmpty()) {
-            tile.unplow();
-            return null;
+    public String use(Tile tile, Player user) {
+        int energyConsume = calculateEnergyConsume(tile, user);
+        if(energyConsume > user.getEnergy()) {
+            return "you do not have enough energy to use this tool.";
+        }
+
+        user.subtractEnergy(energyConsume);
+        if(successfulAttempt(tile)) {
+            if(tile.isPlowed()) {
+                tile.unplow();
+                return "tile " + tile.getPosition() + " unplowed.\n" + energyConsume + " energy has been consumed.";
+            }
+            else if(tile.getObjectInTile() instanceof ForagingMineral fm) {
+                int count = user.getMiningLevel() >= 2 ? 2 : 1;
+
+                user.addToBackPack(fm, count);
+                user.upgradeMiningAbility(10);
+                tile.empty();
+
+                return count + " " + fm.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.";
+            }
         }
         else {
-            if(successfulAttempt(tile)) {
-                ForagingMineral fm = (ForagingMineral) tile.getObjectInTile();
-                tile.empty();
-                return fm;
-            }
-            else {
-                tile.empty();
-                return null;
-            }
+            return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";
         }
+
+        return "unsuccessful attempt!";
     }
 }

@@ -1,5 +1,6 @@
 package models.tools;
 
+import models.Player;
 import models.map.Tile;
 
 public class Shear extends Tool implements BackPackable {
@@ -14,7 +15,7 @@ public class Shear extends Tool implements BackPackable {
     }
 
     @Override
-    public BackPackable use(Tile tile) {
+    public String use(Tile tile, Player user) {
         return null;
     }
 }
