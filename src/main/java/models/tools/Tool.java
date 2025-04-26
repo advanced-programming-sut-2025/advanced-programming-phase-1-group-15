@@ -31,6 +31,6 @@ public class Tool implements BackPackable {
 
     @Override
     public String getDescription() {
-        return description;
+        return description + " Level: " + toolLevel;
     }
 }

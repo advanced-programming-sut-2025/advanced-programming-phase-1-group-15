@@ -1,7 +1,6 @@
 package models.stores;
 
 import models.animals.Animal;
-import models.farming.ForagingSeeds;
 
 import java.util.ArrayList;
 

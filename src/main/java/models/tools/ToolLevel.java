@@ -1,5 +1,6 @@
 package models.tools;
 
 public enum ToolLevel {
-    NORMAL, COOPER, IRON, GOLD, IRIDIUM
+    NORMAL, COOPER, IRON, GOLD, IRIDIUM,
+    TRAINING, BAMBOO, FIBERGLASS
 }

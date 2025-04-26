@@ -3,8 +3,9 @@ package models.farming;
 import models.map.Tilable;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
+import models.tools.BackPackable;
 
-public class ForagingCrop implements Tilable, TimeObserver {
+public class ForagingCrop implements Tilable, BackPackable, TimeObserver {
     private ForagingCropsType foragingCropsType;
 
     public ForagingCropsType getForagingCropsType() {
@@ -18,5 +19,15 @@ public class ForagingCrop implements Tilable, TimeObserver {
     @Override
     public void update(DateAndTime dateAndTime) {
 
+    }
+
+    @Override
+    public String getName() {
+        return foragingCropsType.name().toLowerCase().replace("_", " ");
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
     }
 }

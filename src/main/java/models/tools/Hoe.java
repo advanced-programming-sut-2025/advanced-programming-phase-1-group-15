@@ -8,7 +8,7 @@ public class Hoe extends Tool {
     public Hoe() {
         this.toolType = ToolType.HOE;
         this.toolLevel = ToolLevel.NORMAL;
-        this.description = "prepare your land for planting crops";
+        this.description = "prepare your land for planting crops.";
     }
 
     @Override
@@ -19,6 +19,7 @@ public class Hoe extends Tool {
             case IRON -> 3;
             case GOLD -> 2;
             case IRIDIUM -> 1;
+            default -> 0;
         };
     }
 

@@ -16,6 +16,7 @@ public class Tile {
     private Area area;
 
     boolean plowed = false;
+    boolean watered = false;
 
     public Tile(int x, int y) {
         this.position = new Position(x, y);
@@ -85,6 +86,13 @@ public class Tile {
     }
     public boolean isPlowed() {
         return plowed;
+    }
+
+    public void water() {
+        watered = true;
+    }
+    public boolean isWatered() {
+        return watered;
     }
 
     public void print() {

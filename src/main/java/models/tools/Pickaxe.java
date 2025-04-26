@@ -8,7 +8,7 @@ public class Pickaxe extends Tool {
     public Pickaxe() {
         this.toolType = ToolType.PICKAXE;
         this.toolLevel = ToolLevel.NORMAL;
-        this.description = "can break small rocks anywhere";
+        this.description = "can break small rocks anywhere.";
     }
 
     public boolean successfulAttempt(Tile tile) {
@@ -27,6 +27,7 @@ public class Pickaxe extends Tool {
                 case IRON -> user.getMiningLevel() == 4 ? 2 : 3;
                 case GOLD -> user.getMiningLevel() == 4 ? 1 : 2;
                 case IRIDIUM -> user.getMiningLevel() == 4 ? 0 : 1;
+                default -> 0;
             };
         }
         else {
@@ -36,6 +37,7 @@ public class Pickaxe extends Tool {
                 case IRON -> user.getMiningLevel() == 4 ? 1 : 2;
                 case GOLD -> user.getMiningLevel() == 4 ? 0 : 1;
                 case IRIDIUM -> 0;
+                default -> 0;
             };
         }
     }

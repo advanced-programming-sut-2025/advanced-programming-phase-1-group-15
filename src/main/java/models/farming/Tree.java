@@ -12,6 +12,9 @@ public class Tree implements Tilable, TimeObserver , Harvestable {
     public TreeType getTreeType() {
         return treeType;
     }
+    public SeedType getSeedType() {
+        return treeType.seedType;
+    }
     public void setTreeType(TreeType treeType) {
         this.treeType = treeType;
     }
