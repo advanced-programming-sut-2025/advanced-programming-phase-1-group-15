@@ -35,4 +35,25 @@ public enum SeedType {
             default: return null;
         }
     }
+
+    public static SeedType getByName(String name) {
+        String simplifiedName = name.trim().toLowerCase();
+        switch (simplifiedName) {
+            case "apricot sapling": return SeedType.APRICOT_SAPLING;
+            case "cherry sapling": return SeedType.CHERRY_SAPLING;
+            case "banana sapling": return SeedType.BANANA_SAPLING;
+            case "mango sapling": return SeedType.MANGO_SAPLING;
+            case "orange sapling": return SeedType.ORANGE_SAPLING;
+            case "peach sapling": return SeedType.PEACH_SAPLING;
+            case "apple sapling": return SeedType.APPLE_SAPLING;
+            case "pomegranate sapling": return SeedType.POMEGRANATE_SAPLING;
+            case "acorns": return SeedType.ACORNS;
+            case "maple seeds": return SeedType.MAPLE_SEEDS;
+            case "pine cones": return SeedType.PINE_CONES;
+            case "mahogany seeds": return SeedType.MAHOGANY_SEEDS;
+            case "mushroom tree seeds": return SeedType.MUSHROOM_TREE_SEEDS;
+            case "mystic tree seeds": return SeedType.MYSTIC_TREE_SEEDS;
+            default: return null;
+        }
+    }
 }

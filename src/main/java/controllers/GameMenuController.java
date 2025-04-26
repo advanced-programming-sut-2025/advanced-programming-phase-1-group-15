@@ -1,9 +1,13 @@
 package controllers;
 
 import models.App;
+import models.Game;
 import models.Player;
 import models.Result;
+import models.farming.CropSeeds;
 import models.farming.Crops;
+import models.farming.PloughedTile;
+import models.farming.SeedType;
 import models.map.*;
 import models.tools.BackPackable;
 import models.tools.Hoe;
@@ -130,16 +134,48 @@ public class GameMenuController {
         }
     }
 
-    public static Result showCraftInfo(String name) {
+    public static Result showCropInfo(String name) {
         Crops crop = Crops.getByName(name);
         if(crop == null)
             return new Result(false,"no crop with this name exists!");
         return new Result(true,crop.toString());
     }
 
-    public static Result plant(String seedName, Position position) {
-        return null;
+    public static Result plant(String seedName, int dx, int dy) {
+        Game current = App.currentGame;
+        int nextX = current.getCurrentPlayer().getPosition().x + dx;
+        int nextY = current.getCurrentPlayer().getPosition().y + dy;
+
+        if(dx==0 && dy==0) {return new Result(false,"this is not a valid direction!");}
+
+        if(nextX>Map.COLS||nextY>Map.ROWS||nextX<0||nextY<0) {
+            return new Result(false,"you are going out of bounds!");}
+
+        Tile goalTile = App.currentGame.getMap().getTile(new Position(nextX,nextY));
+
+        if(!goalTile.getObjectInTile().getClass().equals(PloughedTile.class))
+            return new Result(false,"you should plough the tile first!");
+
+        PloughedTile tobeSeeded = (PloughedTile) goalTile.getObjectInTile();
+        if(tobeSeeded.hasTreeOrCrop())
+            return new Result(false,"there is already a seed in this tile!");
+
+        if(CropSeeds.getByName(seedName) != null){
+            tobeSeeded.seed(CropSeeds.getByName(seedName));
+            // TODO: giant plants
+            return new Result(true,"congratulations! you seeded this tile!");
+        }
+
+        if(SeedType.getByName(seedName) != null){
+            tobeSeeded.seed(SeedType.getByName(seedName));
+            // TODO: giant plants
+            return new Result(true,"congratulations! you seeded this tile!");
+
+        }
+
+        return new Result(false,"no seed found with this name");
     }
+
     public static Result showPlant(Position position) {
         return null;
     }

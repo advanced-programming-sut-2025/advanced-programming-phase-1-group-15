@@ -213,12 +213,17 @@ public class GameMenu implements AppMenu {
                 System.out.println(result.message());
             }
 
-            else if(GameMenuCommands.CRAFT_INFO.matches(command)) {
-                Matcher matcher = GameMenuCommands.CRAFT_INFO.matcher(command);
+            else if(GameMenuCommands.CROP_INFO.matches(command)) {
+                Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.showCraftInfo(matcher.group("craft_name")));
+                System.out.println(GameMenuController.showCropInfo(matcher.group("craft_name")));
             }
-
+            else if(GameMenuCommands.PLANT_SEED.matches(command)) {
+                Matcher matcher = GameMenuCommands.PLANT_SEED.matcher(command);
+                matcher.matches();
+                System.out.println(GameMenuController.plant(matcher.group("seed"),
+                        Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy"))));
+            }
             else {
                 System.out.println("invalid command");
             }

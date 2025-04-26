@@ -4,8 +4,10 @@ import models.map.Tilable;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 
-public class Tree implements Tilable, TimeObserver {
+public class Tree implements Tilable, TimeObserver , Harvestable {
     private TreeType treeType;
+
+    private GiantProducts giantProducts;
 
     public TreeType getTreeType() {
         return treeType;
@@ -22,6 +24,11 @@ public class Tree implements Tilable, TimeObserver {
 
     @Override
     public void update(DateAndTime dateAndTime) {
+
+    }
+
+    @Override
+    public void harvest() {
 
     }
 }

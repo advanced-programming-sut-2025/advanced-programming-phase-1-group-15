@@ -89,4 +89,53 @@ public enum CropSeeds {
             default: return null;
         }
     }
+
+    public static CropSeeds getByName(String name) {
+        String simplifiedName = name.trim().toLowerCase();
+        switch (simplifiedName) {
+            case "jazz seed": return CropSeeds.JAZZ_SEED;
+            case "carrot seed": return CropSeeds.CARROT_SEED;
+            case "cauliflower seed": return CropSeeds.CAULIFLOWER_SEED;
+            case "coffee seed": return CropSeeds.COFFEE_SEED;
+            case "garlic seed": return CropSeeds.GARLIC_SEED;
+            case "bean starter": return CropSeeds.BEAN_STARTER;
+            case "kale seed": return CropSeeds.KALE_SEED;
+            case "parsnip seed": return CropSeeds.PARSNIP_SEED;
+            case "potato seed": return CropSeeds.POTATO_SEED;
+            case "rhubarb seed": return CropSeeds.RHUBARB_SEED;
+            case "strawberry seed": return CropSeeds.STRAWBERRY_SEED;
+            case "tulip bulb": return CropSeeds.TULIP_BULB;
+            case "rice shot": return CropSeeds.RICE_SHOT;
+            case "blueberry seed": return CropSeeds.BLUEBERRY_SEED;
+            case "corn seed": return CropSeeds.CORN_SEED;
+            case "hops starter": return CropSeeds.HOPS_STARTER;
+            case "pepper seed": return CropSeeds.PEPPER_SEED;
+            case "melon seed": return CropSeeds.MELON_SEED;
+            case "poppy seed": return CropSeeds.POPPY_SEED;
+            case "radish seed": return CropSeeds.RADISH_SEED;
+            case "red cabbage seed": return CropSeeds.RED_CABBAGE_SEED;
+            case "star fruit seed": return CropSeeds.STAR_FRUIT_SEED;
+            case "spangle seed": return CropSeeds.SPANGLE_SEED;
+            case "summer squash seed": return CropSeeds.SUMMER_SQUASH_SEED;
+            case "sunflower seed": return CropSeeds.SUNFLOWER_SEED;
+            case "tomato seed": return CropSeeds.TOMATO_SEED;
+            case "wheat seed": return CropSeeds.WHEAT_SEED;
+            case "amaranth seed": return CropSeeds.AMARANTH_SEED;
+            case "artichoke seed": return CropSeeds.ARTICHOKE_SEED;
+            case "beet seed": return CropSeeds.BEET_SEED;
+            case "bok choy seed": return CropSeeds.BOK_CHOY_SEED;
+            case "broccoli seed": return CropSeeds.BROCCOLI_SEED;
+            case "cranberry seed": return CropSeeds.CRANBERRY_SEED;
+            case "eggplant seed": return CropSeeds.EGGPLANT_SEED;
+            case "fairy seed": return CropSeeds.FAIRY_SEED;
+            case "grape starter": return CropSeeds.GRAPE_STARTER;
+            case "pumpkin starter": return CropSeeds.PUMPKIN_STARTER;
+            case "yam seed": return CropSeeds.YAM_SEED;
+            case "rare seed": return CropSeeds.RARE_SEED;
+            case "powder melon seed": return CropSeeds.POWDER_MELON_SEED;
+            case "ancient seed": return CropSeeds.ANCIENT_SEED;
+            default: return null;
+        }
+    }
+
 }
