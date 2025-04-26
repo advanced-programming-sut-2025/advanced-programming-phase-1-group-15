@@ -9,7 +9,7 @@ import java.util.List;
 public enum TreeType {
     APRICOT_TREE(
             SeedType.APRICOT_SAPLING,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.APRICOT,
             1,
@@ -21,7 +21,7 @@ public enum TreeType {
     ),
     CHERRY_TREE(
             SeedType.CHERRY_SAPLING,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
                     28,
             FruitType.CHERRY,
             1,
@@ -32,7 +32,7 @@ public enum TreeType {
             ),
     BANANA_TREE(
             SeedType.BANANA_SAPLING,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.BANANA,
             1,
@@ -43,7 +43,7 @@ public enum TreeType {
             ),
     MANGO_TREE(
             SeedType.MANGO_SAPLING,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.MANGO,
             1,
@@ -54,7 +54,7 @@ public enum TreeType {
     ),
     ORANGE_TREE(
             SeedType.ORANGE_SAPLING,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.ORANGE,
             1,
@@ -65,7 +65,7 @@ public enum TreeType {
     ),
     PEACH_TREE(
             SeedType.PEACH_SAPLING,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.MANGO,
             1,
@@ -76,7 +76,7 @@ public enum TreeType {
     ),
     APPLE_TREE(
             SeedType.APPLE_SAPLING,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.MANGO,
             1,
@@ -87,7 +87,7 @@ public enum TreeType {
     ),
     POMEGRANATE_TREE(
             SeedType.POMEGRANATE_SAPLING,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.POMEGRANATE,
             1,
@@ -98,7 +98,7 @@ public enum TreeType {
     ),
     OAK_TREE(
             SeedType.ACORNS,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.OAK_RESIN,
             7,
@@ -109,7 +109,7 @@ public enum TreeType {
     ),
     MAPLE_TREE(
             SeedType.MAPLE_SEEDS,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.MAPLE_SYRUP,
             9,
@@ -120,7 +120,7 @@ public enum TreeType {
     ),
     PINE_TREE(
             SeedType.PINE_CONES,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.PINE_TAR,
             5,
@@ -131,7 +131,7 @@ public enum TreeType {
     ),
     MAHOGANY_TREE(
             SeedType.MAHOGANY_SEEDS,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.SAP,
             1,
@@ -142,7 +142,7 @@ public enum TreeType {
     ),
     MUSHROOM_TREE(
             SeedType.MUSHROOM_TREE_SEEDS,
-            "7-7-7-7",
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
             28,
             FruitType.COMMON_MUSHROOM,
             1,
@@ -153,8 +153,8 @@ public enum TreeType {
     ),
     MYSTIC_TREE(
             SeedType.MYSTIC_TREE_SEEDS,
-            "7-7-7-7",
-                    28,
+            new ArrayList<>(Arrays.asList(7,7,7,7)),
+            28,
             FruitType.MYSTIC_SYRUP,
             7,
                     1000,
@@ -164,7 +164,7 @@ public enum TreeType {
             );
 
     public final SeedType seedType;
-    public final String stages;
+    public final ArrayList<Integer> stages;
     public final int totalHarvestTime;
     public final FruitType fruitType;
     public final int harvestCycle;
@@ -175,7 +175,7 @@ public enum TreeType {
 
     TreeType(
             SeedType seedType,
-            String stages,
+            ArrayList<Integer> stages,
             int totalHarvestTime,
             FruitType fruitType,
             int harvestCycle,
