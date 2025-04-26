@@ -488,6 +488,11 @@ public enum Crops{
     private final boolean edible;
     private final boolean CanBecomeGiant;
     private final int energy;
+
+    public int getTotalHarvestTime() {
+        return totalHarvestTime;
+    }
+
     Crops(
             CropSeeds seedType,
             ArrayList<Integer> stages,

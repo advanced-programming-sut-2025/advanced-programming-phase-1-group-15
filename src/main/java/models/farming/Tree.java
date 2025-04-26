@@ -9,6 +9,11 @@ public class Tree implements Tilable, TimeObserver , Harvestable {
 
     private GiantProducts giantProducts;
 
+    private int DaysUntilHarvest;
+
+    public int getDaysUntilHarvest() {
+        return DaysUntilHarvest;
+    }
     public TreeType getTreeType() {
         return treeType;
     }
@@ -33,5 +38,10 @@ public class Tree implements Tilable, TimeObserver , Harvestable {
     @Override
     public void harvest() {
 
+    }
+
+    @Override
+    public String printInfo() {
+        return " ";
     }
 }

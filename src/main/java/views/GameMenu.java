@@ -224,6 +224,13 @@ public class GameMenu implements AppMenu {
                 System.out.println(GameMenuController.plant(matcher.group("seed"),
                         Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy"))));
             }
+
+            else if(GameMenuCommands.SHOW_PLANT_INFO.matches(command)) {
+                Matcher matcher = GameMenuCommands.SHOW_PLANT_INFO.matcher(command);
+                matcher.matches();
+                System.out.println(GameMenuController.showPlant(
+                        Integer.parseInt(matcher.group("x")),Integer.parseInt(matcher.group("y"))));
+            }
             else {
                 System.out.println("invalid command");
             }

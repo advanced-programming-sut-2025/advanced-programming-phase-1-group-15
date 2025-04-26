@@ -1,5 +1,7 @@
 package models.map;
 
+import models.App;
+import models.farming.PloughedTile;
 import models.farming.Tree;
 import models.foraging.Stone;
 
@@ -80,9 +82,11 @@ public class Tile {
 
     public void plow() {
         plowed = true;
+        objectInTile = new PloughedTile(App.currentGame.getMap(),this.position);
     }
     public void unplow() {
         plowed = false;
+        objectInTile = null;
     }
     public boolean isPlowed() {
         return plowed;

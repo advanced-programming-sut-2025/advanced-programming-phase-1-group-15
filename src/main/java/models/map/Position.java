@@ -22,6 +22,10 @@ public class Position {
         return x == position.x && y == position.y;
     }
 
+    public boolean outOfBounds() {
+        return x < 0 || y < 0 || x > Map.COLS || y > Map.ROWS;
+    }
+
     @Override
     public String toString() {
         return "(" + x + "," + y + ")";

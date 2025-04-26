@@ -166,8 +166,19 @@ public class GameMenuController {
         return new Result(false,"no seed found with this name");
     }
 
-    public static Result showPlant(Position position) {
-        return null;
+    public static Result showPlant(int x, int y) {
+        Position position = new Position(x, y);
+        if(position.outOfBounds()) {
+            return new Result(false,"this position is out of bounds!");
+        }
+        Tile tile = App.currentGame.getMap().getTile(position);
+        if(!tile.getObjectInTile().getClass().equals(PloughedTile.class))
+            return new Result(false,"this is not a ploughed tile!");
+        PloughedTile toBeShown = (PloughedTile) tile.getObjectInTile();
+
+        if(!toBeShown.hasTreeOrCrop())
+            return new Result(false,"there is not any plant here!");
+        return new Result(true,toBeShown.getHarvestable().printInfo());
     }
     public static Result fertilize(String fertilizerName, Position position) {
         return null;

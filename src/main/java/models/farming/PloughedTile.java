@@ -18,7 +18,11 @@ public class PloughedTile implements Tilable, TimeObserver {
         return harvestable != null;
     }
 
-    public PloughedTile(Map map,Position position) {
+    public Harvestable getHarvestable() {
+        return harvestable;
+    }
+
+    public PloughedTile(Map map, Position position) {
         tile = map.getTile(position);
     }
 
