@@ -1,8 +1,9 @@
 package models.animals;
 
 import models.time.Season;
+import models.tools.BackPackable;
 
-public enum FishType {
+public enum FishType{
     SALMON(Season.AUTUMN, 75),
     SARDINE(Season.AUTUMN, 40),
     SHAD(Season.AUTUMN, 60),

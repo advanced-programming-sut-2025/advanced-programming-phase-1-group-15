@@ -1,4 +1,4 @@
-package models.farming;
+package models.foraging;
 
 import models.map.Tilable;
 import models.time.DateAndTime;

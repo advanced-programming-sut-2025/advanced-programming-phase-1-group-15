@@ -1,6 +1,9 @@
 package models.farming;
 
-public enum FruitType {
+import models.map.Tilable;
+import models.tools.BackPackable;
+
+public enum FruitType implements BackPackable {
     APRICOT,
     CHERRY,
     BANANA,
@@ -14,5 +17,20 @@ public enum FruitType {
     PINE_TAR,
     SAP,
     COMMON_MUSHROOM,
-    MYSTIC_SYRUP
+    MYSTIC_SYRUP;
+
+    @Override
+    public String getName() {
+        return "";
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
+    @Override
+    public int getPrice() {
+        return 0;
+    }
 }

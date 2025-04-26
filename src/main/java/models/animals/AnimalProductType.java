@@ -1,6 +1,8 @@
 package models.animals;
 
-public enum AnimalProductType {
+import models.tools.BackPackable;
+
+public enum AnimalProductType{
     EGG(50),
     LARGE_EGG(95),
     DUCK_EGG(95),

@@ -5,7 +5,9 @@ import models.tools.BackPackable;
 
 public class CraftItem implements Tilable, BackPackable {
     private CraftItemType craftItemType;
-
+    public CraftItem(CraftItemType craftItemType) {
+        this.craftItemType = craftItemType;
+    }
     @Override
     public String getName() {
         return craftItemType.name().toLowerCase().replaceAll("_", " ");
