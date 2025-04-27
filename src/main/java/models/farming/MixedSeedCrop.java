@@ -1,7 +1,6 @@
 package models.farming;
 
 import models.time.Season;
-import models.tools.BackPackable;
 
 import java.util.ArrayList;
 import java.util.Arrays;

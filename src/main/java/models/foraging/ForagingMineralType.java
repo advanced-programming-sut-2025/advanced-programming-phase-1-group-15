@@ -1,7 +1,7 @@
 package models.foraging;
 
 
-public enum ForagingMineralType {
+public enum ForagingMineralType{
     QUARTZ(
             "A clear crystal commonly found in caves and mines.",
             25

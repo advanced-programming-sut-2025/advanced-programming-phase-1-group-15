@@ -1,5 +1,24 @@
 package models.animals;
 
-public class Fish {
-    private FishType fishType;
+import models.tools.BackPackable;
+
+public class Fish implements BackPackable {
+    private final FishType fishType;
+    public Fish(FishType fishType) {
+        this.fishType = fishType;
+    }
+    @Override
+    public String getName() {
+        return fishType.name().toLowerCase().replace("_", " ");
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
+    @Override
+    public int getPrice() {
+        return fishType.basePrice;
+    }
 }

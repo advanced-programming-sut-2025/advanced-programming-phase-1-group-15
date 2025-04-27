@@ -1,6 +1,7 @@
 package models.farming;
 
 import models.time.Season;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -520,7 +521,6 @@ public enum Crops{
     public String getName(){
         return name();
     }
-
     public static Crops getByName(String name) {
         String lowerName = name.trim().toLowerCase();
         switch (lowerName) {
