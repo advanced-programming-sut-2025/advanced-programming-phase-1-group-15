@@ -4,16 +4,15 @@ import models.App;
 import models.Game;
 import models.Player;
 import models.Result;
+import models.crafting.CraftItem;
 import models.farming.CropSeeds;
 import models.farming.Crops;
 import models.farming.PloughedTile;
 import models.farming.SeedType;
 import models.map.*;
 import models.tools.BackPackable;
-import models.tools.Hoe;
 import models.tools.Tool;
 import models.tools.TrashCan;
-
 public class GameMenuController {
     public static Player getCurrentPlayer() {
         return App.currentGame.getCurrentPlayer();
@@ -210,5 +209,45 @@ public class GameMenuController {
     }
     public static Result finishQuest(int index) {
         return null;
+    }
+    public static Result ShowRecipe() {
+        Player player = getCurrentPlayer();
+        for (CraftItem availableCraft : player.getAvailableCrafts()) {
+            System.out.println(availableCraft.getCraftItemType().recipe);
+        }
+        return null;
+    }
+    public static Result crafting(String craftingName) {
+        Player player = getCurrentPlayer();
+        CraftItem crafting = null;
+        for (CraftItem availableCraft : player.getAvailableCrafts()) {
+            if(availableCraft.getName().equals(craftingName)){
+                crafting = availableCraft;
+                for (BackPackable backPackable : availableCraft.getCraftItemType().ingredients.keySet()) {
+                    int num = availableCraft.getCraftItemType().ingredients.get(backPackable);
+                    for (BackPackable packable : player.getInventory().getItems().keySet()) {
+                        int number = player.getInventory().getItems().get(packable);
+                        if(packable.getName().equals(backPackable.getName())){
+                            if (number < num) {
+                                return new Result(false , "you dont have enough ingredients!");
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        if(crafting == null)
+            return new Result(false,"craft item not available");
+        for (BackPackable backPackable : crafting.getCraftItemType().ingredients.keySet()) {
+            int num = player.getInventory().getItems().get(backPackable);
+            for (BackPackable temp : player.getInventory().getItems().keySet()) {
+                int number = player.getInventory().getItems().get(temp);
+                if(backPackable.getName().equals(temp.getName())){
+                    player.getInventory().getItems().put(temp, number-num);
+                }
+            }
+        }
+        return new Result(true,"craft make successfully");
     }
 }
