@@ -2,8 +2,6 @@ package models.tools;
 
 import models.Player;
 import models.animals.Animal;
-import models.farming.Crop;
-import models.farming.ForagingCrop;
 import models.map.Tile;
 
 public class MilkPail extends Tool {

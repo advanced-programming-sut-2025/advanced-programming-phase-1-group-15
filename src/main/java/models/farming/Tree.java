@@ -3,9 +3,8 @@ package models.farming;
 import models.map.Tilable;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
-import models.tools.BackPackable;
 
-public class Tree implements Tilable, TimeObserver , Harvestable{
+public class Tree implements Tilable, TimeObserver , Harvestable {
     private TreeType treeType;
 
     private GiantProducts giantProducts;
@@ -19,8 +18,13 @@ public class Tree implements Tilable, TimeObserver , Harvestable{
     public void setTreeType(TreeType treeType) {
         this.treeType = treeType;
     }
-    public Tree(){
-    }  // TODO: should be checked
+
+    public Tree(TreeType treeType) {
+        this.treeType = treeType;
+    }
+
+    public Tree(){}  // TODO: should be checked
+
     @Override
     public void update(DateAndTime dateAndTime) {
 
