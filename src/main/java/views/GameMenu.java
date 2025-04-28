@@ -224,6 +224,16 @@ public class GameMenu implements AppMenu {
                 System.out.println(GameMenuController.plant(matcher.group("seed"),
                         Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy"))));
             }
+            else if(GameMenuCommands.Recipe.matches(command)) {
+                Matcher matcher = GameMenuCommands.Recipe.matcher(command);
+                matcher.matches();
+                System.out.println(GameMenuController.ShowRecipe());
+            }
+            else if(GameMenuCommands.Crafting.matches(command)) {
+                Matcher matcher = GameMenuCommands.Crafting.matcher(command);
+                matcher.matches();
+                System.out.println(GameMenuController.crafting(matcher.group("itemName")));
+            }
             else {
                 System.out.println("invalid command");
             }

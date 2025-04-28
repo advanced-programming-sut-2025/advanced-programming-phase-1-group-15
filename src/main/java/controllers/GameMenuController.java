@@ -248,6 +248,7 @@ public class GameMenuController {
                 }
             }
         }
+        player.getInventory().getItems().put(crafting , 1);
         return new Result(true,"craft make successfully");
     }
 }
