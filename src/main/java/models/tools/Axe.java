@@ -1,7 +1,6 @@
 package models.tools;
 
 import models.Player;
-import models.farming.ForagingSeeds;
 import models.farming.Seed;
 import models.farming.Tree;
 import models.map.Tile;

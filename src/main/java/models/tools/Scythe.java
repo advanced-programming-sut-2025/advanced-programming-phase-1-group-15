@@ -2,7 +2,7 @@ package models.tools;
 
 import models.Player;
 import models.farming.Crop;
-import models.farming.ForagingCrop;
+import models.foraging.ForagingCrop;
 import models.map.Tile;
 
 public class Scythe extends Tool {

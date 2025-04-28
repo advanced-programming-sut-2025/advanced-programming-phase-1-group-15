@@ -1,6 +1,6 @@
 package models.stores;
 
-import models.farming.ForagingSeeds;
+import models.foraging.ForagingSeeds;
 
 import java.util.ArrayList;
 
