@@ -7,6 +7,8 @@ import models.foraging.*;
 import models.tools.BackPackable;
 import java.util.HashMap;
 
+import static models.foraging.ForagingCropsType.*;
+
 public enum ArtisanItemType {
     BEER(CraftItemType.KEG,
             "Drink in moderation.",
@@ -103,25 +105,25 @@ public enum ArtisanItemType {
             50,
             9,
             new HashMap<>(){{
-                put(new ForagingCrop(ForagingCropsType.COMMON_MUSHROOM),5);
+                put(new ForagingCrop(COMMON_MUSHROOM),5);
             }},
-            7*ForagingCropsType.COMMON_MUSHROOM.basePrice/10+25),
+            7*COMMON_MUSHROOM.basePrice/10+25),
     DRIED_RED_MUSHROOM(CraftItemType.DEHYDRATOR,
             "A package of gourmet mushrooms.",
             50,
             9,
             new HashMap<>(){{
-                put(new ForagingCrop(ForagingCropsType.RED_MUSHROOM),5);
+                put(new ForagingCrop(RED_MUSHROOM),5);
             }},
-            7*ForagingCropsType.RED_MUSHROOM.basePrice/10+25),
+            7*RED_MUSHROOM.basePrice/10+25),
     DRIED_PURPLE_MUSHROOM(CraftItemType.DEHYDRATOR,
             "A package of gourmet mushrooms.",
             50,
             9,
             new HashMap<>(){{
-                put(new ForagingCrop(ForagingCropsType.PURPLE_MUSHROOM),5);
+                put(new ForagingCrop(PURPLE_MUSHROOM),5);
             }},
-            7*ForagingCropsType.RED_MUSHROOM.basePrice/10+25),
+            7* PURPLE_MUSHROOM.basePrice/10+25),
     DRIED_FRUIT(CraftItemType.DEHYDRATOR,
             "Chewy pieces of dried fruit.",
             75,

@@ -3,6 +3,7 @@ package models;
 import models.animals.Animal;
 import models.cooking.Food;
 import models.cooking.FoodType;
+import models.crafting.CraftItem;
 import models.crafting.CraftItemType;
 import models.map.Farm;
 import models.relation.PlayerFriendShip;
@@ -56,9 +57,8 @@ public class Player extends User implements TimeObserver {
 
     private Game game;
 
-    private ArrayList<CraftItemType> availableCrafts = new ArrayList<>();
-    private ArrayList<FoodType> availableFoods = new ArrayList<>();
-
+    private ArrayList<CraftItem> availableCrafts = new ArrayList<>();
+    private ArrayList<Food> availableFoods = new ArrayList<>();
     private ArrayList<Animal> animals = new ArrayList<>();
 
     private HashMap<Player,PlayerFriendShip> friendships = new HashMap<>();
@@ -267,6 +267,14 @@ public class Player extends User implements TimeObserver {
     }
     public void showFriendships() {
 
+    }
+
+    public ArrayList<CraftItem> getAvailableCrafts() {
+        return availableCrafts;
+    }
+
+    public ArrayList<Food> getAvailableFoods() {
+        return availableFoods;
     }
 
     @Override

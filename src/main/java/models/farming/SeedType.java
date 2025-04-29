@@ -1,6 +1,5 @@
 package models.farming;
 
-import models.tools.BackPackable;
 
 public enum SeedType {
     APRICOT_SAPLING,
