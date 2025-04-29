@@ -34,4 +34,14 @@ public class Tree implements Tilable, TimeObserver , Harvestable {
     public void harvest() {
 
     }
+
+    @Override
+    public int getDaysUntilHarvest() {
+        return 0;
+    }
+
+    @Override
+    public String printInfo() {
+        return "";
+    }
 }

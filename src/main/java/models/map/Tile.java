@@ -1,7 +1,7 @@
 package models.map;
 
 import models.App;
-import models.farming.PloughedTile;
+import models.farming.GeneralPlants.PloughedTile;
 import models.farming.Tree;
 import models.foraging.Stone;
 
