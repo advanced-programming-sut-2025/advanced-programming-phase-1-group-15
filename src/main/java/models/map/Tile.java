@@ -129,4 +129,9 @@ public class Tile {
             }
         }
     }
+
+    public void removeObjectInTile() {
+        objectInTile = null;
+        // TODO: check if any other thing should be checked later
+    }
 }

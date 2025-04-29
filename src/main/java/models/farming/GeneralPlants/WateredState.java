@@ -15,6 +15,11 @@ public class WateredState implements PlantState {
     }
 
     @Override
+    public Result updateByTime(PloughedTile tile) {
+        return null;
+    }
+
+    @Override
     public Result water(PloughedTile tile) {
         return new Result(false,"this tile is already watered");
     }

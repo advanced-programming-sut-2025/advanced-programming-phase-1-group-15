@@ -1,6 +1,6 @@
 package models.farming;
 
-public enum CropSeeds {
+public enum CropSeeds  {
     JAZZ_SEED,
     CARROT_SEED,
     CAULIFLOWER_SEED,

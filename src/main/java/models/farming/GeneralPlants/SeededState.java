@@ -5,6 +5,11 @@ import models.farming.SeedType;
 
 public class SeededState implements PlantState {
     @Override
+    public Result updateByTime(PloughedTile tile) {
+        return null;
+    }
+
+    @Override
     public Result fertilize(PloughedTile tile) {
         tile.setState(new FertilizedState());
         return null;

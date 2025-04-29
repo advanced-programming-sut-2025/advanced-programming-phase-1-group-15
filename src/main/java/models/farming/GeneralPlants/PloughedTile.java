@@ -13,6 +13,9 @@ public class PloughedTile implements Tilable, TimeObserver {
     Position position;
     Map map;
     Tile tile;
+    DateAndTime lastUpdate;
+
+
 
     private PlantState currentState = new PloughedState();
 
@@ -45,10 +48,18 @@ public class PloughedTile implements Tilable, TimeObserver {
 
     @Override
     public void update(DateAndTime dateAndTime) {
-
+        if(lastUpdate.getDay() != dateAndTime.getDay()){
+            currentState.updateByTime(this);
+        }
+        // other changes should be added
+        lastUpdate = dateAndTime;
     }
 
     public boolean hasTreeOrCrop() {
         return harvestable != null;
+    }
+
+    public void unPlough(){
+        this.tile.removeObjectInTile();
     }
 }

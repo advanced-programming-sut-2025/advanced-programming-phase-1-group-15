@@ -5,27 +5,62 @@ import models.time.Season;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public enum MixedSeedCrop {
-    CAULIFLOWER(new ArrayList<>(List.of(Season.SPRING))),
-    PARSNIP(new ArrayList<>(List.of(Season.SPRING))),
-    POTATO(new ArrayList<>(List.of(Season.SPRING))),
-    BLUE_JAZZ(new ArrayList<>(List.of(Season.SPRING))),
-    TULIP(new ArrayList<>(List.of(Season.SPRING))),
-    CORN(new ArrayList<>(Arrays.asList(Season.SUMMER , Season.AUTUMN))),
-    HOT_PEPPER(new ArrayList<>(List.of(Season.SUMMER))),
-    RADISH(new ArrayList<>(List.of(Season.SUMMER))),
-    WHEAT(new ArrayList<>(List.of(Season.SUMMER))),
-    POPPY(new ArrayList<>(List.of(Season.SUMMER))),
-    SUNFLOWER(new ArrayList<>(Arrays.asList(Season.SUMMER , Season.AUTUMN))),
-    SUMMER_SPANGLE(new ArrayList<>(List.of(Season.SUMMER))),
-    ARTICHOKE(new ArrayList<>(List.of(Season.AUTUMN))),
-    EGGPLANT(new ArrayList<>(List.of(Season.AUTUMN))),
-    PUMPKIN(new ArrayList<>(List.of(Season.AUTUMN))),
-    FAIRY_ROSE(new ArrayList<>(List.of(Season.AUTUMN))),
-    POWDER_MELON(new ArrayList<>(List.of(Season.WINTER)));
-    public final ArrayList<Season> season;
-    MixedSeedCrop(ArrayList<Season> season) {
-        this.season = season;
-    }
+        SUMMER_SEEDS(new ArrayList<>(List.of(
+                CropSeeds.CORN_SEED,
+                CropSeeds.PEPPER_SEED,
+                CropSeeds.RADISH_SEED,
+                CropSeeds.WHEAT_SEED,
+                CropSeeds.POPPY_SEED,
+                CropSeeds.SUNFLOWER_SEED,
+                CropSeeds.SPANGLE_SEED
+        ))),
+        SPRING_SEEDS(new ArrayList<>(List.of(
+                CropSeeds.CAULIFLOWER_SEED,
+                CropSeeds.PARSNIP_SEED,
+                CropSeeds.POTATO_SEED,
+                CropSeeds.JAZZ_SEED,
+                CropSeeds.TULIP_BULB
+        ))),
+        AUTUMN_SEEDS(new ArrayList<>(List.of(
+                CropSeeds.CORN_SEED,
+                CropSeeds.SUNFLOWER_SEED,
+                CropSeeds.ARTICHOKE_SEED,
+                CropSeeds.EGGPLANT_SEED,
+                CropSeeds.PUMPKIN_STARTER,
+                CropSeeds.FAIRY_SEED
+        ))),
+        WINTER_SEEDS(new ArrayList<>(List.of(CropSeeds.POWDER_MELON_SEED)));
+
+        public final ArrayList<CropSeeds> possibleSeeds;
+        MixedSeedCrop(ArrayList<CropSeeds> possibleSeeds) {
+            this.possibleSeeds = possibleSeeds;
+        }
+
+        public ArrayList<CropSeeds> getPossibleSeeds() {
+                return possibleSeeds;
+        }
+
+        public static CropSeeds getRandomSeed(Season season) {
+                ArrayList<CropSeeds> seeds = new ArrayList<>();
+                if(season == Season.SPRING){
+                        seeds = SPRING_SEEDS.possibleSeeds;
+                }
+                else if(season == Season.AUTUMN){
+                        seeds = AUTUMN_SEEDS.possibleSeeds;
+                }
+                else if(season == Season.WINTER){
+                        seeds = WINTER_SEEDS.possibleSeeds;
+                }
+                else if(season == Season.SUMMER){
+                        seeds = SUMMER_SEEDS.possibleSeeds;
+                }
+                else{
+                        throw new IllegalArgumentException("Unsupported season: " + season);
+                }
+                Random rand = new Random();
+                return seeds.get(rand.nextInt(seeds.size()));
+        }
 }

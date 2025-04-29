@@ -25,4 +25,13 @@ public class FertilizedState implements PlantState {
     public Result harvest(PloughedTile tile) {
         return new Result(false,"you should fertilize this tile first");
     }
+
+    @Override
+    public Result updateByTime(PloughedTile tile) {
+        daysNotWatered++;
+        if(daysNotWatered >= 2){
+            tile.unPlough();
+        }
+        return null;
+    }
 }

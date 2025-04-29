@@ -6,6 +6,11 @@ import models.farming.SeedType;
 public class PloughedState implements PlantState {
 
     @Override
+    public Result updateByTime(PloughedTile tile) {
+        return null;
+    }
+
+    @Override
     public Result seed(PloughedTile tile, SeedType seed) {
         tile.setState(new SeededState());
         return new Result(true,"congratulations! you seeded this tile!");

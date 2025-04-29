@@ -8,5 +8,5 @@ public interface PlantState {
     Result fertilize(PloughedTile tile);
     Result water(PloughedTile tile);
     Result harvest(PloughedTile tile);
-
+    Result updateByTime(PloughedTile tile);
 }
