@@ -1,11 +1,13 @@
 package controllers;
 
 import models.App;
+import models.Player;
 import models.Result;
+import models.crafting.CraftItem;
+import models.crafting.CraftItemType;
 import models.map.Position;
+import models.tools.BackPackable;
 import models.weather.WeatherOption;
-
-import java.util.Objects;
 
 public class CheatCodeController {
     public static Result cheatAdvanceTime(int hours) {
@@ -63,5 +65,89 @@ public class CheatCodeController {
 
     public static Result cheatAddProduct(String productName, int amount) {
         return null;
+    }
+
+    public static Result cheatAddItem(String itemName , String count) {
+        itemName = itemName.trim();
+        Player player = App.currentGame.getCurrentPlayer();
+        boolean find = false;
+        for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
+            if (backPackable.getName().equals(itemName)) {
+                find = true;
+                break;
+            }
+        }
+        if (!find && player.getInventory().getItems().size()==player.getInventory().getCapacity()){
+            return new Result(false , "your inventory is full!");
+        }
+        int num = Integer.parseInt(count);
+        CraftItem item = null;
+        switch (itemName){
+            case "cherry bomb":
+                item = new CraftItem(CraftItemType.CHERRY_BOMB);
+                break;
+            case "charcoal klin":
+                item = new CraftItem(CraftItemType.CHARCOAL_KLIN);
+                break;
+            case "bomb":
+                item = new CraftItem(CraftItemType.BOMB);
+                break;
+            case "mega bomb":
+                item = new CraftItem(CraftItemType.MEGA_BOMB);
+                break;
+            case "sprinkler":
+                item = new CraftItem(CraftItemType.SPRINKLER);
+                break;
+            case "quality sprinkler":
+                item = new CraftItem(CraftItemType.QUALITY_SPRINKLER);
+                break;
+            case "iridium sprinkler":
+                item = new CraftItem(CraftItemType.IRIDIUM_SPRINKLER);
+                break;
+            case "furnace":
+                item = new CraftItem(CraftItemType.FURNACE);
+                break;
+            case "scarecrow":
+                item = new CraftItem(CraftItemType.SCARECROW);
+                break;
+            case "deluxe sprinkler":
+                item = new CraftItem(CraftItemType.DELUXE_SCARECROW);
+                break;
+            case "bee house":
+                item = new CraftItem(CraftItemType.BEE_HOUSE);
+                break;
+            case "cheese press":
+                item = new CraftItem(CraftItemType.CHEESE_PRESS);
+                break;
+            case "keg":
+                item = new CraftItem(CraftItemType.KEG);
+                break;
+            case "loom":
+                item = new CraftItem(CraftItemType.LOOM);
+                break;
+            case "mayonnaise machine":
+                item = new CraftItem(CraftItemType.MAYONNAISE_MACHINE);
+                break;
+            case "oil maker":
+                item = new CraftItem(CraftItemType.OIL_MAKER);
+                break;
+            case "fish smoker":
+                item = new CraftItem(CraftItemType.FISH_SMOKER);
+                break;
+            case "preserves jar":
+                item = new CraftItem(CraftItemType.PRESERVES_JAR);
+                break;
+            case "dehydrator":
+                item = new CraftItem(CraftItemType.DEHYDRATOR);
+                break;
+            case "mystic tree seed":
+                item = new CraftItem(CraftItemType.MYSTIC_TREE_SEED);
+                break;
+            default:
+                return new Result(false , "item not available");
+        }
+        if(item!=null)
+            player.getInventory().getItems().put(item , player.getInventory().getItems().getOrDefault(item, 0) + 1);
+        return new Result(true , "item added successfully");
     }
 }
