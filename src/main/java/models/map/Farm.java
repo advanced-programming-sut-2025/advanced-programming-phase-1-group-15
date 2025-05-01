@@ -3,7 +3,12 @@ package models.map;
 import models.App;
 import models.Player;
 import models.farming.Tree;
+import models.farming.TreeType;
+import models.foraging.ForagingMineral;
+import models.foraging.ForagingMineralType;
 import models.foraging.Stone;
+import models.time.DateAndTime;
+import models.time.Season;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -39,7 +44,60 @@ public class Farm extends Area {
         }
     }
 
+    private void randomTreeGenerator(Season season) {
+        Random rand = new Random();
+        int treesCount = rand.nextInt(6) + 7;
 
+        ArrayList<TreeType> validTreeTypes = new ArrayList<>();
+        for (TreeType treeType : TreeType.values()) {
+            if (treeType.season.contains(season)) {
+                validTreeTypes.add(treeType);
+            }
+        }
+
+        for (int i = 0; i < treesCount; i++) {
+            while (true) {
+                int randomRow = rand.nextInt(tiles.size());
+                int randomCol = rand.nextInt(tiles.get(randomRow).size());
+                Tile randomTile = tiles.get(randomRow).get(randomCol);
+
+                if (randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
+                    TreeType randomTreeType = validTreeTypes.get(rand.nextInt(validTreeTypes.size()));
+
+                    randomTile.put(new Tree(randomTreeType));
+                    break;
+                }
+            }
+        }
+    }
+
+    private void randomMineralGenerator() {
+        Random rand = new Random();
+        int mineralsCount = rand.nextInt(6) + 7;
+
+        for (int i = 0; i < mineralsCount; i++) {
+            while (true) {
+                int randomRow = rand.nextInt(tiles.size());
+                int randomCol = rand.nextInt(tiles.get(randomRow).size());
+                Tile randomTile = tiles.get(randomRow).get(randomCol);
+
+                if(rand.nextBoolean()) {
+                    if (randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
+                        randomTile.put(new Stone());
+                        break;
+                    }
+                }
+                else {
+                    if (randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
+                        ForagingMineralType randomMineralType = ForagingMineralType.values()[rand.nextInt(ForagingMineralType.values().length)];
+
+                        randomTile.put(new ForagingMineral(randomMineralType));
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
     public void build() {
         innerAreas = new ArrayList<>();
@@ -51,33 +109,23 @@ public class Farm extends Area {
 
         for(Area innerArea : innerAreas){
             innerArea.setParentArea(this);
+            innerArea.owner = this.owner;
             innerArea.build();
         }
 
-        Random rand = new Random();
-        int treesCount = rand.nextInt(6) + 7;
-        int stonesCount = rand.nextInt(6) + 7;
-        for(int i = 0; i < treesCount; i++) {
-            while(true) {
-                int randomRow = rand.nextInt(tiles.size());
-                int randomCol = rand.nextInt(tiles.get(randomRow).size());
-                Tile randomTile = tiles.get(randomRow).get(randomCol);
-                if(randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
-                    randomTile.put(new Tree());
-                    break;
-                }
-            }
+        randomTreeGenerator(Season.SPRING);
+        randomMineralGenerator();
+    }
+
+    @Override
+    public void update(DateAndTime dateAndTime) {
+        if(dateAndTime.getDay() == 1 || dateAndTime.getDay() == 14) {
+            randomTreeGenerator(dateAndTime.getSeason());
+            randomMineralGenerator();
         }
-        for(int i = 0; i < stonesCount; i++) {
-            while(true) {
-                int randomRow = rand.nextInt(tiles.size());
-                int randomCol = rand.nextInt(tiles.get(randomRow).size());
-                Tile randomTile = tiles.get(randomRow).get(randomCol);
-                if(randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
-                    randomTile.put(new Stone());
-                    break;
-                }
-            }
+
+        for(Area innerArea : innerAreas) {
+            innerArea.update(dateAndTime);
         }
     }
 }

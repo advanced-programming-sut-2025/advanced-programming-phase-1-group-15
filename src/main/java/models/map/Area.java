@@ -1,25 +1,26 @@
 package models.map;
 
 import models.Player;
+import models.time.TimeObserver;
 
 import java.util.ArrayList;
 
-public abstract class Area {
+public abstract class Area implements TimeObserver {
     protected AreaType areaType;
     protected ArrayList<ArrayList<Tile>> tiles;
 
     protected ArrayList<Area> innerAreas;
     protected Area parentArea;
 
-    protected Player owner = null;
+    protected Player owner;
 
     public Player getOwner() {
-        if(this instanceof Map) return null;
+        if(parentArea == null) return null;
 
-        if(this.owner == null) {
+        if(owner == null) {
             return parentArea.getOwner();
         }
-        return this.owner;
+        return owner;
     }
 
     public void setParentArea(Area parentArea) {

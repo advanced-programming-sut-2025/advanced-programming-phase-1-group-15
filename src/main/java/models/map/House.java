@@ -1,5 +1,6 @@
 package models.map;
 
+import models.time.DateAndTime;
 import models.tools.BackPackable;
 
 import java.util.ArrayList;
@@ -38,10 +39,15 @@ public class House extends Area {
     public void build() {
         for(ArrayList<Tile> row : tiles) {
             for(Tile tile : row) {
-                if(this.getOwner() != null && tile.getPosition().x == fridgeCoordinates[this.getOwner().getMapNumber() - 1][0] && tile.getPosition().y == fridgeCoordinates[this.getOwner().getMapNumber() - 1][1]) {
-                    tile.put(this.getOwner().fridge());
+                if(owner != null && tile.getPosition().x == fridgeCoordinates[owner.getMapNumber() - 1][0] && tile.getPosition().y == fridgeCoordinates[owner.getMapNumber() - 1][1]) {
+                    tile.put(owner.fridge());
                 }
             }
         }
+    }
+
+    @Override
+    public void update(DateAndTime dateAndTime) {
+
     }
 }

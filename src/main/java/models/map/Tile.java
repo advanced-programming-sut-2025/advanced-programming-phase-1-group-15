@@ -3,6 +3,7 @@ package models.map;
 import models.App;
 import models.farming.GeneralPlants.PloughedTile;
 import models.farming.Tree;
+import models.foraging.ForagingMineral;
 import models.foraging.Stone;
 import models.tools.Fridge;
 
@@ -120,6 +121,9 @@ public class Tile {
             else if(objectInTile instanceof Stone) {
                 PrintInColor.printInBrightGray('O');
             }
+            else if(objectInTile instanceof ForagingMineral) {
+                PrintInColor.printInBrightYellow('*');
+            }
             else if(objectInTile instanceof Fridge) {
                 PrintInColor.printInBlue('F');
             }
@@ -132,10 +136,5 @@ public class Tile {
                 System.out.print('.');
             }
         }
-    }
-
-    public void removeObjectInTile() {
-        objectInTile = null;
-        // TODO: check if any other thing should be checked later
     }
 }

@@ -45,6 +45,7 @@ public class Game implements TimeObserver {
         mapTiles = Tile.buildMapTiles();
         map = new Map(mapTiles);
         map.build();
+        dateAndTime.addObserver(map);
     }
 
     public ArrayList<Player> getPlayers() {

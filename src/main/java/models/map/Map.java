@@ -26,7 +26,7 @@ import java.util.Queue;
 */
 
 
-public class Map extends Area implements TimeObserver, WeatherObserver {
+public class Map extends Area {
     public static int ROWS = 50;
     public static int COLS = 100;
 
@@ -61,11 +61,9 @@ public class Map extends Area implements TimeObserver, WeatherObserver {
 
     @Override
     public void update(DateAndTime dateAndTime) {
-
-    }
-    @Override
-    public void update(WeatherOption weatherOption) {
-
+        for(Area innerArea : innerAreas){
+            innerArea.update(dateAndTime);
+        }
     }
 
     public void printMap() {

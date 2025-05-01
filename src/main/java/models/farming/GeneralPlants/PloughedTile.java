@@ -60,6 +60,6 @@ public class PloughedTile implements Tilable, TimeObserver {
     }
 
     public void unPlough(){
-        this.tile.removeObjectInTile();
+        this.tile.empty();
     }
 }

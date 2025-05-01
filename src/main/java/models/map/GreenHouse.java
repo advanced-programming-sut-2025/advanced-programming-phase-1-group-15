@@ -1,5 +1,7 @@
 package models.map;
 
+import models.time.DateAndTime;
+
 import java.util.ArrayList;
 
 public class GreenHouse extends Area {
@@ -27,6 +29,11 @@ public class GreenHouse extends Area {
 
     }
     public void repair() {
+
+    }
+
+    @Override
+    public void update(DateAndTime dateAndTime) {
 
     }
 }

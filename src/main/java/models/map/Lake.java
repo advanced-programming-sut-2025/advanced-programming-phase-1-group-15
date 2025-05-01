@@ -2,6 +2,7 @@ package models.map;
 
 import models.App;
 import models.Player;
+import models.time.DateAndTime;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -26,6 +27,11 @@ public class Lake extends Area {
     }
 
     public void build() {
+
+    }
+
+    @Override
+    public void update(DateAndTime dateAndTime) {
 
     }
 }
