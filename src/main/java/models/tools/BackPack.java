@@ -6,7 +6,6 @@ public class BackPack extends Tool {
     private int itemsCount;
     private int capacity;
     private HashMap<BackPackable, Integer> items = new HashMap<>();
-
     public BackPack() {
         this.toolType = ToolType.BACKPACK;
         this.toolLevel = ToolLevel.NORMAL;
@@ -19,6 +18,10 @@ public class BackPack extends Tool {
         items.put(new Axe(), 1);
         items.put(new WateringCan(), 1);
         items.put(new Scythe(), 1);
+    }
+
+    public int getCapacity() {
+        return capacity;
     }
 
     public HashMap<BackPackable, Integer> getItems() {

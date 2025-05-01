@@ -267,7 +267,17 @@ public class GameMenuController {
         return null;
     }
     public static Result crafting(String craftingName) {
-        Player player = getCurrentPlayer();
+        Player player = App.currentGame.getCurrentPlayer();
+        boolean find = false;
+        for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
+            if (backPackable.getName().equals(craftingName)) {
+                find = true;
+                break;
+            }
+        }
+        if (!find && player.getInventory().getItems().size()==player.getInventory().getCapacity()){
+            return new Result(false , "your inventory is full!");
+        }
         CraftItem crafting = null;
         for (CraftItem availableCraft : player.getAvailableCrafts()) {
             if(availableCraft.getName().equals(craftingName)){
@@ -297,7 +307,8 @@ public class GameMenuController {
                 }
             }
         }
-        player.getInventory().getItems().put(crafting , 1);
+        player.getInventory().getItems().put(crafting , player.getInventory().getItems().getOrDefault(crafting, 0) + 1);
+        player.setEnergy(player.getEnergy()-2);
         return new Result(true,"craft make successfully");
     }
 }
