@@ -1,6 +1,6 @@
 package models.map;
 
-import models.cooking.Fridgable;
+import models.tools.BackPackable;
 
 import java.util.ArrayList;
 
@@ -17,8 +17,12 @@ public class House extends Area {
             {67, 35}, //MAP 3
             {88, 33}   //MAP 4
     };
-
-    private ArrayList<Fridgable> fridge = new ArrayList<>();
+    public static int[][] fridgeCoordinates = {
+            {7, 5},   //MAP 1
+            {62, 13}, //MAP 2
+            {69, 36}, //MAP 3
+            {89, 30}   //MAP 4
+    };
 
     public House(ArrayList<ArrayList<Tile>> houseTiles) {
         this.areaType = AreaType.HOUSE;
@@ -32,6 +36,12 @@ public class House extends Area {
     }
 
     public void build() {
-
+        for(ArrayList<Tile> row : tiles) {
+            for(Tile tile : row) {
+                if(this.getOwner() != null && tile.getPosition().x == fridgeCoordinates[this.getOwner().getMapNumber() - 1][0] && tile.getPosition().y == fridgeCoordinates[this.getOwner().getMapNumber() - 1][1]) {
+                    tile.put(this.getOwner().fridge());
+                }
+            }
+        }
     }
 }

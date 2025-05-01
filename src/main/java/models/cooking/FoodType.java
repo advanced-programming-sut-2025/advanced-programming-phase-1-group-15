@@ -7,6 +7,7 @@ import models.farming.*;
 import models.foraging.ForagingCrop;
 import models.foraging.ForagingCropsType;
 import models.tools.BackPackable;
+
 import java.util.HashMap;
 
 public enum FoodType {
@@ -34,7 +35,7 @@ public enum FoodType {
             113,
             false,
             110),
-    OMELET("1 egg + 1 milk = 1 olmelet",
+    OMELET("1 egg + 1 milk = 1 omelet",
             new HashMap<>(){{
                 put(new AnimalProduct(AnimalProductType.EGG),1);
                 put(new AnimalProduct(AnimalProductType.COW_MILK),1);

@@ -1,9 +1,11 @@
 package controllers;
 
+import com.sun.jdi.AbsentInformationException;
 import models.App;
 import models.Game;
 import models.Player;
 import models.Result;
+import models.cooking.Food;
 import models.crafting.CraftItem;
 import models.farming.CropSeeds;
 import models.farming.Crops;
@@ -13,6 +15,7 @@ import models.map.*;
 import models.tools.BackPackable;
 import models.tools.Tool;
 import models.tools.TrashCan;
+
 public class GameMenuController {
     public static Player getCurrentPlayer() {
         return App.currentGame.getCurrentPlayer();
@@ -123,6 +126,44 @@ public class GameMenuController {
         return new Result(true, tool.use(useTile, getCurrentPlayer()));
     }
 
+    public static Result putInFridge(String itemName) {
+        BackPackable item = getCurrentPlayer().getInventory().getItemByName(itemName);
+        if(item == null) {
+            return new Result(false, "You don't have that item in your inventory.");
+        }
+
+        int itemCount = getCurrentPlayer().getInventory().getItemCount(itemName);
+        getCurrentPlayer().fridge().addToFridge(item, itemCount);
+        getCurrentPlayer().getInventory().removeFromBackPack(item);
+
+        return new Result(true, item.getName() + " moved to fridge.");
+    }
+    public static Result pickFromFridge(String itemName) {
+        BackPackable item = getCurrentPlayer().fridge().getItemByName(itemName);
+        if(item == null) {
+            return new Result(false, "You don't have that item in your fridge.");
+        }
+
+        int itemCount = getCurrentPlayer().fridge().getItemCount(itemName);
+        getCurrentPlayer().getInventory().addToBackPack(item, itemCount);
+        getCurrentPlayer().fridge().removeFromFridge(item);
+
+        return new Result(true, item.getName() + " moved to inventory.");
+    }
+    public static Result showCookingRecipes() {
+        return new Result(true, "Available cooking recipes: \n" + getCurrentPlayer().showAvailableFoods());
+    }
+    public static Result eatFood(String foodName) {
+        Food food = (Food) getCurrentPlayer().getInventory().getItemByName(foodName);
+        if(food == null) {
+            return new Result(false, "You don't have that food.");
+        }
+
+        getCurrentPlayer().eat(food);
+        getCurrentPlayer().getInventory().removeCountFromBackPack(food, 1);
+        return new Result(true, "You ate " + food.getName() + ". " + food.getEnergy() + " energy added.");
+    }
+
     public static Result showCropInfo(String name) {
         Crops crop = Crops.getByName(name);
         if(crop == null)
@@ -189,12 +230,7 @@ public class GameMenuController {
         return null;
     }
 
-    public static Result cookFood(String foodName) {
-        return null;
-    }
-    public static Result eatFood(String foodName) {
-        return null;
-    }
+
 
     public static Result collectProduce(String animalName) {
         return null;

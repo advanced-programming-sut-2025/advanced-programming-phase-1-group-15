@@ -4,19 +4,15 @@ import models.animals.Animal;
 import models.cooking.Food;
 import models.cooking.FoodType;
 import models.crafting.CraftItem;
-import models.crafting.CraftItemType;
 import models.map.Farm;
 import models.relation.PlayerFriendShip;
 import models.map.Position;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
-import models.tools.BackPack;
-import models.tools.BackPackable;
-import models.tools.Tool;
-import models.tools.TrashCan;
+import models.tools.*;
 
-import javax.sound.midi.Track;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Player extends User implements TimeObserver {
@@ -36,6 +32,7 @@ public class Player extends User implements TimeObserver {
 
     private BackPack inventory = new BackPack();
     private TrashCan trashCan = new TrashCan();
+    private Fridge fridge = new Fridge();
     private Tool currentTool = null;
 
     private int farmingAbility = 0;
@@ -58,7 +55,10 @@ public class Player extends User implements TimeObserver {
     private Game game;
 
     private ArrayList<CraftItem> availableCrafts = new ArrayList<>();
-    private ArrayList<Food> availableFoods = new ArrayList<>();
+
+    private ArrayList<Food> availableFoods = new ArrayList<>(Arrays.asList(new Food(FoodType.FRIED_EGG),
+            new Food(FoodType.BACKED_FISH), new Food(FoodType.SALAD)));
+
     private ArrayList<Animal> animals = new ArrayList<>();
 
     private HashMap<Player,PlayerFriendShip> friendships = new HashMap<>();
@@ -143,6 +143,9 @@ public class Player extends User implements TimeObserver {
             energy -= amount;
         }
     }
+    public void addEnergy(int amount) {
+        energy = Math.min(200, energy + amount);
+    }
 
     public boolean isLocked() {
         return !unlimitedEnergy && energyConsumed >= 50;
@@ -173,6 +176,10 @@ public class Player extends User implements TimeObserver {
         if(!inventory.checkFilled()) {
             inventory.addToBackPack(bp, count);
         }
+    }
+
+    public Fridge fridge() {
+        return fridge;
     }
 
     public TrashCan getTrashCan() {
@@ -238,11 +245,16 @@ public class Player extends User implements TimeObserver {
         }
     }
 
+    public ArrayList<CraftItem> getAvailableCrafts() {
+        return availableCrafts;
+    }
+
+    public ArrayList<Food> getAvailableFoods() {
+        return availableFoods;
+    }
+
     public ArrayList<Animal> getAnimals() {
         return animals;
-    }
-    public void setAnimals(ArrayList<Animal> animals) {
-        this.animals = animals;
     }
 
     public Player getCouple() {
@@ -253,28 +265,26 @@ public class Player extends User implements TimeObserver {
     }
 
     public void eat(Food food) {
-
+        addEnergy(food.getEnergy());
     }
 
-    public void showCrafts() {
+    public void showAvailableCrafts() {
 
     }
-    public void showRecipes() {
+    public String showAvailableFoods() {
+        StringBuilder sb = new StringBuilder();
+        for(Food food : availableFoods) {
+            sb.append(food.getName()).append("    ");
+            sb.append(food.getRecipe()).append("\n");
+        }
 
+        return sb.toString();
     }
     public void showAnimals() {
 
     }
     public void showFriendships() {
 
-    }
-
-    public ArrayList<CraftItem> getAvailableCrafts() {
-        return availableCrafts;
-    }
-
-    public ArrayList<Food> getAvailableFoods() {
-        return availableFoods;
     }
 
     @Override

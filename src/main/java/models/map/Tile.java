@@ -4,6 +4,7 @@ import models.App;
 import models.farming.GeneralPlants.PloughedTile;
 import models.farming.Tree;
 import models.foraging.Stone;
+import models.tools.Fridge;
 
 import java.util.ArrayList;
 
@@ -118,6 +119,9 @@ public class Tile {
             }
             else if(objectInTile instanceof Stone) {
                 PrintInColor.printInBrightGray('O');
+            }
+            else if(objectInTile instanceof Fridge) {
+                PrintInColor.printInBlue('F');
             }
         }
         else {

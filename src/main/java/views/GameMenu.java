@@ -213,6 +213,35 @@ public class GameMenu implements AppMenu {
                 System.out.println(result.message());
             }
 
+            else if(GameMenuCommands.FRIDGE_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.FRIDGE_REGEX.matcher(command);
+
+                String action = matcher.matches() ? matcher.group("action") : "";
+                String itemName = matcher.group("itemName");
+
+                Result result;
+                if(action.equalsIgnoreCase("put")) {
+                    result = GameMenuController.putInFridge(itemName);
+                }
+                else {
+                    result = GameMenuController.pickFromFridge(itemName);
+                }
+
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.SHOW_COOKING_RECIPES_REGEX.matches(command)) {
+                Result result = GameMenuController.showCookingRecipes();
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.EAT_FOOD_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.EAT_FOOD_REGEX.matcher(command);
+
+                String foodName = matcher.matches() ? matcher.group("foodName") : "";
+
+                Result result = GameMenuController.eatFood(foodName);
+                System.out.println(result.message());
+            }
+
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);
                 matcher.matches();

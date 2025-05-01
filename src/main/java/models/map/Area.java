@@ -14,13 +14,12 @@ public abstract class Area {
     protected Player owner = null;
 
     public Player getOwner() {
-        if(this.getClass().equals(Map.class)) return null;
-        if(this.owner == null)
+        if(this instanceof Map) return null;
+
+        if(this.owner == null) {
             return parentArea.getOwner();
+        }
         return this.owner;
-    }
-    public void setOwner(Player owner) {
-        this.owner = owner;
     }
 
     public void setParentArea(Area parentArea) {
