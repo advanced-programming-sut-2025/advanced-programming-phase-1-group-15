@@ -9,6 +9,7 @@ import models.foraging.ForagingMineralType;
 import models.foraging.Stone;
 import models.time.DateAndTime;
 import models.time.Season;
+import models.tools.Fridge;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -40,6 +41,10 @@ public class Farm extends Area {
         for(ArrayList<Tile> row : farmTiles) {
             for(Tile tile : row) {
                 tile.setArea(this);
+                if(tile.getPosition().x == House.fridgeCoordinates[number - 1][0] && tile.getPosition().y == House.fridgeCoordinates[number - 1][1]) {
+                    Fridge fridge = new Fridge();
+                    tile.put(fridge);
+                }
             }
         }
     }
@@ -109,7 +114,6 @@ public class Farm extends Area {
 
         for(Area innerArea : innerAreas){
             innerArea.setParentArea(this);
-            innerArea.owner = this.owner;
             innerArea.build();
         }
 

@@ -19,7 +19,7 @@ public class House extends Area {
             {88, 33}   //MAP 4
     };
     public static int[][] fridgeCoordinates = {
-            {7, 5},   //MAP 1
+            {3, 5},   //MAP 1
             {62, 13}, //MAP 2
             {69, 36}, //MAP 3
             {89, 30}   //MAP 4
@@ -37,13 +37,7 @@ public class House extends Area {
     }
 
     public void build() {
-        for(ArrayList<Tile> row : tiles) {
-            for(Tile tile : row) {
-                if(owner != null && tile.getPosition().x == fridgeCoordinates[owner.getMapNumber() - 1][0] && tile.getPosition().y == fridgeCoordinates[owner.getMapNumber() - 1][1]) {
-                    tile.put(owner.fridge());
-                }
-            }
-        }
+
     }
 
     @Override

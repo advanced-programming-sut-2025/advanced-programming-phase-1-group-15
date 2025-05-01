@@ -1,13 +1,16 @@
 package models.animals;
 
+import models.map.Area;
 import models.map.Position;
+import models.time.DateAndTime;
 
 import java.util.ArrayList;
 
-public class Coop {
-    private int capacity;
-    private boolean Big;
-    private boolean Deluxe;
+public class Coop extends Area {
+    private int animalCount = 0;
+    private int capacity = 4;
+    private boolean Big = false;
+    private boolean Deluxe = false;
 
     private ArrayList<Animal> animals = new ArrayList<>();
 
@@ -23,17 +26,24 @@ public class Coop {
     public boolean isBig() {
         return Big;
     }
-    public void setBig(boolean big) {
-        Big = big;
+    public void setBig() {
+        Big = true;
+        this.capacity = 8;
     }
 
     public boolean isDeluxe() {
         return Deluxe;
     }
-    public void setDeluxe(boolean deluxe) {
-        Deluxe = deluxe;
+    public void setDeluxe() {
+        Deluxe = true;
+        this.capacity = 12;
     }
 
+    public void addAnimal(Animal animal) {
+        if(animalCount < capacity) {
+            animals.add(animal);
+        }
+    }
     public ArrayList<Animal> getAnimals() {
         return animals;
     }
@@ -42,7 +52,12 @@ public class Coop {
         return position;
     }
 
-    public void build(ArrayList<Position> positions) {
+    public void build() {
+
+    }
+
+    @Override
+    public void update(DateAndTime dateAndTime) {
 
     }
 }

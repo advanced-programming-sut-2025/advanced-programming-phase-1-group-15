@@ -32,7 +32,7 @@ public class Player extends User implements TimeObserver {
 
     private BackPack inventory = new BackPack();
     private TrashCan trashCan = new TrashCan();
-    private Fridge fridge = new Fridge();
+    private Fridge fridge;
     private Tool currentTool = null;
 
     private int farmingAbility = 0;
@@ -178,6 +178,9 @@ public class Player extends User implements TimeObserver {
         }
     }
 
+    public void setFridge(Fridge fridge) {
+        this.fridge = fridge;
+    }
     public Fridge fridge() {
         return fridge;
     }

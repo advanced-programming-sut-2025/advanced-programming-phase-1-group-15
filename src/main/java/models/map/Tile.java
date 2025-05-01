@@ -106,7 +106,12 @@ public class Tile {
             PrintInColor.printInBlue('~');
         }
         else if(area.areaType.equals(AreaType.HOUSE)) {
-            System.out.print('H');
+            if(objectInTile instanceof House) {
+                PrintInColor.printInCyan('F');
+            }
+            else {
+                System.out.print('H');
+            }
         }
         else if(area.areaType.equals(AreaType.GREENHOUSE)) {
             PrintInColor.printInGreen('G');
