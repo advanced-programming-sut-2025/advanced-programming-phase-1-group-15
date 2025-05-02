@@ -261,6 +261,12 @@ public class GameMenu implements AppMenu {
             }
             else if(GameMenuCommands.BUY_ANIMAL_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.BUY_ANIMAL_REGEX.matcher(command);
+
+                String animal = matcher.matches() ? matcher.group("animal") : "";
+                String name = matcher.group("name");
+
+                Result result = GameMenuController.buyAnimal(animal, name);
+                System.out.println(result.message());
             }
 
             else if(GameMenuCommands.CROP_INFO.matches(command)) {

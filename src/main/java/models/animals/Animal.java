@@ -5,6 +5,7 @@ import models.map.Tilable;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class Animal implements Tilable, TimeObserver {
@@ -30,12 +31,19 @@ public class Animal implements Tilable, TimeObserver {
     public AnimalType getAnimalType() {
         return animalType;
     }
+    public String getAnimalTypeName() {
+        return animalType.name().toLowerCase();
+    }
 
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getPrice() {
+        return animalType.price;
     }
 
     public ArrayList<AnimalProduct> getProducts() {
@@ -65,6 +73,15 @@ public class Animal implements Tilable, TimeObserver {
     }
     public void feed() {
 
+    }
+
+    public static Animal animalFactory(String animalType, String name) {
+        for(AnimalType at: AnimalType.values()) {
+            if(at.name().toLowerCase().equals(animalType)) {
+                return new Animal(at, name);
+            }
+        }
+        return null;
     }
 
     @Override

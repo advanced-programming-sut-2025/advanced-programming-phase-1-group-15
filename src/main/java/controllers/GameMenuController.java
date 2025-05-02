@@ -5,6 +5,8 @@ import models.App;
 import models.Game;
 import models.Player;
 import models.Result;
+import models.animals.Animal;
+import models.animals.AnimalType;
 import models.animals.Barn;
 import models.animals.Coop;
 import models.cooking.Food;
@@ -229,8 +231,22 @@ public class GameMenuController {
             return new Result(true, "coop built successfully.");
         }
     }
-    public static Result buyAnimal(String animalName) {
-        return null;
+    public static Result buyAnimal(String animalType, String name) {
+        Animal animal = Animal.animalFactory(animalType, name);
+        if(animal == null) {
+            return new Result(false, "invalid animal type!");
+        }
+
+        for(Animal playerAnimal : getCurrentPlayer().getAnimals()) {
+            if(animal.getName().equals(playerAnimal.getName())) {
+                return new Result(false, "each animal must have a unique name.");
+            }
+        }
+
+        getCurrentPlayer().getAnimals().add(animal);
+        getCurrentPlayer().subtractGold(animal.getPrice());
+
+        return new Result(true, "a new " + animal.getAnimalTypeName() + " named " + animal.getName() + " has been bought.");
     }
 
 

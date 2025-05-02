@@ -22,8 +22,8 @@ public class Player extends User implements TimeObserver {
 
     private int mapNumber;
 
-    private int gold = 0;
-    private int wood = 0;
+    private int gold = 500;
+    private int wood = 100;
 
     private int energy = 200;
     private int energyConsumed = 0;
