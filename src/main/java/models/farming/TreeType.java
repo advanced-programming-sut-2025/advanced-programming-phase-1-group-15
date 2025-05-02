@@ -194,6 +194,43 @@ public enum TreeType  {
         this.energy = energy;
         this.season = season;
     }
+
+    public SeedType getSeedType() {
+        return seedType;
+    }
+
+    public ArrayList<Integer> getStages() {
+        return stages;
+    }
+
+    public int getTotalHarvestTime() {
+        return totalHarvestTime;
+    }
+
+    public FruitType getFruitType() {
+        return fruitType;
+    }
+
+    public int getHarvestCycle() {
+        return harvestCycle;
+    }
+
+    public int getBasePrice() {
+        return basePrice;
+    }
+
+    public boolean isEdible() {
+        return edible;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public ArrayList<Season> getSeason() {
+        return season;
+    }
+
     public void displayInfo() {
         System.out.println("Tree Type: " + this.name().replace("_", " "));
         System.out.println("Seed Type: " + seedType);

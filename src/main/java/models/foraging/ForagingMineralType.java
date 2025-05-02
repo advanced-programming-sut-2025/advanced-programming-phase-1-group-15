@@ -1,6 +1,8 @@
 package models.foraging;
 
 
+import models.time.Season;
+
 public enum ForagingMineralType{
     QUARTZ(
             "A clear crystal commonly found in caves and mines.",
@@ -77,4 +79,5 @@ public enum ForagingMineralType{
         this.description = description;
         this.sellPrice = sellPrice;
     }
+
 }

@@ -4,7 +4,6 @@ import models.Result;
 import models.farming.Crop;
 import models.farming.CropSeeds;
 import models.farming.Harvestable;
-import models.farming.SeedType;
 
 public class WateredState implements PlantState {
 
@@ -46,25 +45,16 @@ public class WateredState implements PlantState {
             return new Result(false, "Crop isn't ready.");
         }
 
-        if (harvestable instanceof Crop) {
-            Crop crop = (Crop) harvestable;
-        }
-
         harvestable.harvest();
 
-        if (harvestable instanceof Crop) {
-            Crop crop = (Crop) harvestable;
-            if (crop.getCropType().isOneTime()) {
-                tile.unPlough();
-                // TODO: check if deleting plowed tile effect other things
-                return new Result(true, "Harvested. Crop removed.");
-            } else {
-                tile.setState(new RestState(tile));
-                return new Result(true, "Harvested. Withdrawal started.");
-            }
+        if (harvestable.isOneTime()) {
+            tile.unPlough();
+            // TODO: check if deleting plowed tile effect other things
+            return new Result(true, "Harvested. Crop removed.");
+        } else {
+            tile.setState(new RestState(tile));
+            return new Result(true, "Harvested. rest mode started.");
         }
-
-        return new Result(true, "Harvested.");
     }
 
     @Override

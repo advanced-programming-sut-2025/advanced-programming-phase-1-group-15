@@ -1,6 +1,5 @@
 package models.farming.GeneralPlants;
 
-import models.farming.Harvestable;
 import models.map.Tilable;
 import models.map.Tile;
 import models.time.DateAndTime;

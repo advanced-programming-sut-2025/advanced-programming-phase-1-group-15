@@ -5,10 +5,11 @@ import models.time.Season;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
-public enum ForagingCropsType{
+public enum ForagingCropsType {
     DAFFODIL(
-            new ArrayList<>(Arrays.asList(Season.SUMMER , Season.AUTUMN, Season.SPRING , Season.WINTER)),
+            new ArrayList<>(Arrays.asList(Season.SUMMER, Season.AUTUMN, Season.SPRING, Season.WINTER)),
             30,
             0
     ),
@@ -81,7 +82,7 @@ public enum ForagingCropsType{
             new ArrayList<>(List.of(Season.AUTUMN)),
             160,
             75
-            ),
+    ),
     HAZElNUT(
             new ArrayList<>(List.of(Season.AUTUMN)),
             40,
@@ -136,4 +137,17 @@ public enum ForagingCropsType{
         this.basePrice = basePrice;
         this.energy = energy;
     }
+
+
+    public static ForagingCropsType getSeasonForagingCrop(Season season) {
+        List<ForagingCropsType> possibleCrops = new ArrayList<>();
+        for (ForagingCropsType crop : ForagingCropsType.values()) {
+            if (crop.season.contains(season)) {
+                possibleCrops.add(crop);
+            }
+        }
+        int randomIndex = new Random().nextInt(possibleCrops.size());
+        return possibleCrops.get(randomIndex);
+    }
+
 }

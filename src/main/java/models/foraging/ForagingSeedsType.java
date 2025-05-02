@@ -5,6 +5,7 @@ import models.time.Season;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public enum ForagingSeedsType {
     JAZZ_SEEDS(
@@ -134,5 +135,16 @@ public enum ForagingSeedsType {
     private final ArrayList<Season> seasons;
     ForagingSeedsType(ArrayList<Season> seasons) {
         this.seasons = seasons;
+    }
+
+    public static ForagingSeedsType getSeasonForagingSeed(Season season) {
+        List<ForagingSeedsType> possibleSeeds = new ArrayList<>();
+        for (ForagingSeedsType seed : ForagingSeedsType.values()) {
+            if (seed.seasons.contains(season)) {
+                possibleSeeds.add(seed);
+            }
+        }
+        int randomIndex = new Random().nextInt(possibleSeeds.size());
+        return possibleSeeds.get(randomIndex);
     }
 }

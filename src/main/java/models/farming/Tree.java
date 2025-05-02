@@ -6,10 +6,8 @@ import models.time.TimeObserver;
 
 import java.util.ArrayList;
 
-public class Tree implements Tilable, TimeObserver , Harvestable {
+public class Tree extends Harvestable implements Tilable, TimeObserver {
     private TreeType treeType;
-
-    private GiantProducts giantProducts;
 
     public TreeType getTreeType() {
         return treeType;
@@ -19,6 +17,7 @@ public class Tree implements Tilable, TimeObserver , Harvestable {
     }
     public void setTreeType(TreeType treeType) {
         this.treeType = treeType;
+        this.daysUntilHarvest = treeType.getTotalHarvestTime();
     }
 
     public Tree(TreeType treeType) {
@@ -36,11 +35,6 @@ public class Tree implements Tilable, TimeObserver , Harvestable {
     }
 
     @Override
-    public int getDaysUntilHarvest() {
-        return 0;
-    }
-
-    @Override
     public String printInfo() {
         return "";
     }
@@ -48,5 +42,10 @@ public class Tree implements Tilable, TimeObserver , Harvestable {
     @Override
     public ArrayList<Integer> getStages() {
         return null;
+    }
+
+    @Override
+    public boolean isOneTime() {
+        return false;
     }
 }

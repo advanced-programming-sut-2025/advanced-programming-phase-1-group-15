@@ -6,28 +6,19 @@ import models.tools.BackPackable;
 
 import java.util.ArrayList;
 
-public class Crop implements Tilable, BackPackable, Harvestable {
+public class Crop extends Harvestable implements Tilable, BackPackable {
 
 
     private final Crops cropType;
-    int daysUntilHarvest;
     int daysNotWatered;
     double sellPrice;
     Quality quality;
-
-
-    public int getDaysUntilHarvest(){
-        return daysUntilHarvest;
-    }
-
-    private GiantProducts giantProducts;
 
     public Crop(Crops cropType) {
         this.cropType = cropType;
         daysUntilHarvest = cropType.getTotalHarvestTime();
         sellPrice = cropType.getBasePrice(); // check effect of fertilizer later
     }
-
 
     @Override
     public void harvest() {
@@ -68,4 +59,11 @@ public class Crop implements Tilable, BackPackable, Harvestable {
     public Crops getCropType() {
         return cropType;
     }
+
+    @Override
+    public boolean isOneTime(){
+        return cropType.isOneTime();
+    }
+
+
 }
