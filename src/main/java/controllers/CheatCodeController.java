@@ -3,6 +3,8 @@ package controllers;
 import models.App;
 import models.Player;
 import models.Result;
+import models.artisanry.ArtisanItem;
+import models.artisanry.ArtisanItemType;
 import models.crafting.CraftItem;
 import models.crafting.CraftItemType;
 import models.map.Position;
@@ -82,6 +84,7 @@ public class CheatCodeController {
         }
         int num = Integer.parseInt(count);
         CraftItem item = null;
+        ArtisanItem artisanItem = null;
         switch (itemName){
             case "cherry bomb":
                 item = new CraftItem(CraftItemType.CHERRY_BOMB);
@@ -143,11 +146,112 @@ public class CheatCodeController {
             case "mystic tree seed":
                 item = new CraftItem(CraftItemType.MYSTIC_TREE_SEED);
                 break;
+            case "honey":
+                artisanItem = new ArtisanItem(ArtisanItemType.HONEY);
+                break;
+            case "cheese":
+                artisanItem = new ArtisanItem(ArtisanItemType.CHEESE_MILK);
+                break;
+            case "large cheese":
+                artisanItem = new ArtisanItem(ArtisanItemType.CHEESE_LARGE_MILK);
+                break;
+            case "goat cheese":
+                artisanItem = new ArtisanItem(ArtisanItemType.GOAT_CHEESE_MILK);
+                break;
+            case "large goat cheese":
+                artisanItem = new ArtisanItem(ArtisanItemType.GOAT_CHEESE_LARGE_MILK);
+                break;
+            case "beer" :
+                artisanItem = new ArtisanItem(ArtisanItemType.BEER);
+                break;
+            case "vinegar" :
+                artisanItem = new ArtisanItem(ArtisanItemType.VINEGAR);
+                break;
+            case "coffee" :
+                artisanItem = new ArtisanItem(ArtisanItemType.COFFEE);
+                break;
+            case "juice" :
+                // must change
+                artisanItem = new ArtisanItem(ArtisanItemType.JUICE);
+                break;
+            case "mead" :
+                artisanItem = new ArtisanItem(ArtisanItemType.MEAD);
+                break;
+            case "pale ale" :
+                artisanItem = new ArtisanItem(ArtisanItemType.PALE_ALE);
+                break;
+            case "wine" :
+                // must change
+                artisanItem = new ArtisanItem(ArtisanItemType.WINE);
+                break;
+            case "dired common mushroom" :
+                artisanItem = new ArtisanItem(ArtisanItemType.DRIED_COMMON_MUSHROOM);
+                break;
+            case "dired red mushroom" :
+                artisanItem = new ArtisanItem(ArtisanItemType.DRIED_RED_MUSHROOM);
+                break;
+            case "dired purple mushroom" :
+                artisanItem = new ArtisanItem(ArtisanItemType.DRIED_PURPLE_MUSHROOM);
+                break;
+            case "dried fruit" :
+                // must change
+                artisanItem = new ArtisanItem(ArtisanItemType.DRIED_FRUIT);
+                break;
+            case "raisins" :
+                artisanItem = new ArtisanItem(ArtisanItemType.RAISINS);
+                break;
+            case "coal":
+                artisanItem = new ArtisanItem(ArtisanItemType.COAL);
+                break;
+            case "rabbit cloth":
+                artisanItem = new ArtisanItem(ArtisanItemType.CLOTH_RABBIT);
+                break;
+            case "sheep cloth":
+                artisanItem = new ArtisanItem(ArtisanItemType.CLOTH_SHEEP);
+                break;
+            case "mayonnaise egg" :
+                artisanItem = new ArtisanItem(ArtisanItemType.MAYONNAISE_EGG);
+                break;
+            case "mayonnaise large egg" :
+                artisanItem = new ArtisanItem(ArtisanItemType.MAYONNAISE_LARGE_EGG);
+                break;
+            case "mayonnaise dinosaur egg" :
+                artisanItem = new ArtisanItem(ArtisanItemType.DINOSAUR_MAYONNAISE);
+                break;
+            case "mayonnaise duck egg" :
+                artisanItem = new ArtisanItem(ArtisanItemType.DUCK_MAYONNAISE);
+                break;
+            case "sunflower oil" :
+                artisanItem = new ArtisanItem(ArtisanItemType.OIL_SUNFLOWER);
+                break;
+            case "sunflower seed oil" :
+                artisanItem = new ArtisanItem(ArtisanItemType.OIL_SUNFLOWER_SEED);
+                break;
+            case "corn oil" :
+                artisanItem = new ArtisanItem(ArtisanItemType.OIL_CORN);
+                break;
+            case "truffle oil"   :
+                artisanItem = new ArtisanItem(ArtisanItemType.TRUFFLE_OIL);
+                break;
+            case "pickles":
+                artisanItem = new ArtisanItem(ArtisanItemType.PICKLES);
+                break;
+            case "jelly" :
+                artisanItem = new ArtisanItem(ArtisanItemType.JELLY);
+                break;
+            case "smoked fish":
+                artisanItem = new ArtisanItem(ArtisanItemType.SMOKED_FISH);
+                break;
+            case "metal bar":
+                artisanItem = new ArtisanItem(ArtisanItemType.METAL_BAR);
+                break;
             default:
                 return new Result(false , "item not available");
         }
         if(item!=null)
             player.getInventory().getItems().put(item , player.getInventory().getItems().getOrDefault(item, 0) + 1);
+        if(artisanItem!=null)
+            player.getInventory().getItems().put(artisanItem , player.getInventory().getItems().getOrDefault(artisanItem,0)+1);
         return new Result(true , "item added successfully");
     }
 }
