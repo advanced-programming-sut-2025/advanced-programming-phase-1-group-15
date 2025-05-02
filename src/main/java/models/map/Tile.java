@@ -77,6 +77,11 @@ public class Tile {
 
         return objectInTile == null;
     }
+    public boolean isBuildable() {
+        AreaType type = getAreaType();
+
+        return type.equals(AreaType.FARM) && objectInTile == null;
+    }
 
     public boolean isAdjacent(Tile otherTile) {
         return (Math.abs(position.x - otherTile.position.x) <= 1) && (Math.abs(position.y - otherTile.position.y) <= 1);
@@ -106,7 +111,7 @@ public class Tile {
             PrintInColor.printInBlue('~');
         }
         else if(area.areaType.equals(AreaType.HOUSE)) {
-            if(objectInTile instanceof House) {
+            if(objectInTile instanceof Fridge) {
                 PrintInColor.printInCyan('F');
             }
             else {
@@ -119,6 +124,12 @@ public class Tile {
         else if(area.areaType.equals(AreaType.QUARRY)) {
             PrintInColor.printInBrown('Q');
         }
+        else if(area.areaType.equals(AreaType.BARN)) {
+            System.out.print('_');
+        }
+        else if(area.areaType.equals(AreaType.COOP)) {
+            PrintInColor.printInGray('□');
+        }
         else if(objectInTile != null) {
             if(objectInTile instanceof Tree) {
                 PrintInColor.printInBrightGreen('T');
@@ -128,9 +139,6 @@ public class Tile {
             }
             else if(objectInTile instanceof ForagingMineral) {
                 PrintInColor.printInBrightYellow('*');
-            }
-            else if(objectInTile instanceof Fridge) {
-                PrintInColor.printInBlue('F');
             }
         }
         else {

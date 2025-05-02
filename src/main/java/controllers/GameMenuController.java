@@ -5,6 +5,8 @@ import models.App;
 import models.Game;
 import models.Player;
 import models.Result;
+import models.animals.Barn;
+import models.animals.Coop;
 import models.cooking.Food;
 import models.crafting.CraftItem;
 import models.farming.CropSeeds;
@@ -13,6 +15,7 @@ import models.farming.GeneralPlants.PloughedTile;
 import models.farming.SeedType;
 import models.map.*;
 import models.tools.BackPackable;
+import models.tools.Fridge;
 import models.tools.Tool;
 import models.tools.TrashCan;
 
@@ -127,28 +130,40 @@ public class GameMenuController {
     }
 
     public static Result putInFridge(String itemName) {
+        Tile tile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        if(!(tile.getArea() instanceof House playersHouse)) {
+            return new Result(false, "you should be in your house to use fridge!");
+        }
+        Fridge fridge = playersHouse.getFridge();
+
         BackPackable item = getCurrentPlayer().getInventory().getItemByName(itemName);
         if(item == null) {
             return new Result(false, "You don't have that item in your inventory.");
         }
 
         int itemCount = getCurrentPlayer().getInventory().getItemCount(itemName);
-        getCurrentPlayer().fridge().addToFridge(item, itemCount);
+        fridge.addToFridge(item, itemCount);
         getCurrentPlayer().getInventory().removeFromBackPack(item);
 
         return new Result(true, item.getName() + " moved to fridge.");
     }
     public static Result pickFromFridge(String itemName) {
-        BackPackable item = getCurrentPlayer().fridge().getItemByName(itemName);
+        Tile tile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        if(!(tile.getArea() instanceof House playersHouse)) {
+            return new Result(false, "you should be in your house to use fridge!");
+        }
+        Fridge fridge = playersHouse.getFridge();
+
+        BackPackable item = fridge.getItemByName(itemName);
         if(item == null) {
             return new Result(false, "You don't have that item in your fridge.");
         }
 
-        int itemCount = getCurrentPlayer().fridge().getItemCount(itemName);
+        int itemCount = fridge.getItemCount(itemName);
         getCurrentPlayer().getInventory().addToBackPack(item, itemCount);
-        getCurrentPlayer().fridge().removeFromFridge(item);
+        fridge.removeFromFridge(item);
 
-        return new Result(true, item.getName() + " moved to inventory.");
+        return new Result(true, item.getName() +  " moved to inventory.");
     }
     public static Result showCookingRecipes() {
         return new Result(true, "Available cooking recipes: \n" + getCurrentPlayer().showAvailableFoods());
@@ -163,6 +178,61 @@ public class GameMenuController {
         getCurrentPlayer().getInventory().removeCountFromBackPack(food, 1);
         return new Result(true, "You ate " + food.getName() + ". " + food.getEnergy() + " energy added.");
     }
+
+    public static Result buildBarn(int x, int y) {
+        boolean buildable = true;
+        for(int row = y; row < y + 2; row++) {
+            for(int col = x; col < x + 2; col++) {
+                Tile tile = App.currentGame.getTile(col, row);
+                if(!tile.isBuildable()) {
+                    buildable = false;
+                }
+            }
+        }
+
+        if(!buildable) {
+            return new Result(false, "You can't build a barn in this Area.");
+        }
+        else {
+            Barn barn = new Barn();
+            for(int row = y; row < y + 2; row++) {
+                for(int col = x; col < x + 2; col++) {
+                    Tile tile = App.currentGame.getTile(col, row);
+                    tile.setArea(barn);
+                }
+            }
+            return new Result(true, "barn built successfully.");
+        }
+    }
+    public static Result buildCoop(int x, int y) {
+        boolean buildable = true;
+        for(int row = y; row < y + 2; row++) {
+            for(int col = x; col < x + 2; col++) {
+                Tile tile = App.currentGame.getTile(col, row);
+                if(!tile.isBuildable()) {
+                    buildable = false;
+                }
+            }
+        }
+
+        if(!buildable) {
+            return new Result(false, "You can't build a coop in this Area.");
+        }
+        else {
+            Coop coop = new Coop();
+            for(int row = y; row < y + 2; row++) {
+                for(int col = x; col < x + 2; col++) {
+                    Tile tile = App.currentGame.getTile(col, row);
+                    tile.setArea(coop);
+                }
+            }
+            return new Result(true, "coop built successfully.");
+        }
+    }
+    public static Result buyAnimal(String animalName) {
+        return null;
+    }
+
 
     public static Result showCropInfo(String name) {
         Crops crop = Crops.getByName(name);
@@ -227,21 +297,6 @@ public class GameMenuController {
     }
 
     public static Result placeItem(String itemName, Position position) {
-        return null;
-    }
-
-
-
-    public static Result collectProduce(String animalName) {
-        return null;
-    }
-    public static Result sellAnimal(String animalName) {
-        return null;
-    }
-    public static Result fishing(String fishingPole) {
-        return null;
-    }
-    public static Result buildBuilding(String buildingName) {
         return null;
     }
 

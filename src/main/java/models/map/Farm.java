@@ -22,8 +22,6 @@ public class Farm extends Area {
             {0, 40, 30, 50}   //MAP 4
     };
 
-    private final int number;
-
     public Farm(ArrayList<ArrayList<Tile>> farmTiles, int number) {
         this.areaType = AreaType.FARM;
         this.number = number;
@@ -41,10 +39,6 @@ public class Farm extends Area {
         for(ArrayList<Tile> row : farmTiles) {
             for(Tile tile : row) {
                 tile.setArea(this);
-                if(tile.getPosition().x == House.fridgeCoordinates[number - 1][0] && tile.getPosition().y == House.fridgeCoordinates[number - 1][1]) {
-                    Fridge fridge = new Fridge();
-                    tile.put(fridge);
-                }
             }
         }
     }
@@ -114,6 +108,7 @@ public class Farm extends Area {
 
         for(Area innerArea : innerAreas){
             innerArea.setParentArea(this);
+            innerArea.number = number;
             innerArea.build();
         }
 

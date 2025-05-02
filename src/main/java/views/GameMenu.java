@@ -242,6 +242,27 @@ public class GameMenu implements AppMenu {
                 System.out.println(result.message());
             }
 
+            else if(GameMenuCommands.BUILD_BUILDING_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.BUILD_BUILDING_REGEX.matcher(command);
+
+                String buildingName = matcher.matches() ? matcher.group("buildingName") : "";
+                int x = Integer.parseInt(matcher.group("x"));
+                int y = Integer.parseInt(matcher.group("y"));
+
+                Result result;
+                if(buildingName.equals("barn")) {
+                    result = GameMenuController.buildBarn(x, y);
+                }
+                else {
+                    result = GameMenuController.buildCoop(x, y);
+                }
+
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.BUY_ANIMAL_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.BUY_ANIMAL_REGEX.matcher(command);
+            }
+
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);
                 matcher.matches();

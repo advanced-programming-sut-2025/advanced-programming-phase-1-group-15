@@ -13,6 +13,7 @@ public abstract class Area implements TimeObserver {
     protected Area parentArea;
 
     protected Player owner;
+    protected int number;
 
     public Player getOwner() {
         if(parentArea == null) return null;

@@ -1,6 +1,7 @@
 package models.animals;
 
 import models.map.Area;
+import models.map.AreaType;
 import models.map.Position;
 import models.time.DateAndTime;
 
@@ -14,7 +15,9 @@ public class Barn extends Area {
 
     private ArrayList<Animal> animals = new ArrayList<>();
 
-    private Position position;
+    public Barn() {
+        this.areaType = AreaType.BARN;
+    }
 
     public int getCapacity() {
         return capacity;
@@ -48,10 +51,7 @@ public class Barn extends Area {
         return animals;
     }
 
-    public Position getPosition() {
-        return position;
-    }
-
+    @Override
     public void build() {
 
     }

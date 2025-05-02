@@ -2,6 +2,7 @@ package models.map;
 
 import models.time.DateAndTime;
 import models.tools.BackPackable;
+import models.tools.Fridge;
 
 import java.util.ArrayList;
 
@@ -16,14 +17,16 @@ public class House extends Area {
             {5, 6},   //MAP 1
             {65, 14}, //MAP 2
             {67, 35}, //MAP 3
-            {88, 33}   //MAP 4
+            {28, 33}   //MAP 4
     };
     public static int[][] fridgeCoordinates = {
             {3, 5},   //MAP 1
             {62, 13}, //MAP 2
-            {69, 36}, //MAP 3
-            {89, 30}   //MAP 4
+            {68, 36}, //MAP 3
+            {25, 33}   //MAP 4
     };
+
+    private Fridge fridge;
 
     public House(ArrayList<ArrayList<Tile>> houseTiles) {
         this.areaType = AreaType.HOUSE;
@@ -37,7 +40,18 @@ public class House extends Area {
     }
 
     public void build() {
+        for(ArrayList<Tile> row : tiles) {
+            for(Tile tile : row) {
+                if(tile.getPosition().x == House.fridgeCoordinates[number - 1][0] && tile.getPosition().y == House.fridgeCoordinates[number - 1][1]) {
+                    fridge = new Fridge();
+                    tile.put(fridge);
+                }
+            }
+        }
+    }
 
+    public Fridge getFridge() {
+        return fridge;
     }
 
     @Override

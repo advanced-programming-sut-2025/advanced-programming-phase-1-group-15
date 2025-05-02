@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DateAndTime {
-    private List<TimeObserver> observers = new ArrayList<>();
+    private final List<TimeObserver> observers = new ArrayList<>();
 
     public void addObserver(TimeObserver observer) {
         observers.add(observer);

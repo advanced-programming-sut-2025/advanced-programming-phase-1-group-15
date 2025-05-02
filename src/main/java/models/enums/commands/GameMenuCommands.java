@@ -21,7 +21,7 @@ package models.enums.commands;
         SHOW_COOKING_RECIPES_REGEX("^\\s*cooking\\s+show\\s+recipes\\s*$"),
         PREPARE_FOOD_REGEX("^\\s*cooking\\s+prepare\\s+(?<foodName>.+?)\\s*$"),
         EAT_FOOD_REGEX("^\\s*eat\\s+(?<foodName>.+?)\\s*$"),
-        BUILD_BUILDING_REGEX("^\\s*build\\s+-a\\s+(<name>barn|coop)-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$"),
+        BUILD_BUILDING_REGEX("^\\s*build\\s+-a\\s+(?<buildingName>barn|coop)\\s+-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$"),
         BUY_ANIMAL_REGEX("^\\s*buy\\s+animal\\s+-a\\s+(?<animal>\\S+)\\s+-n\\s+(?<name>.+?)\\s*$"),
         PET_ANIMAL_REGEX("pet -n <name>"),
         SHOW_ANIMALS_REGEX("animals"),
