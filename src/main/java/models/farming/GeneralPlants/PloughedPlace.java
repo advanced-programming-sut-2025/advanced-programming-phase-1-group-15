@@ -106,22 +106,16 @@ public class PloughedPlace implements TimeObserver {
         Crops previousCrops = getCropTypeOfPos(positions.get(0));
         TreeType previousTree = getTreeTypeOfPos(positions.get(0));
 
-
-
-        for (Position position : positions) {
-            if(getCropTypeOfPos(position) != null){
-                if(getCropTypeOfPos(position).equals(previousCrops)){
-                    continue;
-                }
-                else{
+        for(int i=1;i<positions.size()-1;i++){
+            Position nextPos = positions.get(i);
+            Position previousPos = positions.get(i-1);
+            if(getCropTypeOfPos(nextPos)!= null && getCropTypeOfPos(previousPos)!= null){
+                if(!getCropTypeOfPos(nextPos).equals(getCropTypeOfPos(previousPos))){
                     return false;
                 }
             }
-            else if(getTreeTypeOfPos(position) != null){
-                if(getTreeTypeOfPos(position).equals(previousTree)){
-                    continue;
-                }
-                else{
+            else if(getTreeTypeOfPos(nextPos)!= null && getTreeTypeOfPos(previousPos)!= null){
+                if(!getTreeTypeOfPos(nextPos).equals(getTreeTypeOfPos(previousPos))){
                     return false;
                 }
             }

@@ -43,4 +43,10 @@ public class PloughedState implements PlantState {
     public Result takeRest() {
         return null;
     }
+
+    @Override
+    public Result seed(SeedType seed) {
+        tile.setState(new SeededState(tile));
+        return new Result(true,"congratulations! you seeded this tile!");
+    }
 }

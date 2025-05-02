@@ -4,6 +4,7 @@ import models.Result;
 import models.farming.Crop;
 import models.farming.CropSeeds;
 import models.farming.Crops;
+import models.farming.SeedType;
 
 public class RestState implements PlantState{
 
@@ -50,5 +51,10 @@ public class RestState implements PlantState{
     @Override
     public Result water() {
         return new Result(false, "Already watered (in withdrawal).");
+    }
+
+    @Override
+    public Result seed(SeedType seed) {
+        return new Result(false,"this tile is already seeded");
     }
 }

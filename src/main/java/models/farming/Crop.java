@@ -22,7 +22,6 @@ public class Crop extends Harvestable implements Tilable, BackPackable {
 
     @Override
     public void harvest() {
-        // giving product to player
     }
 
     @Override
@@ -33,7 +32,6 @@ public class Crop extends Harvestable implements Tilable, BackPackable {
                 "is today watered? : " + (((daysNotWatered==0) ? "yes" : "no")) + "\n"+
                 "";
         // TODO: should be completed and fixed . there are some paradoxes in doc
-
     }
 
     @Override
@@ -64,6 +62,5 @@ public class Crop extends Harvestable implements Tilable, BackPackable {
     public boolean isOneTime(){
         return cropType.isOneTime();
     }
-
 
 }

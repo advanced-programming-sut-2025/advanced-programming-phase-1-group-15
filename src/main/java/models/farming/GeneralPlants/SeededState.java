@@ -42,4 +42,9 @@ public class SeededState implements PlantState {
     public Result takeRest() {
         return null;
     }
+
+    @Override
+    public Result seed(SeedType seed) {
+        return new Result(false,"this tile is already seeded");
+    }
 }

@@ -4,6 +4,7 @@ import models.Result;
 import models.farming.Crop;
 import models.farming.CropSeeds;
 import models.farming.Harvestable;
+import models.farming.SeedType;
 
 public class WateredState implements PlantState {
 
@@ -16,7 +17,7 @@ public class WateredState implements PlantState {
 
     @Override
     public Result seed(CropSeeds seed) {
-        return new Result(false,"this tile is already watered");
+        return new Result(false,"this tile is already seeded");
     }
 
     @Override
@@ -60,5 +61,10 @@ public class WateredState implements PlantState {
     @Override
     public Result takeRest() {
         return null;
+    }
+
+    @Override
+    public Result seed(SeedType seed) {
+        return new Result(false,"this tile is already seeded");
     }
 }
