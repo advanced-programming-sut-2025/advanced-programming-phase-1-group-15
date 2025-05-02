@@ -6,29 +6,41 @@ import models.farming.SeedType;
 
 public class PloughedState implements PlantState {
 
+    PloughedPlace tile;
+
+    public PloughedState(PloughedPlace tile) {
+        this.tile = tile;
+    }
+
+
     @Override
-    public Result updateByTime(PloughedPlace tile) {
+    public Result updateByTime() {
         return null;
     }
 
     @Override
-    public Result seed(PloughedPlace tile, CropSeeds seed) {
-        tile.setState(new SeededState());
+    public Result seed(CropSeeds seed) {
+        tile.setState(new SeededState(tile));
         return new Result(true,"congratulations! you seeded this tile!");
     }
 
     @Override
-    public Result fertilize(PloughedPlace tile) {
+    public Result fertilize() {
         return new Result(false,"you should seed this tile first");
     }
 
     @Override
-    public Result water(PloughedPlace tile) {
+    public Result water() {
         return new Result(false,"you should seed this tile first");
     }
 
     @Override
-    public Result harvest(PloughedPlace tile) {
+    public Result harvest() {
         return new Result(false,"you should seed this tile first");
+    }
+
+    @Override
+    public Result takeRest() {
+        return null;
     }
 }

@@ -15,7 +15,7 @@ public class PloughedPlace implements TimeObserver {
     protected Tile tile;
     protected Harvestable harvestable;
     protected DateAndTime lastUpdate;
-    protected PlantState currentState = new PloughedState();
+    protected PlantState currentState = new PloughedState(this);
     protected SeedType seed;
     protected CropSeeds cropSeed;
 
@@ -32,11 +32,14 @@ public class PloughedPlace implements TimeObserver {
 
     public Result seed(CropSeeds seed){
         Crops crop = CropSeeds.cropOfThisSeed(seed);
-        this.currentState.seed(this,seed);
 
-        if(crop == null){
-            throw new IllegalArgumentException("crop seed cannot be null");
+        if(crop == null)  throw new IllegalArgumentException("crop seed cannot be null");
+
+        if (!crop.canGrowInThisSeason(lastUpdate.getSeason())) {
+            return new Result(false, "this is not a suitable season for this seed!");
         }
+
+        this.currentState.seed(seed);
 
         this.harvestable = new Crop(crop);
 
@@ -62,7 +65,7 @@ public class PloughedPlace implements TimeObserver {
     }
 
     public void fertilize() {
-        currentState.fertilize(this);
+        currentState.fertilize();
     }
 
     public PloughedPlace() {
@@ -75,7 +78,7 @@ public class PloughedPlace implements TimeObserver {
     @Override
     public void update(DateAndTime dateAndTime) {
         if(lastUpdate.getDay() != dateAndTime.getDay()){
-            currentState.updateByTime(this);
+            currentState.updateByTime();
         }
         // other changes should be added
         lastUpdate = dateAndTime;

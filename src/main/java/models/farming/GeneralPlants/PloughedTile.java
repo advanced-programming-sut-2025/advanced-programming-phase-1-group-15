@@ -30,8 +30,7 @@ public class PloughedTile implements Tilable, TimeObserver {
 
 
     public Result seed(CropSeeds seed){
-        // TODO: check for getting Giant
-        return null;
+        return ploughedPlace.seed(seed);
     }
 
     @Override

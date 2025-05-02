@@ -8,19 +8,24 @@ public class FertilizedState implements PlantState {
     private int daysNotWatered = 0 ;
     int daysWatered = 0;
     int growthLevel = 0;
+    PloughedPlace tile;
+
+    public FertilizedState(PloughedPlace tile) {
+        this.tile = tile;
+    }
 
     @Override
-    public Result seed(PloughedPlace tile, CropSeeds seed) {
+    public Result seed(CropSeeds seed) {
         return new Result(false,"this tile is already seeded");
     }
 
     @Override
-    public Result fertilize(PloughedPlace tile) {
+    public Result fertilize() {
         return new Result(false,"this tile is already fertilized");
     }
 
     @Override
-    public Result water(PloughedPlace tile) {
+    public Result water() {
         daysWatered++;
         daysNotWatered = 0;
         if(daysWatered > tile.getHarvestable().getStages().get(growthLevel)){
@@ -31,16 +36,21 @@ public class FertilizedState implements PlantState {
     }
 
     @Override
-    public Result harvest(PloughedPlace tile) {
+    public Result harvest() {
         return new Result(false,"you should fertilize this tile first");
     }
 
     @Override
-    public Result updateByTime(PloughedPlace tile) {
+    public Result updateByTime() {
         daysNotWatered++;
         if(daysNotWatered >= 2){
             tile.unPlough();
         }
+        return null;
+    }
+
+    @Override
+    public Result takeRest() {
         return null;
     }
 }

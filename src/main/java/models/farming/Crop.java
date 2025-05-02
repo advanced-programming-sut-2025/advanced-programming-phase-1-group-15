@@ -7,15 +7,14 @@ import models.tools.BackPackable;
 import java.util.ArrayList;
 
 public class Crop implements Tilable, BackPackable, Harvestable {
-    public Crops getCropType() {
-        return cropType;
-    }
+
 
     private final Crops cropType;
     int daysUntilHarvest;
     int daysNotWatered;
     double sellPrice;
     Quality quality;
+
 
     public int getDaysUntilHarvest(){
         return daysUntilHarvest;
@@ -26,13 +25,13 @@ public class Crop implements Tilable, BackPackable, Harvestable {
     public Crop(Crops cropType) {
         this.cropType = cropType;
         daysUntilHarvest = cropType.getTotalHarvestTime();
-        sellPrice = cropType.getBasePrice();
+        sellPrice = cropType.getBasePrice(); // check effect of fertilizer later
     }
 
 
     @Override
     public void harvest() {
-
+        // giving product to player
     }
 
     @Override
@@ -64,5 +63,9 @@ public class Crop implements Tilable, BackPackable, Harvestable {
     @Override
     public ArrayList<Integer> getStages(){
         return cropType.getStages();
+    }
+
+    public Crops getCropType() {
+        return cropType;
     }
 }

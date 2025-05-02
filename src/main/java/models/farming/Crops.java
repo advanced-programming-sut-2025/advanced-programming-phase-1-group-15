@@ -495,12 +495,49 @@ public enum Crops{
     private final boolean CanBecomeGiant;
     private final int energy;
 
+    public boolean canGrowInThisSeason(Season currentSeason){
+        for(Season s: season){
+            if(currentSeason == s){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean canBecomeGiant() {
         return CanBecomeGiant;
     }
 
     public int getTotalHarvestTime() {
         return totalHarvestTime;
+    }
+
+    public CropSeeds getSource() {
+        return source;
+    }
+
+    public boolean isOneTime() {
+        return OneTime;
+    }
+
+    public int getRegrowthTime() {
+        return RegrowthTime;
+    }
+
+    public boolean isEdible() {
+        return edible;
+    }
+
+    public ArrayList<Season> getSeason() {
+        return season;
+    }
+
+    public boolean isCanBecomeGiant() {
+        return CanBecomeGiant;
+    }
+
+    public int getEnergy() {
+        return energy;
     }
 
     Crops(
