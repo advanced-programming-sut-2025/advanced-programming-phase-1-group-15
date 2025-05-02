@@ -230,8 +230,7 @@ public class GameMenu implements AppMenu {
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.SHOW_COOKING_RECIPES_REGEX.matches(command)) {
-                Result result = GameMenuController.showCookingRecipes();
-                System.out.println(result.message());
+                System.out.print("Available cooking recipes: \n" + game.getCurrentPlayer().showAvailableFoods());
             }
             else if(GameMenuCommands.EAT_FOOD_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.EAT_FOOD_REGEX.matcher(command);
@@ -266,6 +265,27 @@ public class GameMenu implements AppMenu {
                 String name = matcher.group("name");
 
                 Result result = GameMenuController.buyAnimal(animal, name);
+                System.out.println(result.message());
+            }
+            else if(command.equals("animals")) {
+                System.out.print("Animals: \n" + game.getCurrentPlayer().showAnimals());
+            }
+            else if(GameMenuCommands.PET_ANIMAL_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.PET_ANIMAL_REGEX.matcher(command);
+
+                String name = matcher.matches() ? matcher.group("name") : "";
+
+                Result result = GameMenuController.petAnimal(name);
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.SHEPHERD_ANIMAL_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.SHEPHERD_ANIMAL_REGEX.matcher(command);
+
+                String name = matcher.matches() ? matcher.group("name") : "";
+                int x = Integer.parseInt(matcher.group("x"));
+                int y = Integer.parseInt(matcher.group("y"));
+
+                Result result = GameMenuController.shepherdAnimal(name, x, y);
                 System.out.println(result.message());
             }
 

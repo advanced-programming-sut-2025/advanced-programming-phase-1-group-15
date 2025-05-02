@@ -14,18 +14,15 @@ public class Animal implements Tilable, TimeObserver {
 
     private ArrayList<AnimalProduct> animalProducts = new ArrayList<>();
 
-    private int friendship;
-    private boolean Petted;
-    private boolean Fed;
+    private int friendship = 0;
+    private boolean petted = false;
+    private boolean fed = false;
 
     private Position position;
 
     public Animal(AnimalType animalType, String name) {
         this.animalType = animalType;
         this.name = name;
-        this.friendship = 0;
-        this.Petted = false;
-        this.Fed = false;
     }
 
     public AnimalType getAnimalType() {
@@ -49,6 +46,9 @@ public class Animal implements Tilable, TimeObserver {
         return animalType.price;
     }
 
+    public Position getPosition() {
+        return position;
+    }
     public void setPosition(Position position) {
         this.position = position;
     }
@@ -64,22 +64,20 @@ public class Animal implements Tilable, TimeObserver {
         return friendship;
     }
 
-    public boolean isPetted() {
-        return Petted;
-    }
-
-    public boolean isFed() {
-        return Fed;
-    }
-
     public void pet() {
-
+        petted = true;
+        friendship += 15;
     }
-    public void shepherd(Position newPosition) {
-
+    public boolean isPetted() {
+        return petted;
     }
+
     public void feed() {
-
+        fed = true;
+        friendship += 8;
+    }
+    public boolean isFed() {
+        return fed;
     }
 
     public static Animal animalFactory(String animalType, String name) {
@@ -93,6 +91,9 @@ public class Animal implements Tilable, TimeObserver {
 
     @Override
     public void update(DateAndTime dateAndTime) {
-
+        if(dateAndTime.getHour() == 9) {
+            petted = false;
+            fed = false;
+        }
     }
 }

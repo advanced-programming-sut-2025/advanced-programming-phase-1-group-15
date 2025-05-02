@@ -1,6 +1,5 @@
 package controllers;
 
-import com.sun.jdi.AbsentInformationException;
 import models.App;
 import models.Game;
 import models.Player;
@@ -169,9 +168,6 @@ public class GameMenuController {
 
         return new Result(true, item.getName() +  " moved to inventory.");
     }
-    public static Result showCookingRecipes() {
-        return new Result(true, "Available cooking recipes: \n" + getCurrentPlayer().showAvailableFoods());
-    }
     public static Result eatFood(String foodName) {
         Food food = (Food) getCurrentPlayer().getInventory().getItemByName(foodName);
         if(food == null) {
@@ -248,6 +244,7 @@ public class GameMenuController {
         boolean placed = getCurrentPlayer().getFarm().place(animal);
 
         if(placed) {
+            App.currentGame.getDateAndTime().addObserver(animal);
             getCurrentPlayer().getAnimals().add(animal);
             getCurrentPlayer().subtractGold(animal.getPrice());
 
@@ -256,6 +253,47 @@ public class GameMenuController {
         else {
             return new Result(false, "not enough " + animal.getMaintenance() + " space to buy this animal.");
         }
+    }
+    public static Result petAnimal(String name) {
+        Animal animal = getCurrentPlayer().getAnimalByName(name);
+
+        if(animal == null) {
+            return new Result(false, "animal name is not correct.");
+        }
+        else if(!getCurrentPlayer().getPosition().isAdjacent(animal.getPosition())) {
+            return new Result(false, "your position is not adjacent!");
+        }
+
+        animal.pet();
+        return new Result(true, "you pet " + animal.getName() + ".");
+    }
+    public static Result shepherdAnimal(String name, int x, int y) {
+        Animal animal = getCurrentPlayer().getAnimalByName(name);
+        if(animal == null) {
+            return new Result(false, "animal name is not correct.");
+        }
+
+        if(x >= Map.COLS || y >= Map.ROWS || x < 0 || y < 0) {
+            return new Result(false, "invalid x or y!");
+        }
+
+        Tile tile = App.currentGame.getTile(x, y);
+        if(!tile.isEmpty()) {
+            return new Result(false, "animal can't stand on a tile which is not empty.");
+        }
+        else if(tile.getAreaType().equals(AreaType.LAKE) && !animal.getAnimalType().equals(AnimalType.DUCK)) {
+            return new Result(false, "only ducks can swim.");
+        }
+        else if(tile.getAreaType().equals(AreaType.FARM)) {
+            Farm farm = (Farm) tile.getArea();
+            if(!getCurrentPlayer().equals(farm.getOwner())) {
+                return new Result(false, "your animals cannot enter other players' territory.");
+            }
+        }
+
+        tile.put(animal);
+        animal.feed();
+        return new Result(true, "shepherd " + animal.getName() + " successfully.");
     }
 
 

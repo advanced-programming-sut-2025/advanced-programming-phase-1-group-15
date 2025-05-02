@@ -248,6 +248,14 @@ public class Player extends User implements TimeObserver {
         return availableFoods;
     }
 
+    public Animal getAnimalByName(String name) {
+        for(Animal animal : animals) {
+            if(animal.getName().equals(name)) {
+                return animal;
+            }
+        }
+        return null;
+    }
     public ArrayList<Animal> getAnimals() {
         return animals;
     }
@@ -267,16 +275,25 @@ public class Player extends User implements TimeObserver {
 
     }
     public String showAvailableFoods() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder display = new StringBuilder();
         for(Food food : availableFoods) {
-            sb.append(food.getName()).append("    ");
-            sb.append(food.getRecipe()).append("\n");
+            display.append(food.getName()).append("    ");
+            display.append(food.getRecipe()).append("\n");
         }
 
-        return sb.toString();
+        return display.toString();
     }
-    public void showAnimals() {
+    public String showAnimals() {
+        StringBuilder display = new StringBuilder();
+        for(Animal animal: animals) {
+            display.append(animal.getName()).append("    ");
+            display.append(animal.getAnimalTypeName()).append("    ");
+            display.append("friendship: ").append(animal.getFriendship()).append("  ");
+            display.append("petted: ").append(animal.isPetted()).append("  ");
+            display.append("fed: ").append(animal.isFed()).append("\n");
+        }
 
+        return display.toString();
     }
     public void showFriendships() {
 

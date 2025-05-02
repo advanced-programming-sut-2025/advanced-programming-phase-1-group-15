@@ -86,6 +86,7 @@ public class DateAndTime {
         else {
             this.hour++;
         }
+        notifyObservers();
     }
     public void nextNHours(int n){
         for(int i = 0; i < n; i++) {

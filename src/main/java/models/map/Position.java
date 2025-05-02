@@ -17,6 +17,9 @@ public class Position {
         return y;
     }
 
+    public boolean isAdjacent(Position otherPosition) {
+        return (Math.abs(x - otherPosition.x) <= 1) && (Math.abs(y - otherPosition.y) <= 1);
+    }
 
     public boolean equals(Position position) {
         return x == position.x && y == position.y;
