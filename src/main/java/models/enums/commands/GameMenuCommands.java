@@ -28,7 +28,9 @@ package models.enums.commands;
         PLANT_SEED("^\\s*plant\\s+-s\\s+(?<seed>.+\\S)\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*$"),
         CROP_INFO("^\\s*craftinfo\\s+-n\\s+(?<craftName>\\S+)\\s*$"),
         Recipe("^\\s*crafting\\s+show\\s+recipes\\s*^"),
-        Crafting("^\\s*crafting\\s+craft\\s+(?<itemName>\\S+)\\s*$");
+        Crafting("^\\s*crafting\\s+craft\\s+(?<itemName>\\S+)\\s*$"),
+        ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisanName>.*)\\s+(?<itemName>.*)\\s*"),
+        GET_ARTISAN("\\s*artisan\\s+get\\s+(?<artisanName>.*)\\s*");
         private final String regex;
 
         GameMenuCommands(String regex) {

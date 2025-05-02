@@ -9,6 +9,8 @@ import models.animals.Animal;
 import models.animals.AnimalType;
 import models.animals.Barn;
 import models.animals.Coop;
+import models.artisanry.ArtisanItem;
+import models.artisanry.ArtisanItemType;
 import models.cooking.Food;
 import models.crafting.CraftItem;
 import models.farming.CropSeeds;
@@ -388,5 +390,97 @@ public class GameMenuController {
         player.getInventory().getItems().put(crafting , player.getInventory().getItems().getOrDefault(crafting, 0) + 1);
         player.setEnergy(player.getEnergy()-2);
         return new Result(true,"craft make successfully");
+    }
+    public static Result UseArtisan(String artisanName , String itemName) {
+        artisanName = artisanName.trim();
+        itemName = itemName.trim();
+        Player player = App.currentGame.getCurrentPlayer();
+        CraftItem artisan = null;
+        for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
+            if (backPackable.getName().equals(artisanName)) {
+                artisan = (CraftItem) backPackable;
+                break;
+            }
+        }
+        if (artisan == null) {
+            return new Result(false,"artisan item not available");
+        }
+        ArtisanItem artisanItem = null;
+        switch (artisanName) {
+            case "bee house":
+                if (itemName.equals("honey")){
+                    artisanItem = new ArtisanItem(ArtisanItemType.HONEY);
+                }
+                break;
+            case "cheese press":
+                //artisanItem = new ArtisanItem(ArtisanItemType.GOAT_CHEESE_LARGE_MILK);
+                artisanItem = switch (itemName) {
+                    case "cheese" -> new ArtisanItem(ArtisanItemType.CHEESE_MILK);
+                    //artisanItem = new ArtisanItem(ArtisanItemType.CHEESE_LARGE_MILK);
+                    case "goat cheese" -> new ArtisanItem(ArtisanItemType.GOAT_CHEESE_MILK);
+                    default -> artisanItem;
+                };
+                break;
+            case "keg":
+                artisanItem = switch (itemName) {
+                    case "beer" -> new ArtisanItem(ArtisanItemType.BEER);
+                    case "vinegar" -> new ArtisanItem(ArtisanItemType.VINEGAR);
+                    case "coffee" -> new ArtisanItem(ArtisanItemType.COFFEE);
+                    case "juice" -> new ArtisanItem(ArtisanItemType.JUICE);
+                    case "mead" -> new ArtisanItem(ArtisanItemType.MEAD);
+                    case "pale ale" -> new ArtisanItem(ArtisanItemType.PALE_ALE);
+                    case "wine" -> new ArtisanItem(ArtisanItemType.WINE);
+                    default -> artisanItem;
+                };
+                break;
+            case "dehydrator":
+                artisanItem = switch (itemName) {
+                    case "dried mushroom" -> new ArtisanItem(ArtisanItemType.DRIED_COMMON_MUSHROOM);
+                    //case "dried mushroom" -> new ArtisanItem(ArtisanItemType.DRIED_RED_MUSHROOM);
+                    //case "dried mushroom" -> new ArtisanItem(ArtisanItemType.DRIED_PURPLE_MUSHROOM);
+                    case "dried fruit" -> new ArtisanItem(ArtisanItemType.DRIED_FRUIT);
+                    case "raisins" -> new ArtisanItem(ArtisanItemType.RAISINS);
+                    default -> artisanItem;
+                };
+                break;
+            case "charcoal klin":
+                if(itemName.equals("coal")){
+                    artisanItem = new ArtisanItem(ArtisanItemType.COAL);
+                }
+                break;
+            case "loom":
+                if(itemName.equals("cloth")){
+                    artisanItem = new ArtisanItem(ArtisanItemType.CLOTH_RABBIT);
+                    // artisanItem = new ArtisanItem(ArtisanItemType.CLOTH_SHEEP);
+                }
+                break;
+            case "mayonnaise machine":
+                artisanItem = switch (itemName) {
+                    case "mayonnaise" -> new ArtisanItem(ArtisanItemType.MAYONNAISE_EGG);
+                    //case "mayonnaise" -> new ArtisanItem(ArtisanItemType.MAYONNAISE_LARGE_EGG);
+                    case "dinosaur mayonnaise" -> new ArtisanItem(ArtisanItemType.DINOSAUR_MAYONNAISE);
+                    case "duck mayonnaise" -> new ArtisanItem(ArtisanItemType.DUCK_MAYONNAISE);
+                    default -> artisanItem;
+                };
+                break;
+            case "oil maker":
+                artisanItem = switch (itemName) {
+                    case "truffle oil" -> new ArtisanItem(ArtisanItemType.TRUFFLE_OIL);
+                    case "oil" -> new ArtisanItem(ArtisanItemType.OIL_SUNFLOWER);
+                    //case "oil" -> new ArtisanItem(ArtisanItemType.OIL_SUNFLOWER_SEED);
+                    //case "oil" -> new ArtisanItem(ArtisanItemType.OIL_CORN);
+                    default -> artisanItem;
+                };
+                break;
+            case "preserves jar":
+                break;
+            case "fish smoker":
+                break;
+            case "furnace":
+                break;
+            default:
+                return new Result(false , "Artisan item not available");
+        }
+        return null;
     }
 }
