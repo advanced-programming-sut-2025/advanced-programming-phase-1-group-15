@@ -63,6 +63,9 @@ public class Animal implements Tilable, TimeObserver {
     public int getFriendship() {
         return friendship;
     }
+    public void setFriendship(int friendship) {
+        this.friendship = friendship;
+    }
 
     public void pet() {
         petted = true;

@@ -109,6 +109,20 @@ public class Tile {
     }
 
     public void print() {
+        if(objectInTile instanceof Animal) {
+            Animal animal = (Animal) objectInTile;
+            switch (animal.getAnimalType()) {
+                case COW -> System.out.print('C');
+                case GOAT -> System.out.print('G');
+                case SHEEP -> System.out.print('S');
+                case PIG -> PrintInColor.printInBrightPurple('P');
+                case CHICKEN -> PrintInColor.printInYellow('C');
+                case DUCK -> System.out.print('D');
+                case RABBIT -> System.out.print('R');
+                case DINOSAUR -> PrintInColor.printInGreen('D');
+            }
+            return;
+        }
         if(area.areaType.equals(AreaType.LAKE)) {
             PrintInColor.printInBlue('~');
         }
@@ -127,32 +141,10 @@ public class Tile {
             PrintInColor.printInBrown('Q');
         }
         else if(area.areaType.equals(AreaType.BARN)) {
-            if(objectInTile instanceof Animal) {
-                Animal animal = (Animal) objectInTile;
-                switch (animal.getAnimalType()) {
-                    case COW -> System.out.print('C');
-                    case GOAT -> System.out.print('G');
-                    case SHEEP -> System.out.print('S');
-                    case PIG -> PrintInColor.printInBrightPurple('P');
-                }
-            }
-            else {
-                System.out.print('_');
-            }
+            System.out.print('_');
         }
         else if(area.areaType.equals(AreaType.COOP)) {
-            if(objectInTile instanceof Animal) {
-                Animal animal = (Animal) objectInTile;
-                switch (animal.getAnimalType()) {
-                    case CHICKEN -> PrintInColor.printInYellow('C');
-                    case DUCK -> System.out.print('D');
-                    case RABBIT -> System.out.print('R');
-                    case DINOSAUR -> PrintInColor.printInGreen('D');
-                }
-            }
-            else {
-                PrintInColor.printInGray('□');
-            }
+            PrintInColor.printInGray('□');
         }
         else if(objectInTile != null) {
             if(objectInTile instanceof Tree) {

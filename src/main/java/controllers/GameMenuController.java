@@ -4,10 +4,7 @@ import models.App;
 import models.Game;
 import models.Player;
 import models.Result;
-import models.animals.Animal;
-import models.animals.AnimalType;
-import models.animals.Barn;
-import models.animals.Coop;
+import models.animals.*;
 import models.artisanry.ArtisanItem;
 import models.artisanry.ArtisanItemType;
 import models.cooking.Food;
@@ -284,6 +281,12 @@ public class GameMenuController {
         else if(tile.getAreaType().equals(AreaType.LAKE) && !animal.getAnimalType().equals(AnimalType.DUCK)) {
             return new Result(false, "only ducks can swim.");
         }
+        else if(tile.getAreaType().equals(AreaType.BARN) && !animal.getMaintenance().equals(Maintenance.BARN)) {
+            return new Result(false, "you can't put a " + animal.getAnimalType() + " in a barn.");
+        }
+        else if(tile.getAreaType().equals(AreaType.COOP) && !animal.getMaintenance().equals(Maintenance.COOP)) {
+            return new Result(false, "you can't put a " + animal.getAnimalType() + " in a coop.");
+        }
         else if(tile.getAreaType().equals(AreaType.FARM)) {
             Farm farm = (Farm) tile.getArea();
             if(!getCurrentPlayer().equals(farm.getOwner())) {
@@ -291,7 +294,12 @@ public class GameMenuController {
             }
         }
 
+        Tile initialTile = App.currentGame.getTile(animal.getPosition());
+        animal.setPosition(tile.getPosition());
+
         tile.put(animal);
+        initialTile.empty();
+
         animal.feed();
         return new Result(true, "shepherd " + animal.getName() + " successfully.");
     }

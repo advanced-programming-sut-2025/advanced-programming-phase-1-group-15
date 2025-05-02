@@ -3,6 +3,7 @@ package controllers;
 import models.App;
 import models.Player;
 import models.Result;
+import models.animals.Animal;
 import models.artisanry.ArtisanItem;
 import models.artisanry.ArtisanItemType;
 import models.crafting.CraftItem;
@@ -51,6 +52,20 @@ public class CheatCodeController {
     public static Result cheatUnlimitedEnergy() {
         App.currentGame.getCurrentPlayer().unlimitedEnergy();
         return new Result(true, "energy: " + App.currentGame.getCurrentPlayer().getEnergy());
+    }
+
+    public static Result cheatAnimalFriendship(String name, int amount) {
+        Animal animal = App.currentGame.getCurrentPlayer().getAnimalByName(name);
+        if(animal == null) {
+            return new Result(false, "animal name is not correct.");
+        }
+
+        if(amount < 0) {
+            return new Result(false, "amount cannot be negative.");
+        }
+
+        animal.setFriendship(amount);
+        return new Result(true, "friendship with " + animal.getName() + " set to " + amount);
     }
 
     public static Result cheatThor(Position position) {

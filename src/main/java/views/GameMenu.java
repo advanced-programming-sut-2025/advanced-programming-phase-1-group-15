@@ -267,9 +267,6 @@ public class GameMenu implements AppMenu {
                 Result result = GameMenuController.buyAnimal(animal, name);
                 System.out.println(result.message());
             }
-            else if(command.equals("animals")) {
-                System.out.print("Animals: \n" + game.getCurrentPlayer().showAnimals());
-            }
             else if(GameMenuCommands.PET_ANIMAL_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.PET_ANIMAL_REGEX.matcher(command);
 
@@ -277,6 +274,18 @@ public class GameMenu implements AppMenu {
 
                 Result result = GameMenuController.petAnimal(name);
                 System.out.println(result.message());
+            }
+            else if(CheatCodeCommands.ANIMAL_FRIENDSHIP_REGEX.matches(command)) {
+                Matcher matcher = CheatCodeCommands.ANIMAL_FRIENDSHIP_REGEX.matcher(command);
+
+                String name = matcher.matches() ? matcher.group("name") : "";
+                int amount = Integer.parseInt(matcher.group("amount"));
+
+                Result result = CheatCodeController.cheatAnimalFriendship(name, amount);
+                System.out.println(result.message());
+            }
+            else if(command.equals("animals")) {
+                System.out.print("Animals: \n" + game.getCurrentPlayer().showAnimals());
             }
             else if(GameMenuCommands.SHEPHERD_ANIMAL_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.SHEPHERD_ANIMAL_REGEX.matcher(command);
