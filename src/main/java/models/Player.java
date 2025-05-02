@@ -4,7 +4,9 @@ import models.animals.Animal;
 import models.cooking.Food;
 import models.cooking.FoodType;
 import models.crafting.CraftItem;
+import models.farming.GeneralPlants.PloughedTile;
 import models.map.Farm;
+import models.map.Tile;
 import models.relation.PlayerFriendShip;
 import models.map.Position;
 import models.time.DateAndTime;
@@ -42,6 +44,8 @@ public class Player extends User implements TimeObserver {
     private int foragingLevel = 0;
     private int fishingAbility = 0;
     private int fishingLevel = 0;
+
+    private DateAndTime lastUpdate = new DateAndTime();
 
     public void setGame(Game game) {
         this.game = game;
@@ -299,6 +303,25 @@ public class Player extends User implements TimeObserver {
 
     }
 
+    public void attackOfCrows(){
+        int remainder = RandomGenerator.getInstance().randomInt(0,15);
+        for(int i=0;i<farm.getTiles().size();i++) {
+            for (int j = 0; j < farm.getTiles().get(i).size(); j++) {
+                Tile tile = farm.getTiles().get(i).get(j);
+                if(tile.isPlowed()){
+                    // TODO: check if it is in a Green house
+                    remainder++;    remainder %= 16;
+                    if(remainder == 0){
+                        if(RandomGenerator.getInstance().randomInt(0,3) == 1) {
+                            tile.unplow();
+                            // TODO: check the effect for tree when you implemented tree
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void update(DateAndTime dateAndTime) {
         if(dateAndTime.getHour() == 9) {
@@ -310,6 +333,9 @@ public class Player extends User implements TimeObserver {
                 energy = 200;
                 goHome();
             }
+        }
+        if(lastUpdate.getDay() != dateAndTime.getDay()) {
+            attackOfCrows();
         }
     }
 }

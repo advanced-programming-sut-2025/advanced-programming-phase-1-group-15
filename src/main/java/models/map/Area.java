@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public abstract class Area implements TimeObserver {
     protected AreaType areaType;
+
+
     protected ArrayList<ArrayList<Tile>> tiles;
 
     protected ArrayList<Area> innerAreas;
@@ -46,6 +48,9 @@ public abstract class Area implements TimeObserver {
         return subArea;
     }
 
+    public ArrayList<ArrayList<Tile>> getTiles() {
+        return tiles;
+    }
 
     public abstract void build();
 
