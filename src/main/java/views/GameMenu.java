@@ -296,6 +296,11 @@ public class GameMenu implements AppMenu {
                 Result result = CheatCodeController.cheatAddItem(matcher.group("itemName"),matcher.group("count"));
                 System.out.println(result.message());
             }
+            else if (GameMenuCommands.PlaceItem.matches(command)) {
+                Matcher matcher = GameMenuCommands.PlaceItem.matcher(command);
+                matcher.matches();
+                System.out.println(GameMenuController.PlaceItem(matcher.group("itemName"),matcher.group("direction")));
+            }
             else if(GameMenuCommands.ARTISAN_USE.matches(command)) {
                 Matcher matcher = GameMenuCommands.ARTISAN_USE.matcher(command);
                 matcher.matches();

@@ -391,9 +391,41 @@ public class GameMenuController {
         player.setEnergy(player.getEnergy()-2);
         return new Result(true,"craft make successfully");
     }
+    public static Result PlaceItem(String itemName, String direction) {
+        itemName = itemName.trim().toLowerCase();
+        Player player = App.currentGame.getCurrentPlayer();
+        BackPackable item = null;
+        for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
+            if (backPackable.getName().equals(itemName)) {
+                item = backPackable;
+            }
+        }
+        if(item == null){
+            return new Result(false , "you dont have this item");
+        }
+        Tile tile = null;
+        switch (direction) {
+            case "up":
+                tile = new Tile(player.getPosition().x , player.getPosition().y+1);
+                break;
+            case "down":
+                tile = new Tile(player.getPosition().x , player.getPosition().y-1);
+                break;
+            case "left":
+                tile = new Tile(player.getPosition().x-1 , player.getPosition().y);
+                break;
+            case "right":
+                tile = new Tile(player.getPosition().x+1 , player.getPosition().y);
+                break;
+            default:
+                return new Result(false , "unknown direction");
+        }
+        player.getInventory().getItems().remove(item);
+        return new Result(true , "Item placed successfully");
+    }
     public static Result UseArtisan(String artisanName , String itemName) {
-        artisanName = artisanName.trim();
-        itemName = itemName.trim();
+        artisanName = artisanName.trim().toLowerCase();
+        itemName = itemName.trim().toLowerCase();
         Player player = App.currentGame.getCurrentPlayer();
         CraftItem artisan = null;
         for (BackPackable backPackable : player.getInventory().getItems().keySet()) {

@@ -30,7 +30,8 @@ package models.enums.commands;
         Recipe("^\\s*crafting\\s+show\\s+recipes\\s*^"),
         Crafting("^\\s*crafting\\s+craft\\s+(?<itemName>\\S+)\\s*$"),
         ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisanName>.*)\\s+(?<itemName>.*)\\s*"),
-        GET_ARTISAN("\\s*artisan\\s+get\\s+(?<artisanName>.*)\\s*");
+        GET_ARTISAN("\\s*artisan\\s+get\\s+(?<artisanName>.*)\\s*"),
+        PlaceItem("\\s*place\\s+item\\s+-n\\s+(?<itemName>.*)\\s+-d\\s+(?<direction>.*)\n");
         private final String regex;
 
         GameMenuCommands(String regex) {
