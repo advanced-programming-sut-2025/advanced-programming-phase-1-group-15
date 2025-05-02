@@ -479,6 +479,11 @@ public enum Crops{
             new ArrayList<>(List.of(Season.AUTUMN , Season.SPRING , Season.SUMMER)),
             false
     );
+
+    public ArrayList<Integer> getStages() {
+        return stages;
+    }
+
     private final CropSeeds source;
     private final ArrayList<Integer> stages;
     private final int totalHarvestTime;
@@ -489,6 +494,10 @@ public enum Crops{
     private final boolean edible;
     private final boolean CanBecomeGiant;
     private final int energy;
+
+    public boolean canBecomeGiant() {
+        return CanBecomeGiant;
+    }
 
     public int getTotalHarvestTime() {
         return totalHarvestTime;

@@ -4,6 +4,8 @@ import models.map.Tilable;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 
+import java.util.ArrayList;
+
 public class Tree implements Tilable, TimeObserver , Harvestable {
     private TreeType treeType;
 
@@ -41,5 +43,10 @@ public class Tree implements Tilable, TimeObserver , Harvestable {
     @Override
     public String printInfo() {
         return "";
+    }
+
+    @Override
+    public ArrayList<Integer> getStages() {
+        return null;
     }
 }

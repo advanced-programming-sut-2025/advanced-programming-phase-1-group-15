@@ -1,5 +1,6 @@
 package models.farming.GeneralPlants;
 
+import models.App;
 import models.Result;
 import models.farming.*;
 import models.map.Map;
@@ -10,36 +11,23 @@ import models.time.DateAndTime;
 import models.time.TimeObserver;
 
 public class PloughedTile implements Tilable, TimeObserver {
-    Position position;
-    Map map;
     Tile tile;
     DateAndTime lastUpdate;
+    private PloughedPlace ploughedPlace;
 
-
-
-    private PlantState currentState = new PloughedState();
+    public PloughedTile(Position position) {
+        tile = App.currentGame.getMap().getTile(position);
+    }
 
     public Harvestable getHarvestable() {
-        return harvestable;
+        return ploughedPlace.getHarvestable();
     }
 
-    private Harvestable harvestable;
-
-    public void setState(PlantState state) {
-        this.currentState = state;
-    }
 
     public Result seed(SeedType seed) {
-        return currentState.seed(this, seed);
+        return ploughedPlace.seed(seed);
     }
 
-    public void fertilize() {
-        currentState.fertilize(this);
-    }
-
-    public PloughedTile(Map map, Position position) {
-        tile = map.getTile(position);
-    }
 
     public Result seed(CropSeeds seed){
         // TODO: check for getting Giant
@@ -49,17 +37,17 @@ public class PloughedTile implements Tilable, TimeObserver {
     @Override
     public void update(DateAndTime dateAndTime) {
         if(lastUpdate.getDay() != dateAndTime.getDay()){
-            currentState.updateByTime(this);
+            //ploughedPlace.getCurrentState().updateByTime(dateAndTime);
         }
         // other changes should be added
         lastUpdate = dateAndTime;
     }
 
     public boolean hasTreeOrCrop() {
-        return harvestable != null;
+        return ploughedPlace.getHarvestable() != null;
     }
 
     public void unPlough(){
-        this.tile.empty();
+        this.tile.unplow();
     }
 }

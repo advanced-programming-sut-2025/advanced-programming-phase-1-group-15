@@ -4,8 +4,14 @@ import models.enums.Quality;
 import models.map.Tilable;
 import models.tools.BackPackable;
 
+import java.util.ArrayList;
+
 public class Crop implements Tilable, BackPackable, Harvestable {
-    private Crops cropType;
+    public Crops getCropType() {
+        return cropType;
+    }
+
+    private final Crops cropType;
     int daysUntilHarvest;
     int daysNotWatered;
     double sellPrice;
@@ -53,5 +59,10 @@ public class Crop implements Tilable, BackPackable, Harvestable {
     @Override
     public int getPrice() {
         return cropType.getBasePrice();
+    }
+
+    @Override
+    public ArrayList<Integer> getStages(){
+        return cropType.getStages();
     }
 }

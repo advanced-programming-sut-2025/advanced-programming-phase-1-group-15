@@ -89,7 +89,7 @@ public class Tile {
 
     public void plow() {
         plowed = true;
-        objectInTile = new PloughedTile(App.currentGame.getMap(),this.position);
+        objectInTile = new PloughedTile(this.position);
     }
     public void unplow() {
         plowed = false;
