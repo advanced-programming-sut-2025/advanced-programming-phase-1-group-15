@@ -2,6 +2,8 @@ package models.map;
 
 import models.App;
 import models.Player;
+import models.animals.Animal;
+import models.animals.Maintenance;
 import models.farming.Tree;
 import models.farming.TreeType;
 import models.foraging.ForagingMineral;
@@ -114,6 +116,33 @@ public class Farm extends Area {
 
         randomTreeGenerator(Season.SPRING);
         randomMineralGenerator();
+    }
+
+    public boolean place(Animal animal) {
+        if(animal.getMaintenance().equals(Maintenance.BARN)) {
+            for(ArrayList<Tile> row : tiles) {
+                for(Tile tile : row) {
+                    if(tile.getAreaType().equals(AreaType.BARN) && tile.isEmpty()) {
+                        animal.setPosition(tile.getPosition());
+                        tile.put(animal);
+                        return true;
+                    }
+                }
+            }
+        }
+        else {
+            for(ArrayList<Tile> row : tiles) {
+                for(Tile tile : row) {
+                    if(tile.getAreaType().equals(AreaType.COOP) && tile.isEmpty()) {
+                        animal.setPosition(tile.getPosition());
+                        tile.put(animal);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override

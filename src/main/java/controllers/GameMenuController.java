@@ -243,10 +243,17 @@ public class GameMenuController {
             }
         }
 
-        getCurrentPlayer().getAnimals().add(animal);
-        getCurrentPlayer().subtractGold(animal.getPrice());
+        boolean placed = getCurrentPlayer().getFarm().place(animal);
 
-        return new Result(true, "a new " + animal.getAnimalTypeName() + " named " + animal.getName() + " has been bought.");
+        if(placed) {
+            getCurrentPlayer().getAnimals().add(animal);
+            getCurrentPlayer().subtractGold(animal.getPrice());
+
+            return new Result(true, "a new " + animal.getAnimalTypeName() + " named " + animal.getName() + " has been bought.");
+        }
+        else {
+            return new Result(false, "not enough " + animal.getMaintenance() + " space to buy this animal.");
+        }
     }
 
 

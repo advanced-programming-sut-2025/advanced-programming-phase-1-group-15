@@ -1,6 +1,8 @@
 package models.map;
 
 import models.App;
+import models.animals.Animal;
+import models.animals.AnimalType;
 import models.farming.GeneralPlants.PloughedTile;
 import models.farming.Tree;
 import models.foraging.ForagingMineral;
@@ -125,10 +127,32 @@ public class Tile {
             PrintInColor.printInBrown('Q');
         }
         else if(area.areaType.equals(AreaType.BARN)) {
-            System.out.print('_');
+            if(objectInTile instanceof Animal) {
+                Animal animal = (Animal) objectInTile;
+                switch (animal.getAnimalType()) {
+                    case COW -> System.out.print('C');
+                    case GOAT -> System.out.print('G');
+                    case SHEEP -> System.out.print('S');
+                    case PIG -> PrintInColor.printInBrightPurple('P');
+                }
+            }
+            else {
+                System.out.print('_');
+            }
         }
         else if(area.areaType.equals(AreaType.COOP)) {
-            PrintInColor.printInGray('□');
+            if(objectInTile instanceof Animal) {
+                Animal animal = (Animal) objectInTile;
+                switch (animal.getAnimalType()) {
+                    case CHICKEN -> PrintInColor.printInYellow('C');
+                    case DUCK -> System.out.print('D');
+                    case RABBIT -> System.out.print('R');
+                    case DINOSAUR -> PrintInColor.printInGreen('D');
+                }
+            }
+            else {
+                PrintInColor.printInGray('□');
+            }
         }
         else if(objectInTile != null) {
             if(objectInTile instanceof Tree) {

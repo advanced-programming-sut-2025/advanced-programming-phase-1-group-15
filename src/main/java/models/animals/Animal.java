@@ -42,8 +42,15 @@ public class Animal implements Tilable, TimeObserver {
         this.name = name;
     }
 
+    public Maintenance getMaintenance() {
+        return animalType.maintenance;
+    }
     public int getPrice() {
         return animalType.price;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public ArrayList<AnimalProduct> getProducts() {
