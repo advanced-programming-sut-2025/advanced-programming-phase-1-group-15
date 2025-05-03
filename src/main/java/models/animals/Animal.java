@@ -8,10 +8,10 @@ import models.time.TimeObserver;
 import java.util.ArrayList;
 
 public class Animal implements Tilable, TimeObserver {
-    private AnimalType animalType;
+    private final AnimalType animalType;
     private String name;
 
-    private ArrayList<AnimalProduct> animalProducts = new ArrayList<>();
+    private final ArrayList<AnimalProductType> animalProductTypes = new ArrayList<>();
     private AnimalProduct currentProduct;
 
     private int friendship = 0;
@@ -24,34 +24,28 @@ public class Animal implements Tilable, TimeObserver {
         this.animalType = animalType;
         switch (animalType) {
             case CHICKEN -> {
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.EGG));
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.LARGE_EGG));
+                this.animalProductTypes.add(AnimalProductType.EGG);
+                this.animalProductTypes.add(AnimalProductType.LARGE_EGG);
             }
             case DUCK -> {
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.DUCK_EGG));
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.DUCK_FEATHER));
+                this.animalProductTypes.add(AnimalProductType.DUCK_EGG);
+                this.animalProductTypes.add(AnimalProductType.DUCK_FEATHER);
             }
             case RABBIT -> {
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.RABBIT_WOOL));
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.RABBIT_LEG));
+                this.animalProductTypes.add(AnimalProductType.RABBIT_WOOL);
+                this.animalProductTypes.add(AnimalProductType.RABBIT_LEG);
             }
-            case DINOSAUR -> {
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.DINOSAUR_EGG));
-            }
+            case DINOSAUR -> this.animalProductTypes.add(AnimalProductType.DINOSAUR_EGG);
             case COW -> {
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.COW_MILK));
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.COW_LARGE_MILK));
+                this.animalProductTypes.add(AnimalProductType.COW_MILK);
+                this.animalProductTypes.add(AnimalProductType.COW_LARGE_MILK);
             }
             case GOAT -> {
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.GOAT_MILK));
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.GOAT_LARGE_MILK));
+                this.animalProductTypes.add(AnimalProductType.GOAT_MILK);
+                this.animalProductTypes.add(AnimalProductType.GOAT_LARGE_MILK);
             }
-            case SHEEP -> {
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.SHEEP_WOOL));
-            }
-            case PIG -> {
-                this.animalProducts.add(new AnimalProduct(AnimalProductType.TRUFFLE));
-            }
+            case SHEEP -> this.animalProductTypes.add(AnimalProductType.SHEEP_WOOL);
+            case PIG -> this.animalProductTypes.add(AnimalProductType.TRUFFLE);
         }
         this.name = name;
     }
@@ -73,8 +67,11 @@ public class Animal implements Tilable, TimeObserver {
     public Maintenance getMaintenance() {
         return animalType.maintenance;
     }
-    public int getPrice() {
+    public int getBasePrice() {
         return animalType.price;
+    }
+    public int getPrice() {
+        return (int) (animalType.price * (((double) friendship /1000) + 0.3));
     }
 
     public Position getPosition() {
@@ -82,10 +79,6 @@ public class Animal implements Tilable, TimeObserver {
     }
     public void setPosition(Position position) {
         this.position = position;
-    }
-
-    public ArrayList<AnimalProduct> getProducts() {
-        return animalProducts;
     }
 
     public int getFriendship() {
@@ -138,18 +131,29 @@ public class Animal implements Tilable, TimeObserver {
         }
     }
     public void produce() {
-        if(friendship > 100) {
+        if(friendship > 100 && animalProductTypes.size() > 1) {
+            double random = 0.5 + Math.random();
+            double probability = (friendship + 150 * random) / 1500;
 
+            if(probability > 0.5) {
+                currentProduct = new AnimalProduct(animalProductTypes.get(1), calculateQuality());
+            }
+            else {
+                currentProduct = new AnimalProduct(animalProductTypes.get(0), calculateQuality());
+            }
         }
         else {
-            currentProduct = new AnimalProduct(animalProducts.get(0).getProductType(), 1, calculateQuality());
+            currentProduct = new AnimalProduct(animalProductTypes.get(0), calculateQuality());
         }
+    }
+    public AnimalProduct getCurrentProduct() {
+        return currentProduct;
     }
 
     @Override
     public void update(DateAndTime dateAndTime) {
         if(dateAndTime.getHour() == 9) {
-            if(fed) {
+            if(fed && dateAndTime.getDay() % animalType.period == 0) {
                 produce();
             }
             else {

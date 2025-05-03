@@ -2,28 +2,23 @@ package models.animals;
 
 import models.tools.BackPackable;
 
-public class AnimalProduct  implements BackPackable{
-    private AnimalProductType animalProductType;
-    private int count;
+public class AnimalProduct  implements BackPackable {
+    private final AnimalProductType animalProductType;
     private ProductQuality productQuality;
-    private int price;
+    private final int price;
 
     public AnimalProduct(AnimalProductType animalProductType) {
         this.animalProductType = animalProductType;
         this.price = animalProductType.price;
     }
-    public AnimalProduct(AnimalProductType animalProductType, int count, ProductQuality productQuality) {
+    public AnimalProduct(AnimalProductType animalProductType, ProductQuality productQuality) {
         this.animalProductType = animalProductType;
-        this.count = count;
         this.productQuality = productQuality;
         this.price = animalProductType.price;
     }
-    public AnimalProductType getProductType() {
-        return animalProductType;
-    }
 
-    public int getCount() {
-        return count;
+    public ProductQuality getProductQuality() {
+        return productQuality;
     }
 
     @Override

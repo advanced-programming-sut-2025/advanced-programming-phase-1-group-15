@@ -10,6 +10,7 @@ import models.enums.commands.CheatCodeCommands;
 import models.enums.commands.Commands;
 import models.enums.commands.GameMenuCommands;
 
+import javax.print.attribute.standard.PresentationDirection;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
@@ -306,7 +307,21 @@ public class GameMenu implements AppMenu {
                 System.out.println(result.message());
             }
             else if(command.equals("produces")) {
+                Result result = GameMenuController.showAnimalProducts();
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.COLLECT_PRODUCE_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.COLLECT_PRODUCE_REGEX.matcher(command);
 
+                String name = matcher.matches() ? matcher.group("name") : "";
+
+                Result result = GameMenuController.collectProduce(name);
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.SELL_ANIMAL_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.COLLECT_PRODUCE_REGEX.matcher(command);
+
+                String name = matcher.matches() ? matcher.group("name") : "";
             }
 
             else if(GameMenuCommands.CROP_INFO.matches(command)) {

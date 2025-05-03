@@ -243,7 +243,7 @@ public class GameMenuController {
         if(placed) {
             App.currentGame.getDateAndTime().addObserver(animal);
             getCurrentPlayer().getAnimals().add(animal);
-            getCurrentPlayer().subtractGold(animal.getPrice());
+            getCurrentPlayer().subtractGold(animal.getBasePrice());
 
             return new Result(true, "a new " + animal.getAnimalTypeName() + " named " + animal.getName() + " has been bought.");
         }
@@ -322,10 +322,38 @@ public class GameMenuController {
         StringBuilder sb = new StringBuilder();
         sb.append("Available animal products: \n");
         for(Animal animal : getCurrentPlayer().getAnimals()) {
-
+            if(animal.getCurrentProduct() != null) {
+                sb.append(animal.getName()).append("    ");
+                sb.append(animal.getCurrentProduct().getName()).append("  quality: ");
+                sb.append(animal.getCurrentProduct().getProductQuality()).append("\n");
+            }
         }
-    }
 
+        return new Result(true, sb.toString());
+    }
+    public static Result collectProduce(String name) {
+        Animal animal = getCurrentPlayer().getAnimalByName(name);
+        if(animal == null) {
+            return new Result(false, "animal name is not correct.");
+        }
+        else if(!getCurrentPlayer().getPosition().isAdjacent(animal.getPosition())) {
+            return new Result(false, "your position is not adjacent!");
+        }
+
+        return null;
+    }
+    public static Result sellAnimal(String name) {
+        Animal animal = getCurrentPlayer().getAnimalByName(name);
+        if(animal == null) {
+            return new Result(false, "animal name is not correct.");
+        }
+
+        App.currentGame.getDateAndTime().removeObserver(animal);
+        getCurrentPlayer().getAnimals().remove(animal);
+        getCurrentPlayer().addGold(animal.getPrice());
+
+        return new Result(true,  animal.getName() + " has been sold with price " + animal.getPrice());
+    }
 
     public static Result showCropInfo(String name) {
         Crops crop = Crops.getByName(name);
