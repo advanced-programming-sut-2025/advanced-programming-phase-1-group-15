@@ -13,8 +13,6 @@ public class Barn extends Area {
     private boolean Big = false;
     private boolean Deluxe = false;
 
-    private ArrayList<Animal> animals = new ArrayList<>();
-
     public Barn() {
         this.areaType = AreaType.BARN;
     }
@@ -40,15 +38,6 @@ public class Barn extends Area {
     public void setDeluxe() {
         Deluxe = true;
         this.capacity = 12;
-    }
-
-    public void addAnimal(Animal animal) {
-        if(animalCount < capacity) {
-            animals.add(animal);
-        }
-    }
-    public ArrayList<Animal> getAnimals() {
-        return animals;
     }
 
     @Override

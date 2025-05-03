@@ -72,4 +72,11 @@ public class WeatherManagement implements TimeObserver {
     public String displayForecast() {
         return "forecast: " + tomorrowWeather.displayWeather();
     }
+
+    public boolean couldShepherdAnimals() {
+        return switch (currentWeather) {
+            case SUNNY -> true;
+            case RAINY, STORM, SNOW -> false;
+        };
+    }
 }

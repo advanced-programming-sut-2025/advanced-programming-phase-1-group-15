@@ -275,7 +275,10 @@ public class GameMenuController {
         }
 
         Tile tile = App.currentGame.getTile(x, y);
-        if(!tile.isEmpty()) {
+        if(!App.currentGame.getWeather().couldShepherdAnimals()) {
+            return new Result(false, "you cannot shepherd animals in this weather!");
+        }
+        else if(!tile.isEmpty()) {
             return new Result(false, "animal can't stand on a tile which is not empty.");
         }
         else if(tile.getAreaType().equals(AreaType.LAKE) && !animal.getAnimalType().equals(AnimalType.DUCK)) {
@@ -302,6 +305,25 @@ public class GameMenuController {
 
         animal.feed();
         return new Result(true, "shepherd " + animal.getName() + " successfully.");
+    }
+    public static Result feedHayAnimal(String name) {
+        Animal animal = getCurrentPlayer().getAnimalByName(name);
+        if(animal == null) {
+            return new Result(false, "animal name is not correct.");
+        }
+        else if(!getCurrentPlayer().getPosition().isAdjacent(animal.getPosition())) {
+            return new Result(false, "your position is not adjacent!");
+        }
+
+        animal.feed();
+        return new Result(true, animal.getName() + " fed with hay.");
+    }
+    public static Result showAnimalProducts() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Available animal products: \n");
+        for(Animal animal : getCurrentPlayer().getAnimals()) {
+
+        }
     }
 
 

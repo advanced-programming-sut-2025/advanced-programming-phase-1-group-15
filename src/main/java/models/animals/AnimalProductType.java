@@ -1,15 +1,13 @@
 package models.animals;
 
-import models.tools.BackPackable;
-
 public enum AnimalProductType{
     EGG(50),
     LARGE_EGG(95),
     DUCK_EGG(95),
     DUCK_FEATHER(250),
     RABBIT_WOOL(340),
-    RABBIT_FOOT(565),
-    DINOSAUR_EGG(1400),
+    RABBIT_LEG(565),
+    DINOSAUR_EGG(350),
     COW_MILK(125),
     COW_LARGE_MILK(190),
     GOAT_MILK(225),
@@ -20,9 +18,5 @@ public enum AnimalProductType{
 
     AnimalProductType(int price) {
         this.price = price;
-    }
-
-    public int getPrice() {
-        return price;
     }
 }

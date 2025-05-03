@@ -297,6 +297,17 @@ public class GameMenu implements AppMenu {
                 Result result = GameMenuController.shepherdAnimal(name, x, y);
                 System.out.println(result.message());
             }
+            else if(GameMenuCommands.FEED_ANIMAL_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.FEED_ANIMAL_REGEX.matcher(command);
+
+                String name = matcher.matches() ? matcher.group("name") : "";
+
+                Result result = GameMenuController.feedHayAnimal(name);
+                System.out.println(result.message());
+            }
+            else if(command.equals("produces")) {
+
+            }
 
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);

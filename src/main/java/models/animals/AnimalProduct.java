@@ -5,9 +5,18 @@ import models.tools.BackPackable;
 public class AnimalProduct  implements BackPackable{
     private AnimalProductType animalProductType;
     private int count;
+    private ProductQuality productQuality;
+    private int price;
 
     public AnimalProduct(AnimalProductType animalProductType) {
         this.animalProductType = animalProductType;
+        this.price = animalProductType.price;
+    }
+    public AnimalProduct(AnimalProductType animalProductType, int count, ProductQuality productQuality) {
+        this.animalProductType = animalProductType;
+        this.count = count;
+        this.productQuality = productQuality;
+        this.price = animalProductType.price;
     }
     public AnimalProductType getProductType() {
         return animalProductType;
@@ -19,7 +28,7 @@ public class AnimalProduct  implements BackPackable{
 
     @Override
     public String getName() {
-        return animalProductType.name().toLowerCase().replace("_", " ");
+        return animalProductType.name().toLowerCase().replaceAll("_", " ");
     }
 
     @Override
@@ -29,6 +38,11 @@ public class AnimalProduct  implements BackPackable{
 
     @Override
     public int getPrice() {
-        return animalProductType.getPrice();
+        return switch (productQuality) {
+            case NORMAL -> price;
+            case SILVER -> (int) (1.25 * price);
+            case GOLD -> (int) (1.5 * price);
+            case IRIDIUM -> 2 * price;
+        };
     }
 }
