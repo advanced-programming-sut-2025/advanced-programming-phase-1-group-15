@@ -22,6 +22,7 @@ public class Tree extends Harvestable implements Tilable, TimeObserver {
 
     public Tree(TreeType treeType) {
         this.treeType = treeType;
+        this.daysUntilHarvest = treeType.getTotalHarvestTime();
     }
 
     @Override
@@ -31,7 +32,9 @@ public class Tree extends Harvestable implements Tilable, TimeObserver {
 
     @Override
     public void harvest() {
-
+        if (daysUntilHarvest > 0) {
+            return;
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ import models.time.DateAndTime;
 import models.time.TimeObserver;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PloughedPlace implements TimeObserver {
     protected Tile tile;
@@ -21,9 +22,27 @@ public class PloughedPlace implements TimeObserver {
 
 
     public Result seed(SeedType seed) {
-        //return currentState.seed(this, seed);
-        //handle for trees later
-        return null;
+        if (harvestable != null) {
+            return new Result(false, "This plot is already occupied.");
+        }
+
+        TreeType treeType = SeedType.getTreeOfSeedType(seed);
+
+        if (treeType == null) {
+            return new Result(false, "This seed cannot grow into a tree.");
+        }
+
+        Result seedResult = currentState.seed(seed);
+        if (!seedResult.isSuccessFull()) {
+            return seedResult;
+        }
+
+        Tree tree = new Tree(treeType);
+        tree.setDaysUntilHarvest(treeType.getTotalHarvestTime());
+        this.harvestable = tree;
+        this.seed = seed;
+
+        return new Result(true, "Tile seeded successfully.");
     }
 
     public void setState(PlantState currentState) {
@@ -31,6 +50,10 @@ public class PloughedPlace implements TimeObserver {
     }
 
     public Result seed(CropSeeds seed){
+        if (harvestable != null) {
+            return new Result(false, "already there is a crop or tree here!");
+        }
+
         Crops crop = CropSeeds.cropOfThisSeed(seed);
 
         if(crop == null)  throw new IllegalArgumentException("crop seed cannot be null");
@@ -39,8 +62,12 @@ public class PloughedPlace implements TimeObserver {
             return new Result(false, "this is not a suitable season for this seed!");
         }
 
-        this.currentState.seed(seed);
+        Result seedResult = this.currentState.seed(seed);
+        if(!seedResult.isSuccessFull()) {
+            return seedResult;
+        }
 
+        this.cropSeed = seed;
         this.harvestable = new Crop(crop);
 
         if (crop.canBecomeGiant()) {
@@ -77,6 +104,9 @@ public class PloughedPlace implements TimeObserver {
 
     @Override
     public void update(DateAndTime dateAndTime) {
+        if(harvestable != null) {
+            harvestable.update(dateAndTime);
+        }
         if(lastUpdate.getDay() != dateAndTime.getDay()){
             currentState.updateByTime();
         }
@@ -164,6 +194,15 @@ public class PloughedPlace implements TimeObserver {
     public Harvestable getHarvestable() {
         return harvestable;
     }
+
+    public List<Integer> getDaysUntilHarvests(List<PloughedPlace> tiles) {
+        return tiles.stream()
+                .map(t -> t.getHarvestable() != null
+                        ? t.getHarvestable().getDaysUntilHarvest()
+                        : null)
+                .collect(Collectors.toList());
+    }
+
 
 }
 

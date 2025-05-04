@@ -22,6 +22,7 @@ public class GiantPlant extends PloughedPlace implements Tilable {
         applyStateIfPossible(new SeededState(this));
         applyStateIfPossible(new FertilizedState(this));
         applyStateIfPossible(new WateredState(this));
+        //this.daysUntilHarvest = minOfList(ploughedParts.)
         // TODO: days Until Harvest Calculation
     }
 
@@ -38,6 +39,14 @@ public class GiantPlant extends PloughedPlace implements Tilable {
 
     @Override
     public void update(DateAndTime dateAndTime) {
+    }
+
+    private static int minOfList(ArrayList<Integer> list) {
+        int min = list.get(0);
+        for(Integer i: list){
+            min = Math.min(min, i);
+        }
+        return min;
     }
 
 }

@@ -12,6 +12,7 @@ import models.crafting.CraftItem;
 import models.farming.CropSeeds;
 import models.farming.Crops;
 import models.farming.GeneralPlants.PloughedTile;
+import models.farming.MixedSeedCrop;
 import models.farming.SeedType;
 import models.map.*;
 import models.tools.BackPackable;
@@ -389,23 +390,22 @@ public class GameMenuController {
 
         if(CropSeeds.getByName(seedName) != null){
             return tobeSeeded.seed(CropSeeds.getByName(seedName));
-            // TODO: giant plants
         }
 
         if(SeedType.getByName(seedName) != null){
             return tobeSeeded.seed(SeedType.getByName(seedName));
-            // TODO: giant plants
         }
 
         return new Result(false,"no seed found with this name");
     }
 
-    public boolean canJoinGiant(Tile tile){
-        Position pos = tile.getPosition();
-        Tile[] adjacents = new Tile[8];
-        //for(int i=0;i<8;)
-        return false;
+    public static Result plantMixedSeed(int dx,int dy) {
+
+        CropSeeds randomSeed = MixedSeedCrop.getRandomSeed(App.currentGame.getDateAndTime().getSeason());
+
+        return plant(randomSeed.name(), dx, dy); // if incorrect errors are shown you should plant method
     }
+
 
     public static Result showPlant(int x, int y) {
         Position position = new Position(x, y);
@@ -420,7 +420,9 @@ public class GameMenuController {
         if(!toBeShown.hasTreeOrCrop())
             return new Result(false,"there is not any plant here!");
         return new Result(true,toBeShown.getHarvestable().printInfo());
+
     }
+
     public static Result fertilize(String fertilizerName, Position position) {
         return null;
     }
