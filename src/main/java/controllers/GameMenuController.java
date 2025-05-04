@@ -340,17 +340,25 @@ public class GameMenuController {
             return new Result(false, "your position is not adjacent!");
         }
 
-        return null;
+        else if(animal.getCurrentProduct() == null) {
+            return new Result(false, "no product is available for this animal!");
+        }
+        getCurrentPlayer().getInventory().addToBackPack(animal.getCurrentProduct(), 1);
+        animal.setCurrentProduct(null);
+
+        return new Result(true, "product added to the inventory.");
     }
     public static Result sellAnimal(String name) {
         Animal animal = getCurrentPlayer().getAnimalByName(name);
         if(animal == null) {
             return new Result(false, "animal name is not correct.");
         }
+        Tile animalTile = App.currentGame.getTile(animal.getPosition());
 
         App.currentGame.getDateAndTime().removeObserver(animal);
         getCurrentPlayer().getAnimals().remove(animal);
         getCurrentPlayer().addGold(animal.getPrice());
+        animalTile.empty();
 
         return new Result(true,  animal.getName() + " has been sold with price " + animal.getPrice());
     }

@@ -1,5 +1,7 @@
 package models.animals;
 
+import models.App;
+import models.map.AreaType;
 import models.map.Position;
 import models.map.Tilable;
 import models.time.DateAndTime;
@@ -146,6 +148,9 @@ public class Animal implements Tilable, TimeObserver {
             currentProduct = new AnimalProduct(animalProductTypes.get(0), calculateQuality());
         }
     }
+    public void setCurrentProduct(AnimalProduct currentProduct) {
+        this.currentProduct = currentProduct;
+    }
     public AnimalProduct getCurrentProduct() {
         return currentProduct;
     }
@@ -153,6 +158,17 @@ public class Animal implements Tilable, TimeObserver {
     @Override
     public void update(DateAndTime dateAndTime) {
         if(dateAndTime.getHour() == 9) {
+            if(!fed) {
+                friendship -= 20;
+            }
+            if(!petted) {
+                friendship += (friendship/200) - 10;
+            }
+            if(!App.currentGame.getTile(position).getAreaType().equals(AreaType.COOP) &&
+                    !App.currentGame.getTile(position).getAreaType().equals(AreaType.BARN)) {
+                friendship -= 20;
+            }
+
             if(fed && dateAndTime.getDay() % animalType.period == 0) {
                 produce();
             }

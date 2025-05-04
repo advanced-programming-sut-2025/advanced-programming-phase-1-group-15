@@ -28,7 +28,7 @@ public class AnimalProduct  implements BackPackable {
 
     @Override
     public String getDescription() {
-        return "";
+        return "Quality: " + productQuality.name();
     }
 
     @Override
