@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public enum TreeType  {
+public enum TreeType {
     APRICOT_TREE(
             SeedType.APRICOT_SAPLING,
             new ArrayList<>(Arrays.asList(7,7,7,7)),

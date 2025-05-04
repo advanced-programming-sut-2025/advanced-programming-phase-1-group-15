@@ -5,6 +5,7 @@ import models.time.DateAndTime;
 import models.time.TimeObserver;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Harvestable implements TimeObserver {
     protected int daysUntilHarvest;
@@ -21,7 +22,6 @@ public abstract class Harvestable implements TimeObserver {
 
     public abstract void harvest();
     public abstract ArrayList<Integer> getStages();
-    public abstract String printInfo();
 
     public int getDaysUntilHarvest() {
         return daysUntilHarvest;
@@ -32,5 +32,16 @@ public abstract class Harvestable implements TimeObserver {
     }
 
     public abstract boolean isOneTime();
+
+    public abstract String getName();
+
+    public static List<Integer> getDaysUntilHarvest(List<Harvestable> harvestables) {
+        ArrayList<Integer> daysUntilHarvest = new ArrayList<>();
+        for (Harvestable harvestable : harvestables) {
+            daysUntilHarvest.add(harvestable.getDaysUntilHarvest());
+        }
+        return daysUntilHarvest;
+    }
+
 
 }

@@ -11,7 +11,7 @@ import models.cooking.Food;
 import models.crafting.CraftItem;
 import models.farming.CropSeeds;
 import models.farming.Crops;
-import models.farming.GeneralPlants.PloughedTile;
+import models.farming.GeneralPlants.PloughedPlace;
 import models.farming.MixedSeedCrop;
 import models.farming.SeedType;
 import models.map.*;
@@ -383,10 +383,10 @@ public class GameMenuController {
 
         Tile goalTile = App.currentGame.getMap().getTile(new Position(nextX,nextY));
 
-        if(!goalTile.getObjectInTile().getClass().equals(PloughedTile.class))
+        if(!goalTile.getObjectInTile().getClass().equals(PloughedPlace.class))
             return new Result(false,"you should plough the tile first!");
 
-        PloughedTile tobeSeeded = (PloughedTile) goalTile.getObjectInTile();
+        PloughedPlace tobeSeeded = (PloughedPlace) goalTile.getObjectInTile();
 
         if(CropSeeds.getByName(seedName) != null){
             return tobeSeeded.seed(CropSeeds.getByName(seedName));
@@ -413,13 +413,13 @@ public class GameMenuController {
             return new Result(false,"this position is out of bounds!");
         }
         Tile tile = App.currentGame.getMap().getTile(position);
-        if(!tile.getObjectInTile().getClass().equals(PloughedTile.class))
+        if(!tile.getObjectInTile().getClass().equals(PloughedPlace.class))
             return new Result(false,"this is not a ploughed tile!");
-        PloughedTile toBeShown = (PloughedTile) tile.getObjectInTile();
+        PloughedPlace toBeShown = (PloughedPlace) tile.getObjectInTile();
 
         if(!toBeShown.hasTreeOrCrop())
             return new Result(false,"there is not any plant here!");
-        return new Result(true,toBeShown.getHarvestable().printInfo());
+        return new Result(true,toBeShown.printInfo());
 
     }
 

@@ -26,16 +26,6 @@ public class Crop extends Harvestable implements Tilable, BackPackable {
     }
 
     @Override
-    public String printInfo(){
-        return "plant info: \n"+
-                "name: "+ cropType+"\n"+
-                "days Until Harvest: " + daysUntilHarvest + "\n"+
-                "is today watered? : " + (((daysNotWatered==0) ? "yes" : "no")) + "\n"+
-                "";
-        // TODO: should be completed and fixed . there are some paradoxes in doc
-    }
-
-    @Override
     public String getName() {
         return cropType.name().toLowerCase().replaceAll("_", " ");
     }

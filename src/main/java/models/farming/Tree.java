@@ -38,11 +38,6 @@ public class Tree extends Harvestable implements Tilable, TimeObserver {
     }
 
     @Override
-    public String printInfo() {
-        return "";
-    }
-
-    @Override
     public ArrayList<Integer> getStages() {
         return null;
     }
@@ -50,5 +45,9 @@ public class Tree extends Harvestable implements Tilable, TimeObserver {
     @Override
     public boolean isOneTime() {
         return false;
+    }
+
+    public String getName(){
+        return treeType.name().toLowerCase().replaceAll("_", " ");
     }
 }

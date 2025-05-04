@@ -3,6 +3,7 @@ package models.farming.GeneralPlants;
 import models.Result;
 import models.farming.CropSeeds;
 import models.farming.SeedType;
+import models.farming.Seedable;
 
 public class SeededState implements PlantState {
     PloughedPlace tile;
@@ -24,11 +25,6 @@ public class SeededState implements PlantState {
     }
 
     @Override
-    public Result seed(CropSeeds seed) {
-        return new Result(false,"this tile is already seeded");
-    }
-
-    @Override
     public Result water() {
         return new Result(false,"you should fertilize this tile first");
     }
@@ -44,7 +40,7 @@ public class SeededState implements PlantState {
     }
 
     @Override
-    public Result seed(SeedType seed) {
+    public Result seed(Seedable seed) {
         return new Result(false,"this tile is already seeded");
     }
 }

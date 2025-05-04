@@ -1,8 +1,7 @@
 package models.farming.GeneralPlants;
 
 import models.Result;
-import models.farming.CropSeeds;
-import models.farming.SeedType;
+import models.farming.*;
 
 public class PloughedState implements PlantState {
 
@@ -19,7 +18,21 @@ public class PloughedState implements PlantState {
     }
 
     @Override
-    public Result seed(CropSeeds seed) {
+    public Result seed(Seedable seed) {
+        if(seed instanceof CropSeeds cropSeed) {
+            tile.setCropSeed(cropSeed);
+            try{tile.setHarvestable(new Crop(CropSeeds.cropOfThisSeed(cropSeed)));}
+            catch(Exception e){
+                return new Result(false,"bug in getting crop of this seed");
+            }
+        }
+        else if(seed instanceof SeedType treeSeed) {
+            tile.setSeed(treeSeed);
+            try{tile.setHarvestable(new Tree(SeedType.getTreeOfSeedType(treeSeed)));}
+            catch(Exception e){
+                return new Result(false,"bug in getting tree of this seed");
+            }
+        }
         tile.setState(new SeededState(tile));
         return new Result(true,"congratulations! you seeded this tile!");
     }
@@ -42,11 +55,5 @@ public class PloughedState implements PlantState {
     @Override
     public Result takeRest() {
         return null;
-    }
-
-    @Override
-    public Result seed(SeedType seed) {
-        tile.setState(new SeededState(tile));
-        return new Result(true,"congratulations! you seeded this tile!");
     }
 }

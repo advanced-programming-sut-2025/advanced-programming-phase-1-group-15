@@ -1,7 +1,7 @@
 package models.farming;
 
 
-public enum SeedType {
+public enum SeedType  implements Seedable  {
     APRICOT_SAPLING,
     CHERRY_SAPLING,
     BANANA_SAPLING,

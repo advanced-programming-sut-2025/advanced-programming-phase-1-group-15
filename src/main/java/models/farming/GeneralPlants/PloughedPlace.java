@@ -14,7 +14,17 @@ import java.util.stream.Collectors;
 
 public class PloughedPlace implements TimeObserver {
     protected Tile tile;
+
+    public void setHarvestable(Harvestable harvestable) {
+        this.harvestable = harvestable;
+    }
+
     protected Harvestable harvestable;
+
+    public void setLastUpdate(DateAndTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
     protected DateAndTime lastUpdate;
     protected PlantState currentState = new PloughedState(this);
     protected SeedType seed;
@@ -95,7 +105,17 @@ public class PloughedPlace implements TimeObserver {
         currentState.fertilize();
     }
 
+    public void setCropSeed(CropSeeds cropSeed) {
+        this.cropSeed = cropSeed;
+    }
+
+    public void setSeed(SeedType seed) {
+        this.seed = seed;
+    }
+
     public PloughedPlace() {
+        App.currentGame.getDateAndTime().addObserver(this);
+        this.setLastUpdate(App.currentGame.getDateAndTime());
     }
 
     public PloughedPlace(Tile tile) {
@@ -161,8 +181,8 @@ public class PloughedPlace implements TimeObserver {
         if(tileOfPos.getObjectInTile() == null){
             return null;
         }
-        if(tileOfPos.getObjectInTile() instanceof PloughedTile ploughedTile){
-            if(ploughedTile.getHarvestable() instanceof Crop crop){
+        if(tileOfPos.getObjectInTile() instanceof PloughedPlace ploughedPlace){
+            if(ploughedPlace.getHarvestable() instanceof Crop crop){
                 return crop.getCropType();
             }
             else{
@@ -177,8 +197,8 @@ public class PloughedPlace implements TimeObserver {
         if(tileOfPos.getObjectInTile() == null){
             return null;
         }
-        if(tileOfPos.getObjectInTile() instanceof PloughedTile ploughedTile){
-            if(ploughedTile.getHarvestable() instanceof Tree tree){
+        if(tileOfPos.getObjectInTile() instanceof PloughedPlace ploughedPlace){
+            if(ploughedPlace.getHarvestable() instanceof Tree tree){
                 return tree.getTreeType();
             }
             else{
@@ -203,6 +223,27 @@ public class PloughedPlace implements TimeObserver {
                 .collect(Collectors.toList());
     }
 
+    public String printInfo() {
+        if (harvestable == null) {
+            return "Empty ploughed place.";
+        }
+
+        return new StringBuilder()
+                .append("Name: ").append(harvestable.getName()).append("\n")
+                .append("Days Until Harvest: ").append(harvestable.getDaysUntilHarvest()).append("\n")
+                .append("Current State: ").append(currentState.getClass().getSimpleName()).append("\n")
+                .append("Watered today: ").append(isWatered() ? "Yes" : "No").append("\n")
+                .append("Fertilized: ").append(isFertilized() ? "Yes" : "No")
+                .toString();
+    }
+
+    private boolean isWatered() {
+        return currentState instanceof WateredState || currentState instanceof RestState;
+    }
+
+    private boolean isFertilized() {
+        return currentState instanceof FertilizedState || currentState instanceof RestState || isWatered();
+    }
 
 }
 

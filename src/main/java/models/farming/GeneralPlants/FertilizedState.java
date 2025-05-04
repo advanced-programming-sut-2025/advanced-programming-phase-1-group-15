@@ -3,6 +3,7 @@ package models.farming.GeneralPlants;
 import models.Result;
 import models.farming.CropSeeds;
 import models.farming.SeedType;
+import models.farming.Seedable;
 
 public class FertilizedState implements PlantState {
     private int daysNotWatered = 0 ;
@@ -14,10 +15,6 @@ public class FertilizedState implements PlantState {
         this.tile = tile;
     }
 
-    @Override
-    public Result seed(CropSeeds seed) {
-        return new Result(false,"this tile is already seeded");
-    }
 
     @Override
     public Result fertilize() {
@@ -55,7 +52,7 @@ public class FertilizedState implements PlantState {
     }
 
     @Override
-    public Result seed(SeedType seed) {
+    public Result seed(Seedable seed) {
         return new Result(false,"this tile is already seeded");
     }
 }

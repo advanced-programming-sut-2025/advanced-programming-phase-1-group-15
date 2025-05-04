@@ -1,11 +1,13 @@
 package models.farming.GeneralPlants;
 
+import models.farming.Harvestable;
 import models.map.Tilable;
 import models.map.Tile;
 import models.time.DateAndTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GiantPlant extends PloughedPlace implements Tilable {
     private List<Tile> parts;
@@ -22,7 +24,13 @@ public class GiantPlant extends PloughedPlace implements Tilable {
         applyStateIfPossible(new SeededState(this));
         applyStateIfPossible(new FertilizedState(this));
         applyStateIfPossible(new WateredState(this));
-        //this.daysUntilHarvest = minOfList(ploughedParts.)
+        ArrayList<Harvestable> harvestables = new ArrayList<>();
+        for(PloughedPlace p: ploughedParts) {
+            harvestables.add(p.getHarvestable());
+        }
+        this.daysUntilHarvest = minOfList((ArrayList<Integer>)
+                harvestables.stream().map(Harvestable::getDaysUntilHarvest).collect(Collectors.toList()));
+
         // TODO: days Until Harvest Calculation
     }
 

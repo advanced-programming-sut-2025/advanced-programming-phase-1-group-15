@@ -1,10 +1,7 @@
 package models.farming.GeneralPlants;
 
 import models.Result;
-import models.farming.Crop;
-import models.farming.CropSeeds;
-import models.farming.Crops;
-import models.farming.SeedType;
+import models.farming.*;
 
 public class RestState implements PlantState{
 
@@ -23,14 +20,14 @@ public class RestState implements PlantState{
         restDaysRemaining--;
         if (restDaysRemaining <= 0) {
             tile.setState(new WateredState(tile));
-            return new Result(true, "Withdrawal period over. Ready to harvest again.");
+            return new Result(true, "rest Period period over. Ready to harvest again.");
         }
         return new Result(true, restDaysRemaining + " withdrawal days left.");
     }
 
     @Override
     public Result harvest() {
-        return new Result(false, "Cannot harvest during withdrawal.");
+        return new Result(false, "Cannot harvest during rest Period.");
     }
 
     @Override
@@ -39,22 +36,17 @@ public class RestState implements PlantState{
     }
 
     @Override
-    public Result seed(CropSeeds seed) {
-        return new Result(false, "Cannot seed during withdrawal.");
-    }
-
-    @Override
     public Result fertilize() {
-        return new Result(false, "Cannot fertilize during withdrawal.");
+        return new Result(false, "Cannot fertilize during rest Period.");
     }
 
     @Override
     public Result water() {
-        return new Result(false, "Already watered (in withdrawal).");
+        return new Result(false, "Already watered (in rest Period).");
     }
 
     @Override
-    public Result seed(SeedType seed) {
+    public Result seed(Seedable seed) {
         return new Result(false,"this tile is already seeded");
     }
 }
