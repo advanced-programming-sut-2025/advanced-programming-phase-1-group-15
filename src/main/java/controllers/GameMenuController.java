@@ -674,6 +674,57 @@ public class GameMenuController {
             default:
                 return new Result(false , "Artisan item not available");
         }
+        if (artisanItem.getName().equals("honey")){
+            Game game = App.currentGame;
+            artisanItem.setHour(game.getDateAndTime().getHour());
+            artisanItem.setDay(game.getDateAndTime().getDay());
+            player.getArtisanItems().add(artisanItem);
+            return new Result(true , "Artisan item made successfully");
+        }
+        for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
+            if (backPackable.getName().equals(artisanItem.getName())) {
+                if(artisanItem.getArtisanItemType().ingredients.getName().equals(backPackable.getName())) {
+                    if (player.getInventory().getItems().get(backPackable)<artisanItem.getArtisanItemType().number) {
+                        return new Result(false , "You cant made this artisan item");
+                    }
+                    Game game = App.currentGame;
+                    artisanItem.setHour(game.getDateAndTime().getHour());
+                    artisanItem.setDay(game.getDateAndTime().getDay());
+                    break;
+                }
+            }
+        }
+        player.getArtisanItems().add(artisanItem);
         return new Result(true , "Artisan item made successfully");
+    }
+    public static Result GetArtisan(String artisanName) {
+        Player player = App.currentGame.getCurrentPlayer();
+        ArtisanItem temp = null;
+        for (ArtisanItem artisanItem : player.getArtisanItems()) {
+            if (artisanItem.getName().equals(artisanName)) {
+                temp = artisanItem;
+            }
+        }
+        if (temp == null) {
+            return new Result(false, "Artisan item not found");
+        }
+        Game game = App.currentGame;
+        if (temp.getArtisanItemType().productionTimeInHours==0){
+            if (temp.getDay()>game.getDateAndTime().getDay()) {
+                player.getInventory().getItems().put(temp , 1);
+                player.getArtisanItems().remove(temp);
+                return new Result(true , "You receive Artisan item successfully");
+            }
+            return new Result(false, "Artisan item is not ready");
+        }
+        int hour = 0;
+        hour += (game.getDateAndTime().getHour()-temp.getHour());
+        hour += (game.getDateAndTime().getDay()-temp.getDay())*24;
+        if(temp.getArtisanItemType().productionTimeInHours>hour) {
+            return new Result(false, "Artisan item is not ready");
+        }
+        player.getInventory().getItems().put(temp , 1);
+        player.getArtisanItems().remove(temp);
+        return new Result(true , "You receive Artisan item successfully");
     }
 }

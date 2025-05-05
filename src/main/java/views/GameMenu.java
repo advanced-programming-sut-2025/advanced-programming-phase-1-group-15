@@ -375,6 +375,7 @@ public class GameMenu implements AppMenu {
             else if (GameMenuCommands.GET_ARTISAN.matches(command)) {
                 Matcher matcher = GameMenuCommands.GET_ARTISAN.matcher(command);
                 matcher.matches();
+                System.out.println(GameMenuController.GetArtisan(matcher.group("artisanName")));
             }
             else {
                 System.out.println("invalid command");

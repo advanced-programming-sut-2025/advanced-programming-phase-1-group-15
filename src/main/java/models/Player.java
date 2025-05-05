@@ -1,6 +1,7 @@
 package models;
 
 import models.animals.Animal;
+import models.artisanry.ArtisanItem;
 import models.cooking.Food;
 import models.cooking.FoodType;
 import models.crafting.CraftItem;
@@ -63,12 +64,16 @@ public class Player extends User implements TimeObserver {
             new Food(FoodType.BACKED_FISH), new Food(FoodType.SALAD)));
 
     private ArrayList<Animal> animals = new ArrayList<>();
-
+    private ArrayList<ArtisanItem> artisanItems = new ArrayList<>();
     private HashMap<Player,PlayerFriendShip> friendships = new HashMap<>();
     private Player couple;
 
     public Player(User user) {
         super(user.getUsername(), user.getPassword(), user.getNickname(), user.getEmail(), user.getGender());
+    }
+
+    public ArrayList<ArtisanItem> getArtisanItems() {
+        return artisanItems;
     }
 
     public Position getPosition() {
