@@ -12,10 +12,6 @@ public class FishingPole extends Tool {
         this.description = "a long, flexible rod used to catch fish.";
     }
 
-    public boolean successfulAttempt(Tile tile) {
-        return tile.getAreaType().equals(AreaType.LAKE);
-    }
-
     @Override
     public int calculateEnergyConsume(Tile tile, Player user) {
         return switch (toolLevel) {
@@ -29,7 +25,10 @@ public class FishingPole extends Tool {
 
     @Override
     public void upgrade() {
-
+        switch (toolLevel) {
+            case TRAINING -> toolLevel = ToolLevel.BAMBOO;
+            case BAMBOO -> toolLevel = ToolLevel.FIBERGLASS;
+        }
     }
 
     @Override
@@ -39,12 +38,7 @@ public class FishingPole extends Tool {
             return "you do not have enough energy to use this tool.";
         }
 
-        if(!successfulAttempt(tile)) {
-            return "you can use fishing pole only on a lake tile.";
-        }
-        else {
-            user.subtractEnergy(energyConsume);
-            return "successful attempt!";
-        }
+        user.subtractEnergy(energyConsume);
+        return "successful attempt!";
     }
 }

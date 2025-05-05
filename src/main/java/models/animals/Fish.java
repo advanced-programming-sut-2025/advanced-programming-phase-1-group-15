@@ -9,7 +9,7 @@ public class Fish implements BackPackable {
     }
     @Override
     public String getName() {
-        return fishType.name().toLowerCase().replace("_", " ");
+        return fishType.name().toLowerCase().replaceAll("_", " ");
     }
 
     @Override

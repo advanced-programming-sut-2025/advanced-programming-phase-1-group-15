@@ -2,6 +2,8 @@ package models.tools;
 
 import models.Player;
 import models.animals.Animal;
+import models.animals.AnimalProduct;
+import models.animals.AnimalType;
 import models.map.Tile;
 
 public class Shear extends Tool implements BackPackable {
@@ -12,10 +14,10 @@ public class Shear extends Tool implements BackPackable {
     }
 
     public boolean successfulAttempt(Tile tile) {
-        if(tile.isEmpty()) {
+        if(tile.isEmpty() || !(tile.getObjectInTile() instanceof Animal animal)) {
             return false;
         }
-        else return tile.getObjectInTile() instanceof Animal;
+        else return animal.getAnimalType().equals(AnimalType.SHEEP);
     }
 
     @Override
@@ -27,7 +29,17 @@ public class Shear extends Tool implements BackPackable {
 
         user.subtractEnergy(energyConsume);
         if(successfulAttempt(tile)) {
-            return "You have successfully used this tool.";
+            Animal animal = (Animal) tile.getObjectInTile();
+            if(animal.getCurrentProduct() == null) {
+                return "no wool to collect!";
+            }
+            else {
+                AnimalProduct product = animal.getCurrentProduct();
+                user.getInventory().addToBackPack(product, 1);
+                animal.setCurrentProduct(null);
+
+                return 1 + " " + product.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.";
+            }
         }
         else {
             return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";

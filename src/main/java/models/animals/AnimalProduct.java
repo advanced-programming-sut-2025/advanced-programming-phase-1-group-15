@@ -17,6 +17,9 @@ public class AnimalProduct  implements BackPackable {
         this.price = animalProductType.price;
     }
 
+    public AnimalProductType getAnimalProductType() {
+        return animalProductType;
+    }
     public ProductQuality getProductQuality() {
         return productQuality;
     }

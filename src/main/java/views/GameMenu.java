@@ -326,6 +326,14 @@ public class GameMenu implements AppMenu {
                 Result result = GameMenuController.sellAnimal(name);
                 System.out.println(result.message());
             }
+            else if(GameMenuCommands.FISHING_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.FISHING_REGEX.matcher(command);
+
+                String fishingPole = matcher.matches() ? matcher.group("fishingPole") : "";
+
+                Result result = GameMenuController.fishing(fishingPole);
+                System.out.println(result.message());
+            }
 
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);

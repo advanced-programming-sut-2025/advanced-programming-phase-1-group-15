@@ -344,6 +344,12 @@ public class GameMenuController {
         else if(animal.getCurrentProduct() == null) {
             return new Result(false, "no product is available for this animal!");
         }
+        else if(animal.getAnimalType().equals(AnimalType.COW) || animal.getAnimalType().equals(AnimalType.GOAT)) {
+            return new Result(false, "you have to use milk pail to collect these products.");
+        }
+        else if(animal.getAnimalType().equals(AnimalType.SHEEP)) {
+            return new Result(false, "you have to use shear to collect this product.");
+        }
         getCurrentPlayer().getInventory().addToBackPack(animal.getCurrentProduct(), 1);
         animal.setCurrentProduct(null);
 
@@ -362,6 +368,9 @@ public class GameMenuController {
         animalTile.empty();
 
         return new Result(true,  animal.getName() + " has been sold with price " + animal.getPrice());
+    }
+    public static Result fishing(String fishingPole) {
+        return null;
     }
 
     public static Result showCropInfo(String name) {

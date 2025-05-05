@@ -4,7 +4,6 @@ import models.animals.Animal;
 import models.cooking.Food;
 import models.cooking.FoodType;
 import models.crafting.CraftItem;
-import models.farming.GeneralPlants.PloughedTile;
 import models.map.Farm;
 import models.map.Tile;
 import models.relation.PlayerFriendShip;

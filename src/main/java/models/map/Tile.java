@@ -1,9 +1,7 @@
 package models.map;
 
-import models.App;
 import models.animals.Animal;
-import models.animals.AnimalType;
-import models.farming.GeneralPlants.PloughedTile;
+import models.farming.GeneralPlants.PloughedPlace;
 import models.farming.Tree;
 import models.foraging.ForagingMineral;
 import models.foraging.Stone;
@@ -91,7 +89,6 @@ public class Tile {
 
     public void plow() {
         plowed = true;
-        objectInTile = new PloughedTile(this.position);
     }
     public void unplow() {
         plowed = false;
