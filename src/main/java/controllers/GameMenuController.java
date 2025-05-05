@@ -15,10 +15,7 @@ import models.farming.GeneralPlants.PloughedPlace;
 import models.farming.MixedSeedCrop;
 import models.farming.SeedType;
 import models.map.*;
-import models.tools.BackPackable;
-import models.tools.Fridge;
-import models.tools.Tool;
-import models.tools.TrashCan;
+import models.tools.*;
 
 public class GameMenuController {
     public static Player getCurrentPlayer() {
@@ -369,8 +366,29 @@ public class GameMenuController {
 
         return new Result(true,  animal.getName() + " has been sold with price " + animal.getPrice());
     }
-    public static Result fishing(String fishingPole) {
-        return null;
+    public static Result fishing(String material) {
+        Lake lake = null;
+        for(int row = getCurrentPlayer().getPosition().y - 1; row <= getCurrentPlayer().getPosition().y + 1; row++) {
+            for(int col = getCurrentPlayer().getPosition().x - 1; col <= getCurrentPlayer().getPosition().x + 1; col++) {
+                if(App.currentGame.getTile(col, row).getArea() instanceof Lake) {
+                    lake = (Lake) App.currentGame.getTile(col, row).getArea();
+                    break;
+                }
+            }
+        }
+
+        if(lake == null) {
+            return new Result(false, "You need to stand adjacent to lake.");
+        }
+        else {
+            FishingPole fishingPole = getCurrentPlayer().getInventory().getFishingPole(material);
+
+            if(fishingPole == null) {
+                return new Result(false, "fishing pole not found.");
+            }
+
+            return new Result(true, fishingPole.use(lake, getCurrentPlayer(), App.currentGame.getWeather().getCurrentWeather()));
+        }
     }
 
     public static Result showCropInfo(String name) {

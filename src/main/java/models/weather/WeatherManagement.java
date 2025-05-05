@@ -66,6 +66,9 @@ public class WeatherManagement implements TimeObserver {
 
     }
 
+    public WeatherOption getCurrentWeather() {
+        return currentWeather;
+    }
     public String displayWeather() {
         return currentWeather.displayWeather();
     }

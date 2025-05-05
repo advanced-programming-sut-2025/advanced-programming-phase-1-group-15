@@ -1,6 +1,7 @@
 package models.map;
 
 import models.animals.Animal;
+import models.animals.Fish;
 import models.farming.GeneralPlants.PloughedPlace;
 import models.farming.Tree;
 import models.foraging.ForagingMineral;
@@ -121,7 +122,12 @@ public class Tile {
             return;
         }
         if(area.areaType.equals(AreaType.LAKE)) {
-            PrintInColor.printInBlue('~');
+            if(objectInTile instanceof Fish) {
+                PrintInColor.printInRed('Ɔ');
+            }
+            else {
+                PrintInColor.printInBlue('~');
+            }
         }
         else if(area.areaType.equals(AreaType.HOUSE)) {
             if(objectInTile instanceof Fridge) {

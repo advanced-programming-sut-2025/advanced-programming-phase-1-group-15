@@ -18,6 +18,7 @@ public class BackPack extends Tool {
         items.put(new Axe(), 1);
         items.put(new WateringCan(), 1);
         items.put(new Scythe(), 1);
+        items.put(new FishingPole(), 1);
     }
 
     public int getCapacity() {
@@ -39,6 +40,17 @@ public class BackPack extends Tool {
     public int getItemCount(String name) {
         BackPackable item = getItemByName(name);
         return items.getOrDefault(item, 0);
+    }
+
+    public FishingPole getFishingPole(String material) {
+        for(BackPackable item : items.keySet()) {
+            if(item instanceof FishingPole fishingPole) {
+                if(fishingPole.getToolLevel().name().equalsIgnoreCase(material)) {
+                    return fishingPole;
+                }
+            }
+        }
+        return null;
     }
 
     public boolean checkFilled() {
