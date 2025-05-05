@@ -36,6 +36,7 @@ package models.enums.commands;
         ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisanName>.*)\\s+(?<itemName>.*)\\s*"),
         GET_ARTISAN("\\s*artisan\\s+get\\s+(?<artisanName>.*)\\s*"),
         PLANT_MIXED_SEED("\\s*plant\\s+mixed\\s+seed\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*"),
+        HARVEST("\\s*harvest\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*"),
         PlaceItem("\\s*place\\s+item\\s+-n\\s+(?<itemName>.*)\\s+-d\\s+(?<direction>.*)\n");
         private final String regex;
 

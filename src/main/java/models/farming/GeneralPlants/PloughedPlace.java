@@ -3,6 +3,7 @@ package models.farming.GeneralPlants;
 import models.App;
 import models.Result;
 import models.farming.*;
+import models.map.AreaType;
 import models.map.Map;
 import models.map.Position;
 import models.map.Tile;
@@ -30,6 +31,9 @@ public class PloughedPlace implements TimeObserver {
     protected SeedType seed;
     protected CropSeeds cropSeed;
 
+    protected boolean isInGreenHouse(){
+        return tile.getAreaType() == AreaType.GREENHOUSE;
+    }
 
     public Result seed(SeedType seed) {
         if (harvestable != null) {
@@ -68,7 +72,7 @@ public class PloughedPlace implements TimeObserver {
 
         if(crop == null)  throw new IllegalArgumentException("crop seed cannot be null");
 
-        if (!crop.canGrowInThisSeason(lastUpdate.getSeason())) {
+        if (!crop.canGrowInThisSeason(lastUpdate.getSeason()) && !isInGreenHouse()) {
             return new Result(false, "this is not a suitable season for this seed!");
         }
 
@@ -159,6 +163,10 @@ public class PloughedPlace implements TimeObserver {
         for(int i=1;i<positions.size()-1;i++){
             Position nextPos = positions.get(i);
             Position previousPos = positions.get(i-1);
+            if(App.currentGame.getTile(previousPos.x,previousPos.y).getAreaType() == AreaType.GREENHOUSE){
+                return false;
+            }
+            
             if(getCropTypeOfPos(nextPos)!= null && getCropTypeOfPos(previousPos)!= null){
                 if(!getCropTypeOfPos(nextPos).equals(getCropTypeOfPos(previousPos))){
                     return false;

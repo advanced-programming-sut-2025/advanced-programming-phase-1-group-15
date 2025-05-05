@@ -387,6 +387,12 @@ public class GameMenu implements AppMenu {
             System.out.println(GameMenuController.plantMixedSeed(
                     Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy"))));
         }
+        else if(GameMenuCommands.HARVEST.matches(command)) {
+            Matcher matcher = GameMenuCommands.HARVEST.matcher(command);
+            matcher.matches();
+            // TODO : check using tools for harvesting
+            System.out.println();
+        }
         else {
             System.out.println("You are locked! (maximum energy per turn consumed). Use \"next turn\" command to continue.");
         }

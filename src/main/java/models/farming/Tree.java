@@ -27,11 +27,6 @@ public class Tree extends Harvestable implements Tilable, TimeObserver {
     }
 
     @Override
-    public void update(DateAndTime dateAndTime) {
-
-    }
-
-    @Override
     public void harvest(int number) {
         App.currentGame.getCurrentPlayer().addToBackPack(new Fruit(this),number);
     }

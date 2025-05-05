@@ -4,6 +4,7 @@ import models.animals.Animal;
 import models.cooking.Food;
 import models.cooking.FoodType;
 import models.crafting.CraftItem;
+import models.map.AreaType;
 import models.map.Farm;
 import models.map.Tile;
 import models.relation.PlayerFriendShip;
@@ -307,6 +308,7 @@ public class Player extends User implements TimeObserver {
         for(int i=0;i<farm.getTiles().size();i++) {
             for (int j = 0; j < farm.getTiles().get(i).size(); j++) {
                 Tile tile = farm.getTiles().get(i).get(j);
+                if(tile.getAreaType() == AreaType.GREENHOUSE) continue;
                 if(tile.isPlowed()){
                     // TODO: check if it is in a Green house
                     remainder++;    remainder %= 16;
