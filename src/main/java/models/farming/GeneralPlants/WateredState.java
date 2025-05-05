@@ -43,7 +43,9 @@ public class WateredState implements PlantState {
             return new Result(false, "Crop isn't ready.");
         }
 
-        harvestable.harvest();
+        int amount = ( tile instanceof GiantPlant ) ? 10 : 1;
+
+        harvestable.harvest(amount);
 
         if (harvestable.isOneTime()) {
             tile.unPlough();

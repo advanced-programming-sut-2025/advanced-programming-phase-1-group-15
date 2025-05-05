@@ -1,5 +1,6 @@
 package models.farming;
 
+import models.App;
 import models.enums.Quality;
 import models.map.Tilable;
 import models.time.DateAndTime;
@@ -22,7 +23,8 @@ public class Crop extends Harvestable implements Tilable, BackPackable {
     }
 
     @Override
-    public void harvest() {
+    public void harvest(int number) {
+        App.currentGame.getCurrentPlayer().addToBackPack(new CropProduct(this),number);
     }
 
     @Override

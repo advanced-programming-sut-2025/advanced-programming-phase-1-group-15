@@ -1,5 +1,6 @@
 package models.farming;
 
+import models.App;
 import models.map.Tilable;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
@@ -31,10 +32,8 @@ public class Tree extends Harvestable implements Tilable, TimeObserver {
     }
 
     @Override
-    public void harvest() {
-        if (daysUntilHarvest > 0) {
-            return;
-        }
+    public void harvest(int number) {
+        App.currentGame.getCurrentPlayer().addToBackPack(new Fruit(this),number);
     }
 
     @Override

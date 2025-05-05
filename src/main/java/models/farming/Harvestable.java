@@ -20,7 +20,7 @@ public abstract class Harvestable implements TimeObserver {
         lastUpdate = dt;
     }
 
-    public abstract void harvest();
+    public abstract void harvest(int number);
     public abstract ArrayList<Integer> getStages();
 
     public int getDaysUntilHarvest() {
