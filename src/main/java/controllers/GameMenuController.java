@@ -9,12 +9,10 @@ import models.artisanry.ArtisanItem;
 import models.artisanry.ArtisanItemType;
 import models.cooking.Food;
 import models.crafting.CraftItem;
-import models.farming.CropSeeds;
-import models.farming.Crops;
+import models.farming.*;
 import models.farming.GeneralPlants.PloughedPlace;
-import models.farming.MixedSeedCrop;
-import models.farming.SeedType;
 import models.map.*;
+import models.stores.CarpenterShop;
 import models.stores.MarnieRanch;
 import models.stores.Store;
 import models.tools.*;
@@ -177,6 +175,11 @@ public class GameMenuController {
     }
 
     public static Result buildBarn(int x, int y) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        if(!(playerTile.getArea() instanceof CarpenterShop)) {
+            return new Result(false, "you should be inside carpenter shop to run this command.");
+        }
+
         boolean buildable = true;
         for(int row = y; row < y + 2; row++) {
             for(int col = x; col < x + 2; col++) {
@@ -202,6 +205,11 @@ public class GameMenuController {
         }
     }
     public static Result buildCoop(int x, int y) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        if(!(playerTile.getArea() instanceof CarpenterShop)) {
+            return new Result(false, "you should be inside carpenter shop to run this command.");
+        }
+
         boolean buildable = true;
         for(int row = y; row < y + 2; row++) {
             for(int col = x; col < x + 2; col++) {
@@ -412,6 +420,66 @@ public class GameMenuController {
 
         return new Result(true, "All Items: \n" + store.displayItems());
     }
+    public static Result showAvailableStoreProducts() {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+
+        if(!playerTile.getAreaType().equals(AreaType.STORE)) {
+            return new Result(false, "You need to be in a store to run this command.");
+        }
+
+        Store store = (Store) playerTile.getArea();
+        if(!store.isOpen(App.currentGame.getDateAndTime().getHour())) {
+            return new Result(false, "store is closed now!");
+        }
+
+        return new Result(true, "All Available Items Fot You: \n" + store.displayAvailableItems());
+    }
+    public static Result purchaseProduct(String productName, int count) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+
+        if(!playerTile.getAreaType().equals(AreaType.STORE)) {
+            return new Result(false, "You need to be in a store to run this command.");
+        }
+
+        Store store = (Store) playerTile.getArea();
+        if(!store.isOpen(App.currentGame.getDateAndTime().getHour())) {
+            return new Result(false, "store is closed now!");
+        }
+
+        if(!store.checkAvailable(productName)) {
+            return new Result(false, "product is not available!");
+        }
+        else if(!store.checkAmount(productName, count)) {
+            return new Result(false, "daily limit exceeded!");
+        }
+
+        return new Result(true, "All Available Items Fot You: \n" + store.displayAvailableItems());
+    }
+    public static Result sellProduct(String productName, int count) {
+        BackPackable item = getCurrentPlayer().getInventory().getItemByName(productName);
+        int availableCount = getCurrentPlayer().getInventory().getItemCount(productName);
+
+        if(item == null) {
+            return new Result(false, "You don't have that item.");
+        }
+        else if(count > availableCount) {
+            return new Result(false, "You only have " + availableCount + " " + item.getName() + " in your inventory.");
+        }
+        else if(item.getPrice() == 0) {
+            return new Result(false, "this item is not sellable.");
+        }
+
+        if(availableCount == -1) {
+            getCurrentPlayer().addGold(availableCount * item.getPrice());
+            getCurrentPlayer().getInventory().removeFromBackPack(item);
+            return new Result(true, "Sold all of your " + item.getName() + ". You earned " + availableCount * item.getPrice() + "gold.");
+        }
+        else {
+            getCurrentPlayer().addGold(count * item.getPrice());
+            getCurrentPlayer().getInventory().removeCountFromBackPack(item, count);
+            return new Result(true, "Sold " + count + " of your " + item.getName() + ". You earned " + count * item.getPrice() + "gold.");
+        }
+    }
 
     public static Result showCropInfo(String name) {
         Crops crop = Crops.getByName(name);
@@ -448,11 +516,28 @@ public class GameMenuController {
         return new Result(false,"no seed found with this name");
     }
 
+    public static Result fertilize(String fertilizerName, Position position) {
+        Tile goalTile = App.currentGame.getTile(position.x,position.y);
+        if(goalTile.getObjectInTile() == null) return new Result(false,"goal tile is empty");
+        if(!goalTile.getObjectInTile().getClass().equals(PloughedPlace.class))
+            return new Result(false,"goal tile is not a PloughedPlace");
+        PloughedPlace goalPlace = (PloughedPlace) goalTile.getObjectInTile();
+        if(fertilizerName.equals("water fertilizer")){
+            return goalPlace.getCurrentState().fertilize(Fertilizer.Water);
+        }
+        else if(fertilizerName.equals("growth fertilizer")){
+            return goalPlace.getCurrentState().fertilize(Fertilizer.Growth);
+        }
+        else {
+            return new Result(false,"fertilizer not found");
+        }
+    }
+
     public static Result plantMixedSeed(int dx,int dy) {
 
         CropSeeds randomSeed = MixedSeedCrop.getRandomSeed(App.currentGame.getDateAndTime().getSeason());
 
-        return plant(randomSeed.name(), dx, dy); // if incorrect errors are shown you should plant method
+        return plant(randomSeed.name(), dx, dy); // if incorrect errors are shown you should check plant method
     }
 
 
@@ -470,10 +555,6 @@ public class GameMenuController {
             return new Result(false,"there is not any plant here!");
         return new Result(true,toBeShown.printInfo());
 
-    }
-
-    public static Result fertilize(String fertilizerName, Position position) {
-        return null;
     }
 
     public static Result placeItem(String itemName, Position position) {

@@ -1,12 +1,9 @@
 package models.stores;
 
-import models.animals.Barn;
 import models.map.AreaType;
 import models.map.Tile;
-import models.time.DateAndTime;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CarpenterShop extends Store {
     public static int[] coordinates = {51, 55, 6, 9};
@@ -37,6 +34,16 @@ public class CarpenterShop extends Store {
     }
 
     @Override
+    public boolean checkAvailable(String productName) {
+        return true;
+    }
+
+    @Override
+    public boolean checkAmount(String productName, int amount) {
+        return true;
+    }
+
+    @Override
     public String displayItems() {
         return "Name    Description    Price\n" +
                 """
@@ -54,5 +61,10 @@ public class CarpenterShop extends Store {
                 Well	Provides a place for you to refill your watering can.	1,000g Stone (75)
                 Shipping Bin	Items placed in it will be included in the nightly shipment.	250g Wood (150)
                 """;
+    }
+
+    @Override
+    public String displayAvailableItems() {
+        return displayItems();
     }
 }

@@ -9,7 +9,11 @@ public abstract class Store extends Area {
     protected int closesAt;
 
     public abstract String displayItems();
+    public abstract String displayAvailableItems();
     public abstract void resetSoldItems();
+    public abstract boolean checkAvailable(String productName);
+    public abstract boolean checkAmount(String productName, int amount);
+
     public boolean isOpen(int hour) {
         return hour >= opensAt && hour <= closesAt;
     }

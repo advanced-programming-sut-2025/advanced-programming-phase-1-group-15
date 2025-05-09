@@ -2,7 +2,6 @@ package models.stores;
 
 import models.map.AreaType;
 import models.map.Tile;
-import models.time.DateAndTime;
 import models.tools.Tool;
 
 import java.util.ArrayList;
@@ -43,6 +42,26 @@ public class Blacksmith extends Store {
     }
 
     @Override
+    public boolean checkAvailable(String productName) {
+        for(BlackSmithItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkAmount(String productName, int amount) {
+        for(BlackSmithItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return amount + sold.get(item) <= item.dailyLimit;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public String displayItems() {
         StringBuilder display = new StringBuilder();
 
@@ -66,6 +85,11 @@ public class Blacksmith extends Store {
                 """);
 
         return display.toString();
+    }
+
+    @Override
+    public String displayAvailableItems() {
+        return displayItems();
     }
 
     public void upgradeTool(Tool tool) {

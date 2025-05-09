@@ -1,8 +1,9 @@
 package models.stores;
 
+import models.App;
 import models.map.AreaType;
 import models.map.Tile;
-import models.time.DateAndTime;
+import models.time.Season;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,26 @@ public class StarDropSaloon extends Store {
     }
 
     @Override
+    public boolean checkAvailable(String productName) {
+        for(StarDropSaloonItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkAmount(String productName, int amount) {
+        for(StarDropSaloonItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return amount + sold.get(item) <= item.dailyLimit;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public String displayItems() {
         StringBuilder display = new StringBuilder();
 
@@ -50,6 +71,22 @@ public class StarDropSaloon extends Store {
             display.append(item.getName()).append("\t");
             display.append("\"").append(item.description).append("\"").append("\t");
             display.append(item.price).append("\n");
+        }
+
+        return display.toString();
+    }
+
+    @Override
+    public String displayAvailableItems() {
+        StringBuilder display = new StringBuilder();
+
+        display.append("Name    Description    Price\n");
+        for(StarDropSaloonItems item : sold.keySet()) {
+            if(sold.get(item) < item.dailyLimit) {
+                display.append(item.getName()).append("\t");
+                display.append("\"").append(item.description).append("\"").append("\t");
+                display.append(item.price).append("\n");
+            }
         }
 
         return display.toString();

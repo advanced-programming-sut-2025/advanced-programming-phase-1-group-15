@@ -5,6 +5,8 @@ import models.artisanry.ArtisanItem;
 import models.cooking.Food;
 import models.cooking.FoodType;
 import models.crafting.CraftItem;
+import models.foraging.ForagingSeeds;
+import models.foraging.ForagingSeedsType;
 import models.map.AreaType;
 import models.map.Farm;
 import models.map.Tile;
@@ -315,6 +317,20 @@ public class Player extends User implements TimeObserver {
                             // TODO: check the effect for tree when you implemented tree
                         }
                     }
+                }
+            }
+        }
+    }
+
+    public void ForagingSeedsAndCrops(){
+        for(int i=0;i<farm.getTiles().size();i++){
+            for(int j=0;j<farm.getTiles().get(i).size();j++){
+                Tile tile = farm.getTiles().get(i).get(j);
+                if(tile.isPlowed()||tile.getAreaType() == AreaType.GREENHOUSE){
+                    continue;
+                }
+                if(RandomGenerator.getInstance().randomInt(0,100)==1){
+                    ForagingSeedsType.getSeasonForagingSeed(App.currentGame.getDateAndTime().getSeason());
                 }
             }
         }

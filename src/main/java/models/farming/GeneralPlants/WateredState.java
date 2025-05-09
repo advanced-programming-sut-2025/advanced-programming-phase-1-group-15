@@ -18,8 +18,9 @@ public class WateredState implements PlantState {
     }
 
     @Override
-    public Result fertilize() {
-        return new Result(false,"this tile is already fertilized");
+    public Result fertilize(Fertilizer fertilizer) {
+
+        return new Result(false,"this tile is already watered");
     }
 
     @Override
