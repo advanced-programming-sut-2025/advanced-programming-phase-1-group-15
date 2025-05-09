@@ -8,10 +8,15 @@ public abstract class Store extends Area {
     protected int opensAt;
     protected int closesAt;
 
-    public String displayItems() {
-        return "";
-    }
+    public abstract String displayItems();
+    public abstract void resetSoldItems();
     public boolean isOpen(int hour) {
         return hour >= opensAt && hour <= closesAt;
+    }
+    @Override
+    public void update(DateAndTime dateAndTime) {
+        if(dateAndTime.getHour() == opensAt) {
+            resetSoldItems();
+        }
     }
 }

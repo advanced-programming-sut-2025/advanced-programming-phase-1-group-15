@@ -1,7 +1,7 @@
 package models.time;
 
 public enum Season {
-    SPRING, SUMMER, AUTUMN, WINTER;
+    SPRING, SUMMER, AUTUMN, WINTER, ALL;
 
     public String displaySeason() {
         return switch (this) {
@@ -9,6 +9,7 @@ public enum Season {
             case SUMMER -> "Summer";
             case AUTUMN -> "Autumn";
             case WINTER -> "Winter";
+            case ALL -> "All";
         };
     }
 }

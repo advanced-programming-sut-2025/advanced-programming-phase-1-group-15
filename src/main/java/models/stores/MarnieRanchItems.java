@@ -1,6 +1,5 @@
 package models.stores;
 
-import models.foraging.ForagingMineralType;
 import models.tools.ToolType;
 
 public enum MarnieRanchItems {

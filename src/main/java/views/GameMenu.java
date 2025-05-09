@@ -337,7 +337,7 @@ public class GameMenu implements AppMenu {
 
             else if(GameMenuCommands.SHOW_STORE_PRODUCTS_REGEX.matches(command)) {
                 Result result = GameMenuController.showStoreProducts();
-                System.out.println(result.message());
+                System.out.print(result.message());
             }
 
             else if(GameMenuCommands.CROP_INFO.matches(command)) {

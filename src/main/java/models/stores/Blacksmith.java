@@ -1,6 +1,5 @@
 package models.stores;
 
-import models.foraging.ForagingMineralType;
 import models.map.AreaType;
 import models.map.Tile;
 import models.time.DateAndTime;
@@ -12,7 +11,7 @@ import java.util.HashMap;
 public class Blacksmith extends Store {
     public static int[] coordinates = {47, 51, 40, 43};
 
-    private HashMap<BlackSmithItems, Integer> Sold = new HashMap<>();
+    private HashMap<BlackSmithItems, Integer> sold = new HashMap<>();
 
     public Blacksmith(ArrayList<ArrayList<Tile>> storeTiles) {
         runner = Runner.CLINT;
@@ -29,7 +28,7 @@ public class Blacksmith extends Store {
         }
 
         for(BlackSmithItems item : BlackSmithItems.values()) {
-            Sold.put(item, 0);
+            sold.put(item, 0);
         }
     }
 
@@ -38,15 +37,9 @@ public class Blacksmith extends Store {
 
     }
 
-    public void resetSoldItems() {
-        Sold.replaceAll((i, v) -> 0);
-    }
-
     @Override
-    public void update(DateAndTime dateAndTime) {
-        if(dateAndTime.getHour() == opensAt) {
-            resetSoldItems();
-        }
+    public void resetSoldItems() {
+        sold.replaceAll((i, v) -> 0);
     }
 
     @Override
@@ -69,7 +62,8 @@ public class Blacksmith extends Store {
                 Copper Trash Can\tCopper Bar(5)\t1,000g
                 Steel Trash Can\tIron Bar(5)\t2,500g
                 Gold Trash Can\tGold Bar(5)\t5,000g
-                Iridium Trash Can\tIridium Bar(5)\t12,500g""");
+                Iridium Trash Can\tIridium Bar(5)\t12,500g
+                """);
 
         return display.toString();
     }
