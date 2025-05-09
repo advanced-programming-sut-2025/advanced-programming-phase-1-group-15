@@ -1,8 +1,12 @@
 package models.enums.commands;
 
 public enum TradeMenuCommands implements Commands {
-    CHANGE_USERNAME_REGEX("change username -u <username>"),;
-
+    CHANGE_USERNAME_REGEX("\\s*change\\s+username\\s+-u\\s*(?<username>.+)\\s*"),
+    TRADE_ITEM("^\\s*trade\\s+-u\\s+(?<username>.+)\\s+-t\\s+(?<type>\\S+)\\s+-i\\s+(?<item>\\S+)\\s+-a\\s+(?<amount>\\d+)" +
+            "\\[-ti\\s+(?<targetItem>.+)\\s+" +
+            "-ta\\s+(?<targetAmount>\\d+)\\]\\s*$"),
+    TRADE_MONEY("^\\s*trade\\s+-u\\s+(?<username>.+)\\s+-t\\s+(?<type>\\S+)\\s+-i\\s+(?<item>\\S+)\\s+-a\\s+(?<amount>\\d+)" +
+            "\\[-p\\s+(?<price>\\d+)\\]\\s*$");
     private final String regex;
     TradeMenuCommands(String regex) { this.regex = regex; }
 

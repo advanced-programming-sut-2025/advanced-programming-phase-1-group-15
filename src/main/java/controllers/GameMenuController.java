@@ -601,7 +601,7 @@ public class GameMenuController {
                 for (BackPackable backPackable : availableCraft.getCraftItemType().ingredients.keySet()) {
                     int num = availableCraft.getCraftItemType().ingredients.get(backPackable);
                     for (BackPackable packable : player.getInventory().getItems().keySet()) {
-                        int number = player.getInventory().getItems().get(packable);
+                        int number = player.getInventory().getItemCount(packable.getName());
                         if(packable.getName().equals(backPackable.getName())){
                             if (number < num) {
                                 return new Result(false , "you dont have enough ingredients!");
@@ -821,7 +821,7 @@ public class GameMenuController {
         for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
             if (backPackable.getName().equals(artisanItem.getName())) {
                 if(artisanItem.getArtisanItemType().ingredients.getName().equals(backPackable.getName())) {
-                    if (player.getInventory().getItems().get(backPackable)<artisanItem.getArtisanItemType().number) {
+                    if (player.getInventory().getItemCount(backPackable.getName())<artisanItem.getArtisanItemType().number) {
                         return new Result(false , "You cant made this artisan item");
                     }
                     Game game = App.currentGame;

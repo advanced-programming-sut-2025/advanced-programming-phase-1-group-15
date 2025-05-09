@@ -24,11 +24,10 @@ public class Player extends User implements TimeObserver {
     private Position homePosition;
     private Position position;
     private Farm farm;
-
+    private int CurrentId;
     private int mapNumber;
 
     private int gold = 500;
-
     private int energy = 200;
     private int energyConsumed = 0;
     private boolean unlimitedEnergy = false;
@@ -68,6 +67,14 @@ public class Player extends User implements TimeObserver {
     private ArrayList<ArtisanItem> artisanItems = new ArrayList<>();
     private HashMap<Player,PlayerFriendShip> friendships = new HashMap<>();
     private Player couple;
+
+    public int getCurrentId() {
+        return CurrentId;
+    }
+
+    public void setCurrentId(int currentId) {
+        CurrentId = currentId;
+    }
 
     public Player(User user) {
         super(user.getUsername(), user.getPassword(), user.getNickname(), user.getEmail(), user.getGender());
