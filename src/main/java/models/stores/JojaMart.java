@@ -1,10 +1,8 @@
 package models.stores;
 
 import models.App;
-import models.foraging.ForagingSeeds;
 import models.map.AreaType;
 import models.map.Tile;
-import models.time.DateAndTime;
 import models.time.Season;
 
 import java.util.ArrayList;
@@ -57,7 +55,12 @@ public class JojaMart extends Store {
     }
 
     @Override
-    public boolean checkAmount(String productName) {
+    public boolean checkAmount(String productName, int amount) {
+        for(JojaMartItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return amount + sold.get(item) <= item.dailyLimit;
+            }
+        }
         return false;
     }
 

@@ -3,9 +3,7 @@ package models.stores;
 import models.App;
 import models.map.AreaType;
 import models.map.Tile;
-import models.time.DateAndTime;
 import models.time.Season;
-import models.tools.BackPackable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +40,28 @@ public class PierreGeneralStore extends Store {
     @Override
     public void resetSoldItems() {
         sold.replaceAll((i, v) -> 0);
+    }
+
+    @Override
+    public boolean checkAvailable(String productName) {
+        Season season = App.currentGame.getDateAndTime().getSeason();
+
+        for(PierreGeneralStoreItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return item.season.equals(Season.ALL) || item.season.equals(season);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkAmount(String productName, int amount) {
+        for(PierreGeneralStoreItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return amount + sold.get(item) <= item.dailyLimit;
+            }
+        }
+        return false;
     }
 
     @Override

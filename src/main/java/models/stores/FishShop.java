@@ -45,7 +45,7 @@ public class FishShop extends Store {
     }
 
     @Override
-    public boolean checkAmount(String productName) {
+    public boolean checkAmount(String productName, int amount) {
         return false;
     }
 

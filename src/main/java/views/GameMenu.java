@@ -363,6 +363,15 @@ public class GameMenu implements AppMenu {
                 Result result = CheatCodeController.cheatAddGold(amount);
                 System.out.println(result.message());
             }
+            else if(GameMenuCommands.SELL_PRODUCT_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.SELL_PRODUCT_REGEX.matcher(command);
+
+                String productName = matcher.matches() ? matcher.group("productName") : "";
+                int count = matcher.matches() ? Integer.parseInt(matcher.group("count")) : -1;
+
+                Result result = GameMenuController.sellProduct(productName, count);
+                System.out.println(result.message());
+            }
 
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);

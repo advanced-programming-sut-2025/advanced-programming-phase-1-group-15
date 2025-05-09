@@ -1,8 +1,9 @@
 package models.stores;
 
+import models.App;
 import models.map.AreaType;
 import models.map.Tile;
-import models.time.DateAndTime;
+import models.time.Season;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,26 @@ public class StarDropSaloon extends Store {
     @Override
     public void resetSoldItems() {
         sold.replaceAll((i, v) -> 0);
+    }
+
+    @Override
+    public boolean checkAvailable(String productName) {
+        for(StarDropSaloonItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkAmount(String productName, int amount) {
+        for(StarDropSaloonItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return amount + sold.get(item) <= item.dailyLimit;
+            }
+        }
+        return false;
     }
 
     @Override

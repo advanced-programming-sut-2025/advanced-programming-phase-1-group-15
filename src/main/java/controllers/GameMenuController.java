@@ -446,7 +446,39 @@ public class GameMenuController {
             return new Result(false, "store is closed now!");
         }
 
-        return new Result(true, store.sell(productName, count));
+        if(!store.checkAvailable(productName)) {
+            return new Result(false, "product is not available!");
+        }
+        else if(!store.checkAmount(productName, count)) {
+            return new Result(false, "daily limit exceeded!");
+        }
+
+        return new Result(true, "All Available Items Fot You: \n" + store.displayAvailableItems());
+    }
+    public static Result sellProduct(String productName, int count) {
+        BackPackable item = getCurrentPlayer().getInventory().getItemByName(productName);
+        int availableCount = getCurrentPlayer().getInventory().getItemCount(productName);
+
+        if(item == null) {
+            return new Result(false, "You don't have that item.");
+        }
+        else if(count > availableCount) {
+            return new Result(false, "You only have " + availableCount + " " + item.getName() + " in your inventory.");
+        }
+        else if(item.getPrice() == 0) {
+            return new Result(false, "this item is not sellable.");
+        }
+
+        if(availableCount == -1) {
+            getCurrentPlayer().addGold(availableCount * item.getPrice());
+            getCurrentPlayer().getInventory().removeFromBackPack(item);
+            return new Result(true, "Sold all of your " + item.getName() + ". You earned " + availableCount * item.getPrice() + "gold.");
+        }
+        else {
+            getCurrentPlayer().addGold(count * item.getPrice());
+            getCurrentPlayer().getInventory().removeCountFromBackPack(item, count);
+            return new Result(true, "Sold " + count + " of your " + item.getName() + ". You earned " + count * item.getPrice() + "gold.");
+        }
     }
 
     public static Result showCropInfo(String name) {

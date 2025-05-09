@@ -33,6 +33,7 @@ package models.enums.commands;
         SHOW_STORE_PRODUCTS_REGEX("^\\s*show\\s+all\\s+products\\s*$"),
         SHOW_AVAILABLE_PRODUCTS_REGEX("^\\s*show\\s+all\\s+available\\s+products\\s*$"),
         PURCHASE_PRODUCT_REGEX("^\\s*purchase\\s+(?<productName>.+?)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),
+        SELL_PRODUCT_REGEX("^\\s*sell\\s+(?<productName>.+?)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),
         PLANT_SEED("^\\s*plant\\s+-s\\s+(?<seed>.+\\S)\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*$"),
         CROP_INFO("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>\\S+)\\s*$"),
         Recipe("^\\s*crafting\\s+show\\s+recipes\\s*^"),

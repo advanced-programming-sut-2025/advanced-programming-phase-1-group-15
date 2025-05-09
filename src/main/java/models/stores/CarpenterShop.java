@@ -1,12 +1,9 @@
 package models.stores;
 
-import models.animals.Barn;
 import models.map.AreaType;
 import models.map.Tile;
-import models.time.DateAndTime;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CarpenterShop extends Store {
     public static int[] coordinates = {51, 55, 6, 9};
@@ -42,8 +39,8 @@ public class CarpenterShop extends Store {
     }
 
     @Override
-    public boolean checkAmount(String productName) {
-        return false;
+    public boolean checkAmount(String productName, int amount) {
+        return true;
     }
 
     @Override

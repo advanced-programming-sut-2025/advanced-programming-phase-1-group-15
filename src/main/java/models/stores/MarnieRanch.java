@@ -41,6 +41,26 @@ public class MarnieRanch extends Store {
     }
 
     @Override
+    public boolean checkAvailable(String productName) {
+        for(MarnieRanchItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkAmount(String productName, int amount) {
+        for(MarnieRanchItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return amount + sold.get(item) <= item.dailyLimit;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public String displayItems() {
         StringBuilder display = new StringBuilder();
 

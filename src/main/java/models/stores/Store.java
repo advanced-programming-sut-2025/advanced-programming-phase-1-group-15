@@ -3,8 +3,6 @@ package models.stores;
 import models.map.Area;
 import models.time.DateAndTime;
 
-import java.util.HashMap;
-
 public abstract class Store extends Area {
     protected Runner runner;
     protected int opensAt;
@@ -14,7 +12,7 @@ public abstract class Store extends Area {
     public abstract String displayAvailableItems();
     public abstract void resetSoldItems();
     public abstract boolean checkAvailable(String productName);
-    public abstract boolean checkAmount(String productName);
+    public abstract boolean checkAmount(String productName, int amount);
 
     public boolean isOpen(int hour) {
         return hour >= opensAt && hour <= closesAt;
