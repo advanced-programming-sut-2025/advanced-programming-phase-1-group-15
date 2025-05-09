@@ -12,6 +12,8 @@ public class PloughedState implements PlantState {
     }
 
 
+
+
     @Override
     public Result updateByTime() {
         return null;
@@ -38,8 +40,16 @@ public class PloughedState implements PlantState {
     }
 
     @Override
-    public Result fertilize() {
-        return new Result(false,"you should seed this tile first");
+    public Result fertilize(Fertilizer fertilizer) {
+        if(fertilizer.equals(Fertilizer.Water)){
+            tile.setFertilizer(Fertilizer.Water);
+            return new Result(true,"successfully fertilized waterFertilizer!");
+        }
+        else if(fertilizer.equals(Fertilizer.Growth)){
+            tile.setFertilizer(Fertilizer.Growth);
+            return new Result(true,"successfully fertilized growthFertilizer!");
+        }
+        else return new Result(false,"invalid fertilizer");
     }
 
     @Override

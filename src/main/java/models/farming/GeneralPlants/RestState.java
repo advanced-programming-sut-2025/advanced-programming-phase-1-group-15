@@ -36,7 +36,7 @@ public class RestState implements PlantState{
     }
 
     @Override
-    public Result fertilize() {
+    public Result fertilize(Fertilizer fertilizer) {
         return new Result(false, "Cannot fertilize during rest Period.");
     }
 

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 public class PloughedPlace implements TimeObserver {
     protected Tile tile;
+    protected Fertilizer fertilizer = null;
 
     public void setHarvestable(Harvestable harvestable) {
         this.harvestable = harvestable;
@@ -105,8 +106,8 @@ public class PloughedPlace implements TimeObserver {
         }
     }
 
-    public void fertilize() {
-        currentState.fertilize();
+    public void setFertilizer(Fertilizer fertilizer) {
+        this.fertilizer = fertilizer;
     }
 
     public void setCropSeed(CropSeeds cropSeed) {
@@ -236,13 +237,11 @@ public class PloughedPlace implements TimeObserver {
             return "Empty ploughed place.";
         }
 
-        return new StringBuilder()
-                .append("Name: ").append(harvestable.getName()).append("\n")
-                .append("Days Until Harvest: ").append(harvestable.getDaysUntilHarvest()).append("\n")
-                .append("Current State: ").append(currentState.getClass().getSimpleName()).append("\n")
-                .append("Watered today: ").append(isWatered() ? "Yes" : "No").append("\n")
-                .append("Fertilized: ").append(isFertilized() ? "Yes" : "No")
-                .toString();
+        return "Name: " + harvestable.getName() + "\n" +
+                "Days Until Harvest: " + harvestable.getDaysUntilHarvest() + "\n" +
+                "Current State: " + currentState.getClass().getSimpleName() + "\n" +
+                "Watered today: " + (isWatered() ? "Yes" : "No") + "\n" +
+                "Fertilized: " + (isFertilized() ? "Yes" : "No");
     }
 
     private boolean isWatered() {
@@ -250,7 +249,7 @@ public class PloughedPlace implements TimeObserver {
     }
 
     private boolean isFertilized() {
-        return currentState instanceof FertilizedState || currentState instanceof RestState || isWatered();
+        return fertilizer != null;
     }
 
 }

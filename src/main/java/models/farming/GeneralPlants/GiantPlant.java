@@ -22,7 +22,6 @@ public class GiantPlant extends PloughedPlace implements Tilable {
         }
         applyStateIfPossible(new PloughedState(this));
         applyStateIfPossible(new SeededState(this));
-        applyStateIfPossible(new FertilizedState(this));
         applyStateIfPossible(new WateredState(this));
         ArrayList<Harvestable> harvestables = new ArrayList<>();
         for(PloughedPlace p: ploughedParts) {
