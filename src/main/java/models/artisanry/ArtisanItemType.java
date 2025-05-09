@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 import static models.foraging.ForagingCropsType.*;
 
-public enum ArtisanItemType implements EdibleEnums {
+public enum ArtisanItemType implements EdibleEnums  {
     HONEY(CraftItemType.BEE_HOUSE,
             "It's a sweet syrup produced by bees.",
             75,

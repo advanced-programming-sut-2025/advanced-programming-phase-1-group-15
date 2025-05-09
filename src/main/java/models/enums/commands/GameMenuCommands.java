@@ -38,7 +38,7 @@ package models.enums.commands;
         GET_ARTISAN("\\s*artisan\\s+get\\s+(?<artisanName>.*)\\s*"),
         PLANT_MIXED_SEED("\\s*plant\\s+mixed\\s+seed\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*"),
         HARVEST("\\s*harvest\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*"),
-        PlaceItem("\\s*place\\s+item\\s+-n\\s+(?<itemName>.*)\\s+-d\\s+(?<direction>.*)\n");
+        PlaceItem("^\\s*place\\s+item\\s+-n\\s+(?<itemName>.*)\\s+-d\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$");
         private final String regex;
 
         GameMenuCommands(String regex) {
