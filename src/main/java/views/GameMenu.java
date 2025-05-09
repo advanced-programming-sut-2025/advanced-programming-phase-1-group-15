@@ -403,7 +403,7 @@ public class GameMenu implements AppMenu {
             else if (GameMenuCommands.PlaceItem.matches(command)) {
                 Matcher matcher = GameMenuCommands.PlaceItem.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.PlaceItem(matcher.group("itemName"),matcher.group("direction")));
+                System.out.println(GameMenuController.PlaceItem(matcher.group("itemName"),matcher.group("x"),matcher.group("y")));
             }
             else if(GameMenuCommands.ARTISAN_USE.matches(command)) {
                 Matcher matcher = GameMenuCommands.ARTISAN_USE.matcher(command);

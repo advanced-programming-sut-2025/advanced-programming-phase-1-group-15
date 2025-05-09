@@ -601,7 +601,7 @@ public class GameMenuController {
                 for (BackPackable backPackable : availableCraft.getCraftItemType().ingredients.keySet()) {
                     int num = availableCraft.getCraftItemType().ingredients.get(backPackable);
                     for (BackPackable packable : player.getInventory().getItems().keySet()) {
-                        int number = player.getInventory().getItems().get(packable);
+                        int number = player.getInventory().getItemCount(packable.getName());
                         if(packable.getName().equals(backPackable.getName())){
                             if (number < num) {
                                 return new Result(false , "you dont have enough ingredients!");
@@ -627,7 +627,7 @@ public class GameMenuController {
         player.setEnergy(player.getEnergy()-2);
         return new Result(true,"craft make successfully");
     }
-    public static Result PlaceItem(String itemName, String direction) {
+    public static Result PlaceItem(String itemName, String x , String y) {
         itemName = itemName.trim().toLowerCase();
         Player player = App.currentGame.getCurrentPlayer();
         BackPackable item = null;
@@ -640,23 +640,57 @@ public class GameMenuController {
             return new Result(false , "you dont have this item");
         }
         Tile tile = null;
-        switch (direction) {
-            case "up":
-                tile = new Tile(player.getPosition().x , player.getPosition().y+1);
+        switch (x) {
+            case "1":
+                switch (y){
+                    case "1":
+                        tile = new Tile(player.getPosition().x+1 , player.getPosition().y+1);
+                        break;
+                    case "-1":
+                        tile = new Tile(player.getPosition().x+1 , player.getPosition().y-1);
+                        break;
+                    case "0":
+                        tile = new Tile(player.getPosition().x+1 , player.getPosition().y);
+                        break;
+                    default:
+                        return new Result(false , "unknown direction");
+                }
                 break;
-            case "down":
-                tile = new Tile(player.getPosition().x , player.getPosition().y-1);
+            case "-1":
+                switch (y){
+                    case "1":
+                        tile = new Tile(player.getPosition().x-1 , player.getPosition().y+1);
+                        break;
+                    case "-1":
+                        tile = new Tile(player.getPosition().x-1 , player.getPosition().y-1);
+                        break;
+                    case "0":
+                        tile = new Tile(player.getPosition().x-1 , player.getPosition().y);
+                        break;
+                    default:
+                        return new Result(false , "unknown direction");
+                }
                 break;
-            case "left":
-                tile = new Tile(player.getPosition().x-1 , player.getPosition().y);
-                break;
-            case "right":
-                tile = new Tile(player.getPosition().x+1 , player.getPosition().y);
+            case "0":
+                switch (y){
+                    case "1":
+                        tile = new Tile(player.getPosition().x , player.getPosition().y+1);
+                        break;
+                    case "-1":
+                        tile = new Tile(player.getPosition().x , player.getPosition().y-1);
+                        break;
+                    case "0":
+                        tile = new Tile(player.getPosition().x , player.getPosition().y);
+                        break;
+                    default:
+                        return new Result(false , "unknown direction");
+                }
                 break;
             default:
                 return new Result(false , "unknown direction");
         }
         player.getInventory().getItems().remove(item);
+        tile.setObjectInTile(item);
         return new Result(true , "Item placed successfully");
     }
     public static Result UseArtisan(String artisanName , String itemName) {
@@ -787,7 +821,7 @@ public class GameMenuController {
         for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
             if (backPackable.getName().equals(artisanItem.getName())) {
                 if(artisanItem.getArtisanItemType().ingredients.getName().equals(backPackable.getName())) {
-                    if (player.getInventory().getItems().get(backPackable)<artisanItem.getArtisanItemType().number) {
+                    if (player.getInventory().getItemCount(backPackable.getName())<artisanItem.getArtisanItemType().number) {
                         return new Result(false , "You cant made this artisan item");
                     }
                     Game game = App.currentGame;
