@@ -15,6 +15,8 @@ import models.farming.GeneralPlants.PloughedPlace;
 import models.farming.MixedSeedCrop;
 import models.farming.SeedType;
 import models.map.*;
+import models.stores.MarnieRanch;
+import models.stores.Store;
 import models.tools.*;
 
 public class GameMenuController {
@@ -57,7 +59,7 @@ public class GameMenuController {
             return new Result(false, "Oops! you've fainted!");
         }
 
-        return new Result(true, "moved to position " + position.toString() + " successfully.");
+        return new Result(true, "moved to position " + position + " successfully.");
     }
 
     public static Result removeFromInventory(String itemName, int count) {
@@ -225,6 +227,11 @@ public class GameMenuController {
         }
     }
     public static Result buyAnimal(String animalType, String name) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        if(!(playerTile.getArea() instanceof MarnieRanch)) {
+            return new Result(false, "you have to be inside marnie's ranch to run this command.");
+        }
+
         Animal animal = Animal.animalFactory(animalType, name);
         if(animal == null) {
             return new Result(false, "invalid animal type!");
@@ -389,6 +396,21 @@ public class GameMenuController {
 
             return new Result(true, fishingPole.use(lake, getCurrentPlayer(), App.currentGame.getWeather().getCurrentWeather()));
         }
+    }
+
+    public static Result showStoreProducts() {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+
+        if(!playerTile.getAreaType().equals(AreaType.STORE)) {
+            return new Result(false, "You need to be in a store to run this command.");
+        }
+
+        Store store = (Store) playerTile.getArea();
+        if(!store.isOpen(App.currentGame.getDateAndTime().getHour())) {
+            return new Result(false, "store is closed now!");
+        }
+
+        return new Result(true, "All Items: \n" + store.displayItems());
     }
 
     public static Result showCropInfo(String name) {

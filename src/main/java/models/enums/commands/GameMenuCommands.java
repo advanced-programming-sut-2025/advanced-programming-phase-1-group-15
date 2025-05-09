@@ -29,6 +29,7 @@ package models.enums.commands;
         COLLECT_PRODUCE_REGEX("^\\s*collect\\s+produce\\s+-n\\s+(?<name>.+?)\\s*$"),
         SELL_ANIMAL_REGEX("^\\s*sell\\s+animal\\s+-n\\s+(?<name>.+?)\\s*$"),
         FISHING_REGEX("^\\s*fishing\\s+-p\\s+(?<fishingPole>\\S+)\\s*$"),
+        SHOW_STORE_PRODUCTS_REGEX("^\\s*show\\s+all\\s+products\\s*$"),
         PLANT_SEED("^\\s*plant\\s+-s\\s+(?<seed>.+\\S)\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*$"),
         CROP_INFO("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>\\S+)\\s*$"),
         Recipe("^\\s*crafting\\s+show\\s+recipes\\s*^"),

@@ -26,7 +26,6 @@ public class Player extends User implements TimeObserver {
     private int mapNumber;
 
     private int gold = 500;
-    private int wood = 100;
 
     private int energy = 200;
     private int energyConsumed = 0;
@@ -130,13 +129,6 @@ public class Player extends User implements TimeObserver {
     }
     public void subtractGold(int gold) {
         this.gold -= gold;
-    }
-
-    public int getWood() {
-        return wood;
-    }
-    public void setWood(int wood) {
-        this.wood = wood;
     }
 
     public int getEnergy() {

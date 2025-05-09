@@ -6,6 +6,7 @@ import models.farming.GeneralPlants.PloughedPlace;
 import models.farming.Tree;
 import models.foraging.ForagingMineral;
 import models.foraging.Stone;
+import models.stores.*;
 import models.tools.Fridge;
 
 import java.util.ArrayList;
@@ -148,6 +149,29 @@ public class Tile {
         }
         else if(area.areaType.equals(AreaType.COOP)) {
             PrintInColor.printInGray('□');
+        }
+        else if(area.areaType.equals(AreaType.STORE)) {
+            if(area instanceof Blacksmith) {
+                System.out.print('b');
+            }
+            else if(area instanceof JojaMart) {
+                System.out.print('j');
+            }
+            else if(area instanceof PierreGeneralStore) {
+                System.out.print('p');
+            }
+            else if(area instanceof CarpenterShop) {
+                System.out.print('c');
+            }
+            else if(area instanceof FishShop) {
+                PrintInColor.printInBlue('f');
+            }
+            else if(area instanceof MarnieRanch) {
+                System.out.print('m');
+            }
+            else if(area instanceof StarDropSaloon) {
+                PrintInColor.printInBrightPurple('s');
+            }
         }
         else if(objectInTile != null) {
             if(objectInTile instanceof Tree) {

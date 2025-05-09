@@ -14,7 +14,7 @@ public enum ForagingSeedsType {
     CARROT_SEEDS(
             new ArrayList<>(List.of(Season.SPRING))
     ),
-    CAULIFLOWER_SEES(
+    CAULIFLOWER_SEEDS(
             new ArrayList<>(List.of(Season.SPRING))
     ),
     COFFEE_BEAN(

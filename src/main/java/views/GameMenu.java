@@ -335,6 +335,11 @@ public class GameMenu implements AppMenu {
                 System.out.println(result.message());
             }
 
+            else if(GameMenuCommands.SHOW_STORE_PRODUCTS_REGEX.matches(command)) {
+                Result result = GameMenuController.showStoreProducts();
+                System.out.print(result.message());
+            }
+
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);
                 matcher.matches();

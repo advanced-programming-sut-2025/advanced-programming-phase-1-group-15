@@ -10,7 +10,7 @@ import models.tools.BackPackable;
 
 import java.util.HashMap;
 
-public enum FoodType {
+public enum FoodType implements EdibleEnums {
     FRIED_EGG("1 egg = 1 fried egg",
             new HashMap<>(){{
                 put(new AnimalProduct(AnimalProductType.EGG),1);
@@ -61,7 +61,7 @@ public enum FoodType {
             75,
             false,
             120),
-    PIZZA_MILK("1 wheat flour + 1 tomato + 1 cheese = 1 pizza",
+    PIZZA("1 wheat flour + 1 tomato + 1 cheese = 1 pizza",
             new HashMap<>(){{
                 put(new Crop(Crops.WHEAT),1);
                 put(new Crop(Crops.TOMATO),1);
@@ -70,7 +70,7 @@ public enum FoodType {
             150,
             false,
             300),
-    PIZZA_LARGE_MILK("1 wheat flour + 1 tomato + 1 cheese = 1 pizza",
+    PIZZA_LARGE("1 wheat flour + 1 tomato + 1 cheese = 1 pizza",
             new HashMap<>(){{
                 put(new Crop(Crops.WHEAT),1);
                 put(new Crop(Crops.TOMATO),1);
@@ -111,7 +111,7 @@ public enum FoodType {
             90,
             false,
             140),
-    HASH_BROWNS_OIL_CORN("1 potato + 1 oil = 1 hash browns",
+    HASHBROWNS_OIL_CORN("1 potato + 1 oil = 1 hash browns",
             new HashMap<>(){{
                 put(new Crop(Crops.POTATO),1);
                 put(new ArtisanItem(ArtisanItemType.OIL_CORN),1);
@@ -119,7 +119,7 @@ public enum FoodType {
             90,
             true,
             120),
-    HASH_BROWNS_OIL_SUNFLOWER("1 potato + 1 oil = 1 hash browns",
+    HASHBROWNS_OIL_SUNFLOWER("1 potato + 1 oil = 1 hash browns",
             new HashMap<>(){{
                 put(new Crop(Crops.POTATO),1);
                 put(new ArtisanItem(ArtisanItemType.OIL_SUNFLOWER),1);
@@ -134,7 +134,7 @@ public enum FoodType {
             90,
             true,
             120),
-    HASH_BROWNS_TRUFFLE_OIL("1 potato + 1 oil = 1 hash browns",
+    HASHBROWNS_TRUFFLE_OIL("1 potato + 1 oil = 1 hash browns",
             new HashMap<>(){{
                 put(new Crop(Crops.POTATO),1);
                 put(new ArtisanItem(ArtisanItemType.TRUFFLE_OIL),1);
@@ -210,14 +210,14 @@ public enum FoodType {
             180),
     DISH_O_THE_SEA_CORN("2 sardines + 1 hash browns = 1 dish O' the sea",
             new HashMap<>(){{
-                put(new Food(FoodType.HASH_BROWNS_OIL_CORN),1);
+                put(new Food(FoodType.HASHBROWNS_OIL_CORN),1);
             }},
             150,
             true,
             220),
     DISH_O_THE_SEA_SUNFLOWER("2 sardines + 1 hash browns = 1 dish O' the sea",
             new HashMap<>(){{
-                put(new Food(FoodType.HASH_BROWNS_OIL_SUNFLOWER),1);
+                put(new Food(FoodType.HASHBROWNS_OIL_SUNFLOWER),1);
             }},
             150,
             true,
@@ -231,7 +231,7 @@ public enum FoodType {
             220),
     DISH_O_THE_SEA_TRUFFLE_OIL("2 sardines + 1 hash browns = 1 dish O' the sea",
             new HashMap<>(){{
-                put(new Food(FoodType.HASH_BROWNS_TRUFFLE_OIL),1);
+                put(new Food(FoodType.HASHBROWNS_TRUFFLE_OIL),1);
             }},
             150,
             true,

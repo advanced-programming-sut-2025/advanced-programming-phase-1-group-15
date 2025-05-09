@@ -28,9 +28,11 @@ public class WeatherManagement implements TimeObserver {
 
     @Override
     public void update(DateAndTime dateAndTime) {
-        currentWeather = tomorrowWeather;
-        predictWeather(dateAndTime);
-        notifyObservers();
+        if(dateAndTime.getHour() == 9) {
+            currentWeather = tomorrowWeather;
+            predictWeather(dateAndTime);
+            notifyObservers();
+        }
     }
 
     private void predictWeather(DateAndTime dateAndTime) {
