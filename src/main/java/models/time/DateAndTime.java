@@ -79,7 +79,7 @@ public class DateAndTime {
     }
 
     public void nextHour(){
-        if(hour == 17) {
+        if(hour == 23) {
             hour = 9;
             nextDay();
         }

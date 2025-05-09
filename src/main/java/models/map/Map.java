@@ -2,6 +2,7 @@ package models.map;
 
 import models.App;
 import models.Player;
+import models.stores.*;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 import models.weather.WeatherObserver;
@@ -52,6 +53,14 @@ public class Map extends Area {
             innerAreas.add(new Farm(getSubArea(tiles, Farm.coordinates[i][0], Farm.coordinates[i][1], Farm.coordinates[i][2],
                     Farm.coordinates[i][3]), i + 1));
         }
+
+        innerAreas.add(new Blacksmith(getSubArea(tiles, Blacksmith.coordinates[0], Blacksmith.coordinates[1], Blacksmith.coordinates[2], Blacksmith.coordinates[3])));
+        innerAreas.add(new JojaMart(getSubArea(tiles, JojaMart.coordinates[0], JojaMart.coordinates[1], JojaMart.coordinates[2], JojaMart.coordinates[3])));
+        innerAreas.add(new PierreGeneralStore(getSubArea(tiles, PierreGeneralStore.coordinates[0], PierreGeneralStore.coordinates[1], PierreGeneralStore.coordinates[2], PierreGeneralStore.coordinates[3])));
+        innerAreas.add(new CarpenterShop(getSubArea(tiles, CarpenterShop.coordinates[0], CarpenterShop.coordinates[1], CarpenterShop.coordinates[2], CarpenterShop.coordinates[3])));
+        innerAreas.add(new FishShop(getSubArea(tiles, FishShop.coordinates[0], FishShop.coordinates[1], FishShop.coordinates[2], FishShop.coordinates[3])));
+        innerAreas.add(new MarnieRanch(getSubArea(tiles, MarnieRanch.coordinates[0], MarnieRanch.coordinates[1], MarnieRanch.coordinates[2], MarnieRanch.coordinates[3])));
+        innerAreas.add(new StarDropSaloon(getSubArea(tiles, StarDropSaloon.coordinates[0], StarDropSaloon.coordinates[1], StarDropSaloon.coordinates[2], StarDropSaloon.coordinates[3])));
 
         for(Area innerArea : innerAreas){
             innerArea.setParentArea(this);

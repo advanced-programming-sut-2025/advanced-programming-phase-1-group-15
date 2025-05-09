@@ -53,8 +53,4 @@ public abstract class Area implements TimeObserver {
     }
 
     public abstract void build();
-
-    public AreaType getAreaType() {
-        return areaType;
-    }
 }
