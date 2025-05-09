@@ -54,4 +54,20 @@ public class StarDropSaloon extends Store {
 
         return display.toString();
     }
+
+    @Override
+    public String displayAvailableItems() {
+        StringBuilder display = new StringBuilder();
+
+        display.append("Name    Description    Price\n");
+        for(StarDropSaloonItems item : sold.keySet()) {
+            if(sold.get(item) < item.dailyLimit) {
+                display.append(item.getName()).append("\t");
+                display.append("\"").append(item.description).append("\"").append("\t");
+                display.append(item.price).append("\n");
+            }
+        }
+
+        return display.toString();
+    }
 }

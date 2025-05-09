@@ -12,6 +12,7 @@ import models.crafting.CraftItem;
 import models.farming.*;
 import models.farming.GeneralPlants.PloughedPlace;
 import models.map.*;
+import models.stores.CarpenterShop;
 import models.stores.MarnieRanch;
 import models.stores.Store;
 import models.tools.*;
@@ -174,6 +175,11 @@ public class GameMenuController {
     }
 
     public static Result buildBarn(int x, int y) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        if(!(playerTile.getArea() instanceof CarpenterShop)) {
+            return new Result(false, "you should be inside carpenter shop to run this command.");
+        }
+
         boolean buildable = true;
         for(int row = y; row < y + 2; row++) {
             for(int col = x; col < x + 2; col++) {
@@ -199,6 +205,11 @@ public class GameMenuController {
         }
     }
     public static Result buildCoop(int x, int y) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        if(!(playerTile.getArea() instanceof CarpenterShop)) {
+            return new Result(false, "you should be inside carpenter shop to run this command.");
+        }
+
         boolean buildable = true;
         for(int row = y; row < y + 2; row++) {
             for(int col = x; col < x + 2; col++) {
@@ -408,6 +419,34 @@ public class GameMenuController {
         }
 
         return new Result(true, "All Items: \n" + store.displayItems());
+    }
+    public static Result showAvailableStoreProducts() {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+
+        if(!playerTile.getAreaType().equals(AreaType.STORE)) {
+            return new Result(false, "You need to be in a store to run this command.");
+        }
+
+        Store store = (Store) playerTile.getArea();
+        if(!store.isOpen(App.currentGame.getDateAndTime().getHour())) {
+            return new Result(false, "store is closed now!");
+        }
+
+        return new Result(true, "All Available Items Fot You: \n" + store.displayAvailableItems());
+    }
+    public static Result purchaseProduct(String productName, int count) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+
+        if(!playerTile.getAreaType().equals(AreaType.STORE)) {
+            return new Result(false, "You need to be in a store to run this command.");
+        }
+
+        Store store = (Store) playerTile.getArea();
+        if(!store.isOpen(App.currentGame.getDateAndTime().getHour())) {
+            return new Result(false, "store is closed now!");
+        }
+
+        return new Result(true, store.sell(productName, count));
     }
 
     public static Result showCropInfo(String name) {

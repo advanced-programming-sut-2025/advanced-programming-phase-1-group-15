@@ -68,6 +68,12 @@ public class CheatCodeController {
         return new Result(true, "friendship with " + animal.getName() + " set to " + amount);
     }
 
+    public static Result cheatAddGold(int amount) {
+        App.currentGame.getCurrentPlayer().addGold(amount);
+
+        return new Result(true, "gold: " + App.currentGame.getCurrentPlayer().getGold());
+    }
+
     public static Result cheatThor(Position position) {
         return null;
     }

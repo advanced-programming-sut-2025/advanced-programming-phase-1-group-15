@@ -43,6 +43,21 @@ public class Blacksmith extends Store {
     }
 
     @Override
+    public boolean checkAvailable(String productName) {
+        for(BlackSmithItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkAmount(String productName) {
+        return false;
+    }
+
+    @Override
     public String displayItems() {
         StringBuilder display = new StringBuilder();
 
@@ -66,6 +81,11 @@ public class Blacksmith extends Store {
                 """);
 
         return display.toString();
+    }
+
+    @Override
+    public String displayAvailableItems() {
+        return displayItems();
     }
 
     public void upgradeTool(Tool tool) {
