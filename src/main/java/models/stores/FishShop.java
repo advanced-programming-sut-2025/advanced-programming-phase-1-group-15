@@ -1,5 +1,6 @@
 package models.stores;
 
+import models.Player;
 import models.map.AreaType;
 import models.map.Tile;
 
@@ -47,6 +48,11 @@ public class FishShop extends Store {
     @Override
     public boolean checkAmount(String productName, int amount) {
         return false;
+    }
+
+    @Override
+    public String sell(Player buyer, String productName, int amount) {
+        return "";
     }
 
     @Override

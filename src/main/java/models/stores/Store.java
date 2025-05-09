@@ -1,5 +1,6 @@
 package models.stores;
 
+import models.Player;
 import models.map.Area;
 import models.time.DateAndTime;
 
@@ -13,6 +14,7 @@ public abstract class Store extends Area {
     public abstract void resetSoldItems();
     public abstract boolean checkAvailable(String productName);
     public abstract boolean checkAmount(String productName, int amount);
+    public abstract String sell(Player buyer, String productName, int amount);
 
     public boolean isOpen(int hour) {
         return hour >= opensAt && hour <= closesAt;

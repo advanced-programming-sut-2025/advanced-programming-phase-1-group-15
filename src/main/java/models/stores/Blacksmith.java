@@ -1,5 +1,7 @@
 package models.stores;
 
+import models.Player;
+import models.foraging.ForagingMineral;
 import models.map.AreaType;
 import models.map.Tile;
 import models.tools.Tool;
@@ -59,6 +61,24 @@ public class Blacksmith extends Store {
             }
         }
         return false;
+    }
+
+    @Override
+    public String sell(Player buyer, String productName, int amount) {
+        for(BlackSmithItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                if(amount * item.price > buyer.getGold()) {
+                    return "not enough gold to buy " + amount + " " + item.getName();
+                }
+
+                buyer.subtractGold(amount * item.price);
+                buyer.addToBackPack(new ForagingMineral(item.foragingMineralType), amount);
+                sold.put(item, sold.get(item) + amount);
+                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+            }
+        }
+
+        return "";
     }
 
     @Override

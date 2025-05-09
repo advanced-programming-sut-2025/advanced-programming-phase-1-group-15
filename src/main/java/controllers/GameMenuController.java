@@ -453,7 +453,7 @@ public class GameMenuController {
             return new Result(false, "daily limit exceeded!");
         }
 
-        return new Result(true, "All Available Items Fot You: \n" + store.displayAvailableItems());
+        return new Result(true, store.sell(getCurrentPlayer(), productName, count));
     }
     public static Result sellProduct(String productName, int count) {
         BackPackable item = getCurrentPlayer().getInventory().getItemByName(productName);

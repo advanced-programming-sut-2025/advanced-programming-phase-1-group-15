@@ -1,7 +1,10 @@
 package models.stores;
 
+import models.Player;
+import models.foraging.ForagingMineral;
 import models.map.AreaType;
 import models.map.Tile;
+import models.tools.Tool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +61,11 @@ public class MarnieRanch extends Store {
             }
         }
         return false;
+    }
+
+    @Override
+    public String sell(Player buyer, String productName, int amount) {
+        return "";
     }
 
     @Override

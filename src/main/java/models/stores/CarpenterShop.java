@@ -1,5 +1,7 @@
 package models.stores;
 
+import models.Player;
+import models.foraging.ForagingMineral;
 import models.map.AreaType;
 import models.map.Tile;
 
@@ -41,6 +43,11 @@ public class CarpenterShop extends Store {
     @Override
     public boolean checkAmount(String productName, int amount) {
         return true;
+    }
+
+    @Override
+    public String sell(Player buyer, String productName, int amount) {
+        return "";
     }
 
     @Override

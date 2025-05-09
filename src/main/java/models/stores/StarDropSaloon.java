@@ -1,9 +1,11 @@
 package models.stores;
 
-import models.App;
+import models.Player;
+import models.cooking.Food;
+import models.cooking.FoodType;
+import models.foraging.ForagingSeeds;
 import models.map.AreaType;
 import models.map.Tile;
-import models.time.Season;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +62,24 @@ public class StarDropSaloon extends Store {
             }
         }
         return false;
+    }
+
+    @Override
+    public String sell(Player buyer, String productName, int amount) {
+        for(StarDropSaloonItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                if(amount * item.price > buyer.getGold()) {
+                    return "not enough gold to buy " + amount + " " + item.getName();
+                }
+
+                buyer.subtractGold(amount * item.price);
+                buyer.addToBackPack(new Food((FoodType) item.itemType), amount);
+                sold.put(item, sold.get(item) + amount);
+                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+            }
+        }
+
+        return "";
     }
 
     @Override
