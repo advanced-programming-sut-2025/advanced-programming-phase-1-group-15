@@ -2,7 +2,7 @@ package models.map;
 
 import models.animals.Animal;
 import models.animals.Fish;
-import models.farming.GeneralPlants.PloughedPlace;
+import models.farming.GeneralPlants.*;
 import models.farming.Tree;
 import models.foraging.ForagingMineral;
 import models.foraging.Stone;
@@ -91,6 +91,7 @@ public class Tile {
 
     public void plow() {
         plowed = true;
+        objectInTile = new PloughedPlace(this);
     }
     public void unplow() {
         plowed = false;
@@ -102,6 +103,12 @@ public class Tile {
 
     public void water() {
         watered = true;
+        if(objectInTile != null) {
+            if(objectInTile instanceof PloughedPlace) {
+                PloughedPlace p = (PloughedPlace) objectInTile;
+                p.getCurrentState().water();
+            }
+        }
     }
     public boolean isWatered() {
         return watered;
@@ -183,14 +190,27 @@ public class Tile {
             else if(objectInTile instanceof ForagingMineral) {
                 PrintInColor.printInBrightYellow('*');
             }
+            else if(plowed){
+                PloughedPlace p = (PloughedPlace) objectInTile;
+                if(p.getCurrentState() instanceof PloughedState){
+                    PrintInColor.printInBrown('X');
+                }
+                else if(p.getCurrentState() instanceof SeededState){
+                    PrintInColor.printInGreen('S');
+                }
+                else if(p.getCurrentState() instanceof WateredState){
+                    PrintInColor.printInBlue('W');
+                }
+                else if(p.getCurrentState() instanceof RestState){
+                    PrintInColor.printInGreen('R');
+                }
+                else {
+                    PrintInColor.printInBrightPurple('N');
+                }
+            }
         }
         else {
-            if(plowed) {
-                System.out.print('X');
-            }
-            else {
-                System.out.print('.');
-            }
+            System.out.print('.');
         }
     }
 }

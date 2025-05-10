@@ -3,17 +3,15 @@ package models.farming.GeneralPlants;
 import models.App;
 import models.Result;
 import models.farming.*;
-import models.map.AreaType;
+import models.map.*;
 import models.map.Map;
-import models.map.Position;
-import models.map.Tile;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PloughedPlace implements TimeObserver {
+public class PloughedPlace implements TimeObserver , Tilable {
     protected Tile tile;
     protected Fertilizer fertilizer = null;
 
@@ -125,6 +123,7 @@ public class PloughedPlace implements TimeObserver {
 
     public PloughedPlace(Tile tile) {
         this.tile = tile;
+        currentState = new PloughedState(this);
     }
 
     @Override

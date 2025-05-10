@@ -415,22 +415,29 @@ public class GameMenu implements AppMenu {
                 matcher.matches();
                 System.out.println(GameMenuController.GetArtisan(matcher.group("artisanName")));
             }
+            else if(GameMenuCommands.PLANT_MIXED_SEED.matches(command)) {
+                Matcher matcher = GameMenuCommands.PLANT_MIXED_SEED.matcher(command);
+                matcher.matches();
+
+                System.out.println(GameMenuController.plantMixedSeed(
+                        Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy"))));
+            }
+            else if(GameMenuCommands.HARVEST.matches(command)) {
+                Matcher matcher = GameMenuCommands.HARVEST.matcher(command);
+                matcher.matches();
+                // TODO : check using tools for harvesting
+                System.out.println();
+            }
+            else if(GameMenuCommands.SHOW_PLANT.matches(command)) {
+                Matcher matcher = GameMenuCommands.SHOW_PLANT.matcher(command);
+                matcher.matches();
+                System.out.println(GameMenuController.showPlant(
+                        Integer.parseInt(matcher.group("x")),Integer.parseInt(matcher.group("y"))
+                ));
+            }
             else {
                 System.out.println("invalid command");
             }
-        }
-        else if(GameMenuCommands.PLANT_MIXED_SEED.matches(command)) {
-            Matcher matcher = GameMenuCommands.PLANT_MIXED_SEED.matcher(command);
-            matcher.matches();
-
-            System.out.println(GameMenuController.plantMixedSeed(
-                    Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy"))));
-        }
-        else if(GameMenuCommands.HARVEST.matches(command)) {
-            Matcher matcher = GameMenuCommands.HARVEST.matcher(command);
-            matcher.matches();
-            // TODO : check using tools for harvesting
-            System.out.println();
         }
         else {
             System.out.println("You are locked! (maximum energy per turn consumed). Use \"next turn\" command to continue.");
