@@ -6,7 +6,9 @@ public enum TradeMenuCommands implements Commands {
             "\\[-ti\\s+(?<targetItem>.+)\\s+" +
             "-ta\\s+(?<targetAmount>\\d+)\\]\\s*$"),
     TRADE_MONEY("^\\s*trade\\s+-u\\s+(?<username>.+)\\s+-t\\s+(?<type>\\S+)\\s+-i\\s+(?<item>\\S+)\\s+-a\\s+(?<amount>\\d+)" +
-            "\\[-p\\s+(?<price>\\d+)\\]\\s*$");
+            "\\[-p\\s+(?<price>\\d+)\\]\\s*$"),
+    TRADE_LIST("^trade\\s+list$"),
+    TRADE_RESPONSE("^trade\\s+response\\s+(?<response>\\S+)\\s+-i\\s+(?<id>\\d+)$");
     private final String regex;
     TradeMenuCommands(String regex) { this.regex = regex; }
 

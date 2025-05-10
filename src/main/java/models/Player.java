@@ -12,6 +12,9 @@ import models.map.Farm;
 import models.map.Tile;
 import models.relation.PlayerFriendShip;
 import models.map.Position;
+import models.relation.Trade;
+import models.relation.TradeWhitMoney;
+import models.relation.TradeWithItem;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 import models.tools.*;
@@ -62,7 +65,10 @@ public class Player extends User implements TimeObserver {
 
     private ArrayList<Food> availableFoods = new ArrayList<>(Arrays.asList(new Food(FoodType.FRIED_EGG),
             new Food(FoodType.BACKED_FISH), new Food(FoodType.SALAD)));
-
+    private ArrayList<TradeWhitMoney> tradesWhitMoney = new ArrayList<>();
+    private ArrayList<TradeWithItem> tradesWithItem = new ArrayList<>();
+    private ArrayList<TradeWithItem> tradesWithItemHistory = new ArrayList<>();
+    private ArrayList<TradeWhitMoney> tradesWithMoneyHistory = new ArrayList<>();
     private ArrayList<Animal> animals = new ArrayList<>();
     private ArrayList<ArtisanItem> artisanItems = new ArrayList<>();
     private HashMap<Player,PlayerFriendShip> friendships = new HashMap<>();
@@ -268,6 +274,26 @@ public class Player extends User implements TimeObserver {
     }
     public ArrayList<Animal> getAnimals() {
         return animals;
+    }
+
+    public ArrayList<TradeWhitMoney> getTradesWhitMoney() {
+        return tradesWhitMoney;
+    }
+
+    public ArrayList<TradeWithItem> getTradesWithItem() {
+        return tradesWithItem;
+    }
+
+    public ArrayList<TradeWithItem> getTradesWithItemHistory() {
+        return tradesWithItemHistory;
+    }
+
+    public ArrayList<TradeWhitMoney> getTradesWithMoneyHistory() {
+        return tradesWithMoneyHistory;
+    }
+
+    public void setGold(int gold) {
+        this.gold = gold;
     }
 
     public Player getCouple() {
