@@ -3,6 +3,7 @@ package controllers;
 import models.App;
 import models.Player;
 import models.Result;
+import models.relation.Trade;
 import models.relation.TradeWhitMoney;
 import models.relation.TradeWithItem;
 import models.tools.BackPackable;
@@ -94,7 +95,107 @@ public class TradeMenuController {
         }
         return new Result(false, "invalid type trade");
     }
-    public static Result tradeResponse(String response, int id) {
-        return null;
+    public static Result tradeResponse(String response, String id) {
+        int Id = Integer.parseInt(id);
+        Player player = App.currentGame.getCurrentPlayer();
+        TradeWhitMoney tradeWhitMoney = null;
+        TradeWithItem tradeWithItem = null;
+        for (TradeWhitMoney trade : player.getTradesWhitMoney()) {
+            if (trade.getId() == Id) {
+                tradeWhitMoney = trade;
+                break;
+            }
+        }
+        if (tradeWhitMoney != null) {
+            if (response.equals("accept")){
+                if(tradeWhitMoney.getType().equals("offer")){
+                    if(player.getGold()>= tradeWhitMoney.getMoney()){
+                        BackPackable item = null;
+                        for (BackPackable backPackable : tradeWhitMoney.getSeller().getInventory().getItems().keySet()) {
+                            if (backPackable.getName().equals(tradeWhitMoney.getName())) {
+                                item = backPackable;
+                                int num = player.getInventory().getItemCount(backPackable.getName()) - tradeWhitMoney.getAmount();
+                                tradeWhitMoney.getSeller().getInventory().getItems().put(item ,num);
+                                tradeWhitMoney.getSeller().setGold(tradeWhitMoney.getMoney()+tradeWhitMoney.getSeller().getGold());
+                                break;
+                            }
+                        }
+                        player.getInventory().getItems().put(item,tradeWhitMoney.getAmount());
+                        player.setGold(player.getGold()-tradeWhitMoney.getMoney());
+                        return new Result(true, "You accept this offer");
+                    }
+                    BackPackable item = null;
+                    for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
+                        if (backPackable.getName().equals(tradeWhitMoney.getName())){
+                            item = backPackable;
+                            if (player.getInventory().getItemCount(item.getName())>tradeWhitMoney.getAmount()) {
+                                return new Result(false, "You dont have enough item to accept request");
+                            }
+                            player.getInventory().getItems().put(item,player.getInventory().getItemCount(item.getName())-tradeWhitMoney.getAmount());
+                            player.setGold(player.getGold()+tradeWhitMoney.getMoney());
+                            tradeWhitMoney.getBuyer().getInventory().getItems().put(item,tradeWhitMoney.getAmount());
+                            break;
+                        }
+                    }
+                    if (item == null) {
+                        return new Result(false, "You dont have this item to accept request");
+                    }
+                    return new Result(true , "You accept this request");
+                }
+            }
+        }
+        for (TradeWithItem trade : player.getTradesWithItem()) {
+            if (trade.getId() == Id) {
+                tradeWithItem = trade;
+                break;
+            }
+        }
+        if (tradeWithItem != null) {
+
+        }
+        if(tradeWhitMoney ==null && tradeWithItem == null)
+            return new Result(false, "id doesnt exist");
+        if (response.equals("reject")){
+            if (tradeWhitMoney == null){
+                player.getTradesWithItem().remove(tradeWithItem);
+                if (tradeWithItem.getType().equals("offer"))
+                    return new Result(true, "You reject offer successfully");
+                return new Result(false, "You reject request successfully");
+            }
+            player.getTradesWhitMoney().remove(tradeWhitMoney);
+            if (tradeWhitMoney.getType().equals("offer"))
+                return new Result(true, "You reject offer successfully");
+            return new Result(true, "you reject this request");
+        }
+        return new Result(true, "invalid response type");
+    }
+    public static void tradeList() {
+        Player player = App.currentGame.getCurrentPlayer();
+        System.out.println("Offers:");
+        for (TradeWhitMoney trade : player.getTradesWhitMoney()) {
+            if(trade.getType().equals("offer")) {
+                System.out.println("id "+ trade.getId() + " username: " + trade.getSeller().getUsername()+" item: " + trade.getName() +
+                        " number: "+ trade.getAmount() + " price: " + trade.getMoney());
+            }
+        }
+        for (TradeWithItem trade : player.getTradesWithItem()) {
+            if(trade.getType().equals("offer")) {
+                System.out.println("id "+ trade.getId() + " username: " + trade.getSeller().getUsername()+" item: " + trade.getName() +
+                        " number: "+ trade.getAmount() + " target item: "+ trade.getTargetName() + " number of target item: " +trade.getAmount());
+            }
+        }
+        System.out.println("Requests:");
+        for (TradeWhitMoney trade : player.getTradesWhitMoney()) {
+            if(trade.getType().equals("request")) {
+                System.out.println("id "+ trade.getId() + " username: " + trade.getSeller().getUsername()+" item: " + trade.getName() +
+                        " number: "+ trade.getAmount() + " price: " + trade.getMoney());
+            }
+        }
+        for (TradeWithItem trade : player.getTradesWithItem()) {
+            if(trade.getType().equals("request")) {
+                System.out.println("id "+ trade.getId() + " username: " + trade.getSeller().getUsername()+" item: " + trade.getName() +
+                        " number: "+ trade.getAmount() + " target item: "+ trade.getTargetName() + " number of target item: " +trade.getAmount());
+            }
+        }
     }
 }

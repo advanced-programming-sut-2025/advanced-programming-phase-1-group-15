@@ -23,6 +23,14 @@ public class TradeMenu implements AppMenu {
             System.out.println(TradeMenuController.tradeWithItem(matcher.group("username"),matcher.group("type"),
                     matcher.group("item"),matcher.group("amount"),matcher.group("targetItem"),matcher.group("targetAmount")));
         }
+        else if(TradeMenuCommands.TRADE_LIST.matches(command)) {
+            Matcher matcher = TradeMenuCommands.TRADE_LIST.matcher(command);
+            TradeMenuController.tradeList();
+        }
+        else if(TradeMenuCommands.TRADE_RESPONSE.matches(command)) {
+            Matcher matcher = TradeMenuCommands.TRADE_RESPONSE.matcher(command);
+            System.out.println(TradeMenuController.tradeResponse(matcher.group("response"),matcher.group("id")));
+        }
         else {
             System.out.println("invalid command");
         }

@@ -12,6 +12,7 @@ public class Trade {
     private String type;
     private String name;
     private int amount;
+    private boolean newTrade = true;
     public Trade(int id, Player seller, Player buyer , String type , String name ,  int amount) {
         this.id = id;
         this.seller = seller;
@@ -37,5 +38,11 @@ public class Trade {
     }
     public int getAmount() {
         return amount;
+    }
+    public boolean isNewTrade() {
+        return newTrade;
+    }
+    public void setNewTrade(boolean newTrade) {
+        this.newTrade = newTrade;
     }
 }

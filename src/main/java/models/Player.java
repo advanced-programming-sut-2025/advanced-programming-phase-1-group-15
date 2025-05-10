@@ -282,6 +282,10 @@ public class Player extends User implements TimeObserver {
         return tradesWithItem;
     }
 
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
+
     public Player getCouple() {
         return couple;
     }
