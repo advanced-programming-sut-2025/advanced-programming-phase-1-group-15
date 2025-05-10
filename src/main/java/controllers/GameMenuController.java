@@ -12,6 +12,7 @@ import models.crafting.CraftItem;
 import models.farming.*;
 import models.farming.GeneralPlants.PloughedPlace;
 import models.map.*;
+import models.stores.CarpenterShop;
 import models.stores.MarnieRanch;
 import models.stores.Store;
 import models.tools.*;
@@ -174,6 +175,11 @@ public class GameMenuController {
     }
 
     public static Result buildBarn(int x, int y) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        if(!(playerTile.getArea() instanceof CarpenterShop)) {
+            return new Result(false, "you should be inside carpenter shop to run this command.");
+        }
+
         boolean buildable = true;
         for(int row = y; row < y + 2; row++) {
             for(int col = x; col < x + 2; col++) {
@@ -199,6 +205,11 @@ public class GameMenuController {
         }
     }
     public static Result buildCoop(int x, int y) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        if(!(playerTile.getArea() instanceof CarpenterShop)) {
+            return new Result(false, "you should be inside carpenter shop to run this command.");
+        }
+
         boolean buildable = true;
         for(int row = y; row < y + 2; row++) {
             for(int col = x; col < x + 2; col++) {
@@ -409,6 +420,66 @@ public class GameMenuController {
 
         return new Result(true, "All Items: \n" + store.displayItems());
     }
+    public static Result showAvailableStoreProducts() {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+
+        if(!playerTile.getAreaType().equals(AreaType.STORE)) {
+            return new Result(false, "You need to be in a store to run this command.");
+        }
+
+        Store store = (Store) playerTile.getArea();
+        if(!store.isOpen(App.currentGame.getDateAndTime().getHour())) {
+            return new Result(false, "store is closed now!");
+        }
+
+        return new Result(true, "All Available Items Fot You: \n" + store.displayAvailableItems());
+    }
+    public static Result purchaseProduct(String productName, int count) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+
+        if(!playerTile.getAreaType().equals(AreaType.STORE)) {
+            return new Result(false, "You need to be in a store to run this command.");
+        }
+
+        Store store = (Store) playerTile.getArea();
+        if(!store.isOpen(App.currentGame.getDateAndTime().getHour())) {
+            return new Result(false, "store is closed now!");
+        }
+
+        if(!store.checkAvailable(productName)) {
+            return new Result(false, "product is not available!");
+        }
+        else if(!store.checkAmount(productName, count)) {
+            return new Result(false, "daily limit exceeded!");
+        }
+
+        return new Result(true, store.sell(getCurrentPlayer(), productName, count));
+    }
+    public static Result sellProduct(String productName, int count) {
+        BackPackable item = getCurrentPlayer().getInventory().getItemByName(productName);
+        int availableCount = getCurrentPlayer().getInventory().getItemCount(productName);
+
+        if(item == null) {
+            return new Result(false, "You don't have that item.");
+        }
+        else if(count > availableCount) {
+            return new Result(false, "You only have " + availableCount + " " + item.getName() + " in your inventory.");
+        }
+        else if(item.getPrice() == 0) {
+            return new Result(false, "this item is not sellable.");
+        }
+
+        if(availableCount == -1) {
+            getCurrentPlayer().addGold(availableCount * item.getPrice());
+            getCurrentPlayer().getInventory().removeFromBackPack(item);
+            return new Result(true, "Sold all of your " + item.getName() + ". You earned " + availableCount * item.getPrice() + "gold.");
+        }
+        else {
+            getCurrentPlayer().addGold(count * item.getPrice());
+            getCurrentPlayer().getInventory().removeCountFromBackPack(item, count);
+            return new Result(true, "Sold " + count + " of your " + item.getName() + ". You earned " + count * item.getPrice() + "gold.");
+        }
+    }
 
     public static Result showCropInfo(String name) {
         Crops crop = Crops.getByName(name);
@@ -530,7 +601,7 @@ public class GameMenuController {
                 for (BackPackable backPackable : availableCraft.getCraftItemType().ingredients.keySet()) {
                     int num = availableCraft.getCraftItemType().ingredients.get(backPackable);
                     for (BackPackable packable : player.getInventory().getItems().keySet()) {
-                        int number = player.getInventory().getItems().get(packable);
+                        int number = player.getInventory().getItemCount(packable.getName());
                         if(packable.getName().equals(backPackable.getName())){
                             if (number < num) {
                                 return new Result(false , "you dont have enough ingredients!");
@@ -556,7 +627,7 @@ public class GameMenuController {
         player.setEnergy(player.getEnergy()-2);
         return new Result(true,"craft make successfully");
     }
-    public static Result PlaceItem(String itemName, String direction) {
+    public static Result PlaceItem(String itemName, String x , String y) {
         itemName = itemName.trim().toLowerCase();
         Player player = App.currentGame.getCurrentPlayer();
         BackPackable item = null;
@@ -569,23 +640,57 @@ public class GameMenuController {
             return new Result(false , "you dont have this item");
         }
         Tile tile = null;
-        switch (direction) {
-            case "up":
-                tile = new Tile(player.getPosition().x , player.getPosition().y+1);
+        switch (x) {
+            case "1":
+                switch (y){
+                    case "1":
+                        tile = new Tile(player.getPosition().x+1 , player.getPosition().y+1);
+                        break;
+                    case "-1":
+                        tile = new Tile(player.getPosition().x+1 , player.getPosition().y-1);
+                        break;
+                    case "0":
+                        tile = new Tile(player.getPosition().x+1 , player.getPosition().y);
+                        break;
+                    default:
+                        return new Result(false , "unknown direction");
+                }
                 break;
-            case "down":
-                tile = new Tile(player.getPosition().x , player.getPosition().y-1);
+            case "-1":
+                switch (y){
+                    case "1":
+                        tile = new Tile(player.getPosition().x-1 , player.getPosition().y+1);
+                        break;
+                    case "-1":
+                        tile = new Tile(player.getPosition().x-1 , player.getPosition().y-1);
+                        break;
+                    case "0":
+                        tile = new Tile(player.getPosition().x-1 , player.getPosition().y);
+                        break;
+                    default:
+                        return new Result(false , "unknown direction");
+                }
                 break;
-            case "left":
-                tile = new Tile(player.getPosition().x-1 , player.getPosition().y);
-                break;
-            case "right":
-                tile = new Tile(player.getPosition().x+1 , player.getPosition().y);
+            case "0":
+                switch (y){
+                    case "1":
+                        tile = new Tile(player.getPosition().x , player.getPosition().y+1);
+                        break;
+                    case "-1":
+                        tile = new Tile(player.getPosition().x , player.getPosition().y-1);
+                        break;
+                    case "0":
+                        tile = new Tile(player.getPosition().x , player.getPosition().y);
+                        break;
+                    default:
+                        return new Result(false , "unknown direction");
+                }
                 break;
             default:
                 return new Result(false , "unknown direction");
         }
         player.getInventory().getItems().remove(item);
+        tile.setObjectInTile(item);
         return new Result(true , "Item placed successfully");
     }
     public static Result UseArtisan(String artisanName , String itemName) {
@@ -716,7 +821,7 @@ public class GameMenuController {
         for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
             if (backPackable.getName().equals(artisanItem.getName())) {
                 if(artisanItem.getArtisanItemType().ingredients.getName().equals(backPackable.getName())) {
-                    if (player.getInventory().getItems().get(backPackable)<artisanItem.getArtisanItemType().number) {
+                    if (player.getInventory().getItemCount(backPackable.getName())<artisanItem.getArtisanItemType().number) {
                         return new Result(false , "You cant made this artisan item");
                     }
                     Game game = App.currentGame;

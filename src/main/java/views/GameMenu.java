@@ -155,6 +155,9 @@ public class GameMenu implements AppMenu {
             else if(GameMenuCommands.SHOW_ENERGY_REGEX.matches(command)) {
                 System.out.println("energy: " + game.getCurrentPlayer().getEnergy());
             }
+            else if(GameMenuCommands.SHOW_GOLD_REGEX.matches(command)) {
+                System.out.println("gold: " + game.getCurrentPlayer().getGold());
+            }
             else if(CheatCodeCommands.ENERGY_SET_REGEX.matches(command)) {
                 Matcher matcher = CheatCodeCommands.ENERGY_SET_REGEX.matcher(command);
 
@@ -339,6 +342,36 @@ public class GameMenu implements AppMenu {
                 Result result = GameMenuController.showStoreProducts();
                 System.out.print(result.message());
             }
+            else if(GameMenuCommands.SHOW_AVAILABLE_PRODUCTS_REGEX.matches(command)) {
+                Result result = GameMenuController.showAvailableStoreProducts();
+                System.out.print(result.message());
+            }
+            else if(GameMenuCommands.PURCHASE_PRODUCT_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.PURCHASE_PRODUCT_REGEX.matcher(command);
+
+                String productName = matcher.matches() ? matcher.group("productName") : "";
+                int count = matcher.matches() ? Integer.parseInt(matcher.group("count")) : 1;
+
+                Result result = GameMenuController.purchaseProduct(productName, count);
+                System.out.println(result.message());
+            }
+            else if(CheatCodeCommands.ADD_GOLD_REGEX.matches(command)) {
+                Matcher matcher = CheatCodeCommands.ADD_GOLD_REGEX.matcher(command);
+
+                int amount = matcher.matches() ? Integer.parseInt(matcher.group("amount")) : 0;
+
+                Result result = CheatCodeController.cheatAddGold(amount);
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.SELL_PRODUCT_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.SELL_PRODUCT_REGEX.matcher(command);
+
+                String productName = matcher.matches() ? matcher.group("productName") : "";
+                int count = matcher.matches() ? Integer.parseInt(matcher.group("count")) : -1;
+
+                Result result = GameMenuController.sellProduct(productName, count);
+                System.out.println(result.message());
+            }
 
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);
@@ -370,7 +403,7 @@ public class GameMenu implements AppMenu {
             else if (GameMenuCommands.PlaceItem.matches(command)) {
                 Matcher matcher = GameMenuCommands.PlaceItem.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.PlaceItem(matcher.group("itemName"),matcher.group("direction")));
+                System.out.println(GameMenuController.PlaceItem(matcher.group("itemName"),matcher.group("x"),matcher.group("y")));
             }
             else if(GameMenuCommands.ARTISAN_USE.matches(command)) {
                 Matcher matcher = GameMenuCommands.ARTISAN_USE.matcher(command);

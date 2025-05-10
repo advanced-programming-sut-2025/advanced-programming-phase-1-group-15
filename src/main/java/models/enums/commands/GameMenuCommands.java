@@ -9,6 +9,7 @@ package models.enums.commands;
         PRINT_MAP_REGEX("^\\s*print\\s+map\\s*$"),
         MAP_GUIDE_REGEX("^\\s*help\\s+reading\\s+map\\s*$"),
         SHOW_ENERGY_REGEX("^\\s*energy\\s+show\\s*$"),
+        SHOW_GOLD_REGEX("^\\s*gold\\s+show\\s*$"),
         WALK_REGEX("^\\s*walk\\s+-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$"),
         INVENTORY_SHOW_REGEX("^\\s*inventory\\s+show\\s*$"),
         INVENTORY_TRASH_REGEX("^\\s*inventory\\s+trash\\s+-i\\s+(?<itemName>.+?)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),
@@ -30,6 +31,9 @@ package models.enums.commands;
         SELL_ANIMAL_REGEX("^\\s*sell\\s+animal\\s+-n\\s+(?<name>.+?)\\s*$"),
         FISHING_REGEX("^\\s*fishing\\s+-p\\s+(?<fishingPole>\\S+)\\s*$"),
         SHOW_STORE_PRODUCTS_REGEX("^\\s*show\\s+all\\s+products\\s*$"),
+        SHOW_AVAILABLE_PRODUCTS_REGEX("^\\s*show\\s+all\\s+available\\s+products\\s*$"),
+        PURCHASE_PRODUCT_REGEX("^\\s*purchase\\s+(?<productName>.+?)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),
+        SELL_PRODUCT_REGEX("^\\s*sell\\s+(?<productName>.+?)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),
         PLANT_SEED("^\\s*plant\\s+-s\\s+(?<seed>.+\\S)\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*$"),
         CROP_INFO("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>\\S+)\\s*$"),
         Recipe("^\\s*crafting\\s+show\\s+recipes\\s*^"),
@@ -38,7 +42,7 @@ package models.enums.commands;
         GET_ARTISAN("\\s*artisan\\s+get\\s+(?<artisanName>.*)\\s*"),
         PLANT_MIXED_SEED("\\s*plant\\s+mixed\\s+seed\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*"),
         HARVEST("\\s*harvest\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*"),
-        PlaceItem("\\s*place\\s+item\\s+-n\\s+(?<itemName>.*)\\s+-d\\s+(?<direction>.*)\n");
+        PlaceItem("^\\s*place\\s+item\\s+-n\\s+(?<itemName>.*)\\s+-d\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$");
         private final String regex;
 
         GameMenuCommands(String regex) {
