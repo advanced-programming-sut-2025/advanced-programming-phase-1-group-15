@@ -5,6 +5,7 @@ import models.Player;
 import models.map.Tile;
 import models.time.Season;
 import models.tools.BackPackable;
+import models.tools.Tool;
 import models.weather.WeatherManagement;
 import models.weather.WeatherOption;
 
@@ -14,16 +15,11 @@ import java.util.HashMap;
 public class NPC {
     protected String name;
     protected String job;
-
     private Tile homeLocation;
-
-    protected ArrayList<String> dialogues = new ArrayList<>();
 
     protected ArrayList<BackPackable> favourites = new ArrayList<>();
 
-    protected ArrayList<Boolean> questsAvailability = new ArrayList<>();
-    protected HashMap<BackPackable, Integer> quests = new HashMap<>();
-    protected HashMap<BackPackable, Integer> rewards = new HashMap<>();
+    protected HashMap<Quest,Integer> questTemplates = new HashMap<>();
 
     protected HashMap<Player, NPCFriendShip> friendships = new HashMap<>();
 
@@ -34,7 +30,7 @@ public class NPC {
     }
 
     public String meet(Player player) {
-        NPCFriendShip fs = friendships.computeIfAbsent(player, k -> new NPCFriendShip());
+        NPCFriendShip fs = friendships.computeIfAbsent(player, k -> new NPCFriendShip(this,player));
         if (!fs.hasTalkedToday()) {
             fs.addPoints(20);
             fs.markTalked();
@@ -65,9 +61,6 @@ public class NPC {
         }
     }
 
-    /**
-     * Returns a short weather descriptor, e.g. "good sunny", "horrible storm".
-     */
     private String getWeatherDescriptor(WeatherOption weather) {
         switch (weather) {
             case SUNNY: return "a good sunny";
@@ -78,10 +71,6 @@ public class NPC {
         }
     }
 
-    /**
-     * Determines time-of-day phrase based on local time.
-     * @return one of "morning", "afternoon", "evening", "night"
-     */
     private String getTimeOfDayPhrase() {
         int hour = App.currentGame.getDateAndTime().getHour();
         if (hour < 6) return "night";
@@ -96,7 +85,25 @@ public class NPC {
     }
 
     public void gift(Player player, BackPackable item) {
+        if (item instanceof Tool) {
+            throw new IllegalArgumentException("Cannot gift tools to NPCs");
+        }
+        NPCFriendShip friendShip = friendships.computeIfAbsent(player, k -> new NPCFriendShip(this,player));
+        int points = 0;
+        if (!friendShip.hasGiftedToday()) {
+            friendShip.addPoints(50);
+            friendShip.markGifted();
+        }
+        if (favourites.contains(item)) {
+            friendShip.addPoints(150);
+        }
+        friendShip.addPoints(points);
+    }
 
+    public void addQuest(BackPackable quest,int questAmount, BackPackable reward, int rewardAmount) {
+    }
+
+    public void activateQuest(){
     }
 
     public void showQuests() {

@@ -566,6 +566,11 @@ public class GameMenuController {
         return null;
     }
 
+    public static Result meetNPC(String npcName) {
+        // TODO : first Default NPC and then this method
+        return null;
+    }
+
     public static Result giftNPC(String NPCName, String itemName) {
         return null;
     }
