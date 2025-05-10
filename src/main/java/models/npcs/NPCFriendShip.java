@@ -1,8 +1,11 @@
 package models.npcs;
 
 import models.Player;
+import models.Result;
+import models.tools.BackPackable;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class NPCFriendShip {
     NPC npc;
@@ -27,6 +30,7 @@ public class NPCFriendShip {
         if(points > MAX_POINTS) {
             this.points = MAX_POINTS;
         }
+        activateQuests();
     }
 
     int getLevel() {
@@ -63,14 +67,30 @@ public class NPCFriendShip {
         }
     }
 
-    void showQuests(Player player) {
+    String showQuests() {
         StringBuilder sj = new StringBuilder("\n");
         for (Quest pq : playerQuests.keySet()) {
             if (playerQuests.get(pq)) {
                 sj.append("Deliver " + pq.getRequestAmount() +
-                        " x " + pq.getRequest().getName());
+                        " x " + pq.getRequest().getName() + "\n");
             }
         }
+        return sj.toString();
+    }
+
+    void finishQuest(BackPackable item) {
+        Quest quest = null;
+        for (Quest pq : playerQuests.keySet()) {
+            if (pq.request.getName().equals(item.getName())) {
+                if (!playerQuests.get(pq)) {
+                    quest = pq;
+                    break;
+                }
+            }
+        }
+        // TODO: check if Player has that Item
+        playerQuests.remove(quest);
+        playerQuests.put(quest, false);
     }
 
 

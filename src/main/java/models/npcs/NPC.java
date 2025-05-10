@@ -100,16 +100,18 @@ public class NPC {
         friendShip.addPoints(points);
     }
 
-    public void addQuest(BackPackable quest,int questAmount, BackPackable reward, int rewardAmount) {
+    public void addQuestTemplate(BackPackable quest,int questAmount, BackPackable reward, int rewardAmount,int level) {
+        questTemplates.put(new Quest(quest,reward,questAmount,rewardAmount),level);
     }
 
-    public void activateQuest(){
+    public String showQuests(Player player) {
+        NPCFriendShip fs = friendships.get(player);
+        if (fs != null) return fs.showQuests();
+        return "no quest for this player";
     }
 
-    public void showQuests() {
-
-    }
-    public void finishQuest(BackPackable item) {
-
+    public void finishQuest(Player player,BackPackable item) {
+        NPCFriendShip fs = friendships.get(player);
+        if (fs != null) fs.finishQuest(item);
     }
 }
