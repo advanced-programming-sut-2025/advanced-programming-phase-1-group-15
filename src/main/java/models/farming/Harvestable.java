@@ -10,14 +10,13 @@ import java.util.List;
 public abstract class Harvestable implements TimeObserver {
     protected int daysUntilHarvest;
     protected Quality quality;
-    protected DateAndTime lastUpdate;
-
+    protected int lastDayUpdated;
     public void update(DateAndTime dt) {
-        if(lastUpdate.getDay() != dt.getDay()){
+        if(lastDayUpdated != dt.getDay()){
             if(daysUntilHarvest > 0)
                 daysUntilHarvest--;
         }
-        lastUpdate = dt;
+        lastDayUpdated = dt.getDay();
     }
 
     public abstract void harvest(int number);

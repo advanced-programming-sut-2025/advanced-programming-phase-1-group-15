@@ -13,8 +13,9 @@ public class DateAndTime {
         observers.remove(observer);
     }
     private void notifyObservers() {
-        for (TimeObserver observer : observers) {
-            observer.update(this);
+        List<TimeObserver> snapshot = new ArrayList<>(observers);
+        for (TimeObserver obs : snapshot) {
+            obs.update(this);
         }
     }
 

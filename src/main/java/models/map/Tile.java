@@ -1,5 +1,6 @@
 package models.map;
 
+import models.App;
 import models.animals.Animal;
 import models.animals.Fish;
 import models.farming.GeneralPlants.*;
@@ -8,6 +9,7 @@ import models.foraging.ForagingMineral;
 import models.foraging.Stone;
 import models.stores.*;
 import models.tools.Fridge;
+import models.weather.WeatherManagement;
 
 import java.util.ArrayList;
 
@@ -20,6 +22,10 @@ public class Tile {
 
     private Tilable objectInTile;
     private Area area;
+
+    public void setWatered(boolean watered) {
+        this.watered = watered;
+    }
 
     boolean plowed = false;
     boolean watered = false;
@@ -92,9 +98,18 @@ public class Tile {
     public void plow() {
         plowed = true;
         objectInTile = new PloughedPlace(this);
+        App.currentGame.getDateAndTime().addObserver((PloughedPlace) objectInTile);
+        App.currentGame.getWeather().addObserver((PloughedPlace) objectInTile);
     }
     public void unplow() {
         plowed = false;
+        if(objectInTile != null) {
+            if(objectInTile instanceof PloughedPlace) {
+                PloughedPlace p = (PloughedPlace) objectInTile;
+                App.currentGame.getDateAndTime().removeObserver(p);
+                App.currentGame.getWeather().removeObserver(p);
+            }
+        }
         objectInTile = null;
     }
     public boolean isPlowed() {

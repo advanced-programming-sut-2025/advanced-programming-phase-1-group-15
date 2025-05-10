@@ -7,13 +7,17 @@ import models.map.*;
 import models.map.Map;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
+import models.weather.WeatherObserver;
+import models.weather.WeatherOption;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PloughedPlace implements TimeObserver , Tilable {
+public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
     protected Tile tile;
     protected Fertilizer fertilizer = null;
+
+    int lastUpdateOfDay = 0;
 
     public void setHarvestable(Harvestable harvestable) {
         this.harvestable = harvestable;
@@ -21,11 +25,6 @@ public class PloughedPlace implements TimeObserver , Tilable {
 
     protected Harvestable harvestable;
 
-    public void setLastUpdate(DateAndTime lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    protected DateAndTime lastUpdate;
     protected PlantState currentState = new PloughedState(this);
     protected SeedType seed;
     protected CropSeeds cropSeed;
@@ -62,6 +61,10 @@ public class PloughedPlace implements TimeObserver , Tilable {
         this.currentState = currentState;
     }
 
+    public DateAndTime lastUpdate(){
+        return App.currentGame.getDateAndTime();
+    }
+
     public Result seed(CropSeeds seed){
         if (harvestable != null) {
             return new Result(false, "already there is a crop or tree here!");
@@ -71,7 +74,7 @@ public class PloughedPlace implements TimeObserver , Tilable {
 
         if(crop == null)  throw new IllegalArgumentException("crop seed cannot be null");
 
-        if (!crop.canGrowInThisSeason(lastUpdate.getSeason()) && !isInGreenHouse()) {
+        if (!crop.canGrowInThisSeason(lastUpdate().getSeason()) && !isInGreenHouse()) {
             return new Result(false, "this is not a suitable season for this seed!");
         }
 
@@ -79,6 +82,8 @@ public class PloughedPlace implements TimeObserver , Tilable {
         if(!seedResult.isSuccessFull()) {
             return seedResult;
         }
+
+
 
         this.cropSeed = seed;
         this.harvestable = new Crop(crop);
@@ -118,7 +123,11 @@ public class PloughedPlace implements TimeObserver , Tilable {
 
     public PloughedPlace() {
         App.currentGame.getDateAndTime().addObserver(this);
-        this.setLastUpdate(App.currentGame.getDateAndTime());
+        updateDay();
+    }
+
+    public void updateDay(){
+        lastUpdateOfDay = App.currentGame.getDateAndTime().getDay();
     }
 
     public PloughedPlace(Tile tile) {
@@ -131,11 +140,12 @@ public class PloughedPlace implements TimeObserver , Tilable {
         if(harvestable != null) {
             harvestable.update(dateAndTime);
         }
-        if(lastUpdate.getDay() != dateAndTime.getDay()){
+        if(lastUpdateOfDay != dateAndTime.getDay()){
             currentState.updateByTime();
+            tile.setWatered(false);
+            updateDay();
         }
         // other changes should be added
-        lastUpdate = dateAndTime;
     }
 
     public boolean hasTreeOrCrop() {
@@ -244,13 +254,22 @@ public class PloughedPlace implements TimeObserver , Tilable {
     }
 
     private boolean isWatered() {
-        return currentState instanceof WateredState || currentState instanceof RestState;
+        return tile.isWatered();
+//        if(currentState instanceof SeededState){
+//            SeededState s = (SeededState) currentState;
+//
+//        }
+//        return currentState instanceof WateredState || currentState instanceof RestState;
+        // check , maybe this is a better method ( I dont think so )
     }
 
     private boolean isFertilized() {
         return fertilizer != null;
     }
 
+    @Override
+    public void update(WeatherOption weatherOption) {
+    }
 }
 
 
