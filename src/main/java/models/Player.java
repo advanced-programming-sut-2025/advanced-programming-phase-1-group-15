@@ -67,6 +67,8 @@ public class Player extends User implements TimeObserver {
             new Food(FoodType.BACKED_FISH), new Food(FoodType.SALAD)));
     private ArrayList<TradeWhitMoney> tradesWhitMoney = new ArrayList<>();
     private ArrayList<TradeWithItem> tradesWithItem = new ArrayList<>();
+    private ArrayList<TradeWithItem> tradesWithItemHistory = new ArrayList<>();
+    private ArrayList<TradeWhitMoney> tradesWithMoneyHistory = new ArrayList<>();
     private ArrayList<Animal> animals = new ArrayList<>();
     private ArrayList<ArtisanItem> artisanItems = new ArrayList<>();
     private HashMap<Player,PlayerFriendShip> friendships = new HashMap<>();
@@ -280,6 +282,14 @@ public class Player extends User implements TimeObserver {
 
     public ArrayList<TradeWithItem> getTradesWithItem() {
         return tradesWithItem;
+    }
+
+    public ArrayList<TradeWithItem> getTradesWithItemHistory() {
+        return tradesWithItemHistory;
+    }
+
+    public ArrayList<TradeWhitMoney> getTradesWithMoneyHistory() {
+        return tradesWithMoneyHistory;
     }
 
     public void setGold(int gold) {

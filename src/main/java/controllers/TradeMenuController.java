@@ -122,6 +122,9 @@ public class TradeMenuController {
                         }
                         player.getInventory().getItems().put(item,tradeWhitMoney.getAmount());
                         player.setGold(player.getGold()-tradeWhitMoney.getMoney());
+                        player.getTradesWhitMoney().add(tradeWhitMoney);
+                        tradeWhitMoney.getSeller().getTradesWithMoneyHistory().add(tradeWhitMoney);
+                        player.getTradesWhitMoney().remove(tradeWhitMoney);
                         return new Result(true, "You accept this offer");
                     }
                     BackPackable item = null;
@@ -140,6 +143,9 @@ public class TradeMenuController {
                     if (item == null) {
                         return new Result(false, "You dont have this item to accept request");
                     }
+                    player.getTradesWithMoneyHistory().add(tradeWhitMoney);
+                    tradeWhitMoney.getBuyer().getTradesWithMoneyHistory().add(tradeWhitMoney);
+                    player.getTradesWhitMoney().remove(tradeWhitMoney);
                     return new Result(true , "You accept this request");
                 }
             }
@@ -151,7 +157,62 @@ public class TradeMenuController {
             }
         }
         if (tradeWithItem != null) {
-
+            if(response.equals("accept")){
+                if(tradeWithItem.getType().equals("offer")){
+                    BackPackable item = null;
+                    for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
+                        if(tradeWithItem.getTargetName().equals(backPackable.getName())){
+                            item = backPackable;
+                            if(player.getInventory().getItemCount(item.getName())>tradeWithItem.getTargetAmount()){
+                                return new Result(false, "You dont have enough item to accept offer");
+                            }
+                            player.getInventory().getItems().put(item,player.getInventory().getItemCount(item.getName())-tradeWithItem.getTargetAmount());
+                            break;
+                        }
+                    }
+                    if (item == null) {
+                        return new Result(false, "You dont have this item to accept offer");
+                    }
+                    BackPackable temp = null;
+                    for (BackPackable backPackable : tradeWithItem.getSeller().getInventory().getItems().keySet()) {
+                        temp = backPackable;
+                        tradeWithItem.getSeller().getInventory().getItems().put(temp ,player.getInventory().getItemCount(backPackable.getName())-tradeWithItem.getAmount());
+                    }
+                    player.getInventory().getItems().put(temp,tradeWithItem.getTargetAmount());
+                    player.getTradesWithItemHistory().add(tradeWithItem);
+                    tradeWithItem.getSeller().getTradesWithItemHistory().add(tradeWithItem);
+                    player.getTradesWithItem().remove(tradeWithItem);
+                    return new Result(true, "You accept this offer");
+                }
+                BackPackable item = null;
+                for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
+                    if(backPackable.getName().equals(tradeWithItem.getName())) {
+                        item = backPackable;
+                        if (player.getInventory().getItemCount(item.getName()) > tradeWithItem.getTargetAmount()) {
+                            return new Result(false, "You dont have enough item to accept request");
+                        }
+                        tradeWithItem.getBuyer().getInventory().getItems().put(item,tradeWithItem.getAmount());
+                        player.getInventory().getItems().put(item,player.getInventory().getItemCount(item.getName())-tradeWithItem.getAmount());
+                        break;
+                    }
+                }
+                if (item == null) {
+                    return new Result(false, "You dont have this item to accept request");
+                }
+                BackPackable temp = null;
+                for (BackPackable backPackable : tradeWithItem.getBuyer().getInventory().getItems().keySet()) {
+                    if (backPackable.getName().equals(tradeWithItem.getTargetName())) {
+                        temp = backPackable;
+                        player.getInventory().getItems().put(temp,tradeWithItem.getTargetAmount());
+                        tradeWithItem.getBuyer().getInventory().getItems().put(temp,tradeWithItem.getBuyer().getInventory().getItemCount(temp.getName())-tradeWithItem.getTargetAmount());
+                        break;
+                    }
+                }
+                player.getTradesWithItemHistory().add(tradeWithItem);
+                tradeWithItem.getBuyer().getTradesWithItemHistory().add(tradeWithItem);
+                player.getTradesWithItem().remove(tradeWithItem);
+                return new Result(true, "You accept this request");
+            }
         }
         if(tradeWhitMoney ==null && tradeWithItem == null)
             return new Result(false, "id doesnt exist");
