@@ -31,6 +31,10 @@ public class TradeMenu implements AppMenu {
             Matcher matcher = TradeMenuCommands.TRADE_RESPONSE.matcher(command);
             System.out.println(TradeMenuController.tradeResponse(matcher.group("response"),matcher.group("id")));
         }
+        else if(TradeMenuCommands.SHOW_TRADE_HISTORY.matches(command)) {
+            Matcher matcher = TradeMenuCommands.SHOW_TRADE_HISTORY.matcher(command);
+            TradeMenuController.showTradeHistory();
+        }
         else {
             System.out.println("invalid command");
         }

@@ -259,4 +259,17 @@ public class TradeMenuController {
             }
         }
     }
+    public static void showTradeHistory(){
+        Player player = App.currentGame.getCurrentPlayer();
+        for (TradeWhitMoney trade : player.getTradesWithMoneyHistory()) {
+            System.out.println("id: "+ trade.getId() +" buyer: " + trade.getBuyer().getUsername() +
+                    " seller: " + trade.getSeller().getUsername() + " itemName: " + trade.getName()+
+            " itemAmount: "+trade.getAmount() + " price: "+trade.getMoney());
+        }
+        for (TradeWithItem trade : player.getTradesWithItemHistory()) {
+            System.out.println("id: "+ trade.getId() +" buyer: " + trade.getBuyer().getUsername() +
+                    " seller: " + trade.getSeller().getUsername() + " itemName: " + trade.getName()+
+                    " itemAmount: "+trade.getAmount() + " target itemName: "+ trade.getTargetName() + " number of target item: " +trade.getAmount());
+        }
+    }
 }
