@@ -50,7 +50,6 @@ public class WateredState implements PlantState {
 
         if (harvestable.isOneTime()) {
             tile.unPlough();
-            // TODO: check if deleting plowed tile effect other things
             return new Result(true, "Harvested. Crop removed.");
         } else {
             tile.setState(new RestState(tile));

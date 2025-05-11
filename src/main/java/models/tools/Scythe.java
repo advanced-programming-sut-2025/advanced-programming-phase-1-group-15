@@ -2,6 +2,8 @@ package models.tools;
 
 import models.Player;
 import models.farming.Crop;
+import models.farming.GeneralPlants.PloughedPlace;
+import models.farming.GeneralPlants.PloughedState;
 import models.foraging.ForagingCrop;
 import models.map.Tile;
 
@@ -14,9 +16,9 @@ public class Scythe extends Tool {
 
     public boolean successfulAttempt(Tile tile) {
         if(tile.isEmpty()) {
-            return true;
+            return false;
         }
-        else return tile.getObjectInTile() instanceof Crop || tile.getObjectInTile() instanceof ForagingCrop;
+        else return tile.getObjectInTile() instanceof PloughedPlace;
     }
 
     @Override
@@ -33,21 +35,9 @@ public class Scythe extends Tool {
 
         user.subtractEnergy(energyConsume);
         if(successfulAttempt(tile)) {
-            if(tile.getObjectInTile() instanceof Crop c) {
-                user.addToBackPack(c, 1);
-                user.upgradeFarmingAbility(5);
-                tile.empty();
-
-                return 1 + " " + c.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.";
-            }
-            else {
-                ForagingCrop fc = (ForagingCrop) tile.getObjectInTile();
-                user.addToBackPack(fc, 1);
-                user.upgradeFarmingAbility(5);
-                tile.empty();
-
-                return 1 + " " + fc.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.";
-            }
+            user.upgradeFarmingAbility(5);
+            PloughedPlace p = (PloughedPlace) tile.getObjectInTile();
+            return p.getCurrentState().harvest().getMessage();
         }
         else {
             return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";

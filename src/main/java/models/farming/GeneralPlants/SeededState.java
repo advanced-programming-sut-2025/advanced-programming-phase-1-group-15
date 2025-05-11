@@ -35,7 +35,7 @@ public class SeededState implements PlantState {
 
     @Override
     public Result harvest() {
-        return new Result(false,"you should fertilize this tile first");
+        return new Result(false,"you should water this tile first");
     }
 
     @Override
