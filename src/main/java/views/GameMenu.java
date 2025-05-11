@@ -402,7 +402,24 @@ public class GameMenu implements AppMenu {
                 String itemName = matcher.group("itemName");
                 int amount = Integer.parseInt(matcher.group("amount"));
 
+                Result result = GameMenuController.gift(username, itemName, amount);
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.HUG_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.HUG_REGEX.matcher(command);
 
+                String username = matcher.matches() ? matcher.group("username") : "";
+
+                Result result = GameMenuController.hug(username);
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.FLOWER_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.FLOWER_REGEX.matcher(command);
+
+                String username = matcher.matches() ? matcher.group("username") : "";
+
+                Result result = GameMenuController.flower(username);
+                System.out.println(result.message());
             }
 
             else if(GameMenuCommands.CROP_INFO.matches(command)) {

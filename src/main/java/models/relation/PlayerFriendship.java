@@ -8,6 +8,8 @@ import models.tools.BackPackable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+
 public class PlayerFriendship implements TimeObserver {
     Player player1;
     Player player2;
@@ -19,8 +21,8 @@ public class PlayerFriendship implements TimeObserver {
     boolean giftToday;
     boolean hugToday;
 
-    private HashMap<String, Player> messages = new HashMap<>();
-    private HashMap<BackPackable,Integer> gifts = new HashMap<>();
+    private final HashMap<Player, ArrayList<String>> messages = new HashMap<>();
+    private final HashMap<Player, ArrayList<BackPackable>> gifts = new HashMap<>();
 
     public PlayerFriendship(Player player1, Player player2) {
         this.player1 = player1;
@@ -34,9 +36,21 @@ public class PlayerFriendship implements TimeObserver {
     public void upgradeXP(int amount) {
         xp += amount;
 
-        if(xp > (level + 1) * 100) {
+        if(xp > (level + 1) * 100 && level != 2) {
             level++;
             xp = 0;
+        }
+    }
+    public void downgradeXP(int amount) {
+        if(xp - amount < 0 && level > 0) {
+            level--;
+            xp = (level + 1) * 100 - amount;
+        }
+        else if(xp - amount < 0 && level == 0) {
+            xp = 0;
+        }
+        else {
+            xp -= amount;
         }
     }
 
@@ -61,20 +75,48 @@ public class PlayerFriendship implements TimeObserver {
         return level;
     }
 
-    public HashMap<String, Player> getMessages() {
+    public HashMap<Player, ArrayList<String>> getMessages() {
         return messages;
+    }
+    public HashMap<Player, ArrayList<BackPackable>> getGifts() {
+        return gifts;
     }
 
     public void talk(Player sender, String message) {
-        messages.put(message, sender);
+        messages.putIfAbsent(sender, new ArrayList<>());
+        messages.get(sender).add(message);
         if(!talkToday) {
             upgradeXP(20);
             talkToday = true;
         }
     }
 
+    public void gift(Player receiver, BackPackable gift) {
+        gifts.putIfAbsent(receiver, new ArrayList<>());
+        gifts.get(receiver).add(gift);
+        giftToday = true;
+    }
+
+    public void hug() {
+        upgradeXP(60);
+        hugToday = true;
+    }
+
+    public void flower() {
+        level = 3;
+        xp = 0;
+    }
+
     @Override
     public void update(DateAndTime dateAndTime) {
-
+        if(dateAndTime.getHour() == 9) {
+            if(!talkToday && !tradeToday && !giftToday && !hugToday) {
+                downgradeXP(10);
+            }
+            talkToday = false;
+            tradeToday = false;
+            giftToday = false;
+            hugToday = false;
+        }
     }
 }

@@ -529,17 +529,92 @@ public class GameMenuController {
         PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), target);
         StringBuilder sb = new StringBuilder();
 
-        for(String message : friendship.getMessages().keySet()) {
-            Player sender = friendship.getMessages().get(message);
+        for(Player sender : friendship.getMessages().keySet()) {
             if(sender.equals(getCurrentPlayer())) {
-                sb.append("from: you    message: \"").append(message).append("\"\n");
+                for(String message : friendship.getMessages().get(sender)) {
+                    sb.append("from: you    message: \"").append(message).append("\"\n");
+                }
             }
             else {
-                sb.append("from: ").append(sender.getUsername()).append("    message: \"").append(message).append("\"\n");
+                for(String message : friendship.getMessages().get(sender)) {
+                    sb.append("from: ").append(sender.getUsername()).append("    message: \"").append(message).append("\"\n");
+                }
             }
         }
 
         return new Result(true, sb.toString());
+    }
+    public static Result gift(String username, String itemName, int amount) {
+        Player receiver = App.currentGame.getPlayerByUsername(username);
+        if(receiver == null) {
+            return new Result(false, "invalid player username!");
+        }
+        if(getCurrentPlayer().equals(receiver)) {
+            return new Result(false, "you can't gift yourself!");
+        }
+
+        BackPackable item = getCurrentPlayer().getInventory().getItemByName(itemName);
+        int availableCount = getCurrentPlayer().getInventory().getItemCount(itemName);
+        if(item == null) {
+            return new Result(false, "you don't have that item.");
+        }
+        if(amount > availableCount) {
+            return new Result(false, "you don't have enough amount of that item.");
+        }
+
+        Player sender = getCurrentPlayer();
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), receiver);
+        friendship.gift(receiver, item);
+        receiver.addToBackPack(item, amount);
+        sender.getInventory().removeCountFromBackPack(item, amount);
+
+        return new Result(true, "you gave "  + amount + " " + itemName + " to " + receiver.getUsername() + "!");
+    }
+    public static Result hug(String username) {
+        Player receiver = App.currentGame.getPlayerByUsername(username);
+        if(receiver == null) {
+            return new Result(false, "invalid player username!");
+        }
+        if(getCurrentPlayer().equals(receiver)) {
+            return new Result(false, "you can't hug yourself!");
+        }
+
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        Tile recieverTile = App.currentGame.getTile(receiver.getPosition());
+        if(!playerTile.isAdjacent(recieverTile)) {
+            return new Result(false, "you have to be next to a player to hug them.");
+        }
+
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), receiver);
+        if(friendship.getLevel() < 2) {
+            return new Result(false, "at least 2 levels of friendship required!");
+        }
+
+        friendship.hug();
+        return new Result(true, "you hugged "  + receiver.getUsername() + "!");
+    }
+    public static Result flower(String username) {
+        Player receiver = App.currentGame.getPlayerByUsername(username);
+        if(receiver == null) {
+            return new Result(false, "invalid player username!");
+        }
+        if(getCurrentPlayer().equals(receiver)) {
+            return new Result(false, "you can't give flower to yourself!");
+        }
+
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        Tile recieverTile = App.currentGame.getTile(receiver.getPosition());
+        if(!playerTile.isAdjacent(recieverTile)) {
+            return new Result(false, "you have to be next to a player to give flower to them.");
+        }
+
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), receiver);
+        if(friendship.getLevel() < 2) {
+            return new Result(false, "at least 2 levels of friendship required!");
+        }
+
+        friendship.flower();
+        return new Result(true, "you gave flower to "  + receiver.getUsername() + ". friendship upgraded to level 3.");
     }
 
     public static Result showCropInfo(String name) {
