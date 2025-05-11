@@ -231,21 +231,32 @@ public enum TreeType {
         return season;
     }
 
-    public void displayInfo() {
-        System.out.println("Tree Type: " + this.name().replace("_", " "));
-        System.out.println("Seed Type: " + seedType);
-        System.out.println("Growth Stages Duration (days): " + stages);
-        System.out.println("Total Harvest Time: " + totalHarvestTime + " days");
-        System.out.println("Fruit Produced: " + fruitType);
-        System.out.println("Harvest Cycle: Every " + harvestCycle + " days");
-        System.out.println("Base Price: " + basePrice + " coins");
-        System.out.println("Edible: " + (edible ? "Yes" : "No"));
-        System.out.println("Energy Restored: " + energy);
-        if(season.size() > 1)
-            System.out.println("Growing Season: " + "Special");
-        else
-            System.out.println("Growing Season: " + season);
-        System.out.println("-----------------------------");
+    @Override
+    public String toString() {
+        return "Tree Type: " + this.name().replace("_", " ") + "\n" +
+                "Seed Type: " + seedType + "\n" +
+                "Growth Stages Duration (days): " + stages + "\n" +
+                "Total Harvest Time: " + totalHarvestTime + " days\n" +
+                "Fruit Produced: " + fruitType + "\n" +
+                "Harvest Cycle: Every " + harvestCycle + " days\n" +
+                "Base Price: " + basePrice + " coins\n" +
+                "Edible: " + (edible ? "Yes" : "No") + "\n" +
+                "Energy Restored: " + energy + "\n" +
+                "Growing Season: " + (season.size() > 1 ? "Special" : season) + "\n" +
+                "-----------------------------\n";
+    }
+
+    public static TreeType getTreeTypeByName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Name cannot be null");
+        }
+        String normalized = name.trim().replace(" ", "_").toUpperCase();
+        for (TreeType type : TreeType.values()) {
+            if (type.name().equalsIgnoreCase(normalized)) {
+                return type;
+                }
+            }
+        return null;
     }
 
 }

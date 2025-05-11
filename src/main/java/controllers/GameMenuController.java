@@ -483,9 +483,12 @@ public class GameMenuController {
 
     public static Result showCropInfo(String name) {
         Crops crop = Crops.getByName(name);
-        if(crop == null)
-            return new Result(false,"no crop with this name exists!");
-        return new Result(true,crop.toString());
+        if(crop != null)
+            return new Result(true,crop.toString());
+        TreeType tree = TreeType.getTreeTypeByName(name);
+        if(tree != null)
+            return new Result(true,tree.toString());
+        return new Result(false, "No such crop '" + name + "'.");
     }
 
     public static Result plant(String seedName, int dx, int dy) {

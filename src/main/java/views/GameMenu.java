@@ -376,7 +376,7 @@ public class GameMenu implements AppMenu {
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.showCropInfo(matcher.group("craft_name")));
+                System.out.println(GameMenuController.showCropInfo(matcher.group("craftName")));
             }
             else if(GameMenuCommands.PLANT_SEED.matches(command)) {
                 Matcher matcher = GameMenuCommands.PLANT_SEED.matcher(command);

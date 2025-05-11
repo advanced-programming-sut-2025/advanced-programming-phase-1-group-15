@@ -35,7 +35,7 @@ package models.enums.commands;
         PURCHASE_PRODUCT_REGEX("^\\s*purchase\\s+(?<productName>.+?)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),
         SELL_PRODUCT_REGEX("^\\s*sell\\s+(?<productName>.+?)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),
         PLANT_SEED("^\\s*plant\\s+-s\\s+(?<seed>.+\\S)\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*$"),
-        CROP_INFO("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>\\S+)\\s*$"),
+        CROP_INFO("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$"),
         Recipe("^\\s*crafting\\s+show\\s+recipes\\s*^"),
         Crafting("^\\s*crafting\\s+craft\\s+(?<itemName>\\S+)\\s*$"),
         ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisanName>.*)\\s+(?<itemName>.*)\\s*"),
