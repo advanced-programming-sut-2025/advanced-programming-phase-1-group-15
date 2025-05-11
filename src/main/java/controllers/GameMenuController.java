@@ -12,6 +12,7 @@ import models.crafting.CraftItem;
 import models.farming.*;
 import models.farming.GeneralPlants.PloughedPlace;
 import models.map.*;
+import models.relation.PlayerFriendship;
 import models.stores.CarpenterShop;
 import models.stores.MarnieRanch;
 import models.stores.Store;
@@ -479,6 +480,66 @@ public class GameMenuController {
             getCurrentPlayer().getInventory().removeCountFromBackPack(item, count);
             return new Result(true, "Sold " + count + " of your " + item.getName() + ". You earned " + count * item.getPrice() + "gold.");
         }
+    }
+
+    public static Result showFriendships() {
+        StringBuilder sb = new StringBuilder();
+        for (PlayerFriendship friendship : App.currentGame.getFriendships()) {
+            if(friendship.getPlayer1().equals(getCurrentPlayer())) {
+                sb.append("with ").append(friendship.getPlayer2().getUsername());
+                sb.append(" xp: ").append(friendship.getXP()).append(" level: ").append(friendship.getLevel()).append("\n");
+            }
+            else if(friendship.getPlayer2().equals(getCurrentPlayer())) {
+                sb.append("with ").append(friendship.getPlayer1().getUsername());
+                sb.append(" xp: ").append(friendship.getXP()).append(" level: ").append(friendship.getLevel()).append("\n");
+            }
+        }
+
+        return new Result(true, sb.toString());
+    }
+    public static Result talkFriendship(String username, String message) {
+        Player receiver = App.currentGame.getPlayerByUsername(username);
+        if(receiver == null) {
+            return new Result(false, "invalid player username!");
+        }
+        if(getCurrentPlayer().equals(receiver)) {
+            return new Result(false, "you can't message yourself!");
+        }
+
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        Tile recieverTile = App.currentGame.getTile(receiver.getPosition());
+        if(!playerTile.isAdjacent(recieverTile)) {
+            return new Result(false, "you have to be next to a player to talk to them.");
+        }
+
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), receiver);
+        friendship.talk(getCurrentPlayer(), message);
+
+        return new Result(true, "your message sent successfully.");
+    }
+    public static Result talkHistory(String username) {
+        Player target = App.currentGame.getPlayerByUsername(username);
+        if(target == null) {
+            return new Result(false, "invalid player username!\n");
+        }
+        if(getCurrentPlayer().equals(target)) {
+            return new Result(false, "you don't have any messages with yourself!\n");
+        }
+
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), target);
+        StringBuilder sb = new StringBuilder();
+
+        for(String message : friendship.getMessages().keySet()) {
+            Player sender = friendship.getMessages().get(message);
+            if(sender.equals(getCurrentPlayer())) {
+                sb.append("from: you    message: \"").append(message).append("\"\n");
+            }
+            else {
+                sb.append("from: ").append(sender.getUsername()).append("    message: \"").append(message).append("\"\n");
+            }
+        }
+
+        return new Result(true, sb.toString());
     }
 
     public static Result showCropInfo(String name) {

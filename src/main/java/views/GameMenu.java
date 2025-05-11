@@ -373,6 +373,38 @@ public class GameMenu implements AppMenu {
                 System.out.println(result.message());
             }
 
+            else if(command.equals("friendships")) {
+                Result result = GameMenuController.showFriendships();
+                System.out.println("Your Friendships: ");
+                System.out.print(result.message());
+            }
+            else if(GameMenuCommands.TALK_FRIENDSHIP_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.TALK_FRIENDSHIP_REGEX.matcher(command);
+
+                String username = matcher.matches() ? matcher.group("username") : "";
+                String message = matcher.group("message");
+
+                Result result = GameMenuController.talkFriendship(username, message);
+                System.out.println(result.message());
+            }
+            else if(GameMenuCommands.TALK_HISTORY_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.TALK_HISTORY_REGEX.matcher(command);
+
+                String username = matcher.matches() ? matcher.group("username") : "";
+
+                Result result = GameMenuController.talkHistory(username);
+                System.out.print(result.message());
+            }
+            else if(GameMenuCommands.GIFT_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.GIFT_REGEX.matcher(command);
+
+                String username = matcher.matches() ? matcher.group("username") : "";
+                String itemName = matcher.group("itemName");
+                int amount = Integer.parseInt(matcher.group("amount"));
+
+
+            }
+
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);
                 matcher.matches();

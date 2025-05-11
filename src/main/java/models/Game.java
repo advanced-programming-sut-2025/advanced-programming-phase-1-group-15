@@ -3,7 +3,7 @@ package models;
 import models.map.Map;
 import models.map.Position;
 import models.map.Tile;
-import models.relation.Trade;
+import models.relation.PlayerFriendship;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 import models.weather.WeatherManagement;
@@ -22,13 +22,13 @@ public class Game implements TimeObserver {
     private ArrayList<ArrayList<Tile>> mapTiles;
     private Map map;
 
-    private ArrayList<Trade> trades = new ArrayList<>();
+    private final ArrayList<PlayerFriendship> friendships = new ArrayList<>();
 
     private boolean finished = false;
 
     public Game(ArrayList<Player> players) {
         this.players = players;
-        for(Player player : players) {
+        for (Player player : players) {
             player.setGame(this);
         }
         this.currentPlayer = players.get(0);
@@ -38,8 +38,13 @@ public class Game implements TimeObserver {
         weather = new WeatherManagement();
 
         dateAndTime.addObserver(weather);
-        for(Player player : players) {
-            dateAndTime.addObserver(player);
+        for(int i = 0; i < players.size() - 1; i++) {
+            dateAndTime.addObserver(players.get(i));
+            for (int j = i + 1; j < players.size(); j++) {
+                PlayerFriendship friendship = new PlayerFriendship(players.get(i), players.get(j));
+                dateAndTime.addObserver(friendship);
+                friendships.add(friendship);
+            }
         }
 
         mapTiles = Tile.buildMapTiles();
@@ -56,6 +61,14 @@ public class Game implements TimeObserver {
     }
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+    public Player getPlayerByUsername(String username) {
+        for (Player player : players) {
+            if (player.getUsername().equals(username)) {
+                return player;
+            }
+        }
+        return null;
     }
 
     public void setMainPlayer(Player mainPlayer) {
@@ -109,8 +122,16 @@ public class Game implements TimeObserver {
         return map;
     }
 
-    public void showTrades() {
-
+    public ArrayList<PlayerFriendship> getFriendships() {
+        return friendships;
+    }
+    public PlayerFriendship getFriendshipByPlayers(Player p1, Player p2) {
+        for(PlayerFriendship friendship : friendships) {
+            if(friendship.isFriendship(p1, p2)) {
+                return friendship;
+            }
+        }
+        return null;
     }
 
     @Override

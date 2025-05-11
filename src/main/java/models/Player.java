@@ -5,14 +5,12 @@ import models.artisanry.ArtisanItem;
 import models.cooking.Food;
 import models.cooking.FoodType;
 import models.crafting.CraftItem;
-import models.foraging.ForagingSeeds;
 import models.foraging.ForagingSeedsType;
 import models.map.AreaType;
 import models.map.Farm;
 import models.map.Tile;
-import models.relation.PlayerFriendShip;
+import models.relation.PlayerFriendship;
 import models.map.Position;
-import models.relation.Trade;
 import models.relation.TradeWhitMoney;
 import models.relation.TradeWithItem;
 import models.time.DateAndTime;
@@ -65,13 +63,16 @@ public class Player extends User implements TimeObserver {
 
     private ArrayList<Food> availableFoods = new ArrayList<>(Arrays.asList(new Food(FoodType.FRIED_EGG),
             new Food(FoodType.BACKED_FISH), new Food(FoodType.SALAD)));
+
     private ArrayList<TradeWhitMoney> tradesWhitMoney = new ArrayList<>();
     private ArrayList<TradeWithItem> tradesWithItem = new ArrayList<>();
     private ArrayList<TradeWithItem> tradesWithItemHistory = new ArrayList<>();
     private ArrayList<TradeWhitMoney> tradesWithMoneyHistory = new ArrayList<>();
+
     private ArrayList<Animal> animals = new ArrayList<>();
+
     private ArrayList<ArtisanItem> artisanItems = new ArrayList<>();
-    private HashMap<Player,PlayerFriendShip> friendships = new HashMap<>();
+
     private Player couple;
 
     public int getCurrentId() {
