@@ -40,6 +40,7 @@ public class PlayerFriendship implements TimeObserver {
     Player player2;
     private int xp = 0;
     private int level = 0;
+    private boolean marry = false;
 
     boolean talkToday;
     boolean tradeToday;
@@ -133,10 +134,19 @@ public class PlayerFriendship implements TimeObserver {
         xp = 0;
     }
 
+    public void marry() {
+        level = 4;
+        xp = 0;
+
+        marry = true;
+        player1.marry(player2);
+        player2.marry(player1);
+    }
+
     @Override
     public void update(DateAndTime dateAndTime) {
         if(dateAndTime.getHour() == 9) {
-            if(!talkToday && !tradeToday && !giftToday && !hugToday) {
+            if(!marry && !talkToday && !tradeToday && !giftToday && !hugToday) {
                 downgradeXP(10);
             }
             talkToday = false;

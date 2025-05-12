@@ -9,6 +9,7 @@ import models.Result;
 import models.enums.commands.CheatCodeCommands;
 import models.enums.commands.Commands;
 import models.enums.commands.GameMenuCommands;
+import models.relation.PlayerFriendship;
 
 import javax.print.attribute.standard.PresentationDirection;
 import java.util.Scanner;
@@ -46,6 +47,9 @@ public class GameMenu implements AppMenu {
         if(GameMenuCommands.NEXT_TURN_REGEX.matches(command)) {
             game.nextTurn();
             System.out.println("\"" + game.getCurrentPlayer().getUsername() + "\" go on!");
+            for(PlayerFriendship.Message message : game.getCurrentPlayer().getReceivedMessages()) {
+                System.out.println("from " + message.sender().getUsername() + "    \"" + message.message() + "\"");
+            }
             return;
         }
 

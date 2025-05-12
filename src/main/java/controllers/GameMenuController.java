@@ -9,6 +9,7 @@ import models.artisanry.ArtisanItem;
 import models.artisanry.ArtisanItemType;
 import models.cooking.Food;
 import models.crafting.CraftItem;
+import models.enums.Gender;
 import models.farming.*;
 import models.farming.GeneralPlants.PloughedPlace;
 import models.map.*;
@@ -561,6 +562,9 @@ public class GameMenuController {
 
         Player sender = getCurrentPlayer();
         PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), receiver);
+        if(friendship.getLevel() < 1) {
+            return new Result(false, "at least 1 level of friendship required!");
+        }
         friendship.gift(sender, item);
         receiver.addToBackPack(item, amount);
         sender.getInventory().removeCountFromBackPack(item, amount);
@@ -690,7 +694,25 @@ public class GameMenuController {
             return new Result(false, "invalid player username!\n");
         }
 
-        return new Result(true, "You've married " + target.getUsername() + "!");
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        Tile targetTile = App.currentGame.getTile(target.getPosition());
+        if(!playerTile.isAdjacent(targetTile)) {
+            return new Result(false, "you have to be next to a player to ask for marriage!");
+        }
+
+        if(getCurrentPlayer().getGender().equals(Gender.GIRL)) {
+            return new Result(false, "you have to be a boy to ask for marriage!");
+        }
+        else if(target.getGender().equals(Gender.BOY)) {
+            return new Result(false, "Why are you gay?");
+        }
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), target);
+        if(friendship.getLevel() < 3) {
+            return new Result(false, "at least 3 levels of friendship required!");
+        }
+
+        target.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), "Will you Marry me?"));
+        return new Result(true, "You're proposal has been sent to " + target.getUsername() + ".");
     }
 
     public static Result showCropInfo(String name) {

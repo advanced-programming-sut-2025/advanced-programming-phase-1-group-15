@@ -10,6 +10,7 @@ import models.map.AreaType;
 import models.map.Farm;
 import models.map.Tile;
 import models.map.Position;
+import models.relation.PlayerFriendship;
 import models.relation.TradeWhitMoney;
 import models.relation.TradeWithItem;
 import models.time.DateAndTime;
@@ -18,7 +19,6 @@ import models.tools.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class Player extends User implements TimeObserver {
     private Position homePosition;
@@ -72,7 +72,10 @@ public class Player extends User implements TimeObserver {
 
     private ArrayList<ArtisanItem> artisanItems = new ArrayList<>();
 
-    private final HashMap<BackPackable, Integer> receivedGifts = new HashMap<>();
+    private ArrayList<PlayerFriendship.Message> receivedMessages = new ArrayList<>();
+    public void addMessage(PlayerFriendship.Message message) {
+        receivedMessages.add(message);
+    }
     private Player couple;
 
     public int getCurrentId() {
@@ -297,8 +300,8 @@ public class Player extends User implements TimeObserver {
         this.gold = gold;
     }
 
-    public HashMap<BackPackable, Integer> getReceivedGifts() {
-        return receivedGifts;
+    public ArrayList<PlayerFriendship.Message> getReceivedMessages() {
+        return receivedMessages;
     }
     public Player getCouple() {
         return couple;
