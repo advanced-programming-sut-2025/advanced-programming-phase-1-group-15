@@ -9,7 +9,6 @@ import models.foraging.ForagingSeedsType;
 import models.map.AreaType;
 import models.map.Farm;
 import models.map.Tile;
-import models.relation.PlayerFriendship;
 import models.map.Position;
 import models.relation.TradeWhitMoney;
 import models.relation.TradeWithItem;
@@ -73,6 +72,7 @@ public class Player extends User implements TimeObserver {
 
     private ArrayList<ArtisanItem> artisanItems = new ArrayList<>();
 
+    private final HashMap<BackPackable, Integer> receivedGifts = new HashMap<>();
     private Player couple;
 
     public int getCurrentId() {
@@ -297,6 +297,9 @@ public class Player extends User implements TimeObserver {
         this.gold = gold;
     }
 
+    public HashMap<BackPackable, Integer> getReceivedGifts() {
+        return receivedGifts;
+    }
     public Player getCouple() {
         return couple;
     }
@@ -331,9 +334,6 @@ public class Player extends User implements TimeObserver {
         }
 
         return display.toString();
-    }
-    public void showFriendships() {
-
     }
 
     public void attackOfCrows(){
