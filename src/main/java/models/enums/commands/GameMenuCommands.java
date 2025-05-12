@@ -34,16 +34,24 @@ package models.enums.commands;
         SHOW_AVAILABLE_PRODUCTS_REGEX("^\\s*show\\s+all\\s+available\\s+products\\s*$"),
         PURCHASE_PRODUCT_REGEX("^\\s*purchase\\s+(?<productName>.+?)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),
         SELL_PRODUCT_REGEX("^\\s*sell\\s+(?<productName>.+?)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),
+        TALK_FRIENDSHIP_REGEX("^\\s*talk\\s+-u\\s+(?<username>\\S+)\\s+-m\\s+(?<message>.+?)\\s*$"),
+        TALK_HISTORY_REGEX("^\\s*talk\\s+history\\s+-u\\s+(?<username>\\S+)\\s*$"),
+        GIFT_REGEX("^\\s*gift\\s+-u\\s+(?<username>\\S+)\\s+-i\\s+(?<itemName>.+?)\\s+-a\\s+(?<amount>\\d+)\\s*$"),
+        GIFT_LIST_REGEX("^\\s*gift\\s+list\\s*$"),
+        GIFT_RATE_REGEX("^\\s*gift\\s+rate\\s+-i\\s+(?<giftNumber>\\d+)\\s+-r\\s+(?<rate>\\d)\\s*$"),
+        GIFT_HISTORY_REGEX("^\\s*gift\\s+history\\s+-u\\s+(?<username>\\S+)\\s*$"),
+        HUG_REGEX("^\\s*hug\\s+-u\\s+(?<username>\\S+)\\s*$"),
+        FLOWER_REGEX("^\\s*flower\\s+-u\\s+(?<username>\\S+)\\s*$"),
         PLANT_SEED("^\\s*plant\\s+-s\\s+(?<seed>.+\\S)\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*$"),
         CROP_INFO("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$"),
         Recipe("^\\s*crafting\\s+show\\s+recipes\\s*^"),
-        Crafting("^\\s*crafting\\s+craft\\s+(?<itemName>\\S+)\\s*$"),
-        ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisanName>.*)\\s+(?<itemName>.*)\\s*"),
+        Crafting("^\\s*crafting\\s+craft\\s+(?<itemName>.+?)\\s*$"),
+        ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisanName>.*)\\s+(?<itemName>.?)\\s*"),
         GET_ARTISAN("\\s*artisan\\s+get\\s+(?<artisanName>.*)\\s*"),
         PLANT_MIXED_SEED("\\s*plant\\s+mixed\\s+seed\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*"),
         HARVEST("\\s*harvest\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*"),
         SHOW_PLANT("\\s*show\\s*plant\\s+-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$"),
-        PlaceItem("^\\s*place\\s+item\\s+-n\\s+(?<itemName>.*)\\s+-d\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$");
+        PlaceItem("^\\s*place\\s+item\\s+-n\\s+(?<itemName>.?)\\s+-d\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$");
         private final String regex;
 
         GameMenuCommands(String regex) {
