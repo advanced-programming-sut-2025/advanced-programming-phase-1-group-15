@@ -22,7 +22,9 @@ public class PlayerFriendship implements TimeObserver {
     boolean hugToday;
 
     private final HashMap<Player, ArrayList<String>> messages = new HashMap<>();
+
     private final HashMap<Player, ArrayList<BackPackable>> gifts = new HashMap<>();
+    private final ArrayList<Integer> rates = new ArrayList<>();
 
     public PlayerFriendship(Player player1, Player player2) {
         this.player1 = player1;
@@ -78,8 +80,12 @@ public class PlayerFriendship implements TimeObserver {
     public HashMap<Player, ArrayList<String>> getMessages() {
         return messages;
     }
-    public HashMap<Player, ArrayList<BackPackable>> getGifts() {
-        return gifts;
+
+    public ArrayList<BackPackable> getGifts(Player sender) {
+        return gifts.get(sender);
+    }
+    public int getRate(int index) {
+        return rates.get(index);
     }
 
     public void talk(Player sender, String message) {
@@ -91,9 +97,10 @@ public class PlayerFriendship implements TimeObserver {
         }
     }
 
-    public void gift(Player receiver, BackPackable gift) {
-        gifts.putIfAbsent(receiver, new ArrayList<>());
-        gifts.get(receiver).add(gift);
+    public void gift(Player sender, BackPackable gift) {
+        gifts.putIfAbsent(sender, new ArrayList<>());
+        gifts.get(sender).add(gift);
+        rates.add(0);
         giftToday = true;
     }
 

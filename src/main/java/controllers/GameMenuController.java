@@ -564,11 +564,81 @@ public class GameMenuController {
 
         Player sender = getCurrentPlayer();
         PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), receiver);
-        friendship.gift(receiver, item);
+        friendship.gift(sender, item);
         receiver.addToBackPack(item, amount);
         sender.getInventory().removeCountFromBackPack(item, amount);
 
         return new Result(true, "you gave "  + amount + " " + itemName + " to " + receiver.getUsername() + "!");
+    }
+    public static Result giftList(String username) {
+        Player sender = App.currentGame.getPlayerByUsername(username);
+        if(sender == null) {
+            return new Result(false, "invalid player username!");
+        }
+        if(getCurrentPlayer().equals(sender)) {
+            return new Result(false, "Oops!");
+        }
+
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(sender, getCurrentPlayer());
+        StringBuilder sb = new StringBuilder();
+        sb.append("gift list: \n");
+        if(friendship.getGifts(sender) != null) {
+            for (int i = 0; i < friendship.getGifts(sender).size(); i++) {
+                sb.append((i + 1)).append(".  ").append(friendship.getGifts(sender).get(i).getName());
+                if (friendship.getRate(i) == 0) {
+                    sb.append("    unrated\n");
+                } else {
+                    sb.append("    rate: ").append(friendship.getRate(i)).append("\n");
+                }
+            }
+        }
+
+        return new Result(true, sb.toString());
+    }
+    public static Result giftHistory(String username) {
+        Player sender = App.currentGame.getPlayerByUsername(username);
+        if(sender == null) {
+            return new Result(false, "invalid player username!");
+        }
+        if(getCurrentPlayer().equals(sender)) {
+            return new Result(false, "Oops!");
+        }
+
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(sender, getCurrentPlayer());
+        StringBuilder sb = new StringBuilder();
+        if(friendship.getGifts(sender) != null) {
+            sb.append("gifts from ").append(sender.getUsername()).append(": \n");
+            for(int i = 0; i < friendship.getGifts(sender).size(); i++) {
+                sb.append(friendship.getGifts(sender).get(i).getName());
+                if(friendship.getRate(i) == 0) {
+                    sb.append("    unrated\n");
+                }
+                else {
+                    sb.append("    rate: ").append(friendship.getRate(i)).append("\n");
+                }
+            }
+        }
+        else {
+            sb.append("no gifts from ").append(sender.getUsername()).append("!\n");
+        }
+
+        if(friendship.getGifts(getCurrentPlayer()) != null) {
+            sb.append("gifts from you: \n");
+            for(int i = 0; i < friendship.getGifts(getCurrentPlayer()).size(); i++) {
+                sb.append(friendship.getGifts(getCurrentPlayer()).get(i).getName());
+                if(friendship.getRate(i) == 0) {
+                    sb.append("    unrated\n");
+                }
+                else {
+                    sb.append("    rate: ").append(friendship.getRate(i)).append("\n");
+                }
+            }
+        }
+        else {
+            sb.append("no gifts from you!\n");
+        }
+
+        return new Result(true, sb.toString());
     }
     public static Result hug(String username) {
         Player receiver = App.currentGame.getPlayerByUsername(username);

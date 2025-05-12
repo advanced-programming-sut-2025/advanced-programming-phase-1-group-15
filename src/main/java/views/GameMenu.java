@@ -405,6 +405,31 @@ public class GameMenu implements AppMenu {
                 Result result = GameMenuController.gift(username, itemName, amount);
                 System.out.println(result.message());
             }
+            else if(GameMenuCommands.GIFT_LIST_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.GIFT_LIST_REGEX.matcher(command);
+
+                String username = matcher.matches() ? matcher.group("username") : "";
+
+                Result result = GameMenuController.giftList(username);
+                System.out.print(result.message());
+            }
+            else if(GameMenuCommands.GIFT_RATE_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.GIFT_RATE_REGEX.matcher(command);
+
+                String username = matcher.matches() ? matcher.group("username") : "";
+                int giftNumber = Integer.parseInt(matcher.group("giftNumber"));
+                int rate = Integer.parseInt(matcher.group("rate"));
+
+
+            }
+            else if(GameMenuCommands.GIFT_HISTORY_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.GIFT_HISTORY_REGEX.matcher(command);
+
+                String username = matcher.matches() ? matcher.group("username") : "";
+
+                Result result = GameMenuController.giftHistory(username);
+                System.out.print(result.message());
+            }
             else if(GameMenuCommands.HUG_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.HUG_REGEX.matcher(command);
 
