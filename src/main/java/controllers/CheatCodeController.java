@@ -9,6 +9,7 @@ import models.artisanry.ArtisanItemType;
 import models.crafting.CraftItem;
 import models.crafting.CraftItemType;
 import models.map.Position;
+import models.relation.PlayerFriendship;
 import models.tools.BackPackable;
 import models.weather.WeatherOption;
 
@@ -82,8 +83,16 @@ public class CheatCodeController {
         return null;
     }
 
-    public static Result cheatSetFriendship(String animalName, int amount) {
-        return null;
+    public static Result cheatSetFriendship(String username, int level) {
+        Player target = App.currentGame.getPlayerByUsername(username);
+        if(target == null) {
+            return new Result(false, "invalid player username!");
+        }
+
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(App.currentGame.getCurrentPlayer(), target);
+        friendship.setLevel(level);
+
+        return new Result(true, "friendship level set to " + level);
     }
 
     public static Result cheatAddProduct(String productName, int amount) {

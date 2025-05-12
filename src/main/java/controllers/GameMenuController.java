@@ -39,7 +39,7 @@ public class GameMenuController {
         }
         else if(tile.getAreaType().equals(AreaType.FARM)) {
             Farm farm = (Farm) tile.getArea();
-            if(!getCurrentPlayer().equals(farm.getOwner())) {
+            if(!getCurrentPlayer().checkTerritory(farm)) {
                 return new Result(false, "you cannot enter other players' territory.");
             }
         }
@@ -308,7 +308,7 @@ public class GameMenuController {
         }
         else if(tile.getAreaType().equals(AreaType.FARM)) {
             Farm farm = (Farm) tile.getArea();
-            if(!getCurrentPlayer().equals(farm.getOwner())) {
+            if(!getCurrentPlayer().checkTerritory(farm)) {
                 return new Result(false, "your animals cannot enter other players' territory.");
             }
         }
@@ -597,6 +597,31 @@ public class GameMenuController {
 
         return new Result(true, sb.toString());
     }
+    public static Result rateGift(String username, int giftNumber, int rate) {
+        Player sender = App.currentGame.getPlayerByUsername(username);
+        if(sender == null) {
+            return new Result(false, "invalid player username!");
+        }
+        if(getCurrentPlayer().equals(sender)) {
+            return new Result(false, "Oops!");
+        }
+
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(sender, getCurrentPlayer());
+        if(giftNumber <= 0 || giftNumber > friendship.getGifts(sender).size()) {
+            return new Result(false, "invalid gift number!");
+        }
+        else if(!(1 <= rate && rate <= 5)) {
+            return new Result(false, "choose between 1 to 5.");
+        }
+        else if(friendship.getGifts(sender).get(giftNumber - 1).getRate() != 0) {
+            return new Result(false, "you can rate each gift once.");
+        }
+
+        friendship.getGifts(sender).get(giftNumber - 1).setRate(rate);
+        friendship.rateGift(rate);
+        return new Result(true, "you rated " + friendship.getGifts(sender).get(giftNumber - 1).getItem().getName()
+                + " with " + rate + "/5");
+    }
     public static Result giftHistory(String username) {
         Player sender = App.currentGame.getPlayerByUsername(username);
         if(sender == null) {
@@ -713,6 +738,22 @@ public class GameMenuController {
 
         target.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), "Will you Marry me?"));
         return new Result(true, "You're proposal has been sent to " + target.getUsername() + ".");
+    }
+    public static Result respondMarriage(String username, String answer) {
+        Player husband = App.currentGame.getPlayerByUsername(username);
+        if(husband == null) {
+            return new Result(false, "invalid player username!\n");
+        }
+
+        PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(husband, getCurrentPlayer());
+        if(answer.equals("-accept")) {
+            friendship.marry();
+            return new Result(true, "CONGRATS ON YOUR WEDDING!");
+        }
+        else {
+            friendship.reject();
+            return new Result(true, "you broke his heart :(");
+        }
     }
 
     public static Result showCropInfo(String name) {

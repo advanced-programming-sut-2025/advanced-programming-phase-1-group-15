@@ -48,7 +48,7 @@ public class GameMenu implements AppMenu {
             game.nextTurn();
             System.out.println("\"" + game.getCurrentPlayer().getUsername() + "\" go on!");
             for(PlayerFriendship.Message message : game.getCurrentPlayer().getReceivedMessages()) {
-                System.out.println("from " + message.sender().getUsername() + "    \"" + message.message() + "\"");
+                System.out.println("message from " + message.sender().getUsername() + ":  \"" + message.message() + "\"");
             }
             return;
         }
@@ -424,7 +424,8 @@ public class GameMenu implements AppMenu {
                 int giftNumber = Integer.parseInt(matcher.group("giftNumber"));
                 int rate = Integer.parseInt(matcher.group("rate"));
 
-
+                Result result = GameMenuController.rateGift(username, giftNumber, rate);
+                System.out.println(result.message());
             }
             else if(GameMenuCommands.GIFT_HISTORY_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.GIFT_HISTORY_REGEX.matcher(command);
@@ -455,7 +456,26 @@ public class GameMenu implements AppMenu {
 
                 String username = matcher.matches() ? matcher.group("username") : "";
 
+                Result result = GameMenuController.marry(username);
+                System.out.println(result.message());
+            }
+            else if (GameMenuCommands.MARRIAGE_RESPOND_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.MARRIAGE_RESPOND_REGEX.matcher(command);
 
+                String username = matcher.matches() ? matcher.group("username") : "";
+                String answer = matcher.group("answer");
+
+                Result result = GameMenuController.respondMarriage(username, answer);
+                System.out.println(result.message());
+            }
+            else if(CheatCodeCommands.SET_FRIENDSHIP_REGEX.matches(command)) {
+                Matcher matcher = CheatCodeCommands.SET_FRIENDSHIP_REGEX.matcher(command);
+
+                String username = matcher.matches() ? matcher.group("username") : "";
+                int level = Integer.parseInt(matcher.group("level"));
+
+                Result result = CheatCodeController.cheatSetFriendship(username, level);
+                System.out.println(result.message());
             }
 
             else if(GameMenuCommands.CROP_INFO.matches(command)) {

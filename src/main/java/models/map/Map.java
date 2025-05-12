@@ -165,7 +165,7 @@ public class Map extends Area {
                         Tile neighbor = getTile(newPosition);
                         if(neighbor.isWalkable()) {
                             Player owner = neighbor.getArea().getOwner();
-                            if(owner == null || owner.equals(player)) {
+                            if(owner == null || owner.equals(player) || owner.equals(player.getCouple())) {
                                 distance[newY][newX] = distance[current.getY()][current.getX()] + 1;
                                 toBeChecked.add(newPosition);
                             }

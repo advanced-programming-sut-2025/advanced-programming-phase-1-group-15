@@ -63,7 +63,7 @@ public class PlayerFriendship implements TimeObserver {
     public void upgradeXP(int amount) {
         xp += amount;
 
-        if(xp > (level + 1) * 100 && level != 2) {
+        if(xp >= (level + 1) * 100 && level < 2) {
             level++;
             xp = 0;
         }
@@ -113,7 +113,12 @@ public class PlayerFriendship implements TimeObserver {
     public void talk(Player sender, String message) {
         messages.add(new Message(sender, message));
         if(!talkToday) {
-            upgradeXP(20);
+            if(marry) {
+                upgradeXP(50);
+            }
+            else {
+                upgradeXP(20);
+            }
             talkToday = true;
         }
     }
@@ -121,15 +126,28 @@ public class PlayerFriendship implements TimeObserver {
     public void gift(Player sender, BackPackable gift) {
         gifts.putIfAbsent(sender, new ArrayList<>());
         gifts.get(sender).add(new Gift(gift));
-        giftToday = true;
+    }
+    public void rateGift(int rate) {
+        int amount = (rate - 3) * 30 + 15;
+        if(amount > 0) {
+            upgradeXP(amount);
+        }
+        else {
+            downgradeXP(-amount);
+        }
     }
 
     public void hug() {
-        upgradeXP(60);
-        hugToday = true;
+        if(!hugToday) {
+            upgradeXP(60);
+            hugToday = true;
+        }
     }
 
     public void flower() {
+        if(marry) {
+            return;
+        }
         level = 3;
         xp = 0;
     }
@@ -141,6 +159,15 @@ public class PlayerFriendship implements TimeObserver {
         marry = true;
         player1.marry(player2);
         player2.marry(player1);
+
+        int g1 = player1.getGold();
+        int g2 = player2.getGold();
+        player1.setGold(g1 + g2);
+        player2.setGold(g1 + g2);
+    }
+    public void reject() {
+        level = 0;
+        xp = 0;
     }
 
     @Override

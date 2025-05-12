@@ -132,6 +132,13 @@ public class Player extends User implements TimeObserver {
     public void setFarm(Farm farm) {
         this.farm = farm;
     }
+    public boolean checkTerritory(Farm farm) {
+        if(this.farm.equals(farm)) return true;
+        if(couple != null) {
+            return couple.getFarm().equals(farm);
+        }
+        return false;
+    }
 
     public int getMapNumber() {
         return mapNumber;
@@ -145,9 +152,15 @@ public class Player extends User implements TimeObserver {
     }
     public void addGold(int gold) {
         this.gold += gold;
+        if(couple != null) {
+            couple.addGold(gold);
+        }
     }
     public void subtractGold(int gold) {
         this.gold -= gold;
+        if(couple != null) {
+            couple.subtractGold(gold);
+        }
     }
 
     public int getEnergy() {
@@ -376,6 +389,7 @@ public class Player extends User implements TimeObserver {
     @Override
     public void update(DateAndTime dateAndTime) {
         if(dateAndTime.getHour() == 9) {
+            energyConsumed = 0;
             if(fainted) {
                 fainted = false;
                 energy = 150;
