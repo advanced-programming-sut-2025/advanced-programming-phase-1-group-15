@@ -12,6 +12,7 @@ import models.crafting.CraftItem;
 import models.farming.*;
 import models.farming.GeneralPlants.PloughedPlace;
 import models.map.*;
+import models.npcs.NPC;
 import models.relation.PlayerFriendship;
 import models.stores.CarpenterShop;
 import models.stores.MarnieRanch;
@@ -776,19 +777,27 @@ public class GameMenuController {
     }
 
     public static Result meetNPC(String npcName) {
-        // TODO : first Default NPC and then this method
-        return null;
+        Player player = App.currentGame.getCurrentPlayer();
+        NPC npc = new NPC(" "," ",new Tile(0,0));
+        // TODO : get from default ones. first should implement default npc
+        return new Result(true,npc.meet(player));
     }
 
     public static Result giftNPC(String NPCName, String itemName) {
-        return null;
+        Player player = App.currentGame.getCurrentPlayer();
+        NPC npc = new NPC(" "," ",new Tile(0,0));
+        // TODO : first default NPC then complete here to test code
+        return new Result(true,npc.gift(player,getCurrentPlayer().getInventory().getItemByName(itemName)));
     }
+
     public static Result questLists() {
         return null;
     }
+
     public static Result finishQuest(int index) {
         return null;
     }
+
     public static Result ShowRecipe() {
         Player player = getCurrentPlayer();
         for (CraftItem availableCraft : player.getAvailableCrafts()) {
@@ -1078,4 +1087,5 @@ public class GameMenuController {
         player.getArtisanItems().remove(temp);
         return new Result(true , "You receive Artisan item successfully");
     }
+
 }

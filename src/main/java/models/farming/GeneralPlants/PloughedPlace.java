@@ -233,6 +233,10 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         return harvestable;
     }
 
+    public void harvest(){
+        harvestable.harvest(1);
+    }
+
     public List<Integer> getDaysUntilHarvests(List<PloughedPlace> tiles) {
         return tiles.stream()
                 .map(t -> t.getHarvestable() != null

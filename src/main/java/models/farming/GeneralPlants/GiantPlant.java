@@ -56,4 +56,9 @@ public class GiantPlant extends PloughedPlace implements Tilable {
         return min;
     }
 
+    @Override
+    public void harvest(){
+        harvestable.harvest(10);
+    }
+
 }

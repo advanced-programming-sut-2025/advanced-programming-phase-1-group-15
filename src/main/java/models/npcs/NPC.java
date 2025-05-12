@@ -84,20 +84,20 @@ public class NPC {
         return season.displaySeason();
     }
 
-    public void gift(Player player, BackPackable item) {
+    public String gift(Player player, BackPackable item) {
         if (item instanceof Tool) {
-            throw new IllegalArgumentException("Cannot gift tools to NPCs");
+            return "Cannot gift tools to NPCs";
         }
         NPCFriendShip friendShip = friendships.computeIfAbsent(player, k -> new NPCFriendShip(this,player));
-        int points = 0;
         if (!friendShip.hasGiftedToday()) {
             friendShip.addPoints(50);
             friendShip.markGifted();
         }
         if (favourites.contains(item)) {
             friendShip.addPoints(150);
+            return "thank you for your gift! 200 points added to our firendship!";
         }
-        friendShip.addPoints(points);
+        return "thank you for your gift! 50 points added to our firendship!";
     }
 
     public void addQuestTemplate(BackPackable quest,int questAmount, BackPackable reward, int rewardAmount,int level) {

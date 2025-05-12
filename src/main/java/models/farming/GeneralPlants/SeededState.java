@@ -13,9 +13,8 @@ public class SeededState implements PlantState {
         this.tile = tile;
     }
     private int daysNotWatered = 0 ;
-    int daysWatered = 0;
-    int growthLevel = 0;
-
+    private int daysWatered = 0;
+    private int growthLevel = 0;
 
     @Override
     public Result fertilize(Fertilizer fertilizer) {
@@ -26,22 +25,30 @@ public class SeededState implements PlantState {
     public Result water() {
         daysWatered++;
         daysNotWatered = 0;
-        if(daysWatered > tile.getHarvestable().getStages().get(growthLevel)){
+        if(growthLevel <= 3) {
+            if (daysWatered > tile.getHarvestable().getStages().get(growthLevel)) {
+                daysWatered = 0;
+                growthLevel++;
+            }
+        }
+        else{
             daysWatered = 0;
-            growthLevel++;
         }
         return new Result(true,"successfully watered this plant!");
     }
 
     @Override
     public Result harvest() {
+        if(growthLevel > 3 ){
+            tile.harvest();
+        }
         return new Result(false,"you should water this tile first");
     }
 
     @Override
     public Result updateByTime() {
         daysNotWatered++;
-        if(daysNotWatered >= 2){
+        if(daysNotWatered >= 2 && growthLevel > 3){
             tile.unPlough();
         }
         return null;
