@@ -446,6 +446,13 @@ public class GameMenu implements AppMenu {
                 Result result = GameMenuController.flower(username);
                 System.out.println(result.message());
             }
+            else if(GameMenuCommands.MARRIAGE_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.MARRIAGE_REGEX.matcher(command);
+
+                String username = matcher.matches() ? matcher.group("username") : "";
+
+
+            }
 
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);

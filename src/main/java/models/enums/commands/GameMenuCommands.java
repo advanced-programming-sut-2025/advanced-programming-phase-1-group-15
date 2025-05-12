@@ -41,6 +41,7 @@ package models.enums.commands;
         GIFT_RATE_REGEX("^\\s*gift\\s+rate\\s+-u\\s+(?<username>\\S+)\\s+-i\\s+(?<giftNumber>\\d+)\\s+-r\\s+(?<rate>\\d)\\s*$"),
         GIFT_HISTORY_REGEX("^\\s*gift\\s+history\\s+-u\\s+(?<username>\\S+)\\s*$"),
         HUG_REGEX("^\\s*hug\\s+-u\\s+(?<username>\\S+)\\s*$"),
+        MARRIAGE_REGEX("^\\s*ask\\s+marriage\\s+-u\\s+(?<username>\\S+)\\s*$"),
         FLOWER_REGEX("^\\s*flower\\s+-u\\s+(?<username>\\S+)\\s*$"),
         PLANT_SEED("^\\s*plant\\s+-s\\s+(?<seed>.+\\S)\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*$"),
         CROP_INFO("^\\s*craft\\s+info\\s+-n\\s+(?<craftName>.+)\\s*$"),

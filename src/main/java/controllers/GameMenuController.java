@@ -530,16 +530,12 @@ public class GameMenuController {
         PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), target);
         StringBuilder sb = new StringBuilder();
 
-        for(Player sender : friendship.getMessages().keySet()) {
-            if(sender.equals(getCurrentPlayer())) {
-                for(String message : friendship.getMessages().get(sender)) {
-                    sb.append("from: you    message: \"").append(message).append("\"\n");
-                }
+        for(PlayerFriendship.Message message : friendship.getMessages()) {
+            if(message.sender().equals(getCurrentPlayer())) {
+                sb.append("from: you    message: \"").append(message.message()).append("\"\n");
             }
             else {
-                for(String message : friendship.getMessages().get(sender)) {
-                    sb.append("from: ").append(sender.getUsername()).append("    message: \"").append(message).append("\"\n");
-                }
+                sb.append("from: ").append(message.sender().getUsername()).append("    message: \"").append(message.message()).append("\"\n");
             }
         }
 
@@ -585,11 +581,12 @@ public class GameMenuController {
         sb.append("gift list: \n");
         if(friendship.getGifts(sender) != null) {
             for (int i = 0; i < friendship.getGifts(sender).size(); i++) {
-                sb.append((i + 1)).append(".  ").append(friendship.getGifts(sender).get(i).getName());
-                if (friendship.getRate(i) == 0) {
+                PlayerFriendship.Gift gift = friendship.getGifts(sender).get(i);
+                sb.append((i + 1)).append(".  ").append(gift.getItem().getName());
+                if (gift.getRate() == 0) {
                     sb.append("    unrated\n");
                 } else {
-                    sb.append("    rate: ").append(friendship.getRate(i)).append("\n");
+                    sb.append("    rate: ").append(gift.getRate()).append("/5\n");
                 }
             }
         }
@@ -609,13 +606,13 @@ public class GameMenuController {
         StringBuilder sb = new StringBuilder();
         if(friendship.getGifts(sender) != null) {
             sb.append("gifts from ").append(sender.getUsername()).append(": \n");
-            for(int i = 0; i < friendship.getGifts(sender).size(); i++) {
-                sb.append(friendship.getGifts(sender).get(i).getName());
-                if(friendship.getRate(i) == 0) {
+            for(PlayerFriendship.Gift gift : friendship.getGifts(sender)) {
+                sb.append(gift.getItem().getName());
+                if(gift.getRate() == 0) {
                     sb.append("    unrated\n");
                 }
                 else {
-                    sb.append("    rate: ").append(friendship.getRate(i)).append("\n");
+                    sb.append("    rate: ").append(gift.getRate()).append("/5\n");
                 }
             }
         }
@@ -625,13 +622,13 @@ public class GameMenuController {
 
         if(friendship.getGifts(getCurrentPlayer()) != null) {
             sb.append("gifts from you: \n");
-            for(int i = 0; i < friendship.getGifts(getCurrentPlayer()).size(); i++) {
-                sb.append(friendship.getGifts(getCurrentPlayer()).get(i).getName());
-                if(friendship.getRate(i) == 0) {
+            for(PlayerFriendship.Gift gift : friendship.getGifts(getCurrentPlayer())) {
+                sb.append(gift.getItem().getName());
+                if(gift.getRate() == 0) {
                     sb.append("    unrated\n");
                 }
                 else {
-                    sb.append("    rate: ").append(friendship.getRate(i)).append("\n");
+                    sb.append("    rate: ").append(gift.getRate()).append("/5\n");
                 }
             }
         }
@@ -686,6 +683,14 @@ public class GameMenuController {
 
         friendship.flower();
         return new Result(true, "you gave flower to "  + receiver.getUsername() + ". friendship upgraded to level 3.");
+    }
+    public static Result marry(String username) {
+        Player target = App.currentGame.getPlayerByUsername(username);
+        if(target == null) {
+            return new Result(false, "invalid player username!\n");
+        }
+
+        return new Result(true, "You've married " + target.getUsername() + "!");
     }
 
     public static Result showCropInfo(String name) {
