@@ -8,7 +8,9 @@ import models.animals.*;
 import models.artisanry.ArtisanItem;
 import models.artisanry.ArtisanItemType;
 import models.cooking.Food;
+import models.cooking.FoodType;
 import models.crafting.CraftItem;
+import models.crafting.CraftItemType;
 import models.enums.Gender;
 import models.farming.*;
 import models.farming.GeneralPlants.PloughedPlace;
@@ -849,7 +851,25 @@ public class GameMenuController {
     public static Result askMarriage(String username, String ringName) {
         return null;
     }
-
+    public static void AddRecipe(String recipeName) {
+        recipeName = recipeName.trim().toLowerCase().replaceAll("_", " ");
+        Player player = App.currentGame.getCurrentPlayer();
+        for(FoodType foodType : FoodType.values()) {
+            if(foodType.getName().equals(recipeName)) {
+                player.getAvailableFoods().add(new Food(foodType));
+                System.out.println("recipe add to inventory:" + foodType.getName());
+                return;
+            }
+        }
+        for (CraftItemType craftItem : CraftItemType.values()) {
+            if (craftItem.getName().equals(recipeName)){
+                player.getAvailableCrafts().add(new CraftItem(craftItem));
+                System.out.println("recipe add to inventory:" + craftItem.getName());
+                return;
+            }
+        }
+        System.out.println("invalid recipe type");
+    }
     public static Result meetNPC(String npcName) {
         Player player = App.currentGame.getCurrentPlayer();
         NPC npc = DefaultNPCs.getInstance().getNPCByName(npcName);
@@ -921,124 +941,71 @@ public class GameMenuController {
 
         return friendships.get(index-1).finishQuest(quests.get(index-1).getRequest());
     }
-
-    public static Result ShowRecipe() {
+    public static void ShowRecipe() {
         Player player = getCurrentPlayer();
         for (CraftItem availableCraft : player.getAvailableCrafts()) {
             System.out.println(availableCraft.getCraftItemType().recipe);
         }
-        return null;
     }
     public static Result crafting(String craftingName) {
         Player player = App.currentGame.getCurrentPlayer();
-        boolean find = false;
-        for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
-            if (backPackable.getName().equals(craftingName)) {
-                find = true;
-                break;
-            }
-        }
-        if (!find && player.getInventory().getItems().size()==player.getInventory().getCapacity()){
+        craftingName = craftingName.trim().toLowerCase().replaceAll("_", " ");
+        if (player.getInventory().getItems().size()==player.getInventory().getCapacity()){
             return new Result(false , "your inventory is full!");
         }
-        CraftItem crafting = null;
+        CraftItem temp = null;
         for (CraftItem availableCraft : player.getAvailableCrafts()) {
             if(availableCraft.getName().equals(craftingName)){
-                crafting = availableCraft;
-                for (BackPackable backPackable : availableCraft.getCraftItemType().ingredients.keySet()) {
-                    int num = availableCraft.getCraftItemType().ingredients.get(backPackable);
-                    for (BackPackable packable : player.getInventory().getItems().keySet()) {
-                        int number = player.getInventory().getItemCount(packable.getName());
-                        if(packable.getName().equals(backPackable.getName())){
-                            if (number < num) {
-                                return new Result(false , "you dont have enough ingredients!");
-                            }
-                        }
-                    }
+                temp = availableCraft;
+            }
+        }
+        if(temp == null) {
+            return new Result(false, "You can't craft this item");
+        }
+        for (BackPackable backPackable : temp.getCraftItemType().ingredients.keySet()) {
+            boolean find = false;
+            for (BackPackable packable : player.getInventory().getItems().keySet()) {
+                if(packable.getName().equals(backPackable.getName())){
+                    find = true;
+                    int num = player.getInventory().getItemCount(packable.getName());
+                    int number = temp.getCraftItemType().ingredients.get(backPackable);
+                    if(number > num)
+                        return new Result(false , "You don't have enough material");
                 }
                 break;
             }
+            if(!find) {
+                return new Result(false , "You don't have enough material");
+            }
         }
-        if(crafting == null)
-            return new Result(false,"craft item not available");
-        for (BackPackable backPackable : crafting.getCraftItemType().ingredients.keySet()) {
-            int num = player.getInventory().getItems().get(backPackable);
-            for (BackPackable temp : player.getInventory().getItems().keySet()) {
-                int number = player.getInventory().getItems().get(temp);
-                if(backPackable.getName().equals(temp.getName())){
-                    player.getInventory().getItems().put(temp, number-num);
+        for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
+            for (BackPackable packable : temp.getCraftItemType().ingredients.keySet()) {
+                if(packable.getName().equals(backPackable.getName())){
+                    int num = player.getInventory().getItemCount(packable.getName());
+                    int number = temp.getCraftItemType().ingredients.get(backPackable);
+                    if(number < num)
+                        player.getInventory().removeCountFromBackPack(backPackable , number);
                 }
             }
         }
-        player.getInventory().getItems().put(crafting , player.getInventory().getItems().getOrDefault(crafting, 0) + 1);
-        player.setEnergy(player.getEnergy()-2);
+        player.getInventory().getItems().put(temp , player.getInventory().getItems().getOrDefault(temp , 1));
+        player.subtractEnergy(2);
         return new Result(true,"craft make successfully");
     }
-    public static Result PlaceItem(String itemName, String x , String y) {
+    public static Result PlaceItem(String itemName, int x , int y) {
         itemName = itemName.trim().toLowerCase().replaceAll("_"," ");
-        Player player = App.currentGame.getCurrentPlayer();
-        BackPackable item = null;
-        for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
-            if (backPackable.getName().equals(itemName)) {
-                item = backPackable;
-            }
-        }
+        BackPackable item = getCurrentPlayer().getInventory().getItemByName(itemName);
         if(item == null){
             return new Result(false , "you dont have this item");
         }
-        Tile tile = null;
-        switch (x) {
-            case "1":
-                switch (y){
-                    case "1":
-                        tile = new Tile(player.getPosition().x+1 , player.getPosition().y+1);
-                        break;
-                    case "-1":
-                        tile = new Tile(player.getPosition().x+1 , player.getPosition().y-1);
-                        break;
-                    case "0":
-                        tile = new Tile(player.getPosition().x+1 , player.getPosition().y);
-                        break;
-                    default:
-                        return new Result(false , "unknown direction");
-                }
-                break;
-            case "-1":
-                switch (y){
-                    case "1":
-                        tile = new Tile(player.getPosition().x-1 , player.getPosition().y+1);
-                        break;
-                    case "-1":
-                        tile = new Tile(player.getPosition().x-1 , player.getPosition().y-1);
-                        break;
-                    case "0":
-                        tile = new Tile(player.getPosition().x-1 , player.getPosition().y);
-                        break;
-                    default:
-                        return new Result(false , "unknown direction");
-                }
-                break;
-            case "0":
-                switch (y){
-                    case "1":
-                        tile = new Tile(player.getPosition().x , player.getPosition().y+1);
-                        break;
-                    case "-1":
-                        tile = new Tile(player.getPosition().x , player.getPosition().y-1);
-                        break;
-                    case "0":
-                        tile = new Tile(player.getPosition().x , player.getPosition().y);
-                        break;
-                    default:
-                        return new Result(false , "unknown direction");
-                }
-                break;
-            default:
-                return new Result(false , "unknown direction");
+        Tile tile = App.currentGame.getTile(getCurrentPlayer().getPosition().x + x, getCurrentPlayer().getPosition().y + y);
+        if(tile.isEmpty() && (tile.getArea() instanceof Farm)) {
+            tile.setObjectInTile(item);
+            getCurrentPlayer().getInventory().removeCountFromBackPack(item, 1);
+            return new Result(true , "Item placed successfully");
         }
-        player.getInventory().getItems().remove(item);
-        tile.setObjectInTile(item);
-        return new Result(true , "Item placed successfully");
+
+        return new Result(false , "You can't place item in this tile");
     }
     public static Result UseArtisan(String artisanName , String itemName) {
         artisanName = artisanName.trim().toLowerCase().replaceAll("_"," ");
@@ -1200,22 +1167,21 @@ public class GameMenuController {
             return new Result(true , "artisan item made successfully");
         }
         for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
-            if (backPackable.getName().equals(artisanItem.getName())) {
-                if(artisanItem.getArtisanItemType().ingredients.getName().equals(backPackable.getName())) {
+                if(artisanItem.getArtisanItemType().ingredients.getName().trim().toLowerCase().replaceAll("_" , " ").equals(backPackable.getName())) {
                     if (player.getInventory().getItemCount(backPackable.getName())<artisanItem.getArtisanItemType().number) {
                         return new Result(false , "You dont have this material");
                     }
                     Game game = App.currentGame;
                     artisanItem.setHour(game.getDateAndTime().getHour());
                     artisanItem.setDay(game.getDateAndTime().getDay());
-                    break;
+                    player.getArtisanItems().add(artisanItem);
+                    return new Result(true , "artisan item made successfully");
                 }
-            }
         }
-        player.getArtisanItems().add(artisanItem);
-        return new Result(true , "artisan item made successfully");
+        return new Result(false , "You dont have this material");
     }
     public static Result GetArtisan(String artisanName) {
+        artisanName = artisanName.trim().toLowerCase().replaceAll("_" , " ");
         Player player = App.currentGame.getCurrentPlayer();
         ArtisanItem temp = null;
         for (ArtisanItem artisanItem : player.getArtisanItems()) {
@@ -1229,7 +1195,7 @@ public class GameMenuController {
         Game game = App.currentGame;
         if (temp.getArtisanItemType().productionTimeInHours==0){
             if (temp.getDay()>game.getDateAndTime().getDay()) {
-                player.getInventory().getItems().put(temp , 1);
+                player.getInventory().addToBackPack(temp ,1);
                 player.getArtisanItems().remove(temp);
                 return new Result(true , "You receive Artisan item successfully");
             }
@@ -1241,7 +1207,7 @@ public class GameMenuController {
         if(temp.getArtisanItemType().productionTimeInHours>hour) {
             return new Result(false, "Artisan item is not ready");
         }
-        player.getInventory().getItems().put(temp , 1);
+        player.getInventory().addToBackPack(temp ,1);
         player.getArtisanItems().remove(temp);
         return new Result(true , "You receive Artisan item successfully");
     }

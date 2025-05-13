@@ -156,7 +156,13 @@ public enum CraftItemType {
             null,
             0,
             0),
-    MYSTIC_TREE_SEED("5 acorn + 5 maple seed + 5 pine cone + 5 mahogany seed = 1 fish smoker",
+    GRASS_STARTER("1 wood + 1 fiber = 1 grass starter",
+            new HashMap<>(),
+            null,
+            0,
+            0
+    ),
+    MYSTIC_TREE_SEED("5 acorn + 5 maple seed + 5 pine cone + 5 mahogany seed = 1 mystic tree seed",
             new HashMap<>(){{
                 put(new Seed(SeedType.ACORNS),5);
                 put(new Seed(SeedType.MAHOGANY_SEEDS),5);
@@ -178,5 +184,8 @@ public enum CraftItemType {
         this.ability = ability;
         this.levelRequired = levelRequired;
         this.price = price;
+    }
+    public String getName(){
+        return this.name().toLowerCase().replaceAll("_", " ");
     }
 }

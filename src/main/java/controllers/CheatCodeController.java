@@ -100,7 +100,7 @@ public class CheatCodeController {
     }
 
     public static Result cheatAddItem(String itemName , String count) {
-        itemName = itemName.trim();
+        itemName = itemName.trim().toLowerCase().replaceAll("_", " ");
         Player player = App.currentGame.getCurrentPlayer();
         boolean find = false;
         for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
@@ -279,9 +279,9 @@ public class CheatCodeController {
                 return new Result(false , "item not available");
         }
         if(item!=null)
-            player.getInventory().getItems().put(item , player.getInventory().getItems().getOrDefault(item, 0) + 1);
+            player.addToBackPack(item, num);
         if(artisanItem!=null)
-            player.getInventory().getItems().put(artisanItem , player.getInventory().getItems().getOrDefault(artisanItem,0)+1);
+            player.addToBackPack(artisanItem, num);
         return new Result(true , "item added successfully");
     }
 }

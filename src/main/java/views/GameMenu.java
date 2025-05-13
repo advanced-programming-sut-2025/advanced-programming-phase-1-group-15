@@ -155,7 +155,6 @@ public class GameMenu implements AppMenu {
                     }
                 }
             }
-
             else if(GameMenuCommands.SHOW_ENERGY_REGEX.matches(command)) {
                 System.out.println("energy: " + game.getCurrentPlayer().getEnergy());
             }
@@ -492,7 +491,7 @@ public class GameMenu implements AppMenu {
             else if(GameMenuCommands.Recipe.matches(command)) {
                 Matcher matcher = GameMenuCommands.Recipe.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.ShowRecipe());
+                GameMenuController.ShowRecipe();
             }
             else if(GameMenuCommands.Crafting.matches(command)) {
                 Matcher matcher = GameMenuCommands.Crafting.matcher(command);
@@ -508,7 +507,7 @@ public class GameMenu implements AppMenu {
             else if (GameMenuCommands.PlaceItem.matches(command)) {
                 Matcher matcher = GameMenuCommands.PlaceItem.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.PlaceItem(matcher.group("itemName"),matcher.group("x"),matcher.group("y")));
+                System.out.println(GameMenuController.PlaceItem(matcher.group("itemName"), Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))));
             }
             else if(GameMenuCommands.ARTISAN_USE.matches(command)) {
                 Matcher matcher = GameMenuCommands.ARTISAN_USE.matcher(command);
@@ -574,6 +573,19 @@ public class GameMenu implements AppMenu {
                 System.out.println(
                         GameMenuController.finishQuest(idx)
                 );
+            }
+            else if(CheatCodeCommands.ADD_RECIPE.matches(command)) {
+                Matcher matcher = CheatCodeCommands.ADD_RECIPE.matcher(command);
+                matcher.matches();
+                GameMenuController.AddRecipe(matcher.group("name"));
+            }
+            else if(GameMenuCommands.SHOW_COOKING_RECIPES_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.SHOW_COOKING_RECIPES_REGEX.matcher(command);
+                matcher.matches();
+            }
+            else if(GameMenuCommands.PREPARE_FOOD_REGEX.matches(command)) {
+                Matcher matcher = GameMenuCommands.PREPARE_FOOD_REGEX.matcher(command);
+                matcher.matches();
             }
             else {
                 System.out.println("invalid command");

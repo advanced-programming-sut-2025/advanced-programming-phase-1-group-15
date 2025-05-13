@@ -3,6 +3,7 @@ package models.map;
 import models.App;
 import models.animals.Animal;
 import models.animals.Fish;
+import models.crafting.CraftItem;
 import models.farming.GeneralPlants.*;
 import models.farming.Tree;
 import models.foraging.ForagingMineral;
@@ -204,6 +205,9 @@ public class Tile {
             }
             else if(objectInTile instanceof ForagingMineral) {
                 PrintInColor.printInBrightYellow('*');
+            }
+            else if(objectInTile instanceof CraftItem) {
+                PrintInColor.printInBrightGray('I');
             }
             else if(plowed){
                 PloughedPlace p = (PloughedPlace) objectInTile;

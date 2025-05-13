@@ -274,4 +274,8 @@ public enum FoodType implements EdibleEnums {
         this.buff = buff;
         this.price = price;
     }
+
+    public String getName() {
+        return this.name().toLowerCase().replaceAll("_", " ");
+    }
 }
