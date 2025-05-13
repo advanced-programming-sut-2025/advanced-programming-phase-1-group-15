@@ -1,7 +1,6 @@
 package models.stores;
 
 import models.Player;
-import models.foraging.ForagingMineral;
 import models.map.AreaType;
 import models.map.Tile;
 import models.tools.Tool;
@@ -12,6 +11,7 @@ import java.util.HashMap;
 public class MarnieRanch extends Store {
     public static int[] coordinates = {46, 50, 21, 25};
 
+    private GeneralItem hay = new GeneralItem(GeneralItemsType.HAY);
     private HashMap<MarnieRanchItems, Integer> sold = new HashMap<>();
 
     public MarnieRanch(ArrayList<ArrayList<Tile>> storeTiles) {
@@ -45,6 +45,9 @@ public class MarnieRanch extends Store {
 
     @Override
     public boolean checkAvailable(String productName) {
+        if(productName.equalsIgnoreCase(hay.getName())) {
+            return true;
+        }
         for(MarnieRanchItems item : sold.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 return true;
@@ -55,6 +58,9 @@ public class MarnieRanch extends Store {
 
     @Override
     public boolean checkAmount(String productName, int amount) {
+        if(productName.equalsIgnoreCase(hay.getName())) {
+            return true;
+        }
         for(MarnieRanchItems item : sold.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 return amount + sold.get(item) <= item.dailyLimit;
@@ -65,6 +71,28 @@ public class MarnieRanch extends Store {
 
     @Override
     public String sell(Player buyer, String productName, int amount) {
+        if(productName.equalsIgnoreCase("hay")) {
+            if(amount * hay.getPrice() > buyer.getGold()) {
+                return "not enough gold to buy " + amount + " " + hay.getName();
+            }
+
+            buyer.subtractGold(amount * hay.getPrice());
+            buyer.addToBackPack(new GeneralItem(GeneralItemsType.HAY), amount);
+            return "you've bought " + amount + " " + hay.getName() + " with price " + amount * hay.getPrice();
+        }
+        for(MarnieRanchItems item : sold.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                if(amount * item.price > buyer.getGold()) {
+                    return "not enough gold to buy " + amount + " " + item.getName();
+                }
+
+                buyer.subtractGold(amount * item.price);
+                buyer.addToBackPack(Tool.toolFactory(item.toolType), amount);
+                sold.put(item, sold.get(item) + amount);
+                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+            }
+        }
+
         return "";
     }
 
@@ -73,6 +101,8 @@ public class MarnieRanch extends Store {
         StringBuilder display = new StringBuilder();
 
         display.append("Name    Price\n");
+        display.append(hay.getName()).append("\t");
+        display.append(hay.getPrice()).append("\n");
         for(MarnieRanchItems item : MarnieRanchItems.values()) {
             display.append(item.getName()).append("\t");
             display.append(item.price).append("\n");
@@ -99,8 +129,10 @@ public class MarnieRanch extends Store {
         StringBuilder display = new StringBuilder();
 
         display.append("Name    Price\n");
+        display.append(hay.getName()).append("\t");
+        display.append(hay.getPrice()).append("\n");
         for(MarnieRanchItems item : sold.keySet()) {
-            if(sold.get(item) == item.dailyLimit) {
+            if(sold.get(item) < item.dailyLimit) {
                 display.append(item.getName()).append("\t");
                 display.append(item.price).append("\n");
             }

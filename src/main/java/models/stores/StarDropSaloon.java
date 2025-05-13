@@ -1,6 +1,8 @@
 package models.stores;
 
 import models.Player;
+import models.artisanry.ArtisanItem;
+import models.artisanry.ArtisanItemType;
 import models.cooking.Food;
 import models.cooking.FoodType;
 import models.foraging.ForagingSeeds;
@@ -46,6 +48,9 @@ public class StarDropSaloon extends Store {
 
     @Override
     public boolean checkAvailable(String productName) {
+        if(productName.equalsIgnoreCase("beer") || productName.equalsIgnoreCase("coffee")) {
+            return true;
+        }
         for(StarDropSaloonItems item : sold.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 return true;
@@ -56,6 +61,9 @@ public class StarDropSaloon extends Store {
 
     @Override
     public boolean checkAmount(String productName, int amount) {
+        if(productName.equalsIgnoreCase("beer") || productName.equalsIgnoreCase("coffee")) {
+            return true;
+        }
         for(StarDropSaloonItems item : sold.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 return amount + sold.get(item) <= item.dailyLimit;
@@ -66,6 +74,24 @@ public class StarDropSaloon extends Store {
 
     @Override
     public String sell(Player buyer, String productName, int amount) {
+        if(productName.equalsIgnoreCase("beer")) {
+            if(amount * 400 > buyer.getGold()) {
+                return "not enough gold to buy " + amount + " beer";
+            }
+
+            buyer.subtractGold(amount * 400);
+            buyer.addToBackPack(new ArtisanItem(ArtisanItemType.BEER), amount);
+            return "you've bought " + amount + " beer with price " + amount * 400;
+        }
+        if(productName.equalsIgnoreCase("coffee")) {
+            if(amount * 300 > buyer.getGold()) {
+                return "not enough gold to buy " + amount + " beer";
+            }
+
+            buyer.subtractGold(amount * 300);
+            buyer.addToBackPack(new ArtisanItem(ArtisanItemType.COFFEE), amount);
+            return "you've bought " + amount + " coffee with price " + amount * 300;
+        }
         for(StarDropSaloonItems item : sold.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 if(amount * item.price > buyer.getGold()) {
@@ -73,7 +99,12 @@ public class StarDropSaloon extends Store {
                 }
 
                 buyer.subtractGold(amount * item.price);
-                buyer.addToBackPack(new Food((FoodType) item.itemType), amount);
+                if(item.getName().contains("recipe")) {
+                    buyer.addToAvailableFoods(new Food((FoodType) item.itemType));
+                }
+                else {
+                    buyer.addToBackPack(new Food((FoodType) item.itemType), amount);
+                }
                 sold.put(item, sold.get(item) + amount);
                 return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
             }

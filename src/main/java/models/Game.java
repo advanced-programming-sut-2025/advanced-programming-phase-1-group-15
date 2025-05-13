@@ -38,8 +38,10 @@ public class Game implements TimeObserver {
         weather = new WeatherManagement();
 
         dateAndTime.addObserver(weather);
+        for(Player player : players) {
+            dateAndTime.addObserver(player);
+        }
         for(int i = 0; i < players.size() - 1; i++) {
-            dateAndTime.addObserver(players.get(i));
             for (int j = i + 1; j < players.size(); j++) {
                 PlayerFriendship friendship = new PlayerFriendship(players.get(i), players.get(j));
                 dateAndTime.addObserver(friendship);

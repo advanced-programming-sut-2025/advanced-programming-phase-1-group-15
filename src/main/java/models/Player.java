@@ -27,7 +27,7 @@ public class Player extends User implements TimeObserver {
     private int CurrentId;
     private int mapNumber;
 
-    private int gold = 500;
+    private int gold = 1000;
     private int energy = 200;
     private int energyConsumed = 0;
     private boolean unlimitedEnergy = false;
@@ -157,14 +157,14 @@ public class Player extends User implements TimeObserver {
     public void addGold(int gold) {
         this.gold += gold;
         if(couple != null) {
-            couple.addGold(gold);
+            couple.setGold(gold);
         }
     }
 
     public void subtractGold(int gold) {
         this.gold -= gold;
         if(couple != null) {
-            couple.subtractGold(gold);
+            couple.setGold(gold);
         }
     }
 
@@ -282,6 +282,9 @@ public class Player extends User implements TimeObserver {
         return availableCrafts;
     }
 
+    public void addToAvailableFoods(Food food) {
+        availableFoods.add(food);
+    }
     public ArrayList<Food> getAvailableFoods() {
         return availableFoods;
     }

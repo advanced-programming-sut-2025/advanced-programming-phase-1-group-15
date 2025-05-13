@@ -12,6 +12,21 @@ public class Tool implements BackPackable {
     protected boolean upgradable;
     protected ToolLevel toolLevel;
 
+    public static Tool toolFactory(ToolType toolType) {
+        return switch (toolType) {
+            case AXE -> new Axe();
+            case HOE -> new Hoe();
+            case PICKAXE -> new Pickaxe();
+            case SHEAR -> new Shear();
+            case SCYTHE -> new Scythe();
+            case BACKPACK -> new BackPack();
+            case MILK_PAIL -> new MilkPail();
+            case TRASH_CAN -> new TrashCan();
+            case FISHING_POLE -> new FishingPole();
+            case WATERING_CAN -> new WateringCan();
+        };
+    }
+
     public int calculateEnergyConsume(Tile tile, Player user) {
         return 0;
     }

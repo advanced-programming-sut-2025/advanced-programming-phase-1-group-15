@@ -22,9 +22,7 @@ import models.npcs.Quest;
 import models.relation.PlayerFriendship;
 import models.relation.TradeWhitMoney;
 import models.relation.TradeWithItem;
-import models.stores.CarpenterShop;
-import models.stores.MarnieRanch;
-import models.stores.Store;
+import models.stores.*;
 import models.tools.*;
 
 import java.util.ArrayList;
@@ -340,8 +338,13 @@ public class GameMenuController {
         else if(!getCurrentPlayer().getPosition().isAdjacent(animal.getPosition())) {
             return new Result(false, "your position is not adjacent!");
         }
+        GeneralItem Hay = (GeneralItem) getCurrentPlayer().getInventory().getItemByName("hay");
+        if(Hay == null) {
+            return new Result(false, "you don't have any hay.");
+        }
 
         animal.feed();
+        getCurrentPlayer().getInventory().removeCountFromBackPack(Hay, 1);
         return new Result(true, animal.getName() + " fed with hay.");
     }
     public static Result showAnimalProducts() {
@@ -423,12 +426,12 @@ public class GameMenuController {
         Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
 
         if(!playerTile.getAreaType().equals(AreaType.STORE)) {
-            return new Result(false, "You need to be in a store to run this command.");
+            return new Result(false, "You need to be in a store to run this command.\n");
         }
 
         Store store = (Store) playerTile.getArea();
         if(!store.isOpen(App.currentGame.getDateAndTime().getHour())) {
-            return new Result(false, "store is closed now!");
+            return new Result(false, "store is closed now!\n");
         }
 
         return new Result(true, "All Items: \n" + store.displayItems());
@@ -437,12 +440,12 @@ public class GameMenuController {
         Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
 
         if(!playerTile.getAreaType().equals(AreaType.STORE)) {
-            return new Result(false, "You need to be in a store to run this command.");
+            return new Result(false, "You need to be in a store to run this command.\n");
         }
 
         Store store = (Store) playerTile.getArea();
         if(!store.isOpen(App.currentGame.getDateAndTime().getHour())) {
-            return new Result(false, "store is closed now!");
+            return new Result(false, "store is closed now!\n");
         }
 
         return new Result(true, "All Available Items Fot You: \n" + store.displayAvailableItems());

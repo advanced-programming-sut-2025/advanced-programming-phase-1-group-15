@@ -1,6 +1,5 @@
 package models.stores;
 
-import models.cooking.EdibleEnums;
 import models.cooking.FoodType;
 import models.artisanry.ArtisanItemType;
 
@@ -22,12 +21,12 @@ public enum StarDropSaloonItems {
     TRIPLE_SHOT_ESPRESSO_RECIPE(FoodType.TRIPLE_SHOT_ESPRESSO, "A recipe to make Triple Shot Espresso.", 5000, 1),
     COOKIE_RECIPE(FoodType.COOKIE, "A recipe to make Cookie.", 300, 1);
 
-    public final EdibleEnums itemType;
+    public final Object itemType;
     public final String description;
     public final int price;
     public final int dailyLimit;
 
-    StarDropSaloonItems(EdibleEnums itemType, String description, int price, int dailyLimit) {
+    StarDropSaloonItems(Object itemType, String description, int price, int dailyLimit) {
         this.itemType = itemType;
         this.description = description;
         this.price = price;

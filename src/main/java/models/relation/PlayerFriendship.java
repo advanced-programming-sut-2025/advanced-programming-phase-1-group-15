@@ -8,8 +8,6 @@ import models.tools.BackPackable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-
 public class PlayerFriendship implements TimeObserver {
     public record Message(Player sender, String message) {
     }

@@ -1,16 +1,14 @@
 package models.artisanry;
 import models.animals.AnimalProduct;
 import models.animals.AnimalProductType;
-import models.cooking.EdibleEnums;
 import models.crafting.CraftItemType;
 import models.farming.*;
 import models.foraging.*;
 import models.tools.BackPackable;
-import java.util.HashMap;
 
 import static models.foraging.ForagingCropsType.*;
 
-public enum ArtisanItemType implements EdibleEnums  {
+public enum ArtisanItemType {
     HONEY(CraftItemType.BEE_HOUSE,
             "It's a sweet syrup produced by bees.",
             75,

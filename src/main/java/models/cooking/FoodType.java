@@ -10,7 +10,7 @@ import models.tools.BackPackable;
 
 import java.util.HashMap;
 
-public enum FoodType implements EdibleEnums {
+public enum FoodType {
     FRIED_EGG("1 egg = 1 fried egg",
             new HashMap<>(){{
                 put(new AnimalProduct(AnimalProductType.EGG),1);
