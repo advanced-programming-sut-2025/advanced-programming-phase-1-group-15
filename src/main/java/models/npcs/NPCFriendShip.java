@@ -78,19 +78,34 @@ public class NPCFriendShip {
         return sj.toString();
     }
 
-    void finishQuest(BackPackable item) {
+    Result finishQuest(BackPackable item) {
         Quest quest = null;
         for (Quest pq : playerQuests.keySet()) {
             if (pq.request.getName().equals(item.getName())) {
                 if (!playerQuests.get(pq)) {
-                    quest = pq;
-                    break;
+                    if(!pq.doneBySomeone) {
+                        quest = pq;
+                        break;
+                    }
                 }
             }
         }
-        // TODO: check if Player has that Item
+        if(quest == null) {
+            return new Result(false,"no quest for this NPC!");
+        }
+        if(player.getInventory().getItemByName(item.getName()) == null){
+            return new Result(false,"does not have this item );");
+        }
+        if(player.getInventory().getItemCount(item.getName()) < quest.getRequestAmount()){
+            return new Result(false,"you do not have enough number of this item!");
+        }
+        quest.setDoneBySomeone(true);
+
         playerQuests.remove(quest);
         playerQuests.put(quest, false);
+        player.getInventory().removeCountFromBackPack(item,quest.getRequestAmount());
+        player.getInventory().addToBackPack(quest.reward,quest.getRewardAmount()*((getLevel()+1)/2));
+        return new Result(true,"well done! quest done!");
     }
 
 

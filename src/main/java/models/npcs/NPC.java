@@ -2,8 +2,11 @@ package models.npcs;
 
 import models.App;
 import models.Player;
+import models.RandomGenerator;
 import models.map.Tile;
+import models.time.DateAndTime;
 import models.time.Season;
+import models.time.TimeObserver;
 import models.tools.BackPackable;
 import models.tools.Tool;
 import models.weather.WeatherManagement;
@@ -11,11 +14,13 @@ import models.weather.WeatherOption;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
-public class NPC {
+public class NPC implements TimeObserver {
     protected String name;
     protected String job;
     private Tile homeLocation;
+    private int lastDayUpdate = App.currentGame.getDateAndTime().getDay();
 
     protected ArrayList<BackPackable> favourites = new ArrayList<>();
 
@@ -117,5 +122,20 @@ public class NPC {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public void update(DateAndTime dateAndTime) {
+        if(lastDayUpdate != dateAndTime.getDay()){
+            lastDayUpdate = dateAndTime.getDay();
+            for(NPCFriendShip fs : friendships.values()){
+                if(fs.getLevel()>=3){
+                    if(RandomGenerator.getInstance().randomInt(0,21) % 2 == 0){
+                        Random rand = new Random();
+                        fs.player.getInventory().addToBackPack(favourites.get(rand.nextInt(favourites.size())),1);
+                    }
+                }
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ public class Quest {
     BackPackable reward;
     int requestAmount;
     int rewardAmount;
+    boolean doneBySomeone = false;
 
     public Quest(BackPackable request, BackPackable reward, int requestAmount, int rewardAmount) {
         this.request = request;
@@ -31,4 +32,7 @@ public class Quest {
         return requestAmount;
     }
 
+    public void setDoneBySomeone(boolean doneBySomeone) {
+        this.doneBySomeone = doneBySomeone;
+    }
 }
