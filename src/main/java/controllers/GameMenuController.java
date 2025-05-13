@@ -1231,6 +1231,32 @@ public class GameMenuController {
         if (food == null) {
             return new Result(false, "You can't cook this food");
         }
+        FoodType ingredient = null;
+        for(FoodType foodRecipe : FoodType.values()) {
+            if (foodRecipe.getName().equals(Rcipe)) {
+                ingredient = foodRecipe;
+            }
+        }
+        for (BackPackable backPackable : ingredient.ingredients.keySet()) {
+            boolean find = false;
+            for (BackPackable packable : player.getInventory().getItems().keySet()) {
+                if (backPackable.getName().equals(packable.getName())) {
+                    if(player.getInventory().getItemCount(packable.getName())< ingredient.ingredients.get(backPackable)) {
+                        return new Result(false, "You dont have enough material");
+                    }
+                    find = true;
+                    break;
+                }
+            }
+            if (!find) {
+                return new Result(false, "You don't have enough material");
+            }
+        }
+        for (BackPackable backPackable : ingredient.ingredients.keySet()) {
+            int num = ingredient.ingredients.get(backPackable);
+            player.getInventory().removeCountFromBackPack(backPackable , num);
+        }
+        player.getInventory().addToBackPack(food ,1);
         return new Result(true , "You cook this food");
     }
     public static void StartTrade(){

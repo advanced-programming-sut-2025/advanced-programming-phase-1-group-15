@@ -588,6 +588,7 @@ public class GameMenu implements AppMenu {
             else if(GameMenuCommands.PREPARE_FOOD_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.PREPARE_FOOD_REGEX.matcher(command);
                 matcher.matches();
+                System.out.println(GameMenuController.Cooking(matcher.group("foodName")));
             }
             else if(GameMenuCommands.START_TRADE.matches(command)) {
                 Matcher matcher = GameMenuCommands.START_TRADE.matcher(command);
