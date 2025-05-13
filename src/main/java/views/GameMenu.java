@@ -591,6 +591,7 @@ public class GameMenu implements AppMenu {
             else if(GameMenuCommands.START_TRADE.matches(command)) {
                 Matcher matcher = GameMenuCommands.START_TRADE.matcher(command);
                 matcher.matches();
+                GameMenuController.StartTrade();
                 AppView.currentMenu = new TradeMenu();
             }
             else {

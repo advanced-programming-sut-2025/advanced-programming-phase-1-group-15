@@ -20,6 +20,8 @@ import models.npcs.NPC;
 import models.npcs.NPCFriendShip;
 import models.npcs.Quest;
 import models.relation.PlayerFriendship;
+import models.relation.TradeWhitMoney;
+import models.relation.TradeWithItem;
 import models.stores.CarpenterShop;
 import models.stores.MarnieRanch;
 import models.stores.Store;
@@ -1229,6 +1231,48 @@ public class GameMenuController {
         return new Result(true , "You cook this food");
     }
     public static void StartTrade(){
-
+        Player player = App.currentGame.getCurrentPlayer();
+        System.out.println("new trade offers:");
+        for (TradeWhitMoney tradeWhitMoney : player.getTradesWhitMoney()) {
+            if (tradeWhitMoney.getType().equals("offer")){
+                if (tradeWhitMoney.isNewTrade()){
+                    System.out.println("user: "+tradeWhitMoney.getSeller().getUsername()+
+                            " item: "+ tradeWhitMoney.getName() + " amount: "+ tradeWhitMoney.getAmount()+
+                            " price: "+ tradeWhitMoney.getMoney());
+                    tradeWhitMoney.setNewTrade(false);
+                }
+            }
+        }
+        for (TradeWithItem tradeWhitItem : player.getTradesWithItem()) {
+            if (tradeWhitItem.getType().equals("offer")){
+                if (tradeWhitItem.isNewTrade()){
+                    System.out.println("user: "+tradeWhitItem.getSeller().getUsername()+
+                            " item: "+ tradeWhitItem.getName() + " amount: "+ tradeWhitItem.getAmount()+
+                            " target item: "+ tradeWhitItem.getTargetName() + " number of target item: "+ tradeWhitItem.getTargetAmount());
+                    tradeWhitItem.setNewTrade(false);
+                }
+            }
+        }
+        System.out.println("new trade requests:");
+        for (TradeWhitMoney tradeWhitMoney : player.getTradesWhitMoney()) {
+            if (tradeWhitMoney.getType().equals("request")){
+                if (tradeWhitMoney.isNewTrade()){
+                    System.out.println("user: "+tradeWhitMoney.getBuyer().getUsername()+
+                            " item: "+ tradeWhitMoney.getName() + " amount: "+ tradeWhitMoney.getAmount()+
+                            " price: "+ tradeWhitMoney.getMoney());
+                    tradeWhitMoney.setNewTrade(false);
+                }
+            }
+        }
+        for (TradeWithItem tradeWhitItem : player.getTradesWithItem()) {
+            if (tradeWhitItem.getType().equals("request")){
+                if (tradeWhitItem.isNewTrade()){
+                    System.out.println("user: "+tradeWhitItem.getBuyer().getUsername()+
+                            " item: "+ tradeWhitItem.getName() + " amount: "+ tradeWhitItem.getAmount()+
+                            " target item: "+ tradeWhitItem.getTargetName() + " number of target item: "+ tradeWhitItem.getTargetAmount());
+                    tradeWhitItem.setNewTrade(false);
+                }
+            }
+        }
     }
 }
