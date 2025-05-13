@@ -53,6 +53,11 @@ package models.enums.commands;
         PLANT_MIXED_SEED("\\s*plant\\s+mixed\\s+seed\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*"),
         HARVEST("\\s*harvest\\s+-d\\s+(?<dx>-1|0|1)\\s+(?<dy>-1|0|1)\\s*"),
         SHOW_PLANT("\\s*show\\s*plant\\s+-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$"),
+        MEET_NPC("^meet\\s+NPC\\s+(?<npcName>.+)$"),
+        GIFT_NPC("^gift\\s+NPC\\s+(?<npcName>.+?)\\s+-i\\s+(?<itemName>.+)$"),
+        FRIEND_LIST("^friendship\\s+NPC\\s+list$"),
+        QUEST_LIST("^quests\\s+list$"),
+        QUEST_FINISH("^quests\\s+finish\\s+-i\\s+(?<index>\\d+)$"),
         PlaceItem("^\\s*place\\s+item\\s+-n\\s+(?<itemName>.?)\\s+-d\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$");
         private final String regex;
 

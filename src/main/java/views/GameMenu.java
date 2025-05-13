@@ -540,6 +540,41 @@ public class GameMenu implements AppMenu {
                         Integer.parseInt(matcher.group("x")),Integer.parseInt(matcher.group("y"))
                 ));
             }
+            else if (GameMenuCommands.MEET_NPC.matches(command)) {
+                Matcher m = GameMenuCommands.MEET_NPC.matcher(command);
+                m.matches();
+                System.out.println(
+                        GameMenuController.meetNPC(m.group("npcName"))
+                );
+            }
+            else if (GameMenuCommands.GIFT_NPC.matches(command)) {
+                Matcher m = GameMenuCommands.GIFT_NPC.matcher(command);
+                m.matches();
+                System.out.println(
+                        GameMenuController.giftNPC(
+                                m.group("npcName"),
+                                m.group("itemName")
+                        )
+                );
+            }
+            else if (GameMenuCommands.FRIEND_LIST.matches(command)) {
+                System.out.println(
+                        GameMenuController.friendShipNPCList()
+                );
+            }
+            else if (GameMenuCommands.QUEST_LIST.matches(command)) {
+                System.out.println(
+                        GameMenuController.questLists()
+                );
+            }
+            else if (GameMenuCommands.QUEST_FINISH.matches(command)) {
+                Matcher m = GameMenuCommands.QUEST_FINISH.matcher(command);
+                m.matches();
+                int idx = Integer.parseInt(m.group("index"));
+                System.out.println(
+                        GameMenuController.finishQuest(idx)
+                );
+            }
             else {
                 System.out.println("invalid command");
             }
