@@ -58,7 +58,8 @@ package models.enums.commands;
         FRIEND_LIST("^friendship\\s+NPC\\s+list$"),
         QUEST_LIST("^quests\\s+list$"),
         QUEST_FINISH("^quests\\s+finish\\s+-i\\s+(?<index>\\d+)$"),
-        PlaceItem("^place\\s+item\\s+-n\\s+(?<itemName>\\S+)\\s+-d\\s+(?<x>-1|0|1)\\s+(?<y>-1|0|1)$");
+        PlaceItem("^place\\s+item\\s+-n\\s+(?<itemName>\\S+)\\s+-d\\s+(?<x>-1|0|1)\\s+(?<y>-1|0|1)$"),
+        START_TRADE("^start\\s+trade$");
         private final String regex;
 
         GameMenuCommands(String regex) {

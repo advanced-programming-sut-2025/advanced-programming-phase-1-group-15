@@ -21,6 +21,7 @@ public class GameMenu implements AppMenu {
     public GameMenu(Game game) {
         this.game = game;
         game.build();
+        App.currentGameMenu = this;
         System.out.println("\"" + game.getCurrentPlayer().getUsername() + "\" it's your turn to begin the game.");
     }
 
@@ -586,6 +587,11 @@ public class GameMenu implements AppMenu {
             else if(GameMenuCommands.PREPARE_FOOD_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.PREPARE_FOOD_REGEX.matcher(command);
                 matcher.matches();
+            }
+            else if(GameMenuCommands.START_TRADE.matches(command)) {
+                Matcher matcher = GameMenuCommands.START_TRADE.matcher(command);
+                matcher.matches();
+                AppView.currentMenu = new TradeMenu();
             }
             else {
                 System.out.println("invalid command");

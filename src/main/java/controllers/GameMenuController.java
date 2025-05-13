@@ -1211,5 +1211,24 @@ public class GameMenuController {
         player.getArtisanItems().remove(temp);
         return new Result(true , "You receive Artisan item successfully");
     }
+    public static Result Cooking(String Rcipe){
+        Rcipe = Rcipe.trim().toLowerCase().replaceAll("_" , " ");
+        Player player = App.currentGame.getCurrentPlayer();
+        if (player.getInventory().getCapacity() == player.getInventory().getItems().size()) {
+            return new Result(false, "Your inventory is full");
+        }
+        Food food = null;
+        for (Food availableFood : player.getAvailableFoods()) {
+            if (availableFood.getName().equals(Rcipe)) {
+                food = availableFood;
+            }
+        }
+        if (food == null) {
+            return new Result(false, "You can't cook this food");
+        }
+        return new Result(true , "You cook this food");
+    }
+    public static void StartTrade(){
 
+    }
 }

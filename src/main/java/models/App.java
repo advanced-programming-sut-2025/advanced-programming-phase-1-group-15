@@ -1,5 +1,7 @@
 package models;
 
+import views.GameMenu;
+
 import java.util.ArrayList;
 
 public class App {
@@ -12,6 +14,7 @@ public class App {
 
     public static ArrayList<Game> recentGames = new ArrayList<>();
     public static Game currentGame;
+    public static GameMenu currentGameMenu;
 
     public static boolean checkUsernameExists(String username) {
         for (User user : users) {
