@@ -23,6 +23,10 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         this.harvestable = harvestable;
     }
 
+    public Fertilizer getFertilizer() {
+        return fertilizer;
+    }
+
     protected Harvestable harvestable;
 
     protected PlantState currentState = new PloughedState(this);
@@ -264,7 +268,7 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
 //
 //        }
 //        return currentState instanceof WateredState || currentState instanceof RestState;
-        // check , maybe this is a better method ( I dont think so )
+        // check , maybe this is a better method ( I don't think so )
     }
 
     private boolean isFertilized() {
@@ -274,6 +278,10 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
     @Override
     public void update(WeatherOption weatherOption) {
     }
+
+
+
+
 }
 
 

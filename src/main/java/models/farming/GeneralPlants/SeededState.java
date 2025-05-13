@@ -11,6 +11,11 @@ public class SeededState implements PlantState {
 
     public SeededState(PloughedPlace tile) {
         this.tile = tile;
+        if(tile.getFertilizer() != null){
+            if(tile.getFertilizer().equals(Fertilizer.Growth)){
+                daysWatered ++;
+            }
+        }
     }
     private int daysNotWatered = 0 ;
     private int daysWatered = 0;
@@ -48,6 +53,12 @@ public class SeededState implements PlantState {
     @Override
     public Result updateByTime() {
         daysNotWatered++;
+        Fertilizer fertilizer = tile.getFertilizer();
+        if(fertilizer != null){
+            if(fertilizer.equals(Fertilizer.Water)){
+                return null;
+            }
+        }
         if(daysNotWatered >= 2 && growthLevel > 3){
             tile.unPlough();
         }

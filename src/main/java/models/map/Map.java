@@ -4,14 +4,8 @@ import models.App;
 import models.Player;
 import models.stores.*;
 import models.time.DateAndTime;
-import models.time.TimeObserver;
-import models.weather.WeatherObserver;
-import models.weather.WeatherOption;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 
 /*
@@ -105,7 +99,7 @@ public class Map extends Area {
         }
 
         System.out.print(' ');
-        for(int i =0; i < 100; i++){
+        for(int i =0; i < COLS; i++){
             System.out.print('_');
         }
         System.out.println();
@@ -130,44 +124,53 @@ public class Map extends Area {
         return pos.x >= 0 && pos.x < COLS && pos.y >= 0 && pos.y < ROWS;
     }
 
-    public int findShortestPath(Player player, Position start, Position end){
-        if(start.equals(end)) return 0;
+    private  Position[][] nextTileInPath = new Position[ROWS][COLS];
 
-        Tile startTile = getTile(start);
-        Tile endTile = getTile(end);
+    public int findShortestPath(Player player, Position start, Position end) {
+        if (start.equals(end)) return 0;
 
-        final int[] deltaX = {-1,0,1};
-        final int[] deltaY = {1,0,-1};
+        final int[] deltaX = {-1, 0, 1};
+        final int[] deltaY = { 1, 0,-1};
 
         int[][] distance = new int[ROWS][COLS];
         for (int[] row : distance) {
-            Arrays.fill(row, -1); // -1 means unvisited
+            Arrays.fill(row, -1);
         }
-
         distance[start.y][start.x] = 0;
-        Queue<Position> toBeChecked = new LinkedList<>();
-        toBeChecked.add(start);
 
-        while(!toBeChecked.isEmpty()) {
-            Position current = toBeChecked.poll();
-            for(int i = 0; i < 3; i++){
-                for(int j = 0; j < 3; j++){
-                    if(deltaX[i] == 0 && deltaY[j] == 0) continue;
-                    int newX = current.x + deltaX[i];
-                    int newY = current.y + deltaY[j];
-                    Position newPosition = new Position(newX, newY);
+        nextTileInPath = new Position[ROWS][COLS];
 
-                    if(newX == end.x && newY == end.y) {
-                        return distance[current.getY()][current.getX()] + 1;
+        Queue<Position> queue = new LinkedList<>();
+        queue.add(start);
+
+        while (!queue.isEmpty()) {
+            Position current = queue.poll();
+            int currentDistance = distance[current.y][current.x];
+
+            for (int dx : deltaX) {
+                for (int dy : deltaY) {
+                    if (dx == 0 && dy == 0) continue;
+
+                    int nx = current.x + dx, ny = current.y + dy;
+                    Position np = new Position(nx, ny);
+
+                    if (nx == end.x && ny == end.y) {
+                        nextTileInPath[ny][nx] = current;
+                        return currentDistance + 1;
                     }
 
-                    if(isBoundValid(newPosition) && distance[newY][newX] == -1) {
-                        Tile neighbor = getTile(newPosition);
-                        if(neighbor.isWalkable()) {
+                    if (isBoundValid(np) && distance[ny][nx] == -1) {
+                        Tile neighbor = getTile(np);
+                        if (neighbor.isWalkable()) {
                             Player owner = neighbor.getArea().getOwner();
-                            if(owner == null || owner.equals(player) || owner.equals(player.getCouple())) {
-                                distance[newY][newX] = distance[current.getY()][current.getX()] + 1;
-                                toBeChecked.add(newPosition);
+                            if (owner == null
+                                    || owner.equals(player)
+                                    || owner.equals(player.getCouple())) {
+
+                                distance[ny][nx] = currentDistance + 1;
+
+                                nextTileInPath[ny][nx] = current;
+                                queue.add(np);
                             }
                         }
                     }
@@ -176,5 +179,35 @@ public class Map extends Area {
         }
 
         return -1;
+    }
+
+
+    public int calculatePath(Position start, Position end) {
+
+        List<Position> path = new ArrayList<>();
+        Position current = end;
+        while (current != null && !current.equals(start)) {
+            path.add(current);
+            current = nextTileInPath[current.y][current.x];
+        }
+        if (current == null) {
+            return -1;
+        }
+        path.add(start);
+
+        Collections.reverse(path);
+
+        int tiles = path.size() - 1;
+        int corners = 0;
+        for (int i = 2; i < path.size(); i++) {
+            Position p0 = path.get(i - 2);
+            Position p1 = path.get(i - 1);
+            Position p2 = path.get(i);
+            int dx1 = p1.x - p0.x, dy1 = p1.y - p0.y;
+            int dx2 = p2.x - p1.x, dy2 = p2.y - p1.y;
+            if (dx1 != dx2 || dy1 != dy2) corners++;
+        }
+
+        return tiles + 10 * corners;
     }
 }

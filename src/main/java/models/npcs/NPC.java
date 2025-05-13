@@ -114,4 +114,8 @@ public class NPC {
         NPCFriendShip fs = friendships.get(player);
         if (fs != null) fs.finishQuest(item);
     }
+
+    public String getName() {
+        return name;
+    }
 }

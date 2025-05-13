@@ -13,6 +13,7 @@ import models.enums.Gender;
 import models.farming.*;
 import models.farming.GeneralPlants.PloughedPlace;
 import models.map.*;
+import models.npcs.DefaultNPCs;
 import models.npcs.NPC;
 import models.relation.PlayerFriendship;
 import models.stores.CarpenterShop;
@@ -846,15 +847,23 @@ public class GameMenuController {
 
     public static Result meetNPC(String npcName) {
         Player player = App.currentGame.getCurrentPlayer();
-        NPC npc = new NPC(" "," ",new Tile(0,0));
+        //NPC npc = new NPC(" "," ",new Tile(0,0));
+        NPC npc = DefaultNPCs.getInstance().getNPCByName(npcName);
+        if(npc == null){
+            return new Result(false,"invalid name for npc");
+        }
         // TODO : get from default ones. first should implement default npc
         return new Result(true,npc.meet(player));
     }
 
     public static Result giftNPC(String NPCName, String itemName) {
         Player player = App.currentGame.getCurrentPlayer();
-        NPC npc = new NPC(" "," ",new Tile(0,0));
+        //NPC npc = new NPC(" "," ",new Tile(0,0));
         // TODO : first default NPC then complete here to test code
+        NPC npc = DefaultNPCs.getInstance().getNPCByName(NPCName);
+        if(npc == null){
+            return new Result(false,"invalid name for npc");
+        }
         return new Result(true,npc.gift(player,getCurrentPlayer().getInventory().getItemByName(itemName)));
     }
 

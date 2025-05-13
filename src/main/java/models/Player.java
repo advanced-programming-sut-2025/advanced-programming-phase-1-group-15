@@ -112,10 +112,10 @@ public class Player extends User implements TimeObserver {
     public int calculateWalkingEnergy(Position nextPosition) {
         int tilesNeeded = game.getMap().findShortestPath(this, position, nextPosition);
         if(tilesNeeded == -1) return -1;
-        return tilesNeeded / 5 + 1;
+        return game.getMap().calculatePath(position,nextPosition) / 5 + 1;
     }
     public void walk(Position position) {
-        int energyNeeded = calculateWalkingEnergy(position);
+        int energyNeeded = calculateWalkingEnergy(position) - 10;
 
         if(energyNeeded > energy) {
             faint();
@@ -129,9 +129,11 @@ public class Player extends User implements TimeObserver {
     public Farm getFarm() {
         return farm;
     }
+
     public void setFarm(Farm farm) {
         this.farm = farm;
     }
+
     public boolean checkTerritory(Farm farm) {
         if(this.farm.equals(farm)) return true;
         if(couple != null) {
@@ -143,6 +145,7 @@ public class Player extends User implements TimeObserver {
     public int getMapNumber() {
         return mapNumber;
     }
+
     public void setMapNumber(int mapNumber) {
         this.mapNumber = mapNumber;
     }
@@ -150,12 +153,14 @@ public class Player extends User implements TimeObserver {
     public int getGold() {
         return gold;
     }
+
     public void addGold(int gold) {
         this.gold += gold;
         if(couple != null) {
             couple.addGold(gold);
         }
     }
+
     public void subtractGold(int gold) {
         this.gold -= gold;
         if(couple != null) {
