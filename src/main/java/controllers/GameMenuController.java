@@ -15,11 +15,16 @@ import models.farming.GeneralPlants.PloughedPlace;
 import models.map.*;
 import models.npcs.DefaultNPCs;
 import models.npcs.NPC;
+import models.npcs.NPCFriendShip;
+import models.npcs.Quest;
 import models.relation.PlayerFriendship;
 import models.stores.CarpenterShop;
 import models.stores.MarnieRanch;
 import models.stores.Store;
 import models.tools.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameMenuController {
     public static Player getCurrentPlayer() {
@@ -847,19 +852,15 @@ public class GameMenuController {
 
     public static Result meetNPC(String npcName) {
         Player player = App.currentGame.getCurrentPlayer();
-        //NPC npc = new NPC(" "," ",new Tile(0,0));
         NPC npc = DefaultNPCs.getInstance().getNPCByName(npcName);
         if(npc == null){
             return new Result(false,"invalid name for npc");
         }
-        // TODO : get from default ones. first should implement default npc
         return new Result(true,npc.meet(player));
     }
 
     public static Result giftNPC(String NPCName, String itemName) {
         Player player = App.currentGame.getCurrentPlayer();
-        //NPC npc = new NPC(" "," ",new Tile(0,0));
-        // TODO : first default NPC then complete here to test code
         NPC npc = DefaultNPCs.getInstance().getNPCByName(NPCName);
         if(npc == null){
             return new Result(false,"invalid name for npc");
@@ -867,12 +868,58 @@ public class GameMenuController {
         return new Result(true,npc.gift(player,getCurrentPlayer().getInventory().getItemByName(itemName)));
     }
 
+    public static Result friendShipNPCList(){
+        Player player = getCurrentPlayer();
+        StringBuilder answer = new StringBuilder();
+        for(NPC npc : DefaultNPCs.getInstance().defaultOnes().values()){
+            if(npc.getFriendships().getOrDefault(player,null)!=null){
+                NPCFriendShip friendship = npc.getFriendships().get(player);
+                answer.append("npc name: "+npc.getName()+"\n"
+                        +"your points: "+friendship.getPoints()+"\n"+
+                        "your friendship level: "+friendship.getLevel()+"\n"+
+                        "--------------------------------------\n");
+            }
+        }
+        if(answer.isEmpty()) return new Result(false,"you have not started any relationship \n");
+        return new Result(true,answer.toString());
+    }
+
     public static Result questLists() {
-        return null;
+        Player player = App.currentGame.getCurrentPlayer();
+        StringBuilder answer = new StringBuilder();
+        List<Quest> quests = new ArrayList<>();
+        int number = 1;
+        for (NPC npc : DefaultNPCs.getInstance().defaultOnes().values()) {
+            NPCFriendShip fs = npc.getFriendships().get(player);
+            if (fs != null) {
+                for (Quest q : fs.getPlayerQuests().keySet()) {
+                    if (fs.getPlayerQuests().get(q)) {
+                        answer.append(q.getInfo(number));
+                        number ++;
+                    }
+                }
+            }
+        }
+        return new Result(true, answer.toString());
     }
 
     public static Result finishQuest(int index) {
-        return null;
+        Player player = App.currentGame.getCurrentPlayer();
+        ArrayList<Quest> quests = new ArrayList<>();
+        ArrayList<NPCFriendShip> friendships = new ArrayList<>();
+        for(NPC npc : DefaultNPCs.getInstance().defaultOnes().values()){
+            NPCFriendShip fs = npc.getFriendships().get(player);
+            if (fs != null) {
+                for (Quest q : fs.getPlayerQuests().keySet()) {
+                    if (fs.getPlayerQuests().get(q)) {
+                        quests.add(q);
+                        friendships.add(fs);
+                    }
+                }
+            }
+        }
+
+        return friendships.get(index-1).finishQuest(quests.get(index-1).getRequest());
     }
 
     public static Result ShowRecipe() {

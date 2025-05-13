@@ -26,6 +26,10 @@ public class NPC implements TimeObserver {
 
     protected HashMap<Quest,Integer> questTemplates = new HashMap<>();
 
+    public HashMap<Player, NPCFriendShip> getFriendships() {
+        return friendships;
+    }
+
     protected HashMap<Player, NPCFriendShip> friendships = new HashMap<>();
 
     public NPC(String name, String job, Tile homeLocation) {

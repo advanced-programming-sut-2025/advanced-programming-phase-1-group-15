@@ -35,4 +35,17 @@ public class Quest {
     public void setDoneBySomeone(boolean doneBySomeone) {
         this.doneBySomeone = doneBySomeone;
     }
+
+    public String getInfo(int number) {
+        return String.format(
+                "%d : Deliver %d × %s → Reward: %d × %s",
+                number,
+                requestAmount,
+                request.getName(),
+                rewardAmount,
+                reward.getName()
+        );
+    }
+
+
 }

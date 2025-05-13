@@ -16,6 +16,10 @@ public class NPCFriendShip {
         this.player = player;
     }
 
+    public int getPoints() {
+        return points;
+    }
+
     private int points = 0;
     private boolean talkedToday = false;
     private boolean giftedToday = false;
@@ -33,7 +37,7 @@ public class NPCFriendShip {
         activateQuests();
     }
 
-    int getLevel() {
+    public int getLevel() {
         return points / POINTS_PER_LEVEL;
     }
 
@@ -67,6 +71,10 @@ public class NPCFriendShip {
         }
     }
 
+    public HashMap<Quest, Boolean> getPlayerQuests() {
+        return playerQuests;
+    }
+
     String showQuests() {
         StringBuilder sj = new StringBuilder("\n");
         for (Quest pq : playerQuests.keySet()) {
@@ -78,7 +86,7 @@ public class NPCFriendShip {
         return sj.toString();
     }
 
-    Result finishQuest(BackPackable item) {
+    public Result finishQuest(BackPackable item) {
         Quest quest = null;
         for (Quest pq : playerQuests.keySet()) {
             if (pq.request.getName().equals(item.getName())) {
