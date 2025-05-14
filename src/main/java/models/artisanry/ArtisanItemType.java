@@ -208,11 +208,11 @@ public enum ArtisanItemType {
             new ForagingMineral(ForagingMineralType.COAL),1,
             0);
     public final String description;
-    public final int energy;
+    public int energy;
     public final int productionTimeInHours;
     public final BackPackable ingredients;
     public final int number;
-    public final int sellPrice;
+    public int sellPrice;
 
     ArtisanItemType(CraftItemType craftItemType,
                     String description,
@@ -227,5 +227,11 @@ public enum ArtisanItemType {
         this.ingredients = ingridients;
         this.number = number;
         this.sellPrice = sellPrice;
+    }
+    public void setMoney(int money) {
+        this.sellPrice = money;
+    }
+    public void  setEnergy(int energy) {
+        this.energy = energy;
     }
 }

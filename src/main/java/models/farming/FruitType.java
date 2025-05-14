@@ -21,7 +21,7 @@ public enum FruitType implements BackPackable {
 
     @Override
     public String getName() {
-        return "";
+        return this.name().toLowerCase().replaceAll("_", " ");
     }
 
     @Override

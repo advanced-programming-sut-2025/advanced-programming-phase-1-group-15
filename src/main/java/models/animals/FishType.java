@@ -30,4 +30,7 @@ public enum FishType {
         this.season = season;
         this.basePrice = basePrice;
     }
+    public String getName(){
+        return this.name().toLowerCase().replaceAll("_", " ");
+    }
 }

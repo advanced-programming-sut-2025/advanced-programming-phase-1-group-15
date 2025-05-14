@@ -1030,140 +1030,162 @@ public class GameMenuController {
             return new Result(false,"artisan item not available");
         }
         ArtisanItem artisanItem = null;
-        switch (itemName) {
-            case "":
-                if(artisan.getName().equals("bee house"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.HONEY);
-                break;
-            case "milk":
-                if(artisan.getName().equals("cheese press"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.CHEESE_MILK);
-                break;
-            case "large milk":
-                if(artisan.getName().equals("cheese press"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.CHEESE_LARGE_MILK);
-                break;
-            case "goat milk":
-                if(artisan.getName().equals("cheese press"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.GOAT_CHEESE_MILK);
-                break;
-            case "large goat milk":
-                if(artisan.getName().equals("cheese press"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.GOAT_CHEESE_LARGE_MILK);
-                break;
-            case "wheat" :
-                if(artisan.getName().equals("keg"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.BEER);
-                break;
-            case "rice" :
-                if(artisan.getName().equals("keg"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.VINEGAR);
-                break;
-            case "coffee been" :
-                if(artisan.getName().equals("keg"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.COFFEE);
-                break;
-            case "juice" :
-
-                if(artisan.getName().equals("keg"))// must change
-                    artisanItem = new ArtisanItem(ArtisanItemType.JUICE);
-                break;
-            case "honey" :
-                if(artisan.getName().equals("keg"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.MEAD);
-                break;
-            case "hops" :
-                if(artisan.getName().equals("keg"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.PALE_ALE);
-                break;
-            case "wine" :
-                // must change
-                if(artisan.getName().equals("keg"))
+        for(TreeType treeType: TreeType.values()) {
+            FruitType fruitType = treeType.getFruitType();
+            if (fruitType.getName().equals(itemName)) {
+                if(artisanName.equals("keg")){
                     artisanItem = new ArtisanItem(ArtisanItemType.WINE);
-                break;
-            case "common mushroom" :
-                if(artisan.getName().equals("dehydrator"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.DRIED_COMMON_MUSHROOM);
-                break;
-            case "red mushroom" :
-                if(artisan.getName().equals("dehydrator"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.DRIED_RED_MUSHROOM);
-                break;
-            case "purple mushroom" :
-                if(artisan.getName().equals("dehydrator"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.DRIED_PURPLE_MUSHROOM);
-                break;
-            case "dried fruit" :
-                // must change
-                if(artisan.getName().equals("dehydrator"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.DRIED_FRUIT);
-                break;
-            case "grapes" :
-                if(artisan.getName().equals("dehydrator"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.RAISINS);
-                break;
-            case "coal":
-                if(artisan.getName().equals("charcoal klin"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.COAL);
-                break;
-            case "rabbit wool":
-                if(artisan.getName().equals("loom"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.CLOTH_RABBIT);
-                break;
-            case "sheep wool":
-                if(artisan.getName().equals("loom"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.CLOTH_SHEEP);
-                break;
-            case "egg" :
-                if(artisan.getName().equals("mayonnaise machine"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.MAYONNAISE_EGG);
-                break;
-            case "large egg" :
-                if(artisan.getName().equals("mayonnaise machine"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.MAYONNAISE_LARGE_EGG);
-                break;
-            case "dinosaur egg" :
-                if(artisan.getName().equals("mayonnaise machine"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.DINOSAUR_MAYONNAISE);
-                break;
-            case "duck egg" :
-                if(artisan.getName().equals("mayonnaise machine"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.DUCK_MAYONNAISE);
-                break;
-            case "sunflower" :
-                if(artisan.getName().equals("oil maker"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.OIL_SUNFLOWER);
-                break;
-            case "sunflower seed" :
-                if(artisan.getName().equals("oil maker"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.OIL_SUNFLOWER_SEED);
-                break;
-            case "corn" :
-                if(artisan.getName().equals("oil maker"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.OIL_CORN);
-                break;
-            case "truffle"   :
-                if(artisan.getName().equals("oil maker"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.TRUFFLE_OIL);
-                break;
-            case "pickles":
-                if(artisan.getName().equals("preserves jar"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.PICKLES);
-                break;
-            case "jelly" :
-                if(artisan.getName().equals("preserves jar"))
+                    artisanItem.getArtisanItemType().setMoney(treeType.getBasePrice()*3);
+                    artisanItem.getArtisanItemType().setEnergy(treeType.getEnergy()*175/100);
+                }
+                if(artisanName.equals("preserves jar")){
                     artisanItem = new ArtisanItem(ArtisanItemType.JELLY);
+                    artisanItem.getArtisanItemType().setMoney(treeType.getBasePrice()*2 + 50);
+                    artisanItem.getArtisanItemType().setEnergy(treeType.energy*2);
+                }
+                if(artisanName.equals("dehydrator")){
+                    artisanItem = new ArtisanItem(ArtisanItemType.DRIED_FRUIT);
+                    artisanItem.getArtisanItemType().setMoney(treeType.getBasePrice()*75/10 + 25);
+                }
                 break;
-            case "smoked fish":
-                //must be fixed
-                if(artisan.getName().equals("fish smoker"))
-                    artisanItem = new ArtisanItem(ArtisanItemType.SMOKED_FISH);
+            }
+        }
+        for(Crops crop: Crops.values()) {
+            if (crop.getName().equals(artisanName)) {
+                artisanItem = new ArtisanItem(ArtisanItemType.JUICE);
+                artisanItem.getArtisanItemType().setMoney(crop.getBasePrice()*225/100);
+                artisanItem.getArtisanItemType().setEnergy(2*crop.getEnergy());
                 break;
-            case "furnace":
-                artisanItem = new ArtisanItem(ArtisanItemType.METAL_BAR);
-                break;
-            default:
-                return new Result(false , "invalid item type");
+            }
+        }
+        for(FishType fish: FishType.values()) {
+            if(fish.getName().equals(artisanName)) {
+                artisanItem = new ArtisanItem(ArtisanItemType.SMOKED_FISH);
+                artisanItem.getArtisanItemType().setMoney(fish.basePrice*2);
+            }
+        }
+        if(artisanItem == null) {
+            switch (itemName) {
+                case "":
+                    if(artisan.getName().equals("bee house"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.HONEY);
+                    break;
+                case "milk":
+                    if(artisan.getName().equals("cheese press"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.CHEESE_MILK);
+                    break;
+                case "large milk":
+                    if(artisan.getName().equals("cheese press"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.CHEESE_LARGE_MILK);
+                    break;
+                case "goat milk":
+                    if(artisan.getName().equals("cheese press"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.GOAT_CHEESE_MILK);
+                    break;
+                case "large goat milk":
+                    if(artisan.getName().equals("cheese press"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.GOAT_CHEESE_LARGE_MILK);
+                    break;
+                case "wheat" :
+                    if(artisan.getName().equals("keg"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.BEER);
+                    break;
+                case "rice" :
+                    if(artisan.getName().equals("keg"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.VINEGAR);
+                    break;
+                case "coffee been" :
+                    if(artisan.getName().equals("keg"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.COFFEE);
+                    break;
+                case "juice" :
+
+                    if(artisan.getName().equals("keg"))// must change
+                        artisanItem = new ArtisanItem(ArtisanItemType.JUICE);
+                    break;
+                case "honey" :
+                    if(artisan.getName().equals("keg"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.MEAD);
+                    break;
+                case "hops" :
+                    if(artisan.getName().equals("keg"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.PALE_ALE);
+                    break;
+                case "common mushroom" :
+                    if(artisan.getName().equals("dehydrator"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.DRIED_COMMON_MUSHROOM);
+                    break;
+                case "red mushroom" :
+                    if(artisan.getName().equals("dehydrator"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.DRIED_RED_MUSHROOM);
+                    break;
+                case "purple mushroom" :
+                    if(artisan.getName().equals("dehydrator"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.DRIED_PURPLE_MUSHROOM);
+                    break;
+                case "grapes" :
+                    if(artisan.getName().equals("dehydrator"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.RAISINS);
+                    break;
+                case "coal":
+                    if(artisan.getName().equals("charcoal klin"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.COAL);
+                    break;
+                case "rabbit wool":
+                    if(artisan.getName().equals("loom"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.CLOTH_RABBIT);
+                    break;
+                case "sheep wool":
+                    if(artisan.getName().equals("loom"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.CLOTH_SHEEP);
+                    break;
+                case "egg" :
+                    if(artisan.getName().equals("mayonnaise machine"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.MAYONNAISE_EGG);
+                    break;
+                case "large egg" :
+                    if(artisan.getName().equals("mayonnaise machine"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.MAYONNAISE_LARGE_EGG);
+                    break;
+                case "dinosaur egg" :
+                    if(artisan.getName().equals("mayonnaise machine"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.DINOSAUR_MAYONNAISE);
+                    break;
+                case "duck egg" :
+                    if(artisan.getName().equals("mayonnaise machine"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.DUCK_MAYONNAISE);
+                    break;
+                case "sunflower" :
+                    if(artisan.getName().equals("oil maker"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.OIL_SUNFLOWER);
+                    break;
+                case "sunflower seed" :
+                    if(artisan.getName().equals("oil maker"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.OIL_SUNFLOWER_SEED);
+                    break;
+                case "corn" :
+                    if(artisan.getName().equals("oil maker"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.OIL_CORN);
+                    break;
+                case "truffle"   :
+                    if(artisan.getName().equals("oil maker"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.TRUFFLE_OIL);
+                    break;
+                case "pickles":
+                    if(artisan.getName().equals("preserves jar"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.PICKLES);
+                    break;
+                case "smoked fish":
+                    //must be fixed
+                    if(artisan.getName().equals("fish smoker"))
+                        artisanItem = new ArtisanItem(ArtisanItemType.SMOKED_FISH);
+                    break;
+                case "furnace":
+                    artisanItem = new ArtisanItem(ArtisanItemType.METAL_BAR);
+                    break;
+                default:
+                    return new Result(false , "invalid item type");
+            }
         }
         if (artisanItem == null)
             return new Result(false,"You cant make this item whit this material");
