@@ -290,6 +290,7 @@ public class CheatCodeController {
         return new Result(true , "item added successfully");
     }
     public static Result AddItem(String name , int num) {
+        name = name.trim().toLowerCase().replaceAll("_", " ");
         Player player = App.currentGame.getCurrentPlayer();
         for(FruitType fruitType : FruitType.values()) {
             if (fruitType.getName().equals(name)) {
