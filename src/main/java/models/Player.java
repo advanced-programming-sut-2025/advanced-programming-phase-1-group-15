@@ -19,8 +19,7 @@ import models.time.DateAndTime;
 import models.time.TimeObserver;
 import models.tools.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 public class Player extends User implements TimeObserver {
     private Position homePosition;
@@ -430,6 +429,26 @@ public class Player extends User implements TimeObserver {
         }
         if(lastUpdate.getDay() != dateAndTime.getDay()) {
             attackOfCrows();
+            ForagingSeedsAndCrops(); // check if causes bug
         }
     }
+
+    public void thorOnThreeTiles(){
+        List<PloughedPlace> ploughed = new ArrayList<>();
+        // collect all ploughed places on the farm
+        for (List<Tile> row : farm.getTiles()) {
+            for (Tile tile : row) {
+                if (tile.getObjectInTile() instanceof PloughedPlace) {
+                    ploughed.add((PloughedPlace) tile.getObjectInTile());
+                }
+            }
+        }
+        // shuffle and strike up to 3
+        Random random = new Random();
+        Collections.shuffle(ploughed, random );
+        for (int i = 0; i < Math.min(3, ploughed.size()); i++) {
+            ploughed.get(i).thor();
+        }
+    }
+
 }

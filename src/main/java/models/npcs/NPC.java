@@ -85,7 +85,7 @@ public class NPC implements TimeObserver {
 
     private String getTimeOfDayPhrase() {
         int hour = App.currentGame.getDateAndTime().getHour();
-        if (hour < 6) return "night";
+        if (hour < 6)  return "night";
         if (hour < 12) return "morning";
         if (hour < 18) return "afternoon";
         return "day";
@@ -107,9 +107,9 @@ public class NPC implements TimeObserver {
         }
         if (favourites.contains(item)) {
             friendShip.addPoints(150);
-            return "thank you for your gift! 200 points added to our firendship!";
+            return "thank you for your gift! 200 points added to our friendship!";
         }
-        return "thank you for your gift! 50 points added to our firendship!";
+        return "thank you for your gift! 50 points added to our friendship!";
     }
 
     public void addQuestTemplate(BackPackable quest,int questAmount, BackPackable reward, int rewardAmount,int level) {

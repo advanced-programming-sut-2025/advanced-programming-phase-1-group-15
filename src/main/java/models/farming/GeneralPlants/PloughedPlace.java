@@ -290,9 +290,6 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         }
         if(weatherOption.equals(WeatherOption.STORM)){
             currentState.water();
-            if(RandomGenerator.getInstance().randomInt(0,100)>97) {
-                this.thor();
-            }
         }
     }
 
