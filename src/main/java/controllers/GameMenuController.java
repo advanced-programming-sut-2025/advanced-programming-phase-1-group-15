@@ -1262,6 +1262,11 @@ public class GameMenuController {
                 ingredient = foodRecipe;
             }
         }
+        Tile tile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+        if(!(tile.getArea() instanceof House playersHouse)){
+            return new Result(false, "You must be in your house");
+        }
+        Fridge fridge = playersHouse.getFridge();
         for (BackPackable backPackable : ingredient.ingredients.keySet()) {
             boolean find = false;
             for (BackPackable packable : player.getInventory().getItems().keySet()) {
@@ -1273,6 +1278,15 @@ public class GameMenuController {
                     break;
                 }
             }
+            if(!find){
+                BackPackable packable = fridge.getItemByName(backPackable.getName());
+                if(packable!=null){
+                    find = true;
+                }
+                if(fridge.getItemCount(backPackable.getName())<ingredient.ingredients.get(backPackable)) {
+                    return new Result(false, "You dont have enough material");
+                }
+            }
             if (!find) {
                 return new Result(false, "You don't have enough material");
             }
@@ -1280,6 +1294,12 @@ public class GameMenuController {
         for (BackPackable backPackable : ingredient.ingredients.keySet()) {
             int num = ingredient.ingredients.get(backPackable);
             player.getInventory().removeCountFromBackPack(backPackable , num);
+        }
+        for (BackPackable packable : ingredient.ingredients.keySet()) {
+            int num = ingredient.ingredients.get(packable);
+            int number = fridge.getItemCount(packable.getName());
+            fridge.removeFromFridge(packable);
+            fridge.addToFridge(packable , number-num);
         }
         player.getInventory().addToBackPack(food ,1);
         return new Result(true , "You cook this food");
