@@ -1,6 +1,7 @@
 package models.tools;
 
 import models.Player;
+import models.farming.CropProduct;
 
 import java.util.HashMap;
 

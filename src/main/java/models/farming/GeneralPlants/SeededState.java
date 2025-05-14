@@ -1,10 +1,7 @@
 package models.farming.GeneralPlants;
 
 import models.Result;
-import models.farming.CropSeeds;
-import models.farming.Fertilizer;
-import models.farming.SeedType;
-import models.farming.Seedable;
+import models.farming.*;
 
 public class SeededState implements PlantState {
     PloughedPlace tile;
@@ -33,9 +30,19 @@ public class SeededState implements PlantState {
         daysWatered++;
         daysNotWatered = 0;
         if(growthLevel <= 3) {
-            if (daysWatered > tile.getHarvestable().getStages().get(growthLevel)) {
-                daysWatered = 0;
-                growthLevel++;
+            if(tile.getHarvestable() instanceof Crop){
+                Crop crop = (Crop) tile.getHarvestable();
+                if(daysWatered > crop.getStages().get(growthLevel)){
+                    daysWatered = 0;
+                    growthLevel++;
+                }
+            }
+            else if(tile.getHarvestable() instanceof Tree){
+                Tree tree = (Tree) tile.getHarvestable();
+                if(daysWatered > tree.getStages().get(growthLevel)){
+                    daysWatered = 0;
+                    growthLevel++;
+                }
             }
         }
         else{

@@ -19,6 +19,7 @@ public class NPCFriendShip {
     public NPCFriendShip(NPC npc, Player player) {
         this.npc = npc;
         this.player = player;
+        activateQuests();
     }
 
     public int getPoints() {
@@ -46,7 +47,6 @@ public class NPCFriendShip {
             levelOneReachedDate = new DateAndTime();
             levelOneReachedDate.setDay(App.currentGame.getDateAndTime().getDay());
         }
-
 
         activateQuests();
     }
