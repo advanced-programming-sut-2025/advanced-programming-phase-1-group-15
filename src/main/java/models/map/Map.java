@@ -118,6 +118,30 @@ public class Map extends Area {
         System.out.println("quarry #");
         System.out.println("tree T");
         System.out.println("stone O");
+        System.out.println("cow C");
+        System.out.println("goat G");
+        System.out.println("Sheep S");
+        System.out.println("pig P");
+        System.out.println("chicken C");
+        System.out.println("duck D");
+        System.out.println("rabbit R");
+        System.out.println("dinosaur D");
+        System.out.println("fish Ɔ");
+        System.out.println("fridge F");
+        System.out.println("foraging minerals *");
+        System.out.println("craft items I");
+        System.out.println("shipping bin █");
+        System.out.println("ploughed tile X");
+        System.out.println("seeded tile S");
+        System.out.println("watered tile W");
+        System.out.println("rest state R");
+        System.out.println("blacksmith b");
+        System.out.println("joja mart j");
+        System.out.println("pierre general store p");
+        System.out.println("carpenter show c");
+        System.out.println("fish shop f");
+        System.out.println("marnie ranch m");
+        System.out.println("star drop saloon s");
     }
 
     public static boolean isBoundValid(Position pos) {

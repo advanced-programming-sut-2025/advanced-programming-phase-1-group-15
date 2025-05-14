@@ -2,10 +2,7 @@ package models.animals;
 
 import models.map.Area;
 import models.map.AreaType;
-import models.map.Position;
 import models.time.DateAndTime;
-
-import java.util.ArrayList;
 
 public class Barn extends Area {
     private int animalCount = 0;

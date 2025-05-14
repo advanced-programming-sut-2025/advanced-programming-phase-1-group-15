@@ -258,11 +258,13 @@ public class GameMenu implements AppMenu {
                 int y = Integer.parseInt(matcher.group("y"));
 
                 Result result;
-                if(buildingName.equals("barn")) {
-                    result = GameMenuController.buildBarn(x, y);
-                }
-                else {
-                    result = GameMenuController.buildCoop(x, y);
+                switch (buildingName) {
+                    case "barn" -> result = GameMenuController.buildBarn(0, x, y);
+                    case "big barn" -> result = GameMenuController.buildBarn(1, x, y);
+                    case "deluxe barn" -> result = GameMenuController.buildBarn(2, x, y);
+                    case "coop" -> result = GameMenuController.buildCoop(0, x, y);
+                    case "big coop" -> result = GameMenuController.buildCoop(1, x, y);
+                    default -> result = GameMenuController.buildCoop(2, x, y);
                 }
 
                 System.out.println(result.message());

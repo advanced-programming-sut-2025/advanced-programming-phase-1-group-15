@@ -1,5 +1,6 @@
 package models.tools;
 
+import models.Player;
 import models.map.Tilable;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
@@ -7,7 +8,12 @@ import models.time.TimeObserver;
 import java.util.HashMap;
 
 public class ShippingBin implements Tilable, TimeObserver {
+    Player owner;
     private HashMap<BackPackable, Integer> items = new HashMap<>();
+
+    public ShippingBin(Player owner) {
+        this.owner = owner;
+    }
 
     public void addToBin(BackPackable item, int amount) {
         for(BackPackable bp : items.keySet()) {
@@ -27,9 +33,10 @@ public class ShippingBin implements Tilable, TimeObserver {
     @Override
     public void update(DateAndTime dateAndTime) {
         if(dateAndTime.getHour() == 9) {
-            for(BackPackable bp : items.keySet()) {
-
+            for(BackPackable item : items.keySet()) {
+                owner.addGold(item.getPrice());
             }
+            items.clear();
         }
     }
 }

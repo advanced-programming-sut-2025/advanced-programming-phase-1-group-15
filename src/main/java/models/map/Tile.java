@@ -166,7 +166,7 @@ public class Tile {
             PrintInColor.printInGreen('G');
         }
         else if(area.areaType.equals(AreaType.QUARRY)) {
-            PrintInColor.printInBrown('Q');
+            PrintInColor.printInBrown('#');
         }
         else if(area.areaType.equals(AreaType.BARN)) {
             System.out.print('_');

@@ -1,5 +1,6 @@
 package models.stores;
 
+import models.App;
 import models.Player;
 import models.foraging.ForagingMineral;
 import models.foraging.Stone;
@@ -76,8 +77,10 @@ public class CarpenterShop extends Store {
             }
 
             buyer.subtractGold(amount * 250);
-            buyer.getInventory().removeCountFromBackPack(buyer.getInventory().getItemByName("wood"),amount * 150);
-            buyer.getFarm().place(new ShippingBin());
+            buyer.subtractWood(amount * 150);
+            ShippingBin shippingBin = new ShippingBin(buyer);
+            App.currentGame.getDateAndTime().addObserver(shippingBin);
+            buyer.getFarm().place(shippingBin);
             return "you've bought " + amount + " shipping bin with price " + amount * 250;
         }
 

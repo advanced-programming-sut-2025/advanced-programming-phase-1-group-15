@@ -185,15 +185,31 @@ public class GameMenuController {
         return new Result(true, "You ate " + food.getName() + ". " + food.getEnergy() + " energy added.");
     }
 
-    public static Result buildBarn(int x, int y) {
+    public static Result buildBarn(int type, int x, int y) {
         Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
         if(!(playerTile.getArea() instanceof CarpenterShop)) {
             return new Result(false, "you should be inside carpenter shop to run this command.");
         }
 
         boolean buildable = true;
-        for(int row = y; row < y + 2; row++) {
-            for(int col = x; col < x + 2; col++) {
+        int requiredGold; int requiredWood; int requiredStone;
+        int y_scale = 2, x_scale = 2;
+        switch (type) {
+            case 1 -> {
+                requiredGold = 12000; requiredWood = 450; requiredStone = 200;
+                x_scale = 4;
+            }
+            case 2 -> {
+                requiredGold = 25000; requiredWood = 550; requiredStone = 300;
+                y_scale = 3;
+                x_scale = 4;
+            }
+            default -> {
+                requiredGold = 6000; requiredWood = 350; requiredStone = 150;
+            }
+        }
+        for(int row = y; row < y + y_scale; row++) {
+            for(int col = x; col < x + x_scale; col++) {
                 Tile tile = App.currentGame.getTile(col, row);
                 if(!tile.isBuildable()) {
                     buildable = false;
@@ -204,26 +220,57 @@ public class GameMenuController {
         if(!buildable) {
             return new Result(false, "You can't build a barn in this Area.");
         }
+        else if(getCurrentPlayer().getGold() < requiredGold) {
+            return new Result(false, "not enough gold to build.");
+        }
+        else if(getCurrentPlayer().getWood() < requiredWood) {
+            return new Result(false, "not enough wood to build.");
+        }
+        else if(getCurrentPlayer().getStone() < requiredStone) {
+            return new Result(false, "not enough stone to build.");
+        }
         else {
             Barn barn = new Barn();
-            for(int row = y; row < y + 2; row++) {
-                for(int col = x; col < x + 2; col++) {
+            switch (type) {
+                case 1 -> barn.setBig();
+                case 2 -> barn.setDeluxe();
+            }
+            for(int row = y; row < y + y_scale; row++) {
+                for(int col = x; col < x + x_scale; col++) {
                     Tile tile = App.currentGame.getTile(col, row);
                     tile.setArea(barn);
                 }
             }
+            getCurrentPlayer().subtractGold(requiredGold); getCurrentPlayer().subtractWood(requiredWood);
+            getCurrentPlayer().subtractStone(requiredStone);
             return new Result(true, "barn built successfully.");
         }
     }
-    public static Result buildCoop(int x, int y) {
+    public static Result buildCoop(int type, int x, int y) {
         Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
         if(!(playerTile.getArea() instanceof CarpenterShop)) {
             return new Result(false, "you should be inside carpenter shop to run this command.");
         }
 
         boolean buildable = true;
-        for(int row = y; row < y + 2; row++) {
-            for(int col = x; col < x + 2; col++) {
+        int requiredGold; int requiredWood; int requiredStone;
+        int y_scale = 2, x_scale = 2;
+        switch (type) {
+            case 1 -> {
+                requiredGold = 10000; requiredWood = 400; requiredStone = 150;
+                x_scale = 4;
+            }
+            case 2 -> {
+                requiredGold = 20000; requiredWood = 500; requiredStone = 200;
+                y_scale = 3;
+                x_scale = 4;
+            }
+            default -> {
+                requiredGold = 4000; requiredWood = 300; requiredStone = 100;
+            }
+        }
+        for(int row = y; row < y + y_scale; row++) {
+            for(int col = x; col < x + x_scale; col++) {
                 Tile tile = App.currentGame.getTile(col, row);
                 if(!tile.isBuildable()) {
                     buildable = false;
@@ -234,14 +281,29 @@ public class GameMenuController {
         if(!buildable) {
             return new Result(false, "You can't build a coop in this Area.");
         }
+        else if(getCurrentPlayer().getGold() < requiredGold) {
+            return new Result(false, "not enough gold to build.");
+        }
+        else if(getCurrentPlayer().getWood() < requiredWood) {
+            return new Result(false, "not enough wood to build.");
+        }
+        else if(getCurrentPlayer().getStone() < requiredStone) {
+            return new Result(false, "not enough stone to build.");
+        }
         else {
             Coop coop = new Coop();
-            for(int row = y; row < y + 2; row++) {
-                for(int col = x; col < x + 2; col++) {
+            switch (type) {
+                case 1 -> coop.setBig();
+                case 2 -> coop.setDeluxe();
+            }
+            for(int row = y; row < y + y_scale; row++) {
+                for(int col = x; col < x + x_scale; col++) {
                     Tile tile = App.currentGame.getTile(col, row);
                     tile.setArea(coop);
                 }
             }
+            getCurrentPlayer().subtractGold(requiredGold); getCurrentPlayer().subtractWood(requiredWood);
+            getCurrentPlayer().subtractStone(requiredStone);
             return new Result(true, "coop built successfully.");
         }
     }
@@ -272,7 +334,7 @@ public class GameMenuController {
             return new Result(true, "a new " + animal.getAnimalTypeName() + " named " + animal.getName() + " has been bought.");
         }
         else {
-            return new Result(false, "not enough " + animal.getMaintenance() + " space to buy this animal.");
+            return new Result(false, "not enough/not the required level " + animal.getMaintenance() + " space to buy this animal.");
         }
     }
     public static Result petAnimal(String name) {

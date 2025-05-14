@@ -3,6 +3,8 @@ package models.map;
 import models.App;
 import models.Player;
 import models.animals.Animal;
+import models.animals.Barn;
+import models.animals.Coop;
 import models.animals.Maintenance;
 import models.farming.Tree;
 import models.farming.TreeType;
@@ -132,10 +134,28 @@ public class Farm extends Area {
         if(animal.getMaintenance().equals(Maintenance.BARN)) {
             for(ArrayList<Tile> row : tiles) {
                 for(Tile tile : row) {
-                    if(tile.getAreaType().equals(AreaType.BARN) && tile.isEmpty()) {
-                        animal.setPosition(tile.getPosition());
-                        tile.put(animal);
-                        return true;
+                    if((tile.getArea() instanceof Barn barn) && tile.isEmpty()) {
+                        switch(animal.getAnimalType()) {
+                            case COW -> {
+                                animal.setPosition(tile.getPosition());
+                                tile.put(animal);
+                                return true;
+                            }
+                            case GOAT -> {
+                                if(barn.isBig() || barn.isDeluxe()) {
+                                    animal.setPosition(tile.getPosition());
+                                    tile.put(animal);
+                                    return true;
+                                }
+                            }
+                            case SHEEP, PIG -> {
+                                if(barn.isDeluxe()) {
+                                    animal.setPosition(tile.getPosition());
+                                    tile.put(animal);
+                                    return true;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -143,10 +163,28 @@ public class Farm extends Area {
         else {
             for(ArrayList<Tile> row : tiles) {
                 for(Tile tile : row) {
-                    if(tile.getAreaType().equals(AreaType.COOP) && tile.isEmpty()) {
-                        animal.setPosition(tile.getPosition());
-                        tile.put(animal);
-                        return true;
+                    if((tile.getArea() instanceof Coop coop) && tile.isEmpty()) {
+                        switch(animal.getAnimalType()) {
+                            case CHICKEN -> {
+                                animal.setPosition(tile.getPosition());
+                                tile.put(animal);
+                                return true;
+                            }
+                            case DUCK, DINOSAUR -> {
+                                if(coop.isBig() || coop.isDeluxe()) {
+                                    animal.setPosition(tile.getPosition());
+                                    tile.put(animal);
+                                    return true;
+                                }
+                            }
+                            case RABBIT -> {
+                                if(coop.isDeluxe()) {
+                                    animal.setPosition(tile.getPosition());
+                                    tile.put(animal);
+                                    return true;
+                                }
+                            }
+                        }
                     }
                 }
             }

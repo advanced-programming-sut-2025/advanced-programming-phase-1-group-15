@@ -175,6 +175,12 @@ public class Player extends User implements TimeObserver {
             couple.setGold(gold);
         }
     }
+    public void subtractWood(int wood) {
+        inventory.removeCountFromBackPack(inventory.getItemByName("wood"), wood);
+    }
+    public void subtractStone(int stone) {
+        inventory.removeCountFromBackPack(inventory.getItemByName("stone"), stone);
+    }
 
     public int getEnergy() {
         return energy;
