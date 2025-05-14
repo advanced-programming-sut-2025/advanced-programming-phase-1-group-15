@@ -878,7 +878,7 @@ public class GameMenuController {
 
         Tile goalTile = App.currentGame.getMap().getTile(new Position(nextX,nextY));
 
-        if(!goalTile.getObjectInTile().getClass().equals(PloughedPlace.class))
+        if(!(goalTile.getObjectInTile() instanceof PloughedPlace))
             return new Result(false,"you should plough the tile first!");
 
         PloughedPlace tobeSeeded = (PloughedPlace) goalTile.getObjectInTile();
@@ -971,6 +971,8 @@ public class GameMenuController {
         if(npc == null){
             return new Result(false,"invalid name for npc");
         }
+        if(player.getPosition().isAdjacent(npc.getHomeLocation().getPosition()))
+            return new Result(false,"npc is not besides of you");
         return new Result(true,npc.meet(player));
     }
 
@@ -989,7 +991,7 @@ public class GameMenuController {
     public static Result friendShipNPCList(){
         Player player = getCurrentPlayer();
         StringBuilder answer = new StringBuilder();
-        for(NPC npc : DefaultNPCs.getInstance().defaultOnes().values()){
+        for(NPC npc : DefaultNPCs.getInstance().getDefaultOnes().values()){
             if(npc.getFriendships().getOrDefault(player,null)!=null){
                 NPCFriendShip friendship = npc.getFriendships().get(player);
                 answer.append("npc name: "+npc.getName()+"\n"
@@ -1007,7 +1009,7 @@ public class GameMenuController {
         StringBuilder answer = new StringBuilder();
         List<Quest> quests = new ArrayList<>();
         int number = 1;
-        for (NPC npc : DefaultNPCs.getInstance().defaultOnes().values()) {
+        for (NPC npc : DefaultNPCs.getInstance().getDefaultOnes().values()) {
             NPCFriendShip fs = npc.getFriendships().get(player);
             if (fs != null) {
                 for (Quest q : fs.getPlayerQuests().keySet()) {
@@ -1025,7 +1027,7 @@ public class GameMenuController {
         Player player = App.currentGame.getCurrentPlayer();
         ArrayList<Quest> quests = new ArrayList<>();
         ArrayList<NPCFriendShip> friendships = new ArrayList<>();
-        for(NPC npc : DefaultNPCs.getInstance().defaultOnes().values()){
+        for(NPC npc : DefaultNPCs.getInstance().getDefaultOnes().values()){
             NPCFriendShip fs = npc.getFriendships().get(player);
             if (fs != null) {
                 for (Quest q : fs.getPlayerQuests().keySet()) {

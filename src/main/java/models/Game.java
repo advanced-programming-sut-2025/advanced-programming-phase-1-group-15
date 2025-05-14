@@ -3,11 +3,12 @@ package models;
 import models.map.Map;
 import models.map.Position;
 import models.map.Tile;
+import models.npcs.DefaultNPCs;
+import models.npcs.NPC;
 import models.relation.PlayerFriendship;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 import models.weather.WeatherManagement;
-
 import java.util.ArrayList;
 
 
@@ -53,6 +54,11 @@ public class Game implements TimeObserver {
         map = new Map(mapTiles);
         map.build();
         dateAndTime.addObserver(map);
+        for(Player player : players) {
+            for(NPC npc: DefaultNPCs.getInstance().getDefaultOnes().values()) {
+                npc.addToFriendShip(player);
+            }
+        }
     }
 
     public ArrayList<Player> getPlayers() {

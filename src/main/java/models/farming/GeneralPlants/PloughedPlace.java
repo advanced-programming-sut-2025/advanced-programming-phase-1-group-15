@@ -300,6 +300,9 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
     int attackedByCrow = 0;
 
     public void thor(){
+        if(tile.getAreaType() == AreaType.GREENHOUSE){
+            return;
+        }
         this.unPlough();
         if(this.harvestable instanceof Tree){
             tile.setObjectInTile(new ArtisanItem(ArtisanItemType.COAL));

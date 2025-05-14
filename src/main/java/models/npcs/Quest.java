@@ -42,7 +42,7 @@ public class Quest {
 
     public String getInfo(int number) {
         return String.format(
-                "%d : Deliver %d × %s → Reward: %d × %s",
+                "%d : Deliver %d × %s → Reward: %d × %s\n",
                 number,
                 requestAmount,
                 request.getName(),

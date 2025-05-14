@@ -29,6 +29,10 @@ public class NPC implements TimeObserver {
         return friendships;
     }
 
+    public void addToFriendShip(Player player) {
+        friendships.put(player,new NPCFriendShip(this,player));
+    }
+
     protected HashMap<Player, NPCFriendShip> friendships = new HashMap<>();
 
     public NPC(String name, String job, Tile homeLocation) {

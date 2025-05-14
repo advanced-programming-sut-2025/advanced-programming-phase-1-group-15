@@ -20,7 +20,13 @@ public class DefaultNPCs {
     private DefaultNPCs() {
     }
 
-    public HashMap<String, NPC> defaultOnes() {
+    public HashMap<String,NPC> defaultOnes = makeDefaultOnes();
+
+    public HashMap<String, NPC> getDefaultOnes() {
+        return defaultOnes;
+    }
+
+    public HashMap<String, NPC> makeDefaultOnes() {
         Map gameMap = App.currentGame.getMap();
         HashMap<String, NPC> list = new HashMap<>();
 
@@ -78,6 +84,6 @@ public class DefaultNPCs {
     }
 
     public NPC getNPCByName(String name) {
-        return defaultOnes().getOrDefault(name, null);
+        return defaultOnes.getOrDefault(name, null);
     }
 }
