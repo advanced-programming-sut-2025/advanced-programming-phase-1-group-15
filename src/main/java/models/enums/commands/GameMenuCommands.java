@@ -10,6 +10,7 @@ package models.enums.commands;
         MAP_GUIDE_REGEX("^\\s*help\\s+reading\\s+map\\s*$"),
         SHOW_ENERGY_REGEX("^\\s*energy\\s+show\\s*$"),
         SHOW_GOLD_REGEX("^\\s*gold\\s+show\\s*$"),
+        GREEN_HOUSE_BUILD_REGEX("^\\s*greenhouse\\s+build\\s*$"),
         WALK_REGEX("^\\s*walk\\s+-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$"),
         INVENTORY_SHOW_REGEX("^\\s*inventory\\s+show\\s*$"),
         INVENTORY_TRASH_REGEX("^\\s*inventory\\s+trash\\s+-i\\s+(?<itemName>.+?)(\\s+-n\\s+(?<count>\\d+))?\\s*$"),

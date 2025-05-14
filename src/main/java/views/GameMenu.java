@@ -137,6 +137,10 @@ public class GameMenu implements AppMenu {
                 game.getMap().mapGuide();
             }
 
+            else if(GameMenuCommands.GREEN_HOUSE_BUILD_REGEX.matches(command)) {
+                 Result result = GameMenuController.buildGreenHouse();
+                 System.out.println(result.message());
+            }
             else if(GameMenuCommands.WALK_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.WALK_REGEX.matcher(command);
 

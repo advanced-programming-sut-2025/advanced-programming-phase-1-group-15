@@ -32,7 +32,26 @@ public class GameMenuController {
     public static Player getCurrentPlayer() {
         return App.currentGame.getCurrentPlayer();
     }
-    
+
+    public static Result buildGreenHouse() {
+        GreenHouse greenHouse = getCurrentPlayer().getFarm().getGreenHouse();
+
+        if(greenHouse.isBuilt()) {
+            return new Result(false, "you can't build your greenhouse twice");
+        }
+        else if(getCurrentPlayer().getGold() < 1000) {
+            return new Result(false, "not enough gold to build your greenhouse");
+        }
+        else if (getCurrentPlayer().getWood() < 500) {
+            return new Result(false, "not enough wood to build your greenhouse");
+        }
+
+        getCurrentPlayer().subtractGold(1000);
+        getCurrentPlayer().subtractWood(500);
+        greenHouse.buildGreenHouse();
+        return new Result(true, "greenhouse built successfully!");
+    }
+
     public static Result walk(int x, int y) {
         if(x >= Map.COLS || y >= Map.ROWS || x < 0 || y < 0) {
             return new Result(false, "you are out of bounds!");

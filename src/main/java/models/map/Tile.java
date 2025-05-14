@@ -162,8 +162,13 @@ public class Tile {
                 System.out.print('H');
             }
         }
-        else if(area.areaType.equals(AreaType.GREENHOUSE)) {
-            PrintInColor.printInGreen('G');
+        else if(area instanceof GreenHouse greenHouse) {
+            if(greenHouse.isBuilt()) {
+                PrintInColor.printInGreen('G');
+            }
+            else {
+                System.out.print('/');
+            }
         }
         else if(area.areaType.equals(AreaType.QUARRY)) {
             PrintInColor.printInBrown('#');
@@ -196,6 +201,9 @@ public class Tile {
             else if(area instanceof StarDropSaloon) {
                 PrintInColor.printInBrightPurple('s');
             }
+        }
+        else if(area.areaType.equals(AreaType.VILLAGE)) {
+            PrintInColor.printInCyan('⌂');
         }
         else if(objectInTile != null) {
             if(objectInTile instanceof Tree) {

@@ -354,6 +354,13 @@ public class CheatCodeController {
                 return new Result(true , "item add successfully");
             }
         }
+        for(GeneralItemsType generalItemsType : GeneralItemsType.values()) {
+            if (generalItemsType.getName().equals(name)){
+                GeneralItem generalItem = new GeneralItem(generalItemsType);
+                player.addToBackPack(generalItem, num);
+                return new Result(true , "item add successfully");
+            }
+        }
         return new Result(false , "item not found");
     }
 }

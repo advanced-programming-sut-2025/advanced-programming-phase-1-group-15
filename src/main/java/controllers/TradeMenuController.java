@@ -3,6 +3,7 @@ package controllers;
 import models.App;
 import models.Player;
 import models.Result;
+import models.relation.PlayerFriendship;
 import models.relation.Trade;
 import models.relation.TradeWhitMoney;
 import models.relation.TradeWithItem;
@@ -34,6 +35,7 @@ public class TradeMenuController {
             TradeWhitMoney trade = new TradeWhitMoney(id , player , user , "offer" , itemName , Amount , Price);
             user.getTradesWhitMoney().add(trade);
             user.setCurrentId(id+1);
+            user.addMessage(new PlayerFriendship.Message(player, player.getUsername() + " want to trade with you. open trade menu if you want to see their offer/request."));
             return new Result(true, "Your offer sent to user successfully");
         }
         else if (type.trim().equals("request")) {
@@ -43,6 +45,7 @@ public class TradeMenuController {
             TradeWhitMoney trade = new TradeWhitMoney(id , user , player , "request" , itemName , Amount , Price);
             user.getTradesWhitMoney().add(trade);
             user.setCurrentId(id+1);
+            user.addMessage(new PlayerFriendship.Message(player, player.getUsername() + " want to trade with you. open trade menu if you want to see their offer/request."));
             return new Result(true, "Your request sent to user successfully");
         }
         return new Result(false, "invalid type trade");
@@ -72,6 +75,7 @@ public class TradeMenuController {
             TradeWithItem trade = new TradeWithItem(id , player , user , "offer" , itemName , Amount , targetItem.trim() , Number);
             user.getTradesWithItem().add(trade);
             user.setCurrentId(id+1);
+            user.addMessage(new PlayerFriendship.Message(player, player.getUsername() + " want to trade with you. open trade menu if you want to see their offer/request."));
             return new Result(true, "Your offer sent to user successfully");
         }
         else if (type.trim().equals("request")) {
@@ -91,6 +95,7 @@ public class TradeMenuController {
             TradeWithItem trade = new TradeWithItem(id , user , player , "request" , itemName , Amount , targetItem.trim() , Number);
             user.getTradesWithItem().add(trade);
             user.setCurrentId(id+1);
+            user.addMessage(new PlayerFriendship.Message(player, player.getUsername() + " want to trade with you. open trade menu if you want to see their offer/request."));
             return new Result(true, "Your request sent to user successfully");
         }
         return new Result(false, "invalid type trade");

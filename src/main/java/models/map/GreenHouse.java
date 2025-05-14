@@ -12,7 +12,15 @@ public class GreenHouse extends Area {
             {33, 39, 15, 20}   //MAP 4
     };
 
+    private boolean built = false;
     private Position waterBox;
+
+    public boolean isBuilt() {
+        return built;
+    }
+    public void buildGreenHouse() {
+        built = true;
+    }
 
     public GreenHouse(ArrayList<ArrayList<Tile>> greenhouseTiles) {
         this.areaType = AreaType.GREENHOUSE;

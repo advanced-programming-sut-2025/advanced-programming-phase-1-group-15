@@ -55,6 +55,8 @@ public class Map extends Area {
         innerAreas.add(new FishShop(getSubArea(tiles, FishShop.coordinates[0], FishShop.coordinates[1], FishShop.coordinates[2], FishShop.coordinates[3])));
         innerAreas.add(new MarnieRanch(getSubArea(tiles, MarnieRanch.coordinates[0], MarnieRanch.coordinates[1], MarnieRanch.coordinates[2], MarnieRanch.coordinates[3])));
         innerAreas.add(new StarDropSaloon(getSubArea(tiles, StarDropSaloon.coordinates[0], StarDropSaloon.coordinates[1], StarDropSaloon.coordinates[2], StarDropSaloon.coordinates[3])));
+        innerAreas.add(new NPCVillage(getSubArea(tiles, NPCVillage.coordinates[0][0], NPCVillage.coordinates[0][1], NPCVillage.coordinates[0][2],NPCVillage.coordinates[0][3])));
+        innerAreas.add(new NPCVillage(getSubArea(tiles, NPCVillage.coordinates[1][0], NPCVillage.coordinates[1][1], NPCVillage.coordinates[1][2],NPCVillage.coordinates[1][3])));
 
         for(Area innerArea : innerAreas){
             innerArea.setParentArea(this);
