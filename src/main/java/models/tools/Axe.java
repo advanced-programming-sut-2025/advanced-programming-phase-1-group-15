@@ -4,6 +4,8 @@ import models.Player;
 import models.farming.Seed;
 import models.farming.Tree;
 import models.map.Tile;
+import models.stores.GeneralItem;
+import models.stores.GeneralItemsType;
 
 public class Axe extends Tool {
     public Axe() {
@@ -68,6 +70,7 @@ public class Axe extends Tool {
 
 
             user.addToBackPack(s, count);
+            user.addToBackPack(new GeneralItem(GeneralItemsType.WOOD), 100);
             user.upgradeForagingAbility(10);
             tile.empty();
 

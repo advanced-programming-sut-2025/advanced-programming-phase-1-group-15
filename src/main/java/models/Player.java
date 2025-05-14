@@ -155,6 +155,12 @@ public class Player extends User implements TimeObserver {
     public int getGold() {
         return gold;
     }
+    public int getWood() {
+        return inventory.getItemCount("wood");
+    }
+    public int getStone() {
+        return inventory.getItemCount("stone");
+    }
 
     public void addGold(int gold) {
         this.gold += gold;

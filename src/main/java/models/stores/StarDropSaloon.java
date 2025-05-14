@@ -85,7 +85,7 @@ public class StarDropSaloon extends Store {
         }
         if(productName.equalsIgnoreCase("coffee")) {
             if(amount * 300 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " beer";
+                return "not enough gold to buy " + amount + " coffee";
             }
 
             buyer.subtractGold(amount * 300);

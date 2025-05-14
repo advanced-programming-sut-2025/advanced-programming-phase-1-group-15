@@ -14,7 +14,7 @@ public class Stone extends ForagingMineral {
 
     @Override
     public String getDescription() {
-        return "just stone!";
+        return "A common material with many uses in crafting and building.";
     }
 
     @Override

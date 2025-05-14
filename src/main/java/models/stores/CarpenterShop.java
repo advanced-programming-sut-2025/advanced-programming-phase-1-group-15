@@ -2,8 +2,10 @@ package models.stores;
 
 import models.Player;
 import models.foraging.ForagingMineral;
+import models.foraging.Stone;
 import models.map.AreaType;
 import models.map.Tile;
+import models.tools.ShippingBin;
 
 import java.util.ArrayList;
 
@@ -47,6 +49,38 @@ public class CarpenterShop extends Store {
 
     @Override
     public String sell(Player buyer, String productName, int amount) {
+        if(productName.equalsIgnoreCase("wood")) {
+            if(amount * 10 > buyer.getGold()) {
+                return "not enough gold to buy " + amount + " wood";
+            }
+
+            buyer.subtractGold(amount * 10);
+            buyer.addToBackPack(new GeneralItem(GeneralItemsType.WOOD), amount);
+            return "you've bought " + amount + " wood with price " + amount * 10;
+        }
+        else if(productName.equalsIgnoreCase("stone")) {
+            if(amount * 20 > buyer.getGold()) {
+                return "not enough gold to buy " + amount + " stone";
+            }
+
+            buyer.subtractGold(amount * 20);
+            buyer.addToBackPack(new Stone(), amount);
+            return "you've bought " + amount + " stone with price " + amount * 20;
+        }
+        else if(productName.equalsIgnoreCase("shipping bin")) {
+            if(amount * 250 > buyer.getGold()) {
+                return "not enough gold to buy " + amount + " shipping bin";
+            }
+            if(amount * 150 > buyer.getWood()) {
+                return "not enough wood to buy " + amount + " shipping bin";
+            }
+
+            buyer.subtractGold(amount * 250);
+            buyer.getInventory().removeCountFromBackPack(buyer.getInventory().getItemByName("wood"),amount * 150);
+            buyer.getFarm().place(new ShippingBin());
+            return "you've bought " + amount + " shipping bin with price " + amount * 250;
+        }
+
         return "";
     }
 

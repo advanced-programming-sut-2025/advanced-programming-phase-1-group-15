@@ -10,6 +10,7 @@ import models.foraging.ForagingMineral;
 import models.foraging.Stone;
 import models.stores.*;
 import models.tools.Fridge;
+import models.tools.ShippingBin;
 import models.weather.WeatherManagement;
 
 import java.util.ArrayList;
@@ -208,6 +209,9 @@ public class Tile {
             }
             else if(objectInTile instanceof CraftItem) {
                 PrintInColor.printInBrightGray('I');
+            }
+            else if(objectInTile instanceof ShippingBin) {
+                PrintInColor.printInPurple('█');
             }
             else if(plowed){
                 PloughedPlace p = (PloughedPlace) objectInTile;

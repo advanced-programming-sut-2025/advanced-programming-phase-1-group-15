@@ -2,6 +2,7 @@ package models.tools;
 
 import models.Player;
 import models.foraging.ForagingMineral;
+import models.foraging.Stone;
 import models.map.Tile;
 
 public class Pickaxe extends Tool {
@@ -67,6 +68,9 @@ public class Pickaxe extends Tool {
             }
             else if(tile.getObjectInTile() instanceof ForagingMineral fm) {
                 int count = user.getMiningLevel() >= 2 ? 2 : 1;
+                if(fm instanceof Stone) {
+                    count = user.getMiningLevel() >= 2 ? 100 : 50;
+                }
 
                 user.addToBackPack(fm, count);
                 user.upgradeMiningAbility(10);

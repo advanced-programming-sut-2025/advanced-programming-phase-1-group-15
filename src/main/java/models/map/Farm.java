@@ -155,6 +155,19 @@ public class Farm extends Area {
         return false;
     }
 
+    public boolean place(Tilable tilable) {
+        for(ArrayList<Tile> row : tiles) {
+            for(Tile tile : row) {
+                if(tile.getAreaType().equals(AreaType.FARM) && tile.isEmpty()) {
+                    tile.put(tilable);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public void update(DateAndTime dateAndTime) {
         if(dateAndTime.getDay() == 1 || dateAndTime.getDay() == 14) {

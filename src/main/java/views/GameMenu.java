@@ -51,10 +51,11 @@ public class GameMenu implements AppMenu {
             for(PlayerFriendship.Message message : game.getCurrentPlayer().getReceivedMessages()) {
                 System.out.println("message from " + message.sender().getUsername() + ":  \"" + message.message() + "\"");
             }
+            game.getCurrentPlayer().getReceivedMessages().clear();
             return;
         }
 
-        if(!currentPlayer.isLocked()) {
+        if(!currentPlayer.isLocked() && !currentPlayer.isFainted()) {
             if(Commands.checkShowCurrentMenuRegex(command)) {
                 System.out.println("game menu");
             }
@@ -604,6 +605,9 @@ public class GameMenu implements AppMenu {
             else {
                 System.out.println("invalid command");
             }
+        }
+        else if(game.getCurrentPlayer().isFainted()){
+            game.nextTurn();
         }
         else {
             System.out.println("You are locked! (maximum energy per turn consumed). Use \"next turn\" command to continue.");
