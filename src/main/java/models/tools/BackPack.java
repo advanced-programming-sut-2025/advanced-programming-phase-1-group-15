@@ -83,7 +83,7 @@ public class BackPack extends Tool {
     }
 
     @Override
-    public void upgrade(Player user) {
+    public String upgrade(Player user) {
         switch (toolLevel) {
             case NORMAL -> {
                 capacity = 24;
@@ -94,6 +94,7 @@ public class BackPack extends Tool {
                 toolLevel = ToolLevel.DELUXE;
             }
         }
+        return "you can't upgrade this tool.";
     }
 
     public String display() {
@@ -117,7 +118,7 @@ public class BackPack extends Tool {
 
         for(BackPackable item : items.keySet()) {
             if(item instanceof Tool tool) {
-                display.append(tool.getName()).append("    Level: ").append(toolLevel).append("\n");
+                display.append(tool.getName()).append("    Level: ").append(tool.toolLevel).append("\n");
             }
         }
 

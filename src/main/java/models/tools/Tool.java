@@ -35,8 +35,8 @@ public class Tool implements BackPackable {
         return null;
     }
 
-    public void upgrade(Player user) {
-
+    public String upgrade(Player user) {
+        return "";
     }
 
     @Override

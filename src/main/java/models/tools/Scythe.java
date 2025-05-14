@@ -19,8 +19,8 @@ public class Scythe extends Tool {
     }
 
     @Override
-    public void upgrade(Player user) {
-
+    public String upgrade(Player user) {
+        return "you can't upgrade this tool.";
     }
 
     @Override

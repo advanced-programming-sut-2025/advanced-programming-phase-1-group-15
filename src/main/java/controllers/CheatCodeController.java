@@ -354,6 +354,6 @@ public class CheatCodeController {
                 return new Result(true , "item add successfully");
             }
         }
-        return new Result(false , "item not find");
+        return new Result(false , "item not found");
     }
 }

@@ -127,8 +127,7 @@ public class GameMenuController {
             return new Result(false, "You don't have that tool.");
         }
 
-        tool.upgrade(getCurrentPlayer());
-        return new Result(true, "Tool upgraded successfully.");
+        return new Result(true, tool.upgrade(getCurrentPlayer()));
     }
     public static Result useTool(int dx, int dy) {
         Tool tool = getCurrentPlayer().getCurrentTool();

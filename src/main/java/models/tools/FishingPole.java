@@ -28,12 +28,13 @@ public class FishingPole extends Tool {
     }
 
     @Override
-    public void upgrade(Player user) {
+    public String upgrade(Player user) {
         switch (toolLevel) {
             case TRAINING -> toolLevel = ToolLevel.BAMBOO;
             case BAMBOO -> toolLevel = ToolLevel.FIBERGLASS;
             case FIBERGLASS -> toolLevel = ToolLevel.IRIDIUM;
         }
+        return "you can't upgrade this tool.";
     }
 
     public String use(Lake lake, Player user, WeatherOption weather) {

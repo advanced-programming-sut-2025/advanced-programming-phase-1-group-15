@@ -26,7 +26,7 @@ public class Axe extends Tool {
         if(successfulAttempt(tile)) {
             return switch (toolLevel) {
                 case NORMAL -> user.getForagingLevel() == 4 ? 4 : 5;
-                case COOPER -> user.getForagingLevel() == 4 ? 3 : 4;
+                case COPPER -> user.getForagingLevel() == 4 ? 3 : 4;
                 case IRON -> user.getForagingLevel() == 4 ? 2 : 3;
                 case GOLD -> user.getForagingLevel() == 4 ? 1 : 2;
                 case IRIDIUM -> user.getForagingLevel() == 4 ? 0 : 1;
@@ -36,7 +36,7 @@ public class Axe extends Tool {
         else {
             return switch (toolLevel) {
                 case NORMAL -> user.getForagingLevel() == 4 ? 3 : 4;
-                case COOPER -> user.getForagingLevel() == 4 ? 2 : 3;
+                case COPPER -> user.getForagingLevel() == 4 ? 2 : 3;
                 case IRON -> user.getForagingLevel() == 4 ? 1 : 2;
                 case GOLD -> user.getForagingLevel() == 4 ? 0 : 1;
                 case IRIDIUM -> 0;
@@ -46,13 +46,43 @@ public class Axe extends Tool {
     }
 
     @Override
-    public void upgrade(Player user) {
+    public String upgrade(Player user) {
         switch (toolLevel) {
-            case NORMAL -> toolLevel = ToolLevel.COOPER;
-            case COOPER -> toolLevel = ToolLevel.IRON;
-            case IRON -> toolLevel = ToolLevel.GOLD;
-            case GOLD -> toolLevel = ToolLevel.IRIDIUM;
+            case NORMAL -> {
+                if(user.getInventory().getItemCount("copper") < 5) {
+                    return "not enough cooper!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("copper"), 5);
+                toolLevel = ToolLevel.COPPER;
+                return "your axe upgraded to COPPER!";
+            }
+            case COPPER -> {
+                if(user.getInventory().getItemCount("iron") < 5) {
+                    return "not enough iron!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("iron"), 5);
+                toolLevel = ToolLevel.IRON;
+                return "your axe upgraded to IRON!";
+            }
+            case IRON -> {
+                if(user.getInventory().getItemCount("gold") < 5) {
+                    return "not enough gold!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("gold"), 5);
+                toolLevel = ToolLevel.GOLD;
+                return "your axe upgraded to GOLD!";
+            }
+            case GOLD -> {
+                if(user.getInventory().getItemCount("iridium") < 5) {
+                    return "not enough iridium!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("iridium"), 5);
+                toolLevel = ToolLevel.IRIDIUM;
+                return "your axe upgraded to IRIDIUM!";
+            }
         }
+
+        return "you can't upgrade this tool.";
     }
 
     @Override

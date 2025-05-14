@@ -13,25 +13,46 @@ public class TrashCan extends Tool {
     }
 
     @Override
-    public void upgrade(Player user) {
+    public String upgrade(Player user) {
         switch (toolLevel) {
             case NORMAL -> {
+                if(user.getInventory().getItemCount("copper") < 5) {
+                    return "not enough cooper!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("copper"), 5);
+                toolLevel = ToolLevel.COPPER;
                 returnPercentage = 0.15;
-                toolLevel = ToolLevel.COOPER;
+                return "your trash can upgraded to COPPER!";
             }
-            case COOPER -> {
-                returnPercentage = 0.3;
+            case COPPER -> {
+                if(user.getInventory().getItemCount("iron") < 5) {
+                    return "not enough iron!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("iron"), 5);
                 toolLevel = ToolLevel.IRON;
+                returnPercentage = 0.3;
+                return "your trash can upgraded to IRON!";
             }
             case IRON -> {
-                returnPercentage = 0.45;
+                if(user.getInventory().getItemCount("gold") < 5) {
+                    return "not enough gold!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("gold"), 5);
                 toolLevel = ToolLevel.GOLD;
+                returnPercentage = 0.45;
+                return "your trash can upgraded to GOLD!";
             }
             case GOLD -> {
-                returnPercentage = 0.6;
+                if(user.getInventory().getItemCount("iridium") < 5) {
+                    return "not enough iridium!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("iridium"), 5);
                 toolLevel = ToolLevel.IRIDIUM;
+                returnPercentage = 0.6;
+                return "your trash can upgraded to IRIDIUM!";
             }
         }
+        return "you can't upgrade this tool.";
     }
 
     public int use(BackPackable item, int amount, Player player) {

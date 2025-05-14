@@ -15,7 +15,7 @@ public class Hoe extends Tool {
     public int calculateEnergyConsume(Tile tile, Player user) {
         return switch (toolLevel) {
             case NORMAL -> 5;
-            case COOPER -> 4;
+            case COPPER -> 4;
             case IRON -> 3;
             case GOLD -> 2;
             case IRIDIUM -> 1;
@@ -24,13 +24,43 @@ public class Hoe extends Tool {
     }
 
     @Override
-    public void upgrade(Player user) {
+    public String upgrade(Player user) {
         switch (toolLevel) {
-            case NORMAL -> toolLevel = ToolLevel.COOPER;
-            case COOPER -> toolLevel = ToolLevel.IRON;
-            case IRON -> toolLevel = ToolLevel.GOLD;
-            case GOLD -> toolLevel = ToolLevel.IRIDIUM;
+            case NORMAL -> {
+                if(user.getInventory().getItemCount("copper") < 5) {
+                    return "not enough cooper!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("copper"), 5);
+                toolLevel = ToolLevel.COPPER;
+                return "your hoe upgraded to COPPER!";
+            }
+            case COPPER -> {
+                if(user.getInventory().getItemCount("iron") < 5) {
+                    return "not enough iron!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("iron"), 5);
+                toolLevel = ToolLevel.IRON;
+                return "your hoe upgraded to IRON!";
+            }
+            case IRON -> {
+                if(user.getInventory().getItemCount("gold") < 5) {
+                    return "not enough gold!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("gold"), 5);
+                toolLevel = ToolLevel.GOLD;
+                return "your hoe upgraded to GOLD!";
+            }
+            case GOLD -> {
+                if(user.getInventory().getItemCount("iridium") < 5) {
+                    return "not enough iridium!";
+                }
+                user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("iridium"), 5);
+                toolLevel = ToolLevel.IRIDIUM;
+                return "your hoe upgraded to IRIDIUM!";
+            }
         }
+
+        return "you can't upgrade this tool.";
     }
 
     @Override
