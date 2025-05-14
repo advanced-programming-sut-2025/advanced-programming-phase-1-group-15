@@ -24,7 +24,7 @@ public class Hoe extends Tool {
     }
 
     @Override
-    public void upgrade() {
+    public void upgrade(Player user) {
         switch (toolLevel) {
             case NORMAL -> toolLevel = ToolLevel.COOPER;
             case COOPER -> toolLevel = ToolLevel.IRON;

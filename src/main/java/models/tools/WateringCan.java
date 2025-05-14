@@ -1,12 +1,8 @@
 package models.tools;
 
 import models.Player;
-import models.foraging.ForagingMineral;
-import models.map.Area;
 import models.map.AreaType;
 import models.map.Tile;
-
-import java.awt.image.AreaAveragingScaleFilter;
 
 public class WateringCan extends Tool {
     private int waterAmount;
@@ -50,7 +46,7 @@ public class WateringCan extends Tool {
     }
 
     @Override
-    public void upgrade() {
+    public void upgrade(Player user) {
         switch (toolLevel) {
             case NORMAL -> {
                 capacity = 55;

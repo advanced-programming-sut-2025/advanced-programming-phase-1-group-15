@@ -1,5 +1,7 @@
 package models.tools;
 
+import models.Player;
+
 import java.util.HashMap;
 
 public class BackPack extends Tool {
@@ -81,7 +83,7 @@ public class BackPack extends Tool {
     }
 
     @Override
-    public void upgrade() {
+    public void upgrade(Player user) {
         switch (toolLevel) {
             case NORMAL -> {
                 capacity = 24;

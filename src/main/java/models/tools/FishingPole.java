@@ -28,7 +28,7 @@ public class FishingPole extends Tool {
     }
 
     @Override
-    public void upgrade() {
+    public void upgrade(Player user) {
         switch (toolLevel) {
             case TRAINING -> toolLevel = ToolLevel.BAMBOO;
             case BAMBOO -> toolLevel = ToolLevel.FIBERGLASS;

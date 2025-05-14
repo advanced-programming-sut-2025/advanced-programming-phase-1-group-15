@@ -35,7 +35,7 @@ public class Tool implements BackPackable {
         return null;
     }
 
-    public void upgrade() {
+    public void upgrade(Player user) {
 
     }
 

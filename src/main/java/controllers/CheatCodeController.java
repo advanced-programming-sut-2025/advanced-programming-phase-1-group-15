@@ -17,6 +17,8 @@ import models.foraging.*;
 import models.map.Position;
 import models.map.Tile;
 import models.relation.PlayerFriendship;
+import models.stores.GeneralItem;
+import models.stores.GeneralItemsType;
 import models.tools.BackPackable;
 import models.weather.WeatherOption;
 
@@ -80,6 +82,16 @@ public class CheatCodeController {
         App.currentGame.getCurrentPlayer().addGold(amount);
 
         return new Result(true, "gold: " + App.currentGame.getCurrentPlayer().getGold());
+    }
+    public static Result cheatAddWood(int amount) {
+        App.currentGame.getCurrentPlayer().getInventory().addToBackPack(new GeneralItem(GeneralItemsType.WOOD), amount);
+
+        return new Result(true, "wood: " + App.currentGame.getCurrentPlayer().getWood());
+    }
+    public static Result cheatAddStone(int amount) {
+        App.currentGame.getCurrentPlayer().getInventory().addToBackPack(new Stone(), amount);
+
+        return new Result(true, "stone: " + App.currentGame.getCurrentPlayer().getStone());
     }
 
     public static Result cheatThor(Position position) {

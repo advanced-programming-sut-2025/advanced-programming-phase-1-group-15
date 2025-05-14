@@ -1,7 +1,6 @@
 package models.tools;
 
 import models.Player;
-import models.map.Tile;
 
 public class TrashCan extends Tool {
     double returnPercentage;
@@ -14,7 +13,7 @@ public class TrashCan extends Tool {
     }
 
     @Override
-    public void upgrade() {
+    public void upgrade(Player user) {
         switch (toolLevel) {
             case NORMAL -> {
                 returnPercentage = 0.15;

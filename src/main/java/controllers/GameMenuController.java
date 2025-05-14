@@ -115,12 +115,19 @@ public class GameMenuController {
         return new Result(true, tool.getName());
     }
     public static Result upgradeTool(String toolName) {
+        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
+
+        if(!(playerTile.getArea() instanceof Blacksmith)) {
+            return new Result(false, "you have to be inside blacksmith to run this command.");
+        }
+
         Tool tool = (Tool) getCurrentPlayer().getInventory().getItemByName(toolName);
 
         if(tool == null) {
             return new Result(false, "You don't have that tool.");
         }
 
+        tool.upgrade(getCurrentPlayer());
         return new Result(true, "Tool upgraded successfully.");
     }
     public static Result useTool(int dx, int dy) {

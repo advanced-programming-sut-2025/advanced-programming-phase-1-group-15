@@ -4,13 +4,6 @@ import models.foraging.ForagingSeedsType;
 import models.time.Season;
 
 public enum JojaMartItems {
-    JOJA_COLA(null, "The flagship product of Joja corporation.", 75, Integer.MAX_VALUE, Season.ALL),
-    ANCIENT_SEED(null, "Could these still grow?", 500, 1, Season.ALL),
-    GRASS_STARTER(null, "Place this on your farm to start a new patch of grass.", 125, Integer.MAX_VALUE, Season.ALL),
-    SUGAR(null, "Adds sweetness to pastries and candies. Too much can be unhealthy.", 125, Integer.MAX_VALUE, Season.ALL),
-    WHEAT_FLOUR(null, "A common cooking ingredient made from crushed wheat seeds.", 125, Integer.MAX_VALUE, Season.ALL),
-    RICE(null, "A basic grain often served under vegetables.", 250, Integer.MAX_VALUE, Season.ALL),
-
     // Spring Stock
     PARSNIP_SEEDS(ForagingSeedsType.PARSNIP_SEEDS, "Plant these in the spring. Takes 4 days to mature.", 25, 5, Season.SPRING),
     BEAN_STARTER(null, "Plant these in the spring. Takes 10 days to mature, but keeps producing after that. Grows on a trellis.", 75, 5, Season.SPRING),

@@ -1,10 +1,7 @@
 package models.tools;
 
 import models.Player;
-import models.farming.Crop;
 import models.farming.GeneralPlants.PloughedPlace;
-import models.farming.GeneralPlants.PloughedState;
-import models.foraging.ForagingCrop;
 import models.map.Tile;
 
 public class Scythe extends Tool {
@@ -22,7 +19,7 @@ public class Scythe extends Tool {
     }
 
     @Override
-    public void upgrade() {
+    public void upgrade(Player user) {
 
     }
 

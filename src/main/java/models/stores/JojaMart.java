@@ -2,7 +2,6 @@ package models.stores;
 
 import models.App;
 import models.Player;
-import models.foraging.ForagingMineral;
 import models.foraging.ForagingSeeds;
 import models.map.AreaType;
 import models.map.Tile;
@@ -14,7 +13,8 @@ import java.util.HashMap;
 public class JojaMart extends Store {
     public static int[] coordinates = {54, 57, 16, 19};
 
-    private HashMap<JojaMartItems, Integer> sold = new HashMap<>();
+    private HashMap<GeneralItemsType, Integer> sold1 = new HashMap<>();
+    private HashMap<JojaMartItems, Integer> sold2 = new HashMap<>();
 
     public JojaMart(ArrayList<ArrayList<Tile>> storeTiles) {
         runner = Runner.MORRIS;
@@ -30,8 +30,11 @@ public class JojaMart extends Store {
             }
         }
 
+        for(int i = 2; i <= 7; i++) {
+            sold1.put(GeneralItemsType.values()[i], 0);
+        }
         for(JojaMartItems item : JojaMartItems.values()) {
-            sold.put(item, 0);
+            sold2.put(item, 0);
         }
     }
 
@@ -42,14 +45,20 @@ public class JojaMart extends Store {
 
     @Override
     public void resetSoldItems() {
-        sold.replaceAll((i, v) -> 0);
+        sold1.replaceAll((i, v) -> 0);
+        sold2.replaceAll((i, v) -> 0);
     }
 
     @Override
     public boolean checkAvailable(String productName) {
         Season season = App.currentGame.getDateAndTime().getSeason();
 
-        for(JojaMartItems item : sold.keySet()) {
+        for(GeneralItemsType item : sold1.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return true;
+            }
+        }
+        for(JojaMartItems item : sold2.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 return item.season.equals(Season.ALL) || item.season.equals(season);
             }
@@ -59,9 +68,14 @@ public class JojaMart extends Store {
 
     @Override
     public boolean checkAmount(String productName, int amount) {
-        for(JojaMartItems item : sold.keySet()) {
+        for(GeneralItemsType item : sold1.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
-                return amount + sold.get(item) <= item.dailyLimit;
+                return true;
+            }
+        }
+        for(JojaMartItems item : sold2.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return amount + sold2.get(item) <= item.dailyLimit;
             }
         }
         return false;
@@ -69,7 +83,19 @@ public class JojaMart extends Store {
 
     @Override
     public String sell(Player buyer, String productName, int amount) {
-        for(JojaMartItems item : sold.keySet()) {
+        for(GeneralItemsType item : sold1.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                if(amount * item.price > buyer.getGold()) {
+                    return "not enough gold to buy " + amount + " " + item.getName();
+                }
+
+                buyer.subtractGold(amount * item.price);
+                buyer.addToBackPack(new GeneralItem(item), amount);
+                sold1.put(item, sold1.get(item) + amount);
+                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+            }
+        }
+        for(JojaMartItems item : sold2.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 if(amount * item.price > buyer.getGold()) {
                     return "not enough gold to buy " + amount + " " + item.getName();
@@ -77,7 +103,7 @@ public class JojaMart extends Store {
 
                 buyer.subtractGold(amount * item.price);
                 buyer.addToBackPack(new ForagingSeeds(item.foragingSeedsType), amount);
-                sold.put(item, sold.get(item) + amount);
+                sold2.put(item, sold2.get(item) + amount);
                 return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
             }
         }
@@ -90,7 +116,12 @@ public class JojaMart extends Store {
         StringBuilder display = new StringBuilder();
 
         display.append("Name    Description    Price\n");
-        for(JojaMartItems item : JojaMartItems.values()) {
+        for(GeneralItemsType item : sold1.keySet()) {
+            display.append(item.getName()).append("\t");
+            display.append("\"").append(item.description).append("\"").append("\t");
+            display.append(item.price).append("\n");
+        }
+        for(JojaMartItems item : sold2.keySet()) {
             display.append(item.getName()).append("\t");
             display.append("\"").append(item.description).append("\"").append("\t");
             display.append(item.price).append("\n");
@@ -105,8 +136,13 @@ public class JojaMart extends Store {
         StringBuilder display = new StringBuilder();
 
         display.append("Name    Description    Price\n");
-        for(JojaMartItems item : sold.keySet()) {
-            if(sold.get(item) < item.dailyLimit && (item.season.equals(Season.ALL) || item.season.equals(season))) {
+        for(GeneralItemsType item : sold1.keySet()) {
+            display.append(item.getName()).append("\t");
+            display.append("\"").append(item.description).append("\"").append("\t");
+            display.append(item.price).append("\n");
+        }
+        for(JojaMartItems item : sold2.keySet()) {
+            if(sold2.get(item) < item.dailyLimit && (item.season.equals(Season.ALL) || item.season.equals(season))) {
                 display.append(item.getName()).append("\t");
                 display.append("\"").append(item.description).append("\"").append("\t");
                 display.append(item.price).append("\n");
