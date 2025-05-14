@@ -13,69 +13,67 @@ import java.util.List;
 public class DefaultNPCs {
     private static final DefaultNPCs defaultNPCs = new DefaultNPCs();
 
-
     public static DefaultNPCs getInstance() {
         return defaultNPCs;
     }
 
     private DefaultNPCs() {
-        //createAll()
     }
 
-    public HashMap<String,NPC> defaultOnes() {
-        var gameMap = App.currentGame.getMap();
-        HashMap<String,NPC> list = new HashMap<>();
+    public HashMap<String, NPC> defaultOnes() {
+        Map gameMap = App.currentGame.getMap();
+        HashMap<String, NPC> list = new HashMap<>();
 
         // Sebastian
-        NPC seb = new NPC("Sebastian", "Programmer", gameMap.getTile(new Position(10, 5)));
-        seb.favourites.add(new Fish(FishType.CRIMSON_FISH));
-        seb.favourites.add(new Fish(FishType.CRIMSON_FISH));
-        seb.favourites.add(new Fish(FishType.CRIMSON_FISH));
-        seb.addQuestTemplate(new Fish(FishType.CRIMSON_FISH), 1, new Fish(FishType.CRIMSON_FISH), 5000, 0);
-        seb.addQuestTemplate(new Fish(FishType.CRIMSON_FISH), 150, new Fish(FishType.CRIMSON_FISH), 50, 1);
-        seb.addQuestTemplate(new Fish(FishType.CRIMSON_FISH), 1, null, 0, 2);
-        list.put(seb.getName(),seb);
+        NPC seb = new NPC("Sebastian", "Programmer", gameMap.getTile(new Position(25, 27)));
+        seb.favourites.add(new Fish(FishType.MIDNIGHT_CARP));
+        seb.favourites.add(new Fish(FishType.GLACIER_FISH));
+        seb.favourites.add(new Fish(FishType.SQUID));
+        seb.addQuestTemplate(new Fish(FishType.MIDNIGHT_CARP), 2, new Fish(FishType.SQUID), 1, 0);
+        seb.addQuestTemplate(new Fish(FishType.GLACIER_FISH), 3, new Fish(FishType.TUNA), 2, 1);
+        seb.addQuestTemplate(new Fish(FishType.SQUID), 5, new Fish(FishType.FLOUNDER), 1, 2);
+        list.put(seb.getName(), seb);
 
         // Abigail
-        NPC abi = new NPC("Abigail", "Adventurer", gameMap.getTile(new Position(15, 8)));
-        abi.favourites.add(new Fish(FishType.CRIMSON_FISH));
-        abi.favourites.add(new Fish(FishType.CRIMSON_FISH));
-        abi.favourites.add(new Fish(FishType.CRIMSON_FISH));
-        abi.addQuestTemplate(new Fish(FishType.CRIMSON_FISH), 1, new Fish(FishType.CRIMSON_FISH), 500, 0);
-        abi.addQuestTemplate(new Fish(FishType.CRIMSON_FISH), 50, new Fish(FishType.CRIMSON_FISH), 1, 1);
-        abi.addQuestTemplate(new Fish(FishType.CRIMSON_FISH), 12, null, 750, 2);
-        list.put(abi.getName(),abi);
-//
-//        // Harvey
-//        NPC harv = new NPC("Harvey", "Doctor", gameMap.getTile(5, 12));
-//        harv.favourites.add(new Coffee());
-//        harv.favourites.add(new TruffleOil());
-//        harv.favourites.add(new Wine());
-//        harv.addQuestTemplate(new Salmon(), 1, null, 0, 0);
-//        harv.addQuestTemplate(new Wine(), 1, new Salad(), 5, 1);
-//        harv.addQuestTemplate(new Hardwood(), 10, new Gold(), 500, 2);
-//        list.add(harv);
-//
-//        // Leah
-//        NPC lea = new NPC("Leah", "Artist", gameMap.getTile(20, 3));
-//        lea.favourites.add(new Salad());
-//        lea.favourites.add(new Grape());
-//        lea.favourites.add(new Wine());
-//        lea.addQuestTemplate(new Salmon(), 1, new Recipe("Deluxe Scarecrow"), 3, 0);
-//        lea.addQuestTemplate(new Wood(), 200, null, 0, 1);
-//        lea.addQuestTemplate(new Wood(), 80, new Gold(), 1000, 2);
-//        list.add(lea);
-//
-//        // Robin
-//        NPC rob = new NPC("Robin", "Carpenter", gameMap.getTile(3, 7));
-//        rob.favourites.add(new Spaghetti());
-//        rob.favourites.add(new Wood());
-//        rob.favourites.add(new IronBar());
-//        rob.addQuestTemplate(new IronBar(), 10, new BeeHouse(), 3, 0);
-//        rob.addQuestTemplate(new Wood(), 1000, null, 0, 1);
-//        rob.addQuestTemplate(new Wood(), 0, new Gold(), 25000, 2);
-//        list.add(rob);
-//
+        NPC abi = new NPC("Abigail", "Adventurer", gameMap.getTile(new Position(25, 25)));
+        abi.favourites.add(new Fish(FishType.FLOUNDER));
+        abi.favourites.add(new Fish(FishType.HERRING));
+        abi.favourites.add(new Fish(FishType.SUNFISH));
+        abi.addQuestTemplate(new Fish(FishType.FLOUNDER), 1, new Fish(FishType.HERRING), 2, 0);
+        abi.addQuestTemplate(new Fish(FishType.HERRING), 4, new Fish(FishType.RAINBOW_TROUT), 1, 1);
+        abi.addQuestTemplate(new Fish(FishType.SUNFISH), 6, new Fish(FishType.DORADO), 1, 2);
+        list.put(abi.getName(), abi);
+
+        // Harvey
+        NPC harv = new NPC("Harvey", "Doctor", gameMap.getTile(new Position(27, 25)));
+        harv.favourites.add(new Fish(FishType.SARDINE));
+        harv.favourites.add(new Fish(FishType.SHAD));
+        harv.favourites.add(new Fish(FishType.SQUID));
+        harv.addQuestTemplate(new Fish(FishType.SARDINE), 1, new Fish(FishType.SQUID), 2, 0);
+        harv.addQuestTemplate(new Fish(FishType.SHAD), 5, new Fish(FishType.TUNA), 1, 1);
+        harv.addQuestTemplate(new Fish(FishType.TUNA), 10, new Fish(FishType.FLOUNDER), 3, 2);
+        list.put(harv.getName(), harv);
+
+        // Leah
+        NPC lea = new NPC("Leah", "Artist", gameMap.getTile(new Position(27, 27)));
+        lea.favourites.add(new Fish(FishType.LIONFISH));
+        lea.favourites.add(new Fish(FishType.GHOST_FISH));
+        lea.favourites.add(new Fish(FishType.HERRING));
+        lea.addQuestTemplate(new Fish(FishType.HERRING), 3, new Fish(FishType.GHOST_FISH), 1, 0);
+        lea.addQuestTemplate(new Fish(FishType.LIONFISH), 2, new Fish(FishType.RAINBOW_TROUT), 2, 1);
+        lea.addQuestTemplate(new Fish(FishType.RAINBOW_TROUT), 5, new Fish(FishType.LEGEND), 1, 2);
+        list.put(lea.getName(), lea);
+
+        // Robin
+        NPC rob = new NPC("Robin", "Carpenter", gameMap.getTile(new Position(23, 27)));
+        rob.favourites.add(new Fish(FishType.TILAPIA));
+        rob.favourites.add(new Fish(FishType.SUNFISH));
+        rob.favourites.add(new Fish(FishType.DORADO));
+        rob.addQuestTemplate(new Fish(FishType.TILAPIA), 4, new Fish(FishType.PERCH), 3, 0);
+        rob.addQuestTemplate(new Fish(FishType.SUNFISH), 2, new Fish(FishType.GLACIER_FISH), 1, 1);
+        rob.addQuestTemplate(new Fish(FishType.DORADO), 6, new Fish(FishType.ANGLER), 1, 2);
+        list.put(rob.getName(), rob);
+
         return list;
     }
 

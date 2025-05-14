@@ -1,6 +1,7 @@
 package models.farming.GeneralPlants;
 
 import models.App;
+import models.RandomGenerator;
 import models.Result;
 import models.artisanry.ArtisanItem;
 import models.artisanry.ArtisanItemType;
@@ -255,8 +256,17 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
             return "Empty ploughed place.";
         }
 
+        int growth = 0;
+        if(currentState instanceof WateredState) growth = 4;
+        if(currentState instanceof RestState) growth = 4;
+        if(currentState instanceof SeededState) {
+            SeededState seededState = (SeededState) currentState;
+            growth = seededState.getGrowthLevel() +1;
+        }
+
         return "Name: " + harvestable.getName() + "\n" +
                 "Days Until Harvest: " + harvestable.getDaysUntilHarvest() + "\n" +
+                "growth Level: "+ growth + "\n" +
                 "Current State: " + currentState.getClass().getSimpleName() + "\n" +
                 "Watered today: " + (isWatered() ? "Yes" : "No") + "\n" +
                 "Fertilized: " + (isFertilized() ? "Yes" : "No");
@@ -280,7 +290,9 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         }
         if(weatherOption.equals(WeatherOption.STORM)){
             currentState.water();
-            this.thor();
+            if(RandomGenerator.getInstance().randomInt(0,100)>97) {
+                this.thor();
+            }
         }
     }
 

@@ -9,7 +9,6 @@ import models.time.Season;
 import models.time.TimeObserver;
 import models.tools.BackPackable;
 import models.tools.Tool;
-import models.weather.WeatherManagement;
 import models.weather.WeatherOption;
 
 import java.util.ArrayList;

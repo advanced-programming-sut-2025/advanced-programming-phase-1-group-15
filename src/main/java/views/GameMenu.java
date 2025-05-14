@@ -9,6 +9,7 @@ import models.Result;
 import models.enums.commands.CheatCodeCommands;
 import models.enums.commands.Commands;
 import models.enums.commands.GameMenuCommands;
+import models.map.Position;
 import models.relation.PlayerFriendship;
 
 import javax.print.attribute.standard.PresentationDirection;
@@ -603,6 +604,13 @@ public class GameMenu implements AppMenu {
                 Matcher matcher = CheatCodeCommands.ADD_ITEMS.matcher(command);
                 matcher.matches();
                 System.out.println(CheatCodeController.AddItem(matcher.group("name"),Integer.parseInt(matcher.group("count"))));
+            }
+            else if(CheatCodeCommands.CHEAT_THOR.matches(command)) {
+                Matcher matcher = CheatCodeCommands.CHEAT_THOR.matcher(command);
+                matcher.matches();
+                System.out.println(CheatCodeController.cheatThor(
+                        new Position(Integer.parseInt(matcher.group("x"))
+                                , Integer.parseInt(matcher.group("y")))));
             }
             else {
                 System.out.println("invalid command");

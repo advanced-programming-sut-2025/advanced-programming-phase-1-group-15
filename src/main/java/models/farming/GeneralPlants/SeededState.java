@@ -8,6 +8,7 @@ import models.farming.Seedable;
 
 public class SeededState implements PlantState {
     PloughedPlace tile;
+    boolean isWatered = false;
 
     public SeededState(PloughedPlace tile) {
         this.tile = tile;
@@ -28,6 +29,7 @@ public class SeededState implements PlantState {
 
     @Override
     public Result water() {
+        isWatered = true;
         daysWatered++;
         daysNotWatered = 0;
         if(growthLevel <= 3) {
@@ -37,7 +39,7 @@ public class SeededState implements PlantState {
             }
         }
         else{
-            daysWatered = 0;
+            tile.setState(new WateredState(tile));
         }
         return new Result(true,"successfully watered this plant!");
     }
@@ -46,14 +48,20 @@ public class SeededState implements PlantState {
     public Result harvest() {
         if(growthLevel > 3 ){
             tile.harvest();
+            System.out.println("test");
         }
         return new Result(false,"you should water this tile first");
+    }
+
+    public int getGrowthLevel() {
+        return growthLevel;
     }
 
     @Override
     public Result updateByTime() {
         daysNotWatered++;
         Fertilizer fertilizer = tile.getFertilizer();
+        isWatered = false;
         if(fertilizer != null){
             if(fertilizer.equals(Fertilizer.Water)){
                 return null;

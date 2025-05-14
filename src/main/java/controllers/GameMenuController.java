@@ -906,7 +906,9 @@ public class GameMenuController {
             return new Result(false,"this position is out of bounds!");
         }
         Tile tile = App.currentGame.getMap().getTile(position);
-        if(!tile.getObjectInTile().getClass().equals(PloughedPlace.class))
+        if(tile.getObjectInTile() == null)
+            return new Result(false,"this tile is empty");
+        if(!(tile.getObjectInTile() instanceof PloughedPlace))
             return new Result(false,"this is not a ploughed tile!");
         PloughedPlace toBeShown = (PloughedPlace) tile.getObjectInTile();
 
@@ -924,6 +926,7 @@ public class GameMenuController {
     public static Result askMarriage(String username, String ringName) {
         return null;
     }
+
     public static void AddRecipe(String recipeName) {
         recipeName = recipeName.trim().toLowerCase().replaceAll("_", " ");
         Player player = App.currentGame.getCurrentPlayer();
