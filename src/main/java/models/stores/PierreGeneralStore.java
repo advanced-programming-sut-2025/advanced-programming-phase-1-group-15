@@ -2,6 +2,10 @@ package models.stores;
 
 import models.App;
 import models.Player;
+import models.crafting.CraftItem;
+import models.crafting.CraftItemType;
+import models.farming.Seed;
+import models.farming.SeedType;
 import models.foraging.ForagingSeeds;
 import models.foraging.ForagingSeedsType;
 import models.map.AreaType;
@@ -14,7 +18,9 @@ import java.util.HashMap;
 public class PierreGeneralStore extends Store {
     public static int[] coordinates = {49, 53, 27, 30};
 
-    private HashMap<PierreGeneralStoreItems, Integer> sold = new HashMap<>();
+    private HashMap<GeneralItemsType, Integer> sold1 = new HashMap<>();
+    private HashMap<SeedType, Integer> sold2 = new HashMap<>();
+    private HashMap<PierreGeneralStoreItems, Integer> sold3 = new HashMap<>();
 
     public PierreGeneralStore(ArrayList<ArrayList<Tile>> storeTiles) {
         runner = Runner.PIERRE;
@@ -30,8 +36,14 @@ public class PierreGeneralStore extends Store {
             }
         }
 
+        for(int i = 4; i <= 14; i++) {
+            sold1.put(GeneralItemsType.values()[i], 0);
+        }
+        for(int i = 0; i <= 7; i++) {
+            sold2.put(SeedType.values()[i], 0);
+        }
         for(PierreGeneralStoreItems item : PierreGeneralStoreItems.values()) {
-            sold.put(item, 0);
+            sold3.put(item, 0);
         }
     }
 
@@ -42,14 +54,23 @@ public class PierreGeneralStore extends Store {
 
     @Override
     public void resetSoldItems() {
-        sold.replaceAll((i, v) -> 0);
+        sold3.replaceAll((i, v) -> 0);
     }
 
     @Override
     public boolean checkAvailable(String productName) {
         Season season = App.currentGame.getDateAndTime().getSeason();
-
-        for(PierreGeneralStoreItems item : sold.keySet()) {
+        for(GeneralItemsType item : sold1.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return true;
+            }
+        }
+        for(SeedType item : sold2.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return true;
+            }
+        }
+        for(PierreGeneralStoreItems item : sold3.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 return item.season.equals(Season.ALL) || item.season.equals(season);
             }
@@ -59,9 +80,19 @@ public class PierreGeneralStore extends Store {
 
     @Override
     public boolean checkAmount(String productName, int amount) {
-        for(PierreGeneralStoreItems item : sold.keySet()) {
+        for(GeneralItemsType item : sold1.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
-                return amount + sold.get(item) <= item.dailyLimit;
+                return true;
+            }
+        }
+        for(SeedType item : sold2.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return true;
+            }
+        }
+        for(PierreGeneralStoreItems item : sold3.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                return amount + sold3.get(item) <= item.dailyLimit;
             }
         }
         return false;
@@ -69,7 +100,39 @@ public class PierreGeneralStore extends Store {
 
     @Override
     public String sell(Player buyer, String productName, int amount) {
-        for(PierreGeneralStoreItems item : sold.keySet()) {
+        for(GeneralItemsType item : sold1.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                if(amount * item.price > buyer.getGold()) {
+                    return "not enough gold to buy " + amount + " " + item.getName();
+                }
+
+                buyer.subtractGold(amount * item.price);
+                if(item.equals(GeneralItemsType.DEHYDRATOR_RECIPE)) {
+                    buyer.addToAvailableCrafts(new CraftItem(CraftItemType.DEHYDRATOR));
+                }
+                else if(item.equals(GeneralItemsType.GRASS_STARTER_RECIPE)) {
+                    buyer.addToAvailableCrafts(new CraftItem(CraftItemType.GRASS_STARTER));
+                }
+                else {
+                    buyer.addToBackPack(new GeneralItem(item), amount);
+                }
+                sold1.put(item, sold1.get(item) + amount);
+                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+            }
+        }
+        for(SeedType item : sold2.keySet()) {
+            if(item.getName().equalsIgnoreCase(productName)) {
+                if(amount * item.price > buyer.getGold()) {
+                    return "not enough gold to buy " + amount + " " + item.getName();
+                }
+
+                buyer.subtractGold(amount * item.price);
+                buyer.addToBackPack(new Seed(item), amount);
+                sold2.put(item, sold2.get(item) + amount);
+                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+            }
+        }
+        for(PierreGeneralStoreItems item : sold3.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 if(amount * item.price > buyer.getGold()) {
                     return "not enough gold to buy " + amount + " " + item.getName();
@@ -77,7 +140,7 @@ public class PierreGeneralStore extends Store {
 
                 buyer.subtractGold(amount * item.price);
                 buyer.addToBackPack(new ForagingSeeds((ForagingSeedsType) item.item), amount);
-                sold.put(item, sold.get(item) + amount);
+                sold3.put(item, sold3.get(item) + amount);
                 return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
             }
         }
@@ -90,7 +153,17 @@ public class PierreGeneralStore extends Store {
         StringBuilder display = new StringBuilder();
 
         display.append("Name    Description    Price\n");
-        for(PierreGeneralStoreItems item : PierreGeneralStoreItems.values()) {
+        for(GeneralItemsType item : sold1.keySet()) {
+            display.append(item.getName()).append("\t");
+            display.append("\"").append(item.description).append("\"").append("\t");
+            display.append(item.price).append("\n");
+        }
+        for(SeedType item : sold2.keySet()) {
+            display.append(item.getName()).append("\t");
+            display.append("\"").append(item.description).append("\"").append("\t");
+            display.append(item.price).append("\n");
+        }
+        for(PierreGeneralStoreItems item : sold3.keySet()) {
             display.append(item.getName()).append("\t");
             display.append("\"").append(item.description).append("\"").append("\t");
             display.append(item.price).append("\n");
@@ -105,8 +178,18 @@ public class PierreGeneralStore extends Store {
         StringBuilder display = new StringBuilder();
 
         display.append("Name    Description    Price\n");
-        for(PierreGeneralStoreItems item : sold.keySet()) {
-            if(sold.get(item) < item.dailyLimit && (item.season.equals(Season.ALL) || item.season.equals(season))) {
+        for(GeneralItemsType item : sold1.keySet()) {
+            display.append(item.getName()).append("\t");
+            display.append("\"").append(item.description).append("\"").append("\t");
+            display.append(item.price).append("\n");
+        }
+        for(SeedType item : sold2.keySet()) {
+            display.append(item.getName()).append("\t");
+            display.append("\"").append(item.description).append("\"").append("\t");
+            display.append(item.price).append("\n");
+        }
+        for(PierreGeneralStoreItems item : sold3.keySet()) {
+            if(sold3.get(item) < item.dailyLimit && (item.season.equals(Season.ALL) || item.season.equals(season))) {
                 display.append(item.getName()).append("\t");
                 display.append("\"").append(item.description).append("\"").append("\t");
                 display.append(item.price).append("\n");

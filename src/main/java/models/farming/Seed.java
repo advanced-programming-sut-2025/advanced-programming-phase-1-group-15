@@ -12,7 +12,7 @@ public class Seed implements Tilable, BackPackable {
 
     @Override
     public String getName() {
-        return seedType.name().toLowerCase().replace("_", " ");
+        return seedType.name().toLowerCase().replaceAll("_", " ");
     }
 
     @Override

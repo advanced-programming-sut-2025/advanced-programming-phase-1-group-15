@@ -13,6 +13,11 @@ public class FishingPole extends Tool {
         this.toolLevel = ToolLevel.TRAINING;
         this.description = "a long, flexible rod used to catch fish.";
     }
+    public FishingPole(ToolLevel toolLevel) {
+        this.toolType = ToolType.FISHING_POLE;
+        this.toolLevel = toolLevel;
+        this.description = "a long, flexible rod used to catch fish.";
+    }
 
     public int calculateEnergyConsume(Player user) {
         return switch (toolLevel) {
@@ -29,11 +34,6 @@ public class FishingPole extends Tool {
 
     @Override
     public String upgrade(Player user) {
-        switch (toolLevel) {
-            case TRAINING -> toolLevel = ToolLevel.BAMBOO;
-            case BAMBOO -> toolLevel = ToolLevel.FIBERGLASS;
-            case FIBERGLASS -> toolLevel = ToolLevel.IRIDIUM;
-        }
         return "you can't upgrade this tool.";
     }
 

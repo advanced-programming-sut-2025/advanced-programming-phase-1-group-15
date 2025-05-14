@@ -291,6 +291,9 @@ public class Player extends User implements TimeObserver {
         }
     }
 
+    public void addToAvailableCrafts(CraftItem craft) {
+        availableCrafts.add(craft);
+    }
     public ArrayList<CraftItem> getAvailableCrafts() {
         return availableCrafts;
     }

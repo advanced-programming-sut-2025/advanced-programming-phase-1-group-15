@@ -2,20 +2,29 @@ package models.farming;
 
 
 public enum SeedType  implements Seedable  {
-    APRICOT_SAPLING,
-    CHERRY_SAPLING,
-    BANANA_SAPLING,
-    MANGO_SAPLING,
-    ORANGE_SAPLING,
-    PEACH_SAPLING,
-    APPLE_SAPLING,
-    POMEGRANATE_SAPLING,
-    ACORNS,
-    MAPLE_SEEDS,
-    PINE_CONES,
-    MAHOGANY_SEEDS,
-    MUSHROOM_TREE_SEEDS,
-    MYSTIC_TREE_SEEDS;
+
+    BANANA_SAPLING("", 0),
+    MANGO_SAPLING("", 0),
+    ACORNS("", 0),
+    MAPLE_SEEDS("", 0),
+    PINE_CONES("", 0),
+    MAHOGANY_SEEDS("", 0),
+    MUSHROOM_TREE_SEEDS("", 0),
+    MYSTIC_TREE_SEEDS("", 0),
+    APPLE_SAPLING("Takes 28 days to produce a mature Apple tree.", 4000),
+    APRICOT_SAPLING("Takes 28 days to produce a mature Apricot tree.", 2000),
+    CHERRY_SAPLING("Takes 28 days to produce a mature Cherry tree.", 3400),
+    ORANGE_SAPLING("Takes 28 days to produce a mature Orange tree.", 4000),
+    PEACH_SAPLING("Takes 28 days to produce a mature Peach tree.", 6000),
+    POMEGRANATE_SAPLING("Takes 28 days to produce a mature Pomegranate tree.", 6000);
+
+    public final String description;
+    public final int price;
+
+    SeedType(String description, int price) {
+        this.description = description;
+        this.price = price;
+    }
 
     public static TreeType getTreeOfSeedType(SeedType seedType) {
         switch (seedType) {
@@ -56,5 +65,10 @@ public enum SeedType  implements Seedable  {
             case "mystic tree seeds": return SeedType.MYSTIC_TREE_SEEDS;
             default: return null;
         }
+    }
+
+
+    public String getName() {
+        return name().toLowerCase().replaceAll("_", " ");
     }
 }
