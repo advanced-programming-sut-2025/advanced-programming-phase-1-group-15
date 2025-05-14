@@ -2,6 +2,8 @@ package models.farming.GeneralPlants;
 
 import models.App;
 import models.Result;
+import models.artisanry.ArtisanItem;
+import models.artisanry.ArtisanItemType;
 import models.farming.*;
 import models.map.*;
 import models.map.Map;
@@ -101,7 +103,6 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
                         giantTiles.add(App.currentGame.getTile(position));
                     }
                     GiantPlant giantPlant = new GiantPlant(giantTiles);
-                    // TODO : Update info of giant Plant based on participants
                     for (Tile part : giantTiles) {
                         part.setObjectInTile(giantPlant);
                     }
@@ -147,9 +148,9 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         if(lastUpdateOfDay != dateAndTime.getDay()){
             currentState.updateByTime();
             tile.setWatered(false);
+            attackedByCrow--;
             updateDay();
         }
-        // other changes should be added
     }
 
     public boolean hasTreeOrCrop() {
@@ -263,12 +264,6 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
 
     private boolean isWatered() {
         return tile.isWatered();
-//        if(currentState instanceof SeededState){
-//            SeededState s = (SeededState) currentState;
-//
-//        }
-//        return currentState instanceof WateredState || currentState instanceof RestState;
-        // check , maybe this is a better method ( I don't think so )
     }
 
     private boolean isFertilized() {
@@ -277,7 +272,26 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
 
     @Override
     public void update(WeatherOption weatherOption) {
+        if(tile.getAreaType() == AreaType.GREENHOUSE){
+            return;
+        }
+        if(weatherOption.equals(WeatherOption.RAINY)){
+            this.currentState.water();
+        }
+        if(weatherOption.equals(WeatherOption.STORM)){
+            currentState.water();
+            this.unPlough();
+            if(this.harvestable instanceof Tree){
+                tile.setObjectInTile(new ArtisanItem(ArtisanItemType.COAL));
+            }
+        }
     }
+
+    public void setAttackedByCrow(int attackedByCrow) {
+        this.attackedByCrow = attackedByCrow;
+    }
+
+    int attackedByCrow = 0;
 
 
 

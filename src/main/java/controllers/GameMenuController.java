@@ -890,6 +890,9 @@ public class GameMenuController {
         if(npc == null){
             return new Result(false,"invalid name for npc");
         }
+        if(!player.getPosition().isAdjacent(npc.getHomeLocation().getPosition())){
+            return new Result(false,"you are not adjacent with this npc");
+        }
         return new Result(true,npc.gift(player,getCurrentPlayer().getInventory().getItemByName(itemName)));
     }
 

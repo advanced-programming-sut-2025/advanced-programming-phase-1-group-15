@@ -44,6 +44,9 @@ public class WateredState implements PlantState {
             return new Result(false, "Crop isn't ready.");
         }
 
+        if(tile.attackedByCrow > 0)
+            return new Result(false,"this is attacked by crow");
+
         int amount = ( tile instanceof GiantPlant ) ? 10 : 1;
 
         harvestable.harvest(amount);

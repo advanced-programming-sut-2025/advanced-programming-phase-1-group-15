@@ -38,6 +38,10 @@ public class NPC implements TimeObserver {
         this.homeLocation = homeLocation;
     }
 
+    public Tile getHomeLocation() {
+        return homeLocation;
+    }
+
     public String meet(Player player) {
         NPCFriendShip fs = friendships.computeIfAbsent(player, k -> new NPCFriendShip(this,player));
         if (!fs.hasTalkedToday()) {

@@ -5,6 +5,8 @@ import models.artisanry.ArtisanItem;
 import models.cooking.Food;
 import models.cooking.FoodType;
 import models.crafting.CraftItem;
+import models.farming.GeneralPlants.PloughedPlace;
+import models.farming.Tree;
 import models.foraging.ForagingSeedsType;
 import models.map.AreaType;
 import models.map.Farm;
@@ -115,7 +117,7 @@ public class Player extends User implements TimeObserver {
         return game.getMap().calculatePath(position,nextPosition) / 5 + 1;
     }
     public void walk(Position position) {
-        int energyNeeded = calculateWalkingEnergy(position) - 10;
+        int energyNeeded = calculateWalkingEnergy(position);
 
         if(energyNeeded > energy) {
             faint();
@@ -367,12 +369,18 @@ public class Player extends User implements TimeObserver {
                 Tile tile = farm.getTiles().get(i).get(j);
                 if(tile.getAreaType() == AreaType.GREENHOUSE) continue;
                 if(tile.isPlowed()){
-                    // TODO: check if it is in a Green house
                     remainder++;    remainder %= 16;
                     if(remainder == 0){
                         if(RandomGenerator.getInstance().randomInt(0,3) == 1) {
-                            tile.unplow();
-                            // TODO: check the effect for tree when you implemented tree
+                            if(tile.getObjectInTile() instanceof PloughedPlace) {
+                                PloughedPlace place = (PloughedPlace) tile.getObjectInTile();
+                                if(place.getHarvestable() instanceof Tree) {
+                                    place.setAttackedByCrow(2);
+                                }
+                                else{
+                                    place.unPlough();
+                                }
+                            }
                         }
                     }
                 }

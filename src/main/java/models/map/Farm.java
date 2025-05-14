@@ -24,6 +24,8 @@ public class Farm extends Area {
             {0, 40, 30, 50}   //MAP 4
     };
 
+    boolean hasScareCrow = false;
+
     public Farm(ArrayList<ArrayList<Tile>> farmTiles, int number) {
         this.areaType = AreaType.FARM;
         this.number = number;

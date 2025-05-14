@@ -6,6 +6,7 @@ import models.time.Season;
 import models.time.TimeObserver;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -21,7 +22,9 @@ public class WeatherManagement implements TimeObserver {
         observers.remove(observer);
     }
     private void notifyObservers() {
-        for (WeatherObserver observer : observers) {
+        Iterator<WeatherObserver> it = observers.iterator();
+        while (it.hasNext()) {
+            WeatherObserver observer = it.next();
             observer.update(currentWeather);
         }
     }
