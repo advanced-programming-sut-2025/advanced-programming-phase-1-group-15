@@ -20,6 +20,10 @@ public class Quest {
         return request;
     }
 
+    public boolean isDoneBySomeone() {
+        return doneBySomeone;
+    }
+
     public BackPackable getReward() {
         return reward;
     }

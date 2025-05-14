@@ -29,6 +29,14 @@ public class DateAndTime {
         year++;
     }
 
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public void setSeason(Season season) {
+        this.season = season;
+    }
+
     public void nextSeason() {
         if(season == Season.SUMMER) {
             season = Season.AUTUMN;

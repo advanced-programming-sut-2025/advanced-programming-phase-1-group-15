@@ -1,15 +1,20 @@
 package models.npcs;
 
+import models.App;
 import models.Player;
 import models.Result;
+import models.time.Season;
 import models.tools.BackPackable;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import models.time.DateAndTime;
 
 public class NPCFriendShip {
     NPC npc;
     Player player;
+
+    private DateAndTime levelOneReachedDate = null;
+
 
     public NPCFriendShip(NPC npc, Player player) {
         this.npc = npc;
@@ -30,10 +35,19 @@ public class NPCFriendShip {
     private HashMap<Quest,Boolean> playerQuests = new HashMap<>();
 
     void addPoints(int points) {
+        int oldLevel = getLevel();
         this.points += points;
         if(points > MAX_POINTS) {
             this.points = MAX_POINTS;
         }
+        int newLevel = getLevel();
+
+        if (oldLevel < 1 && newLevel >= 1) {
+            levelOneReachedDate = new DateAndTime();
+            levelOneReachedDate.setDay(App.currentGame.getDateAndTime().getDay());
+        }
+
+
         activateQuests();
     }
 
@@ -64,8 +78,21 @@ public class NPCFriendShip {
 
     void activateQuests() {
         int lvl = getLevel();
-        for (Quest quest : npc.questTemplates.keySet())  {
-            if (!playerQuests.containsKey(quest) && lvl >= npc.questTemplates.get(quest)) {
+        DateAndTime now = App.currentGame.getDateAndTime();
+
+        for (Quest quest : npc.questTemplates.keySet()) {
+            int required = npc.questTemplates.get(quest);
+            if (playerQuests.containsKey(quest)) continue;
+
+            if (required == 0) {
+                playerQuests.put(quest, true);
+            }
+            else if (required == 1 && lvl >= 1) {
+                playerQuests.put(quest, true);
+            }
+            else if (required == 2 && lvl >= 1
+                    && levelOneReachedDate != null
+                    && levelOneReachedDate.getSeason() != now.getSeason()) {
                 playerQuests.put(quest, true);
             }
         }
@@ -87,33 +114,37 @@ public class NPCFriendShip {
     }
 
     public Result finishQuest(BackPackable item) {
-        Quest quest = null;
+        Quest found = null;
+
         for (Quest pq : playerQuests.keySet()) {
-            if (pq.request.getName().equals(item.getName())) {
-                if (!playerQuests.get(pq)) {
-                    if(!pq.doneBySomeone) {
-                        quest = pq;
-                        break;
-                    }
-                }
+            if (pq.getRequest().getName().equals(item.getName())
+                    && playerQuests.get(pq)
+                    && !pq.isDoneBySomeone()) {
+                found = pq;
+                break;
             }
         }
-        if(quest == null) {
-            return new Result(false,"no quest for this NPC!");
-        }
-        if(player.getInventory().getItemByName(item.getName()) == null){
-            return new Result(false,"does not have this item );");
-        }
-        if(player.getInventory().getItemCount(item.getName()) < quest.getRequestAmount()){
-            return new Result(false,"you do not have enough number of this item!");
-        }
-        quest.setDoneBySomeone(true);
 
-        playerQuests.remove(quest);
-        playerQuests.put(quest, false);
-        player.getInventory().removeCountFromBackPack(item,quest.getRequestAmount());
-        player.getInventory().addToBackPack(quest.reward,quest.getRewardAmount()*((getLevel()+1)/2));
-        return new Result(true,"well done! quest done!");
+        if (found == null) {
+            return new Result(false, "no available quest for this NPC!");
+        }
+        if (player.getInventory().getItemByName(item.getName()) == null) {
+            return new Result(false, "you don't have this item!");
+        }
+        if (player.getInventory().getItemCount(item.getName()) < found.getRequestAmount()) {
+            return new Result(false, "you don't have enough of this item!");
+        }
+
+        found.setDoneBySomeone(true);
+
+        playerQuests.put(found, false);
+
+        player.getInventory().removeCountFromBackPack(item, found.getRequestAmount());
+        player.getInventory()
+                .addToBackPack(found.getReward(),
+                        found.getRewardAmount() * ((getLevel() + 1) / 2));
+
+        return new Result(true, "well done! quest completed!");
     }
 
 
