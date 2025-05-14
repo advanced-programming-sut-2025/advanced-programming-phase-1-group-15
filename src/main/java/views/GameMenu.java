@@ -596,6 +596,11 @@ public class GameMenu implements AppMenu {
                 GameMenuController.StartTrade();
                 AppView.currentMenu = new TradeMenu();
             }
+            else if(CheatCodeCommands.ADD_ITEMS.matches(command)) {
+                Matcher matcher = CheatCodeCommands.ADD_ITEMS.matcher(command);
+                matcher.matches();
+                System.out.println(CheatCodeController.AddItem(matcher.group("name"),Integer.parseInt(matcher.group("count"))));
+            }
             else {
                 System.out.println("invalid command");
             }

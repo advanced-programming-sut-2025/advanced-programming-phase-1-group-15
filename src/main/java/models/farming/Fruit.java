@@ -10,6 +10,10 @@ public class Fruit implements BackPackable {
         this.sourceTree = sourceTree;
         this.fruitType   = sourceTree.getTreeType().getFruitType();
     }
+    public Fruit(FruitType fruitType) {
+        this.fruitType   = fruitType;
+        this.sourceTree = null;
+    }
     public FruitType getFruitType() {
         return fruitType;
     }

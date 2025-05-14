@@ -76,4 +76,7 @@ public enum ForagingMineralType{
         this.description = description;
         this.sellPrice = sellPrice;
     }
+    public String getName(){
+        return this.name().toLowerCase().replaceAll("_", " ");
+    }
 }

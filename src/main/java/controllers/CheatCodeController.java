@@ -3,11 +3,16 @@ package controllers;
 import models.App;
 import models.Player;
 import models.Result;
-import models.animals.Animal;
+import models.animals.*;
 import models.artisanry.ArtisanItem;
 import models.artisanry.ArtisanItemType;
 import models.crafting.CraftItem;
 import models.crafting.CraftItemType;
+import models.farming.Crop;
+import models.farming.Crops;
+import models.farming.Fruit;
+import models.farming.FruitType;
+import models.foraging.*;
 import models.map.Position;
 import models.relation.PlayerFriendship;
 import models.tools.BackPackable;
@@ -283,5 +288,51 @@ public class CheatCodeController {
         if(artisanItem!=null)
             player.addToBackPack(artisanItem, num);
         return new Result(true , "item added successfully");
+    }
+    public static Result AddItem(String name , int num) {
+        Player player = App.currentGame.getCurrentPlayer();
+        for(FruitType fruitType : FruitType.values()) {
+            if (fruitType.getName().equals(name)) {
+                Fruit fruit = new Fruit(fruitType);
+                player.addToBackPack(fruit, num);
+                return new Result(true , "item add successfully");
+            }
+        }
+        for(Crops crop : Crops.values()) {
+            if (crop.getName().toLowerCase().replaceAll("_"," ").equals(name)) {
+                Crop crop1 = new Crop(crop);
+                player.addToBackPack(crop1, num);
+                return new Result(true , "item add successfully");
+            }
+        }
+        for(ForagingCropsType foragingCropsType : ForagingCropsType.values()) {
+            if (foragingCropsType.getName().equals(name)){
+                ForagingCrop temp = new ForagingCrop(foragingCropsType);
+                player.addToBackPack(temp, num);
+                return new Result(true , "item add successfully");
+            }
+        }
+        for(ForagingMineralType foragingMineralType : ForagingMineralType.values()) {
+            if (foragingMineralType.getName().equals(name)){
+                ForagingMineral temp = new ForagingMineral(foragingMineralType);
+                player.addToBackPack(temp, num);
+                return new Result(true , "item add successfully");
+            }
+        }
+        for(AnimalProductType animalProductType : AnimalProductType.values()) {
+            if (animalProductType.getName().equals(name)){
+                AnimalProduct animalProduct = new AnimalProduct(animalProductType);
+                player.addToBackPack(animalProduct, num);
+                return new Result(true , "item add successfully");
+            }
+        }
+        for (FishType fishType : FishType.values()) {
+            if (fishType.getName().equals(name)){
+                Fish fish = new Fish(fishType);
+                player.addToBackPack(fish, num);
+                return new Result(true , "item add successfully");
+            }
+        }
+        return new Result(false , "item not find");
     }
 }

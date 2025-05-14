@@ -614,7 +614,6 @@ public enum Crops{
             default: return null;
         }
     }
-
     @Override
     public String toString() {
         return  getName()+": \n"+
@@ -630,7 +629,6 @@ public enum Crops{
                 ", energy= " + energy + '\n' +
                 "-------------------------------------";
     }
-
     public int getBasePrice() {
         return basePrice;
     }

@@ -149,5 +149,8 @@ public enum ForagingCropsType {
         int randomIndex = new Random().nextInt(possibleCrops.size());
         return possibleCrops.get(randomIndex);
     }
+    public String getName(){
+        return this.name().toLowerCase().replaceAll("_", " ");
+    }
 
 }

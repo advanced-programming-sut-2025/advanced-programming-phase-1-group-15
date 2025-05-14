@@ -11,6 +11,7 @@ public enum CheatCodeCommands implements Commands {
     SET_FRIENDSHIP_REGEX("^\\s*cheat\\s+set\\s+friendship\\s+-u\\s+(?<username>\\S+)\\s+-l\\s+(?<level>\\d+)\\s*$"),
     CHANGE_USERNAME_REGEX("change username -u <username>"),
     ADD_RECIPE("^add\\s+recipe\\s+(?<name>\\S+)$"),
+    ADD_ITEMS("^add\\s+item\\s+(?<name>\\S+)\\s+(?<count>\\d+)$"),
     ADD_ITEM("^\\s*cheat\\s+add\\s+item\\s+-n\\s+(?<itemName>.*)\\s+-c\\s+(?<count>[0-9]+)\\s*$");
     private final String regex;
     CheatCodeCommands(String regex) { this.regex = regex; }

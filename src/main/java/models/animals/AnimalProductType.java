@@ -19,4 +19,7 @@ public enum AnimalProductType{
     AnimalProductType(int price) {
         this.price = price;
     }
+    public String getName(){
+        return this.name().toLowerCase().replaceAll("_", " ");
+    }
 }
