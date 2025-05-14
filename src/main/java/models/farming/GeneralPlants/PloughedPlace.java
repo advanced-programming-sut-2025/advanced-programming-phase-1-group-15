@@ -280,10 +280,7 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         }
         if(weatherOption.equals(WeatherOption.STORM)){
             currentState.water();
-            this.unPlough();
-            if(this.harvestable instanceof Tree){
-                tile.setObjectInTile(new ArtisanItem(ArtisanItemType.COAL));
-            }
+            this.thor();
         }
     }
 
@@ -292,6 +289,13 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
     }
 
     int attackedByCrow = 0;
+
+    public void thor(){
+        this.unPlough();
+        if(this.harvestable instanceof Tree){
+            tile.setObjectInTile(new ArtisanItem(ArtisanItemType.COAL));
+        }
+    }
 
 
 

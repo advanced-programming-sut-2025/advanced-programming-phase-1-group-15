@@ -364,6 +364,7 @@ public class Player extends User implements TimeObserver {
 
     public void attackOfCrows(){
         int remainder = RandomGenerator.getInstance().randomInt(0,15);
+        if(farm.doesHaveScareCrow()) return;
         for(int i=0;i<farm.getTiles().size();i++) {
             for (int j = 0; j < farm.getTiles().get(i).size(); j++) {
                 Tile tile = farm.getTiles().get(i).get(j);

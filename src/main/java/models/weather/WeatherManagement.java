@@ -22,10 +22,9 @@ public class WeatherManagement implements TimeObserver {
         observers.remove(observer);
     }
     private void notifyObservers() {
-        Iterator<WeatherObserver> it = observers.iterator();
-        while (it.hasNext()) {
-            WeatherObserver observer = it.next();
-            observer.update(currentWeather);
+        List<WeatherObserver> snapshot = new ArrayList<>(observers);
+        for (WeatherObserver obs : snapshot) {
+            obs.update(currentWeather);
         }
     }
 

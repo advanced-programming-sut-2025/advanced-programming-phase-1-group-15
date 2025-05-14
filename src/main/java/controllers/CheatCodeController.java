@@ -12,8 +12,10 @@ import models.farming.Crop;
 import models.farming.Crops;
 import models.farming.Fruit;
 import models.farming.FruitType;
+import models.farming.GeneralPlants.PloughedPlace;
 import models.foraging.*;
 import models.map.Position;
+import models.map.Tile;
 import models.relation.PlayerFriendship;
 import models.tools.BackPackable;
 import models.weather.WeatherOption;
@@ -81,7 +83,13 @@ public class CheatCodeController {
     }
 
     public static Result cheatThor(Position position) {
-        return null;
+        Tile tile = App.currentGame.getTile(position.x, position.y);
+        if(tile.getObjectInTile() instanceof PloughedPlace){
+            PloughedPlace p = (PloughedPlace)tile.getObjectInTile();
+            p.thor();
+            return new Result(true,"thor done on this position(;");
+        }
+        return new Result(false,"here is not a ploughed place");
     }
 
     public static Result cheatAddItem(Position position) {
