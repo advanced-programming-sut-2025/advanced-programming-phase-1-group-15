@@ -434,11 +434,12 @@ public class Player extends User implements TimeObserver {
             attackOfCrows();
             ForagingSeedsAndCrops(); // check if causes bug
         }
+        lastUpdate.setDay(dateAndTime.getDay());
+        lastUpdate.setSeason(dateAndTime.getSeason());
     }
 
     public void thorOnThreeTiles(){
         List<PloughedPlace> ploughed = new ArrayList<>();
-        // collect all ploughed places on the farm
         for (List<Tile> row : farm.getTiles()) {
             for (Tile tile : row) {
                 if (tile.getObjectInTile() instanceof PloughedPlace) {
@@ -446,7 +447,6 @@ public class Player extends User implements TimeObserver {
                 }
             }
         }
-        // shuffle and strike up to 3
         Random random = new Random();
         Collections.shuffle(ploughed, random );
         for (int i = 0; i < Math.min(3, ploughed.size()); i++) {

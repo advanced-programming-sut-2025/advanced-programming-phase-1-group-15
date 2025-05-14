@@ -878,7 +878,7 @@ public class GameMenuController {
 
         Tile goalTile = App.currentGame.getMap().getTile(new Position(nextX,nextY));
 
-        if(!goalTile.getObjectInTile().getClass().equals(PloughedPlace.class))
+        if(!(goalTile.getObjectInTile() instanceof PloughedPlace))
             return new Result(false,"you should plough the tile first!");
 
         PloughedPlace tobeSeeded = (PloughedPlace) goalTile.getObjectInTile();
