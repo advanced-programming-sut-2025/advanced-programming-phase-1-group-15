@@ -14,6 +14,8 @@ import models.crafting.CraftItemType;
 import models.enums.Gender;
 import models.farming.*;
 import models.farming.GeneralPlants.PloughedPlace;
+import models.foraging.ForagingCropsType;
+import models.foraging.ForagingSeedsType;
 import models.map.*;
 import models.npcs.DefaultNPCs;
 import models.npcs.NPC;
@@ -858,11 +860,21 @@ public class GameMenuController {
 
     public static Result showCropInfo(String name) {
         Crops crop = Crops.getByName(name);
-        if(crop != null)
-            return new Result(true,crop.toString());
+        if (crop != null) {
+            return new Result(true, crop.toString());
+        }
         TreeType tree = TreeType.getTreeTypeByName(name);
-        if(tree != null)
-            return new Result(true,tree.toString());
+        if (tree != null) {
+            return new Result(true, tree.toString());
+        }
+        ForagingCropsType foragingCrop = ForagingCropsType.getByName(name);
+        if (foragingCrop != null) {
+            return new Result(true, foragingCrop.toString());
+        }
+        ForagingSeedsType foragingSeed = ForagingSeedsType.getByName(name);
+        if (foragingSeed != null) {
+            return new Result(true, foragingSeed.toString());
+        }
         return new Result(false, "No such crop '" + name + "'.");
     }
 
