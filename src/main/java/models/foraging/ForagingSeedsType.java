@@ -147,4 +147,24 @@ public enum ForagingSeedsType {
         int randomIndex = new Random().nextInt(possibleSeeds.size());
         return possibleSeeds.get(randomIndex);
     }
+
+    public String getName() {
+        return name().toLowerCase().replace('_', ' ');
+    }
+
+    public static ForagingSeedsType getByName(String input) {
+        String normalized = input.trim().toLowerCase().replace(' ', '_');
+        for (ForagingSeedsType s : values()) {
+            if (s.name().toLowerCase().equals(normalized)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return getName() +
+                "\n — seasons: " + seasons + "\n";
+    }
 }

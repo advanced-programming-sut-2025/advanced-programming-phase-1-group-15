@@ -18,6 +18,7 @@ import models.relation.TradeWithItem;
 import models.time.DateAndTime;
 import models.time.TimeObserver;
 import models.tools.*;
+import models.weather.WeatherOption;
 
 import java.util.*;
 
@@ -433,6 +434,9 @@ public class Player extends User implements TimeObserver {
         if(lastUpdate.getDay() != dateAndTime.getDay()) {
             attackOfCrows();
             ForagingSeedsAndCrops(); // check if causes bug
+        }
+        if(App.currentGame.getWeather().getCurrentWeather() == WeatherOption.STORM) {
+            thorOnThreeTiles();
         }
         lastUpdate.setDay(dateAndTime.getDay());
         lastUpdate.setSeason(dateAndTime.getSeason());

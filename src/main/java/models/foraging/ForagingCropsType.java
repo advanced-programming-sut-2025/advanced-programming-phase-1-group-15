@@ -153,4 +153,23 @@ public enum ForagingCropsType {
         return this.name().toLowerCase().replaceAll("_", " ");
     }
 
+
+    public static ForagingCropsType getByName(String input) {
+        String normalized = input.trim().toLowerCase().replace(' ', '_');
+        for (ForagingCropsType c : values()) {
+            if (c.name().toLowerCase().equals(normalized)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return getName() +
+                " — seasons: " + season +"\n"+
+                ", basePrice: " + basePrice +"\n"+
+                ", energy: " + energy+"\n";
+    }
+
 }
