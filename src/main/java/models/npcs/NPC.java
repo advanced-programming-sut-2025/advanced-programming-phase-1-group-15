@@ -13,7 +13,6 @@ import models.weather.WeatherOption;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 
 public class NPC implements TimeObserver {
     protected String name;
@@ -142,8 +141,7 @@ public class NPC implements TimeObserver {
             for(NPCFriendShip fs : friendships.values()){
                 if(fs.getLevel()>=3){
                     if(RandomGenerator.getInstance().randomInt(0,21) % 2 == 0){
-                        Random rand = new Random();
-                        fs.player.getInventory().addToBackPack(favourites.get(rand.nextInt(favourites.size())),1);
+                        fs.player.getInventory().addToBackPack(favourites.get(RandomGenerator.getInstance().randomInt(0,favourites.size()-1)),1);
                     }
                 }
             }

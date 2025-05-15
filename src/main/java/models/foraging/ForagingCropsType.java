@@ -1,11 +1,11 @@
 package models.foraging;
 
+import models.RandomGenerator;
 import models.time.Season;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public enum ForagingCropsType {
     DAFFODIL(
@@ -146,7 +146,7 @@ public enum ForagingCropsType {
                 possibleCrops.add(crop);
             }
         }
-        int randomIndex = new Random().nextInt(possibleCrops.size());
+        int randomIndex = RandomGenerator.getInstance().randomInt(0,possibleCrops.size());
         return possibleCrops.get(randomIndex);
     }
     public String getName(){

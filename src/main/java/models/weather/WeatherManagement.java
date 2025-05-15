@@ -1,5 +1,6 @@
 package models.weather;
 
+import models.RandomGenerator;
 import models.map.Position;
 import models.time.DateAndTime;
 import models.time.Season;
@@ -8,7 +9,6 @@ import models.time.TimeObserver;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 public class WeatherManagement implements TimeObserver {
     private WeatherOption currentWeather = WeatherOption.SUNNY;
@@ -38,7 +38,6 @@ public class WeatherManagement implements TimeObserver {
     }
 
     private void predictWeather(DateAndTime dateAndTime) {
-        Random rand = new Random();
         Season season = dateAndTime.getSeason();
 
         List<WeatherOption> possibleWeathers = new ArrayList<>();
@@ -54,11 +53,11 @@ public class WeatherManagement implements TimeObserver {
             }
         }
 
-        if(rand.nextBoolean()) {
+        if(RandomGenerator.getInstance().randomBoolean()) {
             tomorrowWeather = WeatherOption.SUNNY;
         }
         else {
-            tomorrowWeather = possibleWeathers.get(rand.nextInt(possibleWeathers.size()));
+            tomorrowWeather = possibleWeathers.get(RandomGenerator.getInstance().randomInt(0,possibleWeathers.size()-1));
         }
     }
 

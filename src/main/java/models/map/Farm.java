@@ -2,6 +2,7 @@ package models.map;
 
 import models.App;
 import models.Player;
+import models.RandomGenerator;
 import models.animals.Animal;
 import models.animals.Barn;
 import models.animals.Coop;
@@ -16,7 +17,6 @@ import models.time.Season;
 import models.tools.Fridge;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Farm extends Area {
     public static int[][] coordinates = {
@@ -63,8 +63,7 @@ public class Farm extends Area {
     }
 
     private void randomTreeGenerator(Season season) {
-        Random rand = new Random();
-        int treesCount = rand.nextInt(6) + 7;
+        int treesCount = RandomGenerator.getInstance().randomInt(7,12);
 
         ArrayList<TreeType> validTreeTypes = new ArrayList<>();
         for (TreeType treeType : TreeType.values()) {
@@ -75,12 +74,12 @@ public class Farm extends Area {
 
         for (int i = 0; i < treesCount; i++) {
             while (true) {
-                int randomRow = rand.nextInt(tiles.size());
-                int randomCol = rand.nextInt(tiles.get(randomRow).size());
+                int randomRow = RandomGenerator.getInstance().randomInt(0,tiles.size());
+                int randomCol = RandomGenerator.getInstance().randomInt(0,tiles.get(randomRow).size());
                 Tile randomTile = tiles.get(randomRow).get(randomCol);
 
                 if (randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
-                    TreeType randomTreeType = validTreeTypes.get(rand.nextInt(validTreeTypes.size()));
+                    TreeType randomTreeType = validTreeTypes.get(RandomGenerator.getInstance().randomInt(0,validTreeTypes.size()));
 
                     randomTile.put(new Tree(randomTreeType));
                     break;
@@ -90,16 +89,15 @@ public class Farm extends Area {
     }
 
     private void randomMineralGenerator() {
-        Random rand = new Random();
-        int mineralsCount = rand.nextInt(6) + 7;
+        int mineralsCount = RandomGenerator.getInstance().randomInt(7,12);
 
         for (int i = 0; i < mineralsCount; i++) {
             while (true) {
-                int randomRow = rand.nextInt(tiles.size());
-                int randomCol = rand.nextInt(tiles.get(randomRow).size());
+                int randomRow = RandomGenerator.getInstance().randomInt(0,tiles.size());
+                int randomCol = RandomGenerator.getInstance().randomInt(0,tiles.get(randomRow).size());
                 Tile randomTile = tiles.get(randomRow).get(randomCol);
 
-                if(rand.nextBoolean()) {
+                if(RandomGenerator.getInstance().randomBoolean()) {
                     if (randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
                         randomTile.put(new Stone());
                         break;
@@ -107,7 +105,8 @@ public class Farm extends Area {
                 }
                 else {
                     if (randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
-                        ForagingMineralType randomMineralType = ForagingMineralType.values()[rand.nextInt(ForagingMineralType.values().length)];
+                        ForagingMineralType randomMineralType = ForagingMineralType.values()
+                                [RandomGenerator.getInstance().randomInt(0,ForagingMineralType.values().length)];
 
                         randomTile.put(new ForagingMineral(randomMineralType));
                         break;
@@ -120,11 +119,15 @@ public class Farm extends Area {
     public void build() {
         innerAreas = new ArrayList<>();
 
-        innerAreas.add(new Lake(getSubArea(tiles, Lake.coordinates[number - 1][0], Lake.coordinates[number - 1][1], Lake.coordinates[number - 1][2], Lake.coordinates[number - 1][3])));
-        innerAreas.add(new House(getSubArea(tiles, House.coordinates[number - 1][0], House.coordinates[number - 1][1], House.coordinates[number - 1][2], House.coordinates[number - 1][3])));
-        greenHouse = new GreenHouse(getSubArea(tiles, GreenHouse.coordinates[number - 1][0], GreenHouse.coordinates[number - 1][1], GreenHouse.coordinates[number - 1][2], GreenHouse.coordinates[number - 1][3]));
+        innerAreas.add(new Lake(getSubArea(tiles, Lake.coordinates[number - 1][0], Lake.coordinates[number - 1][1],
+                Lake.coordinates[number - 1][2], Lake.coordinates[number - 1][3])));
+        innerAreas.add(new House(getSubArea(tiles, House.coordinates[number - 1][0], House.coordinates[number - 1][1],
+                House.coordinates[number - 1][2], House.coordinates[number - 1][3])));
+        greenHouse = new GreenHouse(getSubArea(tiles, GreenHouse.coordinates[number - 1][0],
+                GreenHouse.coordinates[number - 1][1], GreenHouse.coordinates[number - 1][2], GreenHouse.coordinates[number - 1][3]));
         innerAreas.add(greenHouse);
-        innerAreas.add(new Quarry(getSubArea(tiles, Quarry.coordinates[number - 1][0], Quarry.coordinates[number - 1][1], Quarry.coordinates[number - 1][2], Quarry.coordinates[number - 1][3])));
+        innerAreas.add(new Quarry(getSubArea(tiles, Quarry.coordinates[number - 1][0],
+                Quarry.coordinates[number - 1][1], Quarry.coordinates[number - 1][2], Quarry.coordinates[number - 1][3])));
 
         for(Area innerArea : innerAreas){
             innerArea.setParentArea(this);

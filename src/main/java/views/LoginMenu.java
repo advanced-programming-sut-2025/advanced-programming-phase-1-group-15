@@ -2,13 +2,13 @@ package views;
 
 import controllers.LoginMenuController;
 import models.App;
+import models.RandomGenerator;
 import models.Result;
 import models.User;
 import models.enums.Gender;
 import models.enums.commands.Commands;
 import models.enums.commands.LoginMenuCommands;
 
-import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
@@ -16,7 +16,7 @@ public class LoginMenu implements AppMenu {
     public static String usernameMenu(Scanner scanner, String username) {
         String newUsername;
         do {
-            int randomSuffix = new Random().nextInt(1000);
+            int randomSuffix = RandomGenerator.getInstance().randomInt(0,999);
             newUsername = username + randomSuffix;
         } while (App.checkUsernameExists(newUsername));
 

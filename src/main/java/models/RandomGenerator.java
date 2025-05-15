@@ -14,4 +14,8 @@ public class RandomGenerator {
     public int randomInt(int min, int max) {
         return rand.nextInt((max - min) + 1) + min;
     }
+
+    public boolean randomBoolean() {
+        return rand.nextBoolean();
+    }
 }

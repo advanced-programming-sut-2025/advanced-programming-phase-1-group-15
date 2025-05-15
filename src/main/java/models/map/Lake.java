@@ -1,12 +1,12 @@
 package models.map;
 
+import models.RandomGenerator;
 import models.animals.Fish;
 import models.animals.FishType;
 import models.time.DateAndTime;
 import models.time.Season;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Lake extends Area {
     public static int[][] coordinates = {
@@ -37,8 +37,7 @@ public class Lake extends Area {
         }
     }
     private void randomFishGenerator(Season season) {
-        Random rand = new Random();
-        int fishesCount = rand.nextInt(2) + 1;
+        int fishesCount = RandomGenerator.getInstance().randomInt(1,2);
 
         ArrayList<FishType> validFishTypes = new ArrayList<>();
         for (FishType fishType : FishType.values()) {
@@ -47,11 +46,11 @@ public class Lake extends Area {
             }
         }
 
-        FishType randomFishType = validFishTypes.get(rand.nextInt(validFishTypes.size()));
+        FishType randomFishType = validFishTypes.get(RandomGenerator.getInstance().randomInt(0,validFishTypes.size()-1));
         todaysFishType = randomFishType;
         for (int i = 0; i < fishesCount; i++) {
-            int randomRow = rand.nextInt(tiles.size());
-            int randomCol = rand.nextInt(tiles.get(randomRow).size());
+            int randomRow = RandomGenerator.getInstance().randomInt(0,tiles.size()-1);
+            int randomCol = RandomGenerator.getInstance().randomInt(0,tiles.get(randomRow).size()-1);
             Tile randomTile = tiles.get(randomRow).get(randomCol);
 
             randomTile.put(new Fish(randomFishType));
