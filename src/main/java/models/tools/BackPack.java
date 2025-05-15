@@ -1,7 +1,8 @@
 package models.tools;
 
 import models.Player;
-import models.farming.CropProduct;
+import models.farming.Seed;
+import models.foraging.Stone;
 
 import java.util.HashMap;
 
@@ -22,6 +23,7 @@ public class BackPack extends Tool {
         items.put(new WateringCan(), 1);
         items.put(new Scythe(), 1);
         items.put(new FishingPole(), 1);
+        items.put(new Stone(), 100000);
     }
 
     public int getCapacity() {
@@ -60,10 +62,12 @@ public class BackPack extends Tool {
         return itemsCount == capacity;
     }
     public void addToBackPack(BackPackable item, int amount) {
-        for(BackPackable bp : items.keySet()) {
-            if (bp.getName().equalsIgnoreCase(item.getName())) {
-                items.put(bp, items.get(bp) + amount);
-                return;
+        if(!(item instanceof FishingPole)) {
+            for(BackPackable bp : items.keySet()) {
+                if (bp.getName().equalsIgnoreCase(item.getName())) {
+                    items.put(bp, items.get(bp) + amount);
+                    return;
+                }
             }
         }
 

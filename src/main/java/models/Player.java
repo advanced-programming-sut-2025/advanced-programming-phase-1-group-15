@@ -79,6 +79,8 @@ public class Player extends User implements TimeObserver {
         receivedMessages.add(message);
     }
     private Player couple;
+    private boolean rejected = false;
+    private int rejectDay = 0;
 
     public int getCurrentId() {
         return CurrentId;
@@ -347,6 +349,10 @@ public class Player extends User implements TimeObserver {
     public void marry(Player couple) {
         this.couple = couple;
     }
+    public void reject(int day) {
+        rejected = true;
+        rejectDay = day;
+    }
 
     public void eat(Food food) {
         addEnergy(food.getEnergy());
@@ -420,14 +426,27 @@ public class Player extends User implements TimeObserver {
 
     @Override
     public void update(DateAndTime dateAndTime) {
+        if(dateAndTime.getDay() - rejectDay > 7) {
+            rejected = false;
+        }
         if(dateAndTime.getHour() == 9) {
             energyConsumed = 0;
             if(fainted) {
                 fainted = false;
-                energy = 150;
+                if(rejected) {
+                    energy = 100;
+                }
+                else {
+                    energy = 150;
+                }
             }
             else {
-                energy = 200;
+                if(rejected) {
+                    energy = 100;
+                }
+                else {
+                    energy = 200;
+                }
                 goHome();
             }
         }

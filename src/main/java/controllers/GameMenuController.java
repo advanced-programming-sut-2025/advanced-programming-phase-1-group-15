@@ -562,6 +562,22 @@ public class GameMenuController {
         return new Result(true, store.sell(getCurrentPlayer(), productName, count));
     }
     public static Result sellProduct(String productName, int count) {
+        ShippingBin sb = null;
+        for(int row = getCurrentPlayer().getPosition().y - 1; row <= getCurrentPlayer().getPosition().y + 1; row++) {
+            for(int col = getCurrentPlayer().getPosition().x - 1; col <= getCurrentPlayer().getPosition().x + 1; col++) {
+                if(row >= 0 && col >= 0) {
+                    Tile tile = App.currentGame.getTile(col, row);
+                    if(!tile.isEmpty() && tile.getObjectInTile() instanceof ShippingBin) {
+                        sb = (ShippingBin) tile.getObjectInTile();
+                        break;
+                    }
+                }
+            }
+        }
+        if(sb == null) {
+            return new Result(false, "You have to stand next to a shipping bin!");
+        }
+
         BackPackable item = getCurrentPlayer().getInventory().getItemByName(productName);
         int availableCount = getCurrentPlayer().getInventory().getItemCount(productName);
 
@@ -575,15 +591,15 @@ public class GameMenuController {
             return new Result(false, "this item is not sellable.");
         }
 
-        if(availableCount == -1) {
-            getCurrentPlayer().addGold(availableCount * item.getPrice());
+        if(count == -1) {
+            sb.addToBin(item, availableCount);
             getCurrentPlayer().getInventory().removeFromBackPack(item);
-            return new Result(true, "Sold all of your " + item.getName() + ". You earned " + availableCount * item.getPrice() + "gold.");
+            return new Result(true, "Sold all of your " + item.getName() + ". You'll earn " + availableCount * item.getPrice() + " gold.");
         }
         else {
-            getCurrentPlayer().addGold(count * item.getPrice());
+            sb.addToBin(item, count);
             getCurrentPlayer().getInventory().removeCountFromBackPack(item, count);
-            return new Result(true, "Sold " + count + " of your " + item.getName() + ". You earned " + count * item.getPrice() + "gold.");
+            return new Result(true, "Sold " + count + " of your " + item.getName() + ". You'll earn " + count * item.getPrice() + " gold.");
         }
     }
 
@@ -813,7 +829,14 @@ public class GameMenuController {
             return new Result(false, "at least 2 levels of friendship required!");
         }
 
+        GeneralItem flower = (GeneralItem) getCurrentPlayer().getInventory().getItemByName(GeneralItemsType.BOUQUET.getName());
+        if(flower == null) {
+            return new Result(false, "first purchase bouquet!");
+        }
+
         friendship.flower();
+        receiver.addToBackPack(flower, 1);
+        getCurrentPlayer().getInventory().removeCountFromBackPack(flower, 1);
         return new Result(true, "you gave flower to "  + receiver.getUsername() + ". friendship upgraded to level 3.");
     }
     public static Result marry(String username) {
@@ -839,6 +862,11 @@ public class GameMenuController {
             return new Result(false, "at least 3 levels of friendship required!");
         }
 
+        GeneralItem ring = (GeneralItem) getCurrentPlayer().getInventory().getItemByName(GeneralItemsType.WEDDING_RING.getName());
+        if(ring == null) {
+            return new Result(false, "first purchase wedding ring!");
+        }
+
         target.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), "Will you Marry me?"));
         return new Result(true, "You're proposal has been sent to " + target.getUsername() + ".");
     }
@@ -851,10 +879,19 @@ public class GameMenuController {
         PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(husband, getCurrentPlayer());
         if(answer.equals("-accept")) {
             friendship.marry();
+
+            GeneralItem ring = (GeneralItem) husband.getInventory().getItemByName(GeneralItemsType.WEDDING_RING.getName());
+            if(ring == null) {
+                return new Result(false, "there has been no proposal!!!");
+            }
+            getCurrentPlayer().addToBackPack(ring, 1);
+            husband.getInventory().removeCountFromBackPack(ring, 1);
+
             return new Result(true, "CONGRATS ON YOUR WEDDING!");
         }
         else {
             friendship.reject();
+            husband.reject(App.currentGame.getDateAndTime().getDay());
             return new Result(true, "you broke his heart :(");
         }
     }

@@ -34,7 +34,7 @@ public class ShippingBin implements Tilable, TimeObserver {
     public void update(DateAndTime dateAndTime) {
         if(dateAndTime.getHour() == 9) {
             for(BackPackable item : items.keySet()) {
-                owner.addGold(item.getPrice());
+                owner.addGold(items.get(item) * item.getPrice());
             }
             items.clear();
         }

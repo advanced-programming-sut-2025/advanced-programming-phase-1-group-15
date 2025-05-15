@@ -8,6 +8,8 @@ public enum CheatCodeCommands implements Commands {
     ENERGY_UNLIMITED_REGEX("^\\s*energy\\s+unlimited\\s*$"),
     ANIMAL_FRIENDSHIP_REGEX("^\\s*cheat\\s+set\\s+friendship\\s+-n\\s+(?<name>.+?)\\s+-c\\s+(?<amount>\\d+)\\s*$"),
     ADD_GOLD_REGEX("^\\s*cheat\\s+add\\s+(?<amount>\\d+)\\s+gold\\s*$"),
+    ADD_WOOD_REGEX("^\\s*cheat\\s+add\\s+(?<amount>\\d+)\\s+gold\\s*$"),
+    ADD_STONE_REGEX("^\\s*cheat\\s+add\\s+(?<amount>\\d+)\\s+gold\\s*$"),
     SET_FRIENDSHIP_REGEX("^\\s*cheat\\s+set\\s+friendship\\s+-u\\s+(?<username>\\S+)\\s+-l\\s+(?<level>\\d+)\\s*$"),
     CHANGE_USERNAME_REGEX("change username -u <username>"),
     ADD_RECIPE("^add\\s+recipe\\s+(?<name>\\S+)$"),

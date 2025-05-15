@@ -120,6 +120,9 @@ public class FishShop extends Store {
             if(amount * 1800 > buyer.getGold()) {
                 return "not enough gold to buy " + amount + " fiberglass rod";
             }
+            if(buyer.getFishingLevel() < 2) {
+                return "at least 2 levels of fishing skill required to buy fiberglass rod";
+            }
 
             sold[4] += 1;
             buyer.addToBackPack(new FishingPole(ToolLevel.FIBERGLASS), amount);
@@ -128,6 +131,9 @@ public class FishShop extends Store {
         else if(productName.equalsIgnoreCase("Iridium Rod")) {
             if(amount * 7500 > buyer.getGold()) {
                 return "not enough gold to buy " + amount + " iridium rod";
+            }
+            else if(buyer.getFishingLevel() < 4) {
+                return "at least 4 levels of fishing skill required to buy iridium rod";
             }
 
             sold[5] += 1;

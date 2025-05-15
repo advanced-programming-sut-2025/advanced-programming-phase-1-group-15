@@ -10,6 +10,7 @@ public class Fish implements BackPackable, Tilable {
 
     public Fish(FishType fishType) {
         this.fishType = fishType;
+        this.quality = ProductQuality.NORMAL;
         this.price = fishType.basePrice;
     }
     public Fish(FishType fishType, ProductQuality quality) {

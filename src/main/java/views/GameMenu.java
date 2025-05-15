@@ -380,7 +380,8 @@ public class GameMenu implements AppMenu {
                 Matcher matcher = GameMenuCommands.SELL_PRODUCT_REGEX.matcher(command);
 
                 String productName = matcher.matches() ? matcher.group("productName") : "";
-                int count = matcher.matches() ? Integer.parseInt(matcher.group("count")) : -1;
+                String countStr = matcher.group("count");
+                int count = (countStr != null) ? Integer.parseInt(countStr) : -1;
 
                 Result result = GameMenuController.sellProduct(productName, count);
                 System.out.println(result.message());
