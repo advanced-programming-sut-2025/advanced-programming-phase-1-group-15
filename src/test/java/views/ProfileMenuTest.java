@@ -1,115 +1,98 @@
 package views;
 
-import controllers.ProfileMenuController;
-import models.Result;
+import models.App;
+import models.User;
+import models.enums.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import java.util.Scanner;
 
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ProfileMenuTest {
 
-    private Scanner mockScanner;
+    private Scanner scanner;
+    private User user;
 
     @BeforeEach
     void setUp() {
-        mockScanner = mock(Scanner.class);
+        user = new User("testUser", "test#1234", "TestNickname", "test@example.com", Gender.BOY);
+        App.currentUser = user;
+        App.users.add(user);
     }
 
     @Test
     void testShowProfileMenu() {
-        when(mockScanner.nextLine()).thenReturn("show current menu");
+        scanner = new Scanner("show current menu\n");
 
         ProfileMenu profileMenu = new ProfileMenu();
-        profileMenu.run(mockScanner);
+        profileMenu.run(scanner);
     }
 
     @Test
     void testSwitchToMainMenu() {
-        when(mockScanner.nextLine()).thenReturn("switch menu main menu");
+        scanner = new Scanner("menu enter main menu\n");
 
         ProfileMenu profileMenu = new ProfileMenu();
-        profileMenu.run(mockScanner);
+        profileMenu.run(scanner);
+
+        assertTrue(AppView.currentMenu instanceof MainMenu);
     }
 
     @Test
     void testChangeUsername() {
-        try (MockedStatic<ProfileMenuController> mockedController = Mockito.mockStatic(ProfileMenuController.class)) {
-            mockedController.when(() -> ProfileMenuController.changeUsername("newUser")).thenReturn(new Result(true, "Username changed successfully!"));
+        scanner = new Scanner("change username -u newUser\n");
 
-            when(mockScanner.nextLine()).thenReturn("change username newUser");
+        ProfileMenu profileMenu = new ProfileMenu();
+        profileMenu.run(scanner);
 
-            ProfileMenu profileMenu = new ProfileMenu();
-            profileMenu.run(mockScanner);
-
-            mockedController.verify(() -> ProfileMenuController.changeUsername("newUser"), times(1));
-        }
+        assertEquals("newUser", App.currentUser.getUsername());
     }
 
     @Test
     void testChangeNickname() {
-        try (MockedStatic<ProfileMenuController> mockedController = Mockito.mockStatic(ProfileMenuController.class)) {
-            mockedController.when(() -> ProfileMenuController.changeNickname("newNick")).thenReturn(new Result(true, "Nickname changed successfully!"));
+        scanner = new Scanner("change nickname -n newNickname\n");
 
-            when(mockScanner.nextLine()).thenReturn("change nickname newNick");
+        ProfileMenu profileMenu = new ProfileMenu();
+        profileMenu.run(scanner);
 
-            ProfileMenu profileMenu = new ProfileMenu();
-            profileMenu.run(mockScanner);
-
-            mockedController.verify(() -> ProfileMenuController.changeNickname("newNick"), times(1));
-        }
+        assertEquals("newNickname", App.currentUser.getNickname());
     }
 
     @Test
     void testChangeEmail() {
-        try (MockedStatic<ProfileMenuController> mockedController = Mockito.mockStatic(ProfileMenuController.class)) {
-            mockedController.when(() -> ProfileMenuController.changeEmail("new@example.com")).thenReturn(new Result(true, "Email changed successfully!"));
+        scanner = new Scanner("change email -e new@example.com\n");
 
-            when(mockScanner.nextLine()).thenReturn("change email new@example.com");
+        ProfileMenu profileMenu = new ProfileMenu();
+        profileMenu.run(scanner);
 
-            ProfileMenu profileMenu = new ProfileMenu();
-            profileMenu.run(mockScanner);
-
-            mockedController.verify(() -> ProfileMenuController.changeEmail("new@example.com"), times(1));
-        }
+        assertEquals("new@example.com", App.currentUser.getEmail());
     }
 
     @Test
     void testChangePassword() {
-        try (MockedStatic<ProfileMenuController> mockedController = Mockito.mockStatic(ProfileMenuController.class)) {
-            mockedController.when(() -> ProfileMenuController.changePassword("newPass", "oldPass")).thenReturn(new Result(true, "Password changed successfully!"));
+        scanner = new Scanner("change password -p 1234#newPass -o test#1234\n");
 
-            when(mockScanner.nextLine()).thenReturn("change password oldPass newPass");
+        ProfileMenu profileMenu = new ProfileMenu();
+        profileMenu.run(scanner);
 
-            ProfileMenu profileMenu = new ProfileMenu();
-            profileMenu.run(mockScanner);
-
-            mockedController.verify(() -> ProfileMenuController.changePassword("newPass", "oldPass"), times(1));
-        }
+        assertEquals("1234#newPass", App.currentUser.getPassword());
     }
 
-//    @Test
-//    void testUserInfo() {
-//        try (MockedStatic<App> mockedApp = Mockito.mockStatic(App.class)) {
-//            User mockUser = mock(User.class);
-//            mockedApp.when(() -> App.currentUser).thenReturn(mockUser);
-//
-//            when(mockScanner.nextLine()).thenReturn("show user info");
-//
-//            ProfileMenu profileMenu = new ProfileMenu();
-//            profileMenu.run(mockScanner);
-//        }
-//    }
+    @Test
+    void testUserInfo() {
+        scanner = new Scanner("user info\n");
+
+        ProfileMenu profileMenu = new ProfileMenu();
+        profileMenu.run(scanner);
+    }
 
     @Test
     void testInvalidCommand() {
-        when(mockScanner.nextLine()).thenReturn("invalid command");
+        scanner = new Scanner("invalid command\n");
 
         ProfileMenu profileMenu = new ProfileMenu();
-        profileMenu.run(mockScanner);
+        profileMenu.run(scanner);
     }
 }

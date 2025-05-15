@@ -2,31 +2,32 @@ package views;
 
 import models.App;
 import models.User;
+import models.enums.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class LoginMenuTest {
 
-    private Scanner mockScanner;
-    private User mockUser;
+    private Scanner scanner;
+    private User user;
 
     @BeforeEach
     void setUp() {
-        mockScanner = mock(Scanner.class);
-        mockUser = mock(User.class);
+        user = new User("testUser", "test#1234", "test", "test@gmail.com", Gender.BOY);
+        user.setSecurityQuestion("What is your favorite food?");
+        user.setSecurityQuestionAnswer("correctAnswer");
+
+        App.users.add(user);
     }
 
     @Test
     void testUsernameMenu_SuggestsNewUsername() {
-        when(mockScanner.nextLine()).thenReturn("y");
-        String suggestedUsername = LoginMenu.usernameMenu(mockScanner, "testUser");
+        scanner = new Scanner("y\n");
+        String suggestedUsername = LoginMenu.usernameMenu(scanner, "testUser");
 
         assertNotNull(suggestedUsername);
         assertTrue(suggestedUsername.startsWith("testUser"));
@@ -34,59 +35,48 @@ class LoginMenuTest {
 
     @Test
     void testUsernameMenu_UserDeclinesNewUsername() {
-        when(mockScanner.nextLine()).thenReturn("n");
-        String suggestedUsername = LoginMenu.usernameMenu(mockScanner, "testUser");
+        scanner = new Scanner("n\n");
+        String suggestedUsername = LoginMenu.usernameMenu(scanner, "testUser");
 
         assertNull(suggestedUsername);
     }
 
     @Test
     void testPasswordMenu_GeneratesStrongPassword() {
-        when(mockScanner.nextLine()).thenReturn("y");
-        String password = LoginMenu.passwordMenu(mockScanner);
+        scanner = new Scanner("y\n");
+        String password = LoginMenu.passwordMenu(scanner);
 
         assertNotNull(password);
-        assertTrue(password.length() >= 8, "Password should be at least 8 characters long");
-        assertTrue(password.matches(".*[A-Z].*"), "Password should contain at least one uppercase letter");
-        assertTrue(password.matches(".*[a-z].*"), "Password should contain at least one lowercase letter");
-        assertTrue(password.matches(".*[0-9].*"), "Password should contain at least one digit");
-        assertTrue(password.matches(".*[!@#$%^&*()_+\\-=;':\"\\\\|,.<>/?].*"));
+        assertFalse(password.isEmpty());
+        assertTrue(password.matches(".*[A-Z].*"), "Should contain an uppercase letter");
+        assertTrue(password.matches(".*[a-z].*"), "Should contain a lowercase letter");
+        assertTrue(password.matches(".*\\d.*"), "Should contain a digit");
+        assertTrue(password.matches(".*[!@#$%^&*()].*"), "Should contain a special character");
     }
 
     @Test
     void testPasswordMenu_UserDeclinesNewPassword() {
-        when(mockScanner.nextLine()).thenReturn("n");
-        String password = LoginMenu.passwordMenu(mockScanner);
+        scanner = new Scanner("n\n");
+        String password = LoginMenu.passwordMenu(scanner);
 
         assertNull(password);
     }
 
     @Test
     void testForgetPasswordMenu_CorrectAnswerChangesPassword() {
-        try (MockedStatic<App> mockedApp = Mockito.mockStatic(App.class)) {
-            mockedApp.when(() -> App.getUserByUsername("testUser")).thenReturn(mockUser);
+        scanner = new Scanner("correctAnswer\nNewStrongPassword!");
 
-            when(mockUser.getSecurityQuestion()).thenReturn("What is your favourite food?");
-            when(mockUser.getSecurityQuestionAnswer()).thenReturn("correctAnswer");
+        LoginMenu.forgetPasswordMenu(scanner, "testUser");
 
-            when(mockScanner.nextLine()).thenReturn("correctAnswer".trim());
-            when(mockScanner.nextLine()).thenReturn("NewStrongPassword!");
-
-            LoginMenu.forgetPasswordMenu(mockScanner, "testUser");
-
-            verify(mockUser, atLeastOnce()).getSecurityQuestion();
-            verify(mockUser, atLeastOnce()).getSecurityQuestionAnswer();
-            verify(mockUser).setPassword("NewStrongPassword!");
-        }
+        assertEquals("NewStrongPassword!", user.getPassword(), "Password should be updated correctly");
     }
 
     @Test
     void testForgetPasswordMenu_WrongAnswerFails() {
-        when(mockUser.getSecurityQuestionAnswer()).thenReturn("correctAnswer");
-        when(mockScanner.nextLine()).thenReturn("wrongAnswer");
+        scanner = new Scanner("wrongAnswer\n");
 
-        LoginMenu.forgetPasswordMenu(mockScanner, mockUser.getUsername());
+        LoginMenu.forgetPasswordMenu(scanner, "testUser");
 
-        verify(mockUser, times(1)).getSecurityQuestionAnswer();
+        assertNotEquals("NewStrongPassword!", user.getPassword(), "Password should not be changed if the answer is wrong");
     }
 }

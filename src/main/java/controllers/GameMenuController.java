@@ -635,6 +635,7 @@ public class GameMenuController {
 
         PlayerFriendship friendship = App.currentGame.getFriendshipByPlayers(getCurrentPlayer(), receiver);
         friendship.talk(getCurrentPlayer(), message);
+        receiver.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), message));
 
         return new Result(true, "your message sent successfully.");
     }
@@ -686,6 +687,7 @@ public class GameMenuController {
         }
         friendship.gift(sender, item);
         receiver.addToBackPack(item, amount);
+        receiver.addMessage(new PlayerFriendship.Message(sender, amount + " " + itemName + " for you!"));
         sender.getInventory().removeCountFromBackPack(item, amount);
 
         return new Result(true, "you gave "  + amount + " " + itemName + " to " + receiver.getUsername() + "!");
@@ -836,7 +838,9 @@ public class GameMenuController {
 
         friendship.flower();
         receiver.addToBackPack(flower, 1);
+        receiver.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), "flowers for you ♡"));
         getCurrentPlayer().getInventory().removeCountFromBackPack(flower, 1);
+
         return new Result(true, "you gave flower to "  + receiver.getUsername() + ". friendship upgraded to level 3.");
     }
     public static Result marry(String username) {
@@ -886,12 +890,15 @@ public class GameMenuController {
             }
             getCurrentPlayer().addToBackPack(ring, 1);
             husband.getInventory().removeCountFromBackPack(ring, 1);
+            husband.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), "I'll Marry you!"));
 
             return new Result(true, "CONGRATS ON YOUR WEDDING!");
         }
         else {
             friendship.reject();
             husband.reject(App.currentGame.getDateAndTime().getDay());
+            husband.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), "your proposal has been rejected :("));
+
             return new Result(true, "you broke his heart :(");
         }
     }
