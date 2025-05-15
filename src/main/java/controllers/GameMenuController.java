@@ -1317,11 +1317,6 @@ public class GameMenuController {
                     if(artisan.getName().equals("preserves jar"))
                         artisanItem = new ArtisanItem(ArtisanItemType.PICKLES);
                     break;
-                case "smoked fish":
-                    //must be fixed
-                    if(artisan.getName().equals("fish smoker"))
-                        artisanItem = new ArtisanItem(ArtisanItemType.SMOKED_FISH);
-                    break;
                 case "furnace":
                     artisanItem = new ArtisanItem(ArtisanItemType.METAL_BAR);
                     break;

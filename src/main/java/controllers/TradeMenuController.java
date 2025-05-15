@@ -131,27 +131,27 @@ public class TradeMenuController {
                         player.getTradesWhitMoney().remove(tradeWhitMoney);
                         return new Result(true, "You accept this offer");
                     }
-                    BackPackable item = null;
-                    for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
-                        if (backPackable.getName().equals(tradeWhitMoney.getName())){
-                            item = backPackable;
-                            if (player.getInventory().getItemCount(item.getName())<tradeWhitMoney.getAmount()) {
-                                return new Result(false, "You don't have enough item to accept request");
-                            }
-                            player.getInventory().removeCountFromBackPack(item, tradeWhitMoney.getAmount());
-                            player.addGold(tradeWhitMoney.getMoney());
-                            tradeWhitMoney.getBuyer().getInventory().addToBackPack(item,tradeWhitMoney.getAmount());
-                            break;
-                        }
-                    }
-                    if (item == null) {
-                        return new Result(false, "You dont have this item to accept request");
-                    }
-                    tradeWhitMoney.getSeller().getTradesWithMoneyHistory().add(tradeWhitMoney);
-                    tradeWhitMoney.getBuyer().getTradesWithMoneyHistory().add(tradeWhitMoney);
-                    player.getTradesWhitMoney().remove(tradeWhitMoney);
-                    return new Result(true , "You accept this request");
                 }
+                BackPackable item = null;
+                for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
+                    if (backPackable.getName().equals(tradeWhitMoney.getName())){
+                        item = backPackable;
+                        if (player.getInventory().getItemCount(item.getName())<tradeWhitMoney.getAmount()) {
+                            return new Result(false, "You don't have enough item to accept request");
+                        }
+                        tradeWhitMoney.getBuyer().getInventory().addToBackPack(item,tradeWhitMoney.getAmount());
+                        player.getInventory().removeCountFromBackPack(item, tradeWhitMoney.getAmount());
+                        player.addGold(tradeWhitMoney.getMoney());
+                        break;
+                    }
+                }
+                if (item == null) {
+                    return new Result(false, "You dont have this item to accept request");
+                }
+                tradeWhitMoney.getSeller().getTradesWithMoneyHistory().add(tradeWhitMoney);
+                tradeWhitMoney.getBuyer().getTradesWithMoneyHistory().add(tradeWhitMoney);
+                player.getTradesWhitMoney().remove(tradeWhitMoney);
+                return new Result(true , "You accept this request");
             }
         }
         for (TradeWithItem trade : player.getTradesWithItem()) {
@@ -180,13 +180,13 @@ public class TradeMenuController {
                     }
                     BackPackable temp = null;
                     for (BackPackable backPackable : tradeWithItem.getSeller().getInventory().getItems().keySet()) {
-                        if(backPackable.getName().equals(tradeWithItem.getTargetName())){
+                        if(backPackable.getName().equals(tradeWithItem.getName())){
                             temp = backPackable;
                             tradeWithItem.getSeller().getInventory().removeCountFromBackPack(temp , tradeWithItem.getAmount());
+                            player.getInventory().addToBackPack(temp, tradeWithItem.getAmount());
                             break;
                         }
                     }
-                    player.getInventory().addToBackPack(temp, tradeWithItem.getAmount());
                     tradeWithItem.getSeller().getTradesWithItemHistory().add(tradeWithItem);
                     tradeWithItem.getBuyer().getTradesWithItemHistory().add(tradeWithItem);
                     player.getTradesWithItem().remove(tradeWithItem);
@@ -263,7 +263,7 @@ public class TradeMenuController {
         for (TradeWithItem trade : player.getTradesWithItem()) {
             if(trade.getType().equals("request")) {
                 System.out.println("id "+ trade.getId() + " username: " + trade.getSeller().getUsername()+" item: " + trade.getName() +
-                        " number: "+ trade.getAmount() + " target item: "+ trade.getTargetName() + " number of target item: " +trade.getAmount());
+                        " number: "+ trade.getAmount() + " target item: "+ trade.getTargetName() + " number of target item: " +trade.getTargetAmount());
             }
         }
     }
@@ -272,7 +272,7 @@ public class TradeMenuController {
         for (TradeWhitMoney trade : player.getTradesWithMoneyHistory()) {
             System.out.println("id: "+ trade.getId() +" buyer: " + trade.getBuyer().getUsername() +
                     " seller: " + trade.getSeller().getUsername() + " itemName: " + trade.getName()+
-            " itemAmount: "+trade.getAmount() + " price: "+trade.getMoney());
+                    " itemAmount: "+trade.getAmount() + " price: "+trade.getMoney());
         }
         for (TradeWithItem trade : player.getTradesWithItemHistory()) {
             System.out.println("id: "+ trade.getId() +" buyer: " + trade.getBuyer().getUsername() +
