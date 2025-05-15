@@ -35,6 +35,8 @@ public class LoginMenuController {
         }
 
         User user = new User(username, password, nickname, email, gender);
+        user.hashPassword(password);
+        user.saveUserToFile();
         App.users.add(user);
         App.currentUser = user;
 
