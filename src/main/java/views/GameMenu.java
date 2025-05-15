@@ -493,6 +493,13 @@ public class GameMenu implements AppMenu {
                 matcher.matches();
                 System.out.println(GameMenuController.showCropInfo(matcher.group("craftName")));
             }
+            else if(GameMenuCommands.PLANT_MIXED_SEED.matches(command)) {
+                Matcher matcher = GameMenuCommands.PLANT_MIXED_SEED.matcher(command);
+                matcher.matches();
+
+                System.out.println(GameMenuController.plantMixedSeed(
+                        Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy"))));
+            }
             else if(GameMenuCommands.PLANT_SEED.matches(command)) {
                 Matcher matcher = GameMenuCommands.PLANT_SEED.matcher(command);
                 matcher.matches();
@@ -529,13 +536,6 @@ public class GameMenu implements AppMenu {
                 Matcher matcher = GameMenuCommands.GET_ARTISAN.matcher(command);
                 matcher.matches();
                 System.out.println(GameMenuController.GetArtisan(matcher.group("artisanName")));
-            }
-            else if(GameMenuCommands.PLANT_MIXED_SEED.matches(command)) {
-                Matcher matcher = GameMenuCommands.PLANT_MIXED_SEED.matcher(command);
-                matcher.matches();
-
-                System.out.println(GameMenuController.plantMixedSeed(
-                        Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy"))));
             }
             else if(GameMenuCommands.HARVEST.matches(command)) {
                 Matcher matcher = GameMenuCommands.HARVEST.matcher(command);

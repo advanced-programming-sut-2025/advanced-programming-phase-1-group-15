@@ -1,5 +1,6 @@
 package models.farming;
 
+import models.RandomGenerator;
 import models.time.Season;
 
 import java.util.ArrayList;
@@ -60,7 +61,8 @@ public enum MixedSeedCrop {
                 else{
                         throw new IllegalArgumentException("Unsupported season: " + season);
                 }
-                Random rand = new Random();
-                return seeds.get(rand.nextInt(seeds.size()));
+                return seeds.get(RandomGenerator.getInstance().randomInt(0,seeds.size()-1));
         }
+
+
 }

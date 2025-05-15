@@ -91,8 +91,8 @@ public enum CropSeeds implements Seedable  {
     }
 
     public static CropSeeds getByName(String name) {
-        String simplifiedName = name.trim().toLowerCase();
-        switch (simplifiedName) {
+        String normalized = name.trim().toLowerCase().replace('_', ' ');
+        switch (normalized) {
             case "jazz seed": return CropSeeds.JAZZ_SEED;
             case "carrot seed": return CropSeeds.CARROT_SEED;
             case "cauliflower seed": return CropSeeds.CAULIFLOWER_SEED;
