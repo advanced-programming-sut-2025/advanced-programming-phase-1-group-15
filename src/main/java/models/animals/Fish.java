@@ -25,7 +25,7 @@ public class Fish implements BackPackable, Tilable {
 
     @Override
     public String getDescription() {
-        return "Quality: " + quality.name();
+        return "";
     }
 
     @Override

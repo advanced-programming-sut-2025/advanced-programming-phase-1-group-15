@@ -1,3 +1,4 @@
+
 package controllers;
 
 import models.App;
@@ -1301,16 +1302,16 @@ public class GameMenuController {
             return new Result(true , "artisan item made successfully");
         }
         for (BackPackable backPackable : player.getInventory().getItems().keySet()) {
-                if(artisanItem.getArtisanItemType().ingredients.getName().trim().toLowerCase().replaceAll("_" , " ").equals(backPackable.getName())) {
-                    if (player.getInventory().getItemCount(backPackable.getName())<artisanItem.getArtisanItemType().number) {
-                        return new Result(false , "You dont have this material");
-                    }
-                    Game game = App.currentGame;
-                    artisanItem.setHour(game.getDateAndTime().getHour());
-                    artisanItem.setDay(game.getDateAndTime().getDay());
-                    player.getArtisanItems().add(artisanItem);
-                    return new Result(true , "artisan item made successfully");
+            if(artisanItem.getArtisanItemType().ingredients.getName().trim().toLowerCase().replaceAll("_" , " ").equals(backPackable.getName())) {
+                if (player.getInventory().getItemCount(backPackable.getName())<artisanItem.getArtisanItemType().number) {
+                    return new Result(false , "You dont have this material");
                 }
+                Game game = App.currentGame;
+                artisanItem.setHour(game.getDateAndTime().getHour());
+                artisanItem.setDay(game.getDateAndTime().getDay());
+                player.getArtisanItems().add(artisanItem);
+                return new Result(true , "artisan item made successfully");
+            }
         }
         return new Result(false , "You dont have this material");
     }
@@ -1396,14 +1397,25 @@ public class GameMenuController {
             }
         }
         for (BackPackable backPackable : ingredient.ingredients.keySet()) {
-            int num = ingredient.ingredients.get(backPackable);
-            player.getInventory().removeCountFromBackPack(backPackable , num);
-        }
-        for (BackPackable packable : ingredient.ingredients.keySet()) {
-            int num = ingredient.ingredients.get(packable);
-            int number = fridge.getItemCount(packable.getName());
-            fridge.removeFromFridge(packable);
-            fridge.addToFridge(packable , number-num);
+            boolean find = false;
+            for (BackPackable packable : player.getInventory().getItems().keySet()) {
+                if (backPackable.getName().equals(packable.getName())) {
+                    int num = ingredient.ingredients.get(backPackable);
+                    player.getInventory().removeCountFromBackPack(packable , num);
+                    find = true;
+                    break;
+                }
+            }
+            if(!find){
+                for (BackPackable packable : ingredient.ingredients.keySet()) {
+                    if (backPackable.getName().equals(packable.getName())) {
+                        int num = ingredient.ingredients.get(packable);
+                        int number = fridge.getItemCount(packable.getName());
+                        fridge.removeFromFridge(packable);
+                        fridge.addToFridge(packable , number-num);
+                    }
+                }
+            }
         }
         player.getInventory().addToBackPack(food ,1);
         return new Result(true , "You cook this food");
