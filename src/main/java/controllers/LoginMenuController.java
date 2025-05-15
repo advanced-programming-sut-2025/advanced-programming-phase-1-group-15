@@ -77,14 +77,13 @@ public class LoginMenuController {
     }
 
     public static Result loginUser(String username, String password, boolean stayLoggedIn) {
-        User user = App.getUserByUsername(username);
+        User user = User.loadUserFromFile(username);
         if(user == null) {
             return new Result(false, "username not found!");
         }
-        else if(!password.equals(user.getPassword())) {
+        else if(user.checkPassword(password)) {
             return new Result(false, "password doesn't match!");
         }
-
         App.currentUser = user;
         AppView.currentMenu = new MainMenu();
         return new Result(true, "User logged in successfully! You are now in main menu.");
