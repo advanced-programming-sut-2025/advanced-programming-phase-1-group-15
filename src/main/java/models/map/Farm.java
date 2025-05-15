@@ -74,12 +74,12 @@ public class Farm extends Area {
 
         for (int i = 0; i < treesCount; i++) {
             while (true) {
-                int randomRow = RandomGenerator.getInstance().randomInt(0,tiles.size());
-                int randomCol = RandomGenerator.getInstance().randomInt(0,tiles.get(randomRow).size());
+                int randomRow = RandomGenerator.getInstance().randomInt(0,tiles.size()-1);
+                int randomCol = RandomGenerator.getInstance().randomInt(0,tiles.get(randomRow).size()-1);
                 Tile randomTile = tiles.get(randomRow).get(randomCol);
 
                 if (randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
-                    TreeType randomTreeType = validTreeTypes.get(RandomGenerator.getInstance().randomInt(0,validTreeTypes.size()));
+                    TreeType randomTreeType = validTreeTypes.get(RandomGenerator.getInstance().randomInt(0,validTreeTypes.size()-1));
 
                     randomTile.put(new Tree(randomTreeType));
                     break;
@@ -93,8 +93,8 @@ public class Farm extends Area {
 
         for (int i = 0; i < mineralsCount; i++) {
             while (true) {
-                int randomRow = RandomGenerator.getInstance().randomInt(0,tiles.size());
-                int randomCol = RandomGenerator.getInstance().randomInt(0,tiles.get(randomRow).size());
+                int randomRow = RandomGenerator.getInstance().randomInt(0,tiles.size()-1);
+                int randomCol = RandomGenerator.getInstance().randomInt(0,tiles.get(randomRow).size()-1);
                 Tile randomTile = tiles.get(randomRow).get(randomCol);
 
                 if(RandomGenerator.getInstance().randomBoolean()) {
@@ -106,7 +106,7 @@ public class Farm extends Area {
                 else {
                     if (randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
                         ForagingMineralType randomMineralType = ForagingMineralType.values()
-                                [RandomGenerator.getInstance().randomInt(0,ForagingMineralType.values().length)];
+                                [RandomGenerator.getInstance().randomInt(0,ForagingMineralType.values().length-1)];
 
                         randomTile.put(new ForagingMineral(randomMineralType));
                         break;
