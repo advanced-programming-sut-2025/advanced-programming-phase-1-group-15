@@ -128,6 +128,14 @@ public class Tile {
         }
     }
     public boolean isWatered() {
+        if(getObjectInTile() instanceof GiantPlant){
+            GiantPlant g = (GiantPlant) getObjectInTile();
+            for(Tile t : g.getParts()){
+                if(t.isWatered()){
+                    return true;
+                }
+            }
+        }
         return watered;
     }
 

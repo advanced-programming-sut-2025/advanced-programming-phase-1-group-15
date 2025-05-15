@@ -72,46 +72,46 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         return App.currentGame.getDateAndTime();
     }
 
-    public Result seed(CropSeeds seed){
+    public Result seed(CropSeeds seed) {
         if (harvestable != null) {
             return new Result(false, "already there is a crop or tree here!");
         }
-
         Crops crop = CropSeeds.cropOfThisSeed(seed);
-
-        if(crop == null)  throw new IllegalArgumentException("crop seed cannot be null");
-
-        if (!crop.canGrowInThisSeason(lastUpdate().getSeason()) && !isInGreenHouse()) {
+        if (crop == null) {
+            throw new IllegalArgumentException("crop seed cannot be null");
+        }
+        if (!crop.canGrowInThisSeason(lastUpdate().getSeason())
+                && !isInGreenHouse()) {
             return new Result(false, "this is not a suitable season for this seed!");
         }
 
         Result seedResult = this.currentState.seed(seed);
-        if(!seedResult.isSuccessFull()) {
+        if (!seedResult.isSuccessFull()) {
             return seedResult;
         }
-
-
 
         this.cropSeed = seed;
         this.harvestable = new Crop(crop);
 
         if (crop.canBecomeGiant()) {
-            List<List<Position>> giantPositions = getAll2x2Groups();
-            for(List<Position> giantPosition : giantPositions) {
-                if (canBecomeGiant(giantPosition)) {
-                    List<Tile> giantTiles = new LinkedList<>();
-                    for(Position position : giantPosition) {
-                        giantTiles.add(App.currentGame.getTile(position));
+            List<List<Position>> groups = getAll2x2Groups();
+            for (List<Position> group : groups) {
+                if (canBecomeGiant(group)) {
+                    List<Tile> tiles = new ArrayList<>();
+                    for (Position p : group) {
+                        tiles.add(App.currentGame.getTile(p));
                     }
-                    GiantPlant giantPlant = new GiantPlant(giantTiles);
-                    for (Tile part : giantTiles) {
-                        part.setObjectInTile(giantPlant);
+                    GiantPlant giant = new GiantPlant(tiles);
+                    giant.setHarvestable(new Crop(CropSeeds.cropOfThisSeed(seed)));
+                    for (Tile t : tiles) {
+                        t.setObjectInTile(giant);
                     }
+                    return new Result(true, "Giant plant seeded!");
                 }
             }
-            return new Result(true,"Giant plant seeded!");
+            return new Result(true, "plant seeded!");
         } else {
-            return new Result(true,"Crop seeded!");
+            return new Result(true, "Crop seeded!");
         }
     }
 
@@ -173,30 +173,41 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
     }
 
     private boolean canBecomeGiant(List<Position> positions) {
-        Crops previousCrops = getCropTypeOfPos(positions.get(0));
-        TreeType previousTree = getTreeTypeOfPos(positions.get(0));
+        // assume at least 4 positions
+        Position first = positions.get(0);
+        Tile firstTile = App.currentGame.getTile(first);
+        AreaType area = firstTile.getAreaType();
+        if (area == AreaType.GREENHOUSE) {
+            return false;
+        }
 
-        for(int i=1;i<positions.size()-1;i++){
-            Position nextPos = positions.get(i);
-            Position previousPos = positions.get(i-1);
-            if(App.currentGame.getTile(previousPos.x,previousPos.y).getAreaType() == AreaType.GREENHOUSE){
+        Crops baseCrop = getCropTypeOfPos(first);
+        TreeType baseTree = getTreeTypeOfPos(first);
+
+        if (baseCrop == null && baseTree == null) {
+            return false;
+        }
+
+        for (Position p : positions) {
+            if(p.x<0 || p.y<0) return false;
+            Tile t = App.currentGame.getTile(p);
+            if (t.getAreaType() == AreaType.GREENHOUSE) {
                 return false;
             }
-            
-            if(getCropTypeOfPos(nextPos)!= null && getCropTypeOfPos(previousPos)!= null){
-                if(!getCropTypeOfPos(nextPos).equals(getCropTypeOfPos(previousPos))){
+            Crops c = getCropTypeOfPos(p);
+            TreeType tr = getTreeTypeOfPos(p);
+
+            if (baseCrop != null) {
+                if (c == null || !c.equals(baseCrop)) {
                     return false;
                 }
-            }
-            else if(getTreeTypeOfPos(nextPos)!= null && getTreeTypeOfPos(previousPos)!= null){
-                if(!getTreeTypeOfPos(nextPos).equals(getTreeTypeOfPos(previousPos))){
+            } else {
+                if (tr == null || !tr.equals(baseTree)) {
                     return false;
                 }
-            }
-            else{
-                return false;
             }
         }
+
         return true;
     }
 
