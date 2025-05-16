@@ -392,19 +392,19 @@ public class Player extends User implements TimeObserver {
                 if(tile.getAreaType() == AreaType.GREENHOUSE) continue;
                 if(tile.isPlowed()){
                     remainder++;    remainder %= 16;
-                    if(remainder == 0){
-                        if(RandomGenerator.getInstance().randomInt(0,3) == 1) {
-                            if(tile.getObjectInTile() instanceof PloughedPlace) {
-                                PloughedPlace place = (PloughedPlace) tile.getObjectInTile();
-                                if(place.getHarvestable() instanceof Tree) {
-                                    place.setAttackedByCrow(2);
-                                }
-                                else{
-                                    place.unPlough();
-                                }
-                            }
-                        }
-                    }
+                    //if(remainder == 0){
+                        //if(RandomGenerator.getInstance().randomInt(0,3) == 1) {
+//                            if(tile.getObjectInTile() instanceof PloughedPlace) {
+//                                PloughedPlace place = (PloughedPlace) tile.getObjectInTile();
+//                                if(place.getHarvestable() instanceof Tree) {
+//                                    place.setAttackedByCrow(2);
+//                                }
+//                                else{
+//                                    place.unPlough();
+//                                }
+//                            }
+                        //}
+                    //}
                 }
             }
         }

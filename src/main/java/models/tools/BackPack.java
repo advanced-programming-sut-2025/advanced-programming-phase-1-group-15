@@ -1,6 +1,8 @@
 package models.tools;
 
 import models.Player;
+import models.animals.Fish;
+import models.animals.FishType;
 import models.farming.Seed;
 import models.foraging.Stone;
 
@@ -24,6 +26,9 @@ public class BackPack extends Tool {
         items.put(new Scythe(), 1);
         items.put(new FishingPole(), 1);
         items.put(new Stone(), 100000);
+        items.put(new Fish(FishType.CRIMSON_FISH.FLOUNDER),20);
+        items.put(new Fish(FishType.CRIMSON_FISH.HERRING),20);
+        items.put(new Fish(FishType.CRIMSON_FISH.SUNFISH),20);
     }
 
     public int getCapacity() {
@@ -76,6 +81,9 @@ public class BackPack extends Tool {
     }
 
     public void removeCountFromBackPack(BackPackable item, int amount) {
+        if(!items.containsKey(item)) {
+            return;
+        }
         if(amount == items.get(item)) {
             removeFromBackPack(item);
             return;

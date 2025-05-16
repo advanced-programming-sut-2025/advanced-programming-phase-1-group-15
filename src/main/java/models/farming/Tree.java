@@ -33,7 +33,7 @@ public class Tree extends Harvestable implements Tilable, TimeObserver {
 
     @Override
     public ArrayList<Integer> getStages() {
-        return null;
+        return treeType.getStages();
     }
 
     @Override

@@ -18,7 +18,7 @@ public class GiantPlant extends PloughedPlace implements Tilable {
     int daysUntilHarvest = 0;
 
     public GiantPlant(List<Tile> parts) {
-        super();
+        super(parts.get(0));
         this.parts= parts;
         ArrayList<PloughedPlace> ploughedParts = new ArrayList<>();
         for(Tile part: parts) {

@@ -617,6 +617,12 @@ public class GameMenu implements AppMenu {
                         new Position(Integer.parseInt(matcher.group("x"))
                                 , Integer.parseInt(matcher.group("y")))));
             }
+            else if(GameMenuCommands.FERTILIZE.matches(command)) {
+                Matcher matcher = GameMenuCommands.FERTILIZE.matcher(command);
+                matcher.matches();
+                System.out.println(GameMenuController.fertilize(matcher.group("name"),
+                        new Position(Integer.parseInt(matcher.group("x")),Integer.parseInt(matcher.group("y")))));
+            }
             else {
                 System.out.println("invalid command");
             }

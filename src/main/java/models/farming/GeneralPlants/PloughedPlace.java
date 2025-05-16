@@ -30,6 +30,14 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         return fertilizer;
     }
 
+    public Result fertilize(Fertilizer f){
+        if(fertilizer == null){
+            this.fertilizer = f;
+            return new Result(true,"successfully fertilized");
+        }
+        return new Result(false,"it already is fertilized");
+    }
+
     protected Harvestable harvestable;
 
     protected PlantState currentState = new PloughedState(this);
@@ -127,11 +135,6 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         this.seed = seed;
     }
 
-    public PloughedPlace() {
-        App.currentGame.getDateAndTime().addObserver(this);
-        updateDay();
-    }
-
     public void updateDay(){
         lastUpdateOfDay = App.currentGame.getDateAndTime().getDay();
     }
@@ -141,6 +144,8 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         currentState = new PloughedState(this);
     }
 
+
+
     @Override
     public void update(DateAndTime dateAndTime) {
         if(harvestable != null) {
@@ -149,7 +154,7 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         if(lastUpdateOfDay != dateAndTime.getDay()){
             currentState.updateByTime();
             tile.setWatered(false);
-            attackedByCrow--;
+            if (attackedByCrow > 0) attackedByCrow--;
             updateDay();
         }
     }
@@ -269,7 +274,7 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
 
         int growth = 0;
         if(currentState instanceof WateredState) growth = 4;
-        if(currentState instanceof RestState) growth = 4;
+        if(currentState instanceof RestState) growth = harvestable.getStages().size();
         if(currentState instanceof SeededState) {
             SeededState seededState = (SeededState) currentState;
             growth = seededState.getGrowthLevel() +1;
@@ -302,6 +307,7 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         if(weatherOption.equals(WeatherOption.STORM)){
             currentState.water();
         }
+        currentState.updateByTime();
     }
 
     public void setAttackedByCrow(int attackedByCrow) {

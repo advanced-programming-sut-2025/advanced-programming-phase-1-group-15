@@ -54,6 +54,10 @@ public class Game implements TimeObserver {
         map = new Map(mapTiles);
         map.build();
         dateAndTime.addObserver(map);
+        for(NPC npc: DefaultNPCs.getInstance().getDefaultOnes().values()) {
+            mapTiles.get(npc.getHomeLocation().getPosition().y)
+                    .get(npc.getHomeLocation().getPosition().x).setObjectInTile(npc);
+        }
         for(Player player : players) {
             for(NPC npc: DefaultNPCs.getInstance().getDefaultOnes().values()) {
                 npc.addToFriendShip(player);

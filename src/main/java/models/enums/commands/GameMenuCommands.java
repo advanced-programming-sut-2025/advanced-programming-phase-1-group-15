@@ -60,6 +60,7 @@ package models.enums.commands;
         QUEST_LIST("^quests\\s+list$"),
         QUEST_FINISH("^quests\\s+finish\\s+-i\\s+(?<index>\\d+)$"),
         PlaceItem("^place\\s+item\\s+-n\\s+(?<itemName>\\S+)\\s+-d\\s+(?<x>-1|0|1)\\s+(?<y>-1|0|1)$"),
+        FERTILIZE("^fertilize\\s+-f\\s+(?<name>\\S+)\\s+-d\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$"),
         START_TRADE("^start\\s+trade$");
         private final String regex;
 

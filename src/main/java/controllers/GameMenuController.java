@@ -952,15 +952,15 @@ public class GameMenuController {
     }
 
     public static Result fertilize(String fertilizerName, Position position) {
-        Tile goalTile = App.currentGame.getTile(position.x,position.y);
-        if(goalTile.getObjectInTile() == null) return new Result(false,"goal tile is empty");
+        Tile goalTile = App.currentGame.getMap().getTile(position);
+        if(goalTile.getObjectInTile() == null) return new Result(false,"goal tile is empty------");
         if(!goalTile.getObjectInTile().getClass().equals(PloughedPlace.class))
             return new Result(false,"goal tile is not a PloughedPlace");
         PloughedPlace goalPlace = (PloughedPlace) goalTile.getObjectInTile();
-        if(fertilizerName.equals("water fertilizer")){
-            return goalPlace.getCurrentState().fertilize(Fertilizer.Water);
+        if(fertilizerName.equals("water")){
+            return goalPlace.fertilize(Fertilizer.Water);
         }
-        else if(fertilizerName.equals("growth fertilizer")){
+        else if(fertilizerName.equals("growth")){
             return goalPlace.getCurrentState().fertilize(Fertilizer.Growth);
         }
         else {
@@ -1028,7 +1028,7 @@ public class GameMenuController {
         if(npc == null){
             return new Result(false,"invalid name for npc");
         }
-        if(player.getPosition().isAdjacent(npc.getHomeLocation().getPosition()))
+        if(!player.getPosition().isAdjacent(npc.getHomeLocation().getPosition()))
             return new Result(false,"npc is not besides of you");
         return new Result(true,npc.meet(player));
     }

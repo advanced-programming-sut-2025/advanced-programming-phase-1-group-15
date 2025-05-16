@@ -3,6 +3,7 @@ package models.npcs;
 import models.App;
 import models.Player;
 import models.RandomGenerator;
+import models.map.Tilable;
 import models.map.Tile;
 import models.time.DateAndTime;
 import models.time.Season;
@@ -14,7 +15,7 @@ import models.weather.WeatherOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class NPC implements TimeObserver {
+public class NPC implements TimeObserver , Tilable {
     protected String name;
     protected String job;
     private Tile homeLocation;

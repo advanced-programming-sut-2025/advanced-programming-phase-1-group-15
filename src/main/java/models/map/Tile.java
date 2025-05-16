@@ -8,6 +8,7 @@ import models.farming.GeneralPlants.*;
 import models.farming.Tree;
 import models.foraging.ForagingMineral;
 import models.foraging.Stone;
+import models.npcs.NPC;
 import models.stores.*;
 import models.tools.Fridge;
 import models.tools.ShippingBin;
@@ -131,11 +132,15 @@ public class Tile {
         if(getObjectInTile() instanceof GiantPlant){
             GiantPlant g = (GiantPlant) getObjectInTile();
             for(Tile t : g.getParts()){
-                if(t.isWatered()){
+                if(t.getWatered()){
                     return true;
                 }
             }
         }
+        return watered;
+    }
+
+    public boolean getWatered() {
         return watered;
     }
 
@@ -211,6 +216,16 @@ public class Tile {
             }
         }
         else if(area.areaType.equals(AreaType.VILLAGE)) {
+            if(objectInTile instanceof NPC npc) {
+                switch(npc.getName()){
+                    case "Sebastian": PrintInColor.printInBrightPurple('s'); break;
+                    case "Abigail": PrintInColor.printInBrightPurple('a'); break;
+                    case "Harvey": PrintInColor.printInBrightPurple('h'); break;
+                    case "Leah": PrintInColor.printInBrightPurple('l'); break;
+                    case "Robin": PrintInColor.printInBrightPurple('r'); break;
+                    default: PrintInColor.printInCyan('⌂');
+                }
+            }
             PrintInColor.printInCyan('⌂');
         }
         else if(objectInTile != null) {

@@ -10,9 +10,18 @@ public class RestState implements PlantState{
 
     public RestState(PloughedPlace tile) {
         this.tile = tile;
-        Crop crop = (Crop) tile.getHarvestable();
-        Crops cropType = crop.getCropType();
-        this.restDaysRemaining= cropType.getRegrowthTime();
+        Harvestable h = tile.getHarvestable();
+
+        if (h instanceof Crop crop) {
+            Crops ct = crop.getCropType();
+            this.restDaysRemaining = ct.getRegrowthTime();
+        }
+        else if (h instanceof Tree tree) {
+            this.restDaysRemaining = tree.getTreeType().getTotalHarvestTime();
+        }
+        else {
+            throw new IllegalStateException("RestState on non-crop/tree");
+        }
     }
 
     @Override
