@@ -50,7 +50,7 @@ public class MainMenu implements AppMenu {
 
         else if(MainMenuCommands.LOGOUT_REGEX.matches(command)) {
             App.currentUser = null;
-            AppView.currentMenu = new LoginMenu();
+            AppView.currentMenu = null;
             System.out.println("User logged out successfully.");
         }
 
