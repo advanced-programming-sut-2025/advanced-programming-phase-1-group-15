@@ -1,0 +1,19 @@
+<changelist name="Uncommitted_changes_before_Update_at_5_15_2025_3_14_PM_[Changes]" date="1747309466343" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_15_2025_3_14_PM_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 5/15/2025 3:14 PM [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/models/User.class" />
+    <option name="AFTER_PATH" value="target/classes/models/User.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_15_2025_3_14_PM_[Changes]/User.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/models/map/Tile$1.class" />
+    <option name="AFTER_PATH" value="target/classes/models/map/Tile$1.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_15_2025_3_14_PM_[Changes]/Tile$1.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/models/map/Tile.class" />
+    <option name="AFTER_PATH" value="target/classes/models/map/Tile.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_5_15_2025_3_14_PM_[Changes]/Tile.class" />
+  </binary>
+</changelist>

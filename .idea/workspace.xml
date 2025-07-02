@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_INJECTED_CODE" value="false" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ca3423a9-190f-44c3-91cb-e44ac7a49f35" name="Changes" comment="fixes on farming">
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/GameMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/GameMenuController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/GameMenuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/GameMenuController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/models/farming/GeneralPlants/RestState.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/models/farming/GeneralPlants/RestState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/models/farming/Tree.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/models/farming/Tree.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;AmiraliMalekloo&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/advanced-programming-sut-2025/advanced-programming-phase-1-group-15&quot;,
+    &quot;accountId&quot;: &quot;730b4b35-1569-4448-b283-02b3295c74f8&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="autoscrollToSource" value="true" />
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2vr83gcjkTWqhkhdJLvJtIXTcgq" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Amir Ali/IdeaProjects/WalkTest&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ca3423a9-190f-44c3-91cb-e44ac7a49f35" name="Changes" comment="" />
+      <created>1744891635337</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1744891635337</updated>
+      <workItem from="1744891636803" duration="762000" />
+      <workItem from="1745086109737" duration="559000" />
+      <workItem from="1745322044370" duration="10390000" />
+      <workItem from="1745332498983" duration="607000" />
+      <workItem from="1745480575312" duration="19005000" />
+      <workItem from="1745520159024" duration="1918000" />
+      <workItem from="1745523576644" duration="3412000" />
+      <workItem from="1745527435098" duration="2926000" />
+      <workItem from="1745558535794" duration="19864000" />
+      <workItem from="1745605676422" duration="5323000" />
+      <workItem from="1745639173855" duration="8346000" />
+      <workItem from="1745650683994" duration="5419000" />
+      <workItem from="1745668798051" duration="4162000" />
+      <workItem from="1745683511308" duration="4288000" />
+      <workItem from="1745726529502" duration="2528000" />
+      <workItem from="1745748405151" duration="1256000" />
+      <workItem from="1745761849253" duration="2215000" />
+      <workItem from="1745834659249" duration="3000" />
+      <workItem from="1745852371807" duration="818000" />
+      <workItem from="1745901369430" duration="3097000" />
+      <workItem from="1745909703315" duration="4468000" />
+      <workItem from="1745925759089" duration="2211000" />
+      <workItem from="1745937254294" duration="850000" />
+      <workItem from="1746007765061" duration="733000" />
+      <workItem from="1746026283379" duration="2903000" />
+      <workItem from="1746079575771" duration="17932000" />
+      <workItem from="1746166607913" duration="28829000" />
+      <workItem from="1746261617764" duration="2000" />
+      <workItem from="1746285865282" duration="7074000" />
+      <workItem from="1746366523344" duration="18502000" />
+      <workItem from="1746434135348" duration="1166000" />
+      <workItem from="1746438948951" duration="397000" />
+      <workItem from="1746462574669" duration="8095000" />
+      <workItem from="1746514771410" duration="1591000" />
+      <workItem from="1746521820227" duration="25000" />
+      <workItem from="1746773118567" duration="15797000" />
+      <workItem from="1746875481495" duration="6234000" />
+      <workItem from="1746893420470" duration="9690000" />
+      <workItem from="1746908157846" duration="4621000" />
+      <workItem from="1746914780101" duration="11000" />
+      <workItem from="1746914806584" duration="31000" />
+      <workItem from="1746920230985" duration="2933000" />
+      <workItem from="1746933976387" duration="4425000" />
+      <workItem from="1747032774842" duration="204000" />
+      <workItem from="1747040236632" duration="3651000" />
+      <workItem from="1747061799653" duration="4208000" />
+      <workItem from="1747075562001" duration="298000" />
+      <workItem from="1747090163376" duration="15000" />
+      <workItem from="1747090502551" duration="600000" />
+      <workItem from="1747128647498" duration="3450000" />
+      <workItem from="1747132135306" duration="12426000" />
+      <workItem from="1747198125324" duration="25180000" />
+      <workItem from="1747235841584" duration="10209000" />
+      <workItem from="1747287522170" duration="38605000" />
+      <workItem from="1747408701055" duration="10081000" />
+      <workItem from="1747422905807" duration="106000" />
+      <workItem from="1747423508577" duration="107000" />
+      <workItem from="1747472117360" duration="869000" />
+      <workItem from="1747807462689" duration="314000" />
+    </task>
+    <task id="LOCAL-00003" summary="Adjacent logic&#10;parent area&#10;RandomGenerator if needed in future">
+      <option name="closed" value="true" />
+      <created>1745494774559</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1745494774560</updated>
+    </task>
+    <task id="LOCAL-00004" summary="walk method completed">
+      <option name="closed" value="true" />
+      <created>1745505539014</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1745505539014</updated>
+    </task>
+    <task id="LOCAL-00005" summary="walk method completed and debugged passing lake">
+      <option name="closed" value="true" />
+      <created>1745573200451</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1745573200451</updated>
+    </task>
+    <task id="LOCAL-00006" summary="show crop info method added">
+      <option name="closed" value="true" />
+      <created>1745609137221</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1745609137221</updated>
+    </task>
+    <task id="LOCAL-00007" summary="basic methods added for Crops and seeds">
+      <option name="closed" value="true" />
+      <created>1745641498219</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1745641498220</updated>
+    </task>
+    <task id="LOCAL-00008" summary="crops structure fixed&#10;seeding command added">
+      <option name="closed" value="true" />
+      <created>1745648667901</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1745648667901</updated>
+    </task>
+    <task id="LOCAL-00009" summary="started giant products">
+      <option name="closed" value="true" />
+      <created>1745686791021</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1745686791021</updated>
+    </task>
+    <task id="LOCAL-00010" summary="apply &quot;state&quot; design pattern to plants">
+      <option name="closed" value="true" />
+      <created>1745922350732</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1745922350732</updated>
+    </task>
+    <task id="LOCAL-00011" summary="watering plants and generating mixedseed somewhat done">
+      <option name="closed" value="true" />
+      <created>1745931400753</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1745931400753</updated>
+    </task>
+    <task id="LOCAL-00012" summary="write main logic of GiantPlant and correct structure of plants">
+      <option name="closed" value="true" />
+      <created>1746182219207</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1746182219207</updated>
+    </task>
+    <task id="LOCAL-00013" summary="implemented rest periods and harvest and season check">
+      <option name="closed" value="true" />
+      <created>1746204004514</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1746204004514</updated>
+    </task>
+    <task id="LOCAL-00014" summary="started adding trees and random foraging">
+      <option name="closed" value="true" />
+      <created>1746219450066</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1746219450066</updated>
+    </task>
+    <task id="LOCAL-00015" summary="continue of tree and checking to become giant">
+      <option name="closed" value="true" />
+      <created>1746223628363</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1746223628363</updated>
+    </task>
+    <task id="LOCAL-00016" summary="attack of crows started">
+      <option name="closed" value="true" />
+      <created>1746225788449</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1746225788449</updated>
+    </task>
+    <task id="LOCAL-00017" summary="added planting trees , fixed structure and planting mixed seeds">
+      <option name="closed" value="true" />
+      <created>1746388676872</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1746388676872</updated>
+    </task>
+    <task id="LOCAL-00018" summary="PrintInfo and GiantPlant Update Done">
+      <option name="closed" value="true" />
+      <created>1746399150285</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1746399150285</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Harvest implemented">
+      <option name="closed" value="true" />
+      <created>1746467298134</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1746467298134</updated>
+    </task>
+    <task id="LOCAL-00020" summary="GreenHouse features related to plants implemented">
+      <option name="closed" value="true" />
+      <created>1746473834266</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1746473834266</updated>
+    </task>
+    <task id="LOCAL-00021" summary="minor fixes">
+      <option name="closed" value="true" />
+      <created>1746802373567</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1746802373567</updated>
+    </task>
+    <task id="LOCAL-00022" summary="forced commit">
+      <option name="closed" value="true" />
+      <created>1746876540159</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1746876540159</updated>
+    </task>
+    <task id="LOCAL-00023" summary="water and plough with tools">
+      <option name="closed" value="true" />
+      <created>1746877472799</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1746877472799</updated>
+    </task>
+    <task id="LOCAL-00024" summary="some fixes on time">
+      <option name="closed" value="true" />
+      <created>1746880078573</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1746880078573</updated>
+    </task>
+    <task id="LOCAL-00025" summary="started NPCs">
+      <option name="closed" value="true" />
+      <created>1746881693952</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1746881693952</updated>
+    </task>
+    <task id="LOCAL-00026" summary="meet method implemented">
+      <option name="closed" value="true" />
+      <created>1746899855603</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1746899855603</updated>
+    </task>
+    <task id="LOCAL-00027" summary="quests and other things">
+      <option name="closed" value="true" />
+      <created>1746908176646</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1746908176646</updated>
+    </task>
+    <task id="LOCAL-00028" summary="quest ( previous was conflicted )">
+      <option name="closed" value="true" />
+      <created>1746909054058</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1746909054058</updated>
+    </task>
+    <task id="LOCAL-00029" summary="and still quest ...">
+      <option name="closed" value="true" />
+      <created>1746911264444</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1746911264444</updated>
+    </task>
+    <task id="LOCAL-00030" summary="minor changes">
+      <option name="closed" value="true" />
+      <created>1746924294234</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1746924294234</updated>
+    </task>
+    <task id="LOCAL-00031" summary="connection of use tool and harvest">
+      <option name="closed" value="true" />
+      <created>1746937169104</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1746937169104</updated>
+    </task>
+    <task id="LOCAL-00032" summary="it does not let me update project so I have to push this commit">
+      <option name="closed" value="true" />
+      <created>1747032949545</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1747032949545</updated>
+    </task>
+    <task id="LOCAL-00033" summary="minor changes on stage and gift">
+      <option name="closed" value="true" />
+      <created>1747042904955</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1747042904955</updated>
+    </task>
+    <task id="LOCAL-00034" summary="complicated formula for walk">
+      <option name="closed" value="true" />
+      <created>1747131964691</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1747131964691</updated>
+    </task>
+    <task id="LOCAL-00035" summary="forgot to commit some files">
+      <option name="closed" value="true" />
+      <created>1747132165693</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1747132165693</updated>
+    </task>
+    <task id="LOCAL-00036" summary="FriendShip with NPC">
+      <option name="closed" value="true" />
+      <created>1747135213230</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1747135213230</updated>
+    </task>
+    <task id="LOCAL-00037" summary="controller methos for NPCs">
+      <option name="closed" value="true" />
+      <created>1747138420316</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1747138420316</updated>
+    </task>
+    <task id="LOCAL-00038" summary="commands and view methods added for NPCs">
+      <option name="closed" value="true" />
+      <created>1747139275309</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1747139275309</updated>
+    </task>
+    <task id="LOCAL-00039" summary="thor , effect of weather on plants , bug of walk fixed">
+      <option name="closed" value="true" />
+      <created>1747198825028</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1747198825028</updated>
+    </task>
+    <task id="LOCAL-00040" summary="thor, fixing an exception etc.">
+      <option name="closed" value="true" />
+      <created>1747211299646</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1747211299646</updated>
+    </task>
+    <task id="LOCAL-00041" summary="some changes on seeded type and NPCs">
+      <option name="closed" value="true" />
+      <created>1747225510059</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1747225510059</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Temporary commit ( The power is out ! ): )">
+      <option name="closed" value="true" />
+      <created>1747228388920</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1747228388920</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Temporary commit ( The power is out ! ): )">
+      <option name="closed" value="true" />
+      <created>1747235870855</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1747235870855</updated>
+    </task>
+    <task id="LOCAL-00044" summary="some minor fixes">
+      <option name="closed" value="true" />
+      <created>1747237639797</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1747237639797</updated>
+    </task>
+    <task id="LOCAL-00045" summary="some fixes">
+      <option name="closed" value="true" />
+      <created>1747246270779</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1747246270779</updated>
+    </task>
+    <task id="LOCAL-00046" summary="some test and fix 1">
+      <option name="closed" value="true" />
+      <created>1747291391594</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1747291391594</updated>
+    </task>
+    <task id="LOCAL-00047" summary="some test and fix 2">
+      <option name="closed" value="true" />
+      <created>1747297747843</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1747297747843</updated>
+    </task>
+    <task id="LOCAL-00048" summary="fixed logic of randomness">
+      <option name="closed" value="true" />
+      <created>1747299676143</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1747299676143</updated>
+    </task>
+    <task id="LOCAL-00049" summary="fix an Exception">
+      <option name="closed" value="true" />
+      <created>1747300773962</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1747300773962</updated>
+    </task>
+    <task id="LOCAL-00050" summary="some fixes on giant plants">
+      <option name="closed" value="true" />
+      <created>1747307050689</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1747307050690</updated>
+    </task>
+    <task id="LOCAL-00051" summary="fixes on farming">
+      <option name="closed" value="true" />
+      <created>1747422725253</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1747422725253</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="meet method implemented" />
+    <MESSAGE value="quests and other things" />
+    <MESSAGE value="quest ( previous was conflicted )" />
+    <MESSAGE value="and still quest ..." />
+    <MESSAGE value="minor changes" />
+    <MESSAGE value="connection of use tool and harvest" />
+    <MESSAGE value="it does not let me update project so I have to push this commit" />
+    <MESSAGE value="minor changes on stage and gift" />
+    <MESSAGE value="complicated formula for walk" />
+    <MESSAGE value="forgot to commit some files" />
+    <MESSAGE value="FriendShip with NPC" />
+    <MESSAGE value="controller methos for NPCs" />
+    <MESSAGE value="commands and view methods added for NPCs" />
+    <MESSAGE value="thor , effect of weather on plants , bug of walk fixed" />
+    <MESSAGE value="thor, fixing an exception etc." />
+    <MESSAGE value="some changes on seeded type and NPCs" />
+    <MESSAGE value="Temporary commit ( The power is out ! ): )" />
+    <MESSAGE value="some minor fixes" />
+    <MESSAGE value="some fixes" />
+    <MESSAGE value="some test and fix 1" />
+    <MESSAGE value="some test and fix 2" />
+    <MESSAGE value="fixed logic of randomness" />
+    <MESSAGE value="fix an Exception" />
+    <MESSAGE value="some fixes on giant plants" />
+    <MESSAGE value="fixes on farming" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixes on farming" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.io.FileNotFoundException" package="java.io" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
