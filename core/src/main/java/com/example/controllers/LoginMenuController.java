@@ -1,12 +1,11 @@
 package com.example.controllers;
 
 import com.example.models.App;
+import com.example.models.RandomGenerator;
 import com.example.models.Result;
 import com.example.models.User;
 import com.example.models.enums.Gender;
 import com.example.models.enums.commands.LoginMenuCommands;
-import com.example.views.AppView;
-import com.example.views.MainMenu;
 
 import java.security.SecureRandom;
 
@@ -16,7 +15,8 @@ public class LoginMenuController {
             return new Result(false, "username format is invalid!");
         }
         else if (App.checkUsernameExists(username)) {
-            return new Result(false, "this username is already taken!");
+            return new Result(false, "this username is already taken!\nYou can use "
+                + suggestAlternativeUsername(username) + " instead.");
         }
         else if(password.length() < 8) {
             return new Result(false, "password must be at least 8 characters.");
@@ -83,11 +83,10 @@ public class LoginMenuController {
         if(user == null) {
             return new Result(false, "username not found!");
         }
-        else if(user.checkPassword(password)) {
+        else if(!user.getPassword().equals(password)) {
             return new Result(false, "password doesn't match!");
         }
         App.currentUser = user;
-        AppView.currentMenu = new MainMenu();
         return new Result(true, "User logged in successfully! You are now in main menu.");
     }
 
@@ -104,5 +103,15 @@ public class LoginMenuController {
 
         user.setPassword(password);
         return new Result(true, "Your password has been changed successfully!");
+    }
+
+    private static String suggestAlternativeUsername(String originalUsername) {
+        String newUsername;
+        do {
+            int randomSuffix = RandomGenerator.getInstance().randomInt(0, 999);
+            newUsername = originalUsername + randomSuffix;
+        } while (App.checkUsernameExists(newUsername));
+
+        return newUsername;
     }
 }

@@ -2,6 +2,7 @@ package com.example.views;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -9,8 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.example.Main;
 import com.example.controllers.LoginMenuController;
-import com.example.models.App;
-import com.example.models.RandomGenerator;
 import com.example.models.Result;
 import com.example.models.enums.Gender;
 
@@ -20,15 +19,18 @@ public class LoginMenuView implements Screen {
     private Skin skin;
     private Texture background;
 
-    // UI components
     private Table mainTable;
-    private Table registerTable;
-    private TextField usernameField, passwordField, confirmPasswordField,
+    private Table loginPanel;
+    private Table registerPanel;
+    private Table forgotPasswordPanel;
+
+    private TextField usernameFieldLogin, passwordFieldLogin;
+    private TextField usernameFieldRegister, passwordFieldRegister, confirmPasswordField,
         nicknameField, emailField;
     private SelectBox<Gender> genderBox;
-    private Label messageLabel;
+    private Label messageLabelLogin, messageLabelRegister;
+
     private TextButton loginButton, registerButton, forgotPasswordButton;
-    private boolean registerMode = false;
 
     public LoginMenuView(Main game) {
         this.game = game;
@@ -46,35 +48,40 @@ public class LoginMenuView implements Screen {
         mainTable.setFillParent(true);
         mainTable.center();
 
-        createLoginUI();
-        createRegisterUI();
+
+        createLoginPanel();
+        createRegisterPanel();
         createForgotPasswordUI();
 
+        mainTable.add(loginPanel).expand().fill();
         stage.addActor(mainTable);
     }
 
-    private void createLoginUI() {
-        Table loginTable = new Table();
+    private void createLoginPanel() {
+        loginPanel = new Table();
+        loginPanel.center();
 
         Label titleLabel = new Label("Welcome to StardewValley!", skin);
-        usernameField = new TextField("Username", skin);
-        passwordField = new TextField("", skin);
-        passwordField.setPasswordMode(true);
-        passwordField.setPasswordCharacter('*');
-        passwordField.setMessageText("Password");
+        usernameFieldLogin = new TextField("", skin);
+        usernameFieldLogin.setMessageText("Username");
+        passwordFieldLogin = new TextField("", skin);
+        passwordFieldLogin.setPasswordMode(true);
+        passwordFieldLogin.setPasswordCharacter('*');
+        passwordFieldLogin.setMessageText("Password");
 
         loginButton = new TextButton("Login", skin);
         forgotPasswordButton = new TextButton("Forgot Password?", skin);
         TextButton switchToRegisterButton = new TextButton("Create Account", skin);
-        messageLabel = new Label("", skin);
+        messageLabelLogin = new Label("", skin);
+        messageLabelLogin.setColor(Color.RED);
 
-        loginTable.add(titleLabel).padBottom(20).row();
-        loginTable.add(usernameField).width(400).padBottom(15).row();
-        loginTable.add(passwordField).width(400).padBottom(15).row();
-        loginTable.add(loginButton).width(200).padBottom(10).row();
-        loginTable.add(forgotPasswordButton).width(300).padBottom(5).row();
-        loginTable.add(switchToRegisterButton).width(200).padBottom(15).row();
-        loginTable.add(messageLabel).width(400).row();
+        loginPanel.add(titleLabel).padBottom(20).row();
+        loginPanel.add(usernameFieldLogin).width(400).padBottom(15).row();
+        loginPanel.add(passwordFieldLogin).width(400).padBottom(15).row();
+        loginPanel.add(loginButton).width(200).padBottom(10).row();
+        loginPanel.add(forgotPasswordButton).width(300).padBottom(5).row();
+        loginPanel.add(switchToRegisterButton).width(250).padBottom(15).row();
+        loginPanel.add(messageLabelLogin).width(400).row();
 
         loginButton.addListener(new ChangeListener() {
             @Override
@@ -96,49 +103,49 @@ public class LoginMenuView implements Screen {
                 showRegisterUI();
             }
         });
-
-        mainTable.add(loginTable);
     }
 
-    private void createRegisterUI() {
-        registerTable = new Table();
-        registerTable.setVisible(true);
+    private void createRegisterPanel() {
+        registerPanel = new Table();
+        registerPanel.center();
 
         Label titleLabel = new Label("Create Account", skin);
-        usernameField = new TextField("Username", skin);
+        usernameFieldRegister = new TextField("", skin);
+        usernameFieldRegister.setMessageText("Username");
 
-        passwordField = new TextField("", skin);
-        passwordField.setPasswordMode(true);
-        passwordField.setPasswordCharacter('*');
-        passwordField.setMessageText("Password");
+        passwordFieldRegister = new TextField("", skin);
+        passwordFieldRegister.setMessageText("Password");
+
         confirmPasswordField = new TextField("", skin);
-        confirmPasswordField.setPasswordMode(true);
-        confirmPasswordField.setPasswordCharacter('*');
         confirmPasswordField.setMessageText("Confirm Password");
 
-        nicknameField = new TextField("Nickname", skin);
-        emailField = new TextField("Email", skin);
+        nicknameField = new TextField("", skin);
+        nicknameField.setMessageText("Nickname");
+        emailField = new TextField("", skin);
+        emailField.setMessageText("Email");
         genderBox = new SelectBox<>(skin);
         genderBox.setItems(Gender.BOY, Gender.GIRL);
 
         registerButton = new TextButton("Register", skin);
         TextButton generatePasswordButton = new TextButton("Generate Password", skin);
         TextButton switchToLoginButton = new TextButton("Back to Login", skin);
+        messageLabelRegister = new Label("", skin);
+        messageLabelRegister.setColor(Color.RED);
 
-        registerTable.add(titleLabel).padBottom(20).row();
-        registerTable.add(usernameField).width(400).padBottom(10).row();
-        registerTable.add(passwordField).width(400).padBottom(10).row();
-        registerTable.add(confirmPasswordField).width(400).padBottom(10).row();
-        registerTable.add(nicknameField).width(400).padBottom(10).row();
-        registerTable.add(emailField).width(400).padBottom(10).row();
-        registerTable.add(genderBox).width(200).padBottom(15).row();
+        registerPanel.add(titleLabel).padBottom(20).row();
+        registerPanel.add(usernameFieldRegister).width(400).padBottom(10).row();
+        registerPanel.add(passwordFieldRegister).width(400).padBottom(10).row();
+        registerPanel.add(confirmPasswordField).width(400).padBottom(10).row();
+        registerPanel.add(nicknameField).width(400).padBottom(10).row();
+        registerPanel.add(emailField).width(400).padBottom(10).row();
+        registerPanel.add(genderBox).width(200).padBottom(15).row();
 
         Table passwordButtons = new Table();
-        passwordButtons.add(registerButton).width(180).padRight(10);
-        passwordButtons.add(generatePasswordButton).width(180);
-        registerTable.add(passwordButtons).padBottom(10).row();
-        registerTable.add(switchToLoginButton).width(200).padBottom(10).row();
-        registerTable.add(messageLabel).width(400).row();
+        passwordButtons.add(registerButton).width(200).padRight(10);
+        passwordButtons.add(generatePasswordButton).width(300);
+        registerPanel.add(passwordButtons).padBottom(10).row();
+        registerPanel.add(switchToLoginButton).width(250).padBottom(10).row();
+        registerPanel.add(messageLabelRegister).width(400).row();
 
         registerButton.addListener(new ChangeListener() {
             @Override
@@ -151,9 +158,9 @@ public class LoginMenuView implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 String password = LoginMenuController.randomPasswordGenerator();
-                passwordField.setText(password);
+                passwordFieldRegister.setText(password);
                 confirmPasswordField.setText(password);
-                messageLabel.setText("Generated password: " + password);
+                messageLabelRegister.setText("Generated password: " + password);
             }
         });
 
@@ -166,41 +173,62 @@ public class LoginMenuView implements Screen {
     }
 
     private void createForgotPasswordUI() {
-        // Similar structure to createRegisterUI
-        // Would contain username field, security question display, answer field, etc.
+        forgotPasswordPanel = new Table();
+        forgotPasswordPanel.center();
+
+        Label tempLabel = new Label("Forgot Password UI (Not implemented yet)", skin);
+        forgotPasswordPanel.add(tempLabel).row();
+        TextButton backToLogin = new TextButton("Back to Login", skin);
+        forgotPasswordPanel.add(backToLogin).padTop(20).row();
+        backToLogin.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                showLoginUI();
+            }
+        });
     }
 
     private void showRegisterUI() {
-        mainTable.clear();
-        mainTable.add(registerTable);
-        registerTable.setVisible(true);
-        registerMode = true;
+        mainTable.clearChildren();
+        mainTable.add(registerPanel).expand().fill();
+
+        usernameFieldRegister.setText("");
+        passwordFieldRegister.setText("");
+        confirmPasswordField.setText("");
+        nicknameField.setText("");
+        emailField.setText("");
+        messageLabelRegister.setText("");
     }
 
     private void showLoginUI() {
-        mainTable.clear();
-        createLoginUI();
-        registerMode = false;
+        mainTable.clearChildren();
+        mainTable.add(loginPanel).expand().fill();
+
+        usernameFieldLogin.setText("");
+        passwordFieldLogin.setText("");
+        messageLabelLogin.setText("");
     }
 
     private void showForgotPasswordUI() {
-        // Implementation for forgot password flow
+        mainTable.clearChildren();
+        mainTable.add(forgotPasswordPanel).expand().fill();
     }
 
+
     private void handleLogin() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+        String username = usernameFieldLogin.getText();
+        String password = passwordFieldLogin.getText();
         Result result = LoginMenuController.loginUser(username, password, false);
-        messageLabel.setText(result.message());
+        messageLabelLogin.setText(result.message());
 
         if (result.success()) {
-            // Proceed to main game screen
+
         }
     }
 
     private void handleRegistration() {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+        String username = usernameFieldRegister.getText(); // Use register specific field
+        String password = passwordFieldRegister.getText(); // Use register specific field
         String confirmPassword = confirmPasswordField.getText();
         String nickname = nicknameField.getText();
         String email = emailField.getText();
@@ -210,67 +238,11 @@ public class LoginMenuView implements Screen {
             username, password, confirmPassword, nickname, email, gender
         );
 
-        messageLabel.setText(result.message());
+        messageLabelRegister.setText(result.message());
 
         if (result.success()) {
-            showSecurityQuestionDialog();
-        } else {
-            handleRegistrationErrors(result, username, password);
+
         }
-    }
-
-    private void handleRegistrationErrors(Result result, String username, String password) {
-        if (result.message().equals("This username is already taken!")) {
-            suggestAlternativeUsername(username);
-        } else if (result.message().contains("weak")) {
-            offerPasswordGeneration();
-        }
-    }
-
-    private void suggestAlternativeUsername(final String originalUsername) {
-        String newUsername;
-        do {
-            int randomSuffix = RandomGenerator.getInstance().randomInt(0, 999);
-            newUsername = originalUsername + randomSuffix;
-        } while (App.checkUsernameExists(newUsername));
-
-        String finalNewUsername = newUsername;
-        Dialog dialog = new Dialog("Username Taken", skin) {
-            public void result(Object obj) {
-                if ((Boolean) obj) {
-                    usernameField.setText(finalNewUsername);
-                    handleRegistration();
-                }
-            }
-        };
-
-        dialog.text("Do you want to use " + newUsername + " instead?");
-        dialog.button("Yes", true);
-        dialog.button("No", false);
-        dialog.show(stage);
-    }
-
-    private void offerPasswordGeneration() {
-        Dialog dialog = new Dialog("Weak Password", skin) {
-            public void result(Object obj) {
-                if ((Boolean) obj) {
-                    String password = LoginMenuController.randomPasswordGenerator();
-                    passwordField.setText(password);
-                    confirmPasswordField.setText(password);
-                    messageLabel.setText("Generated password: " + password);
-                }
-            }
-        };
-
-        dialog.text("Do you want to generate a strong password?");
-        dialog.button("Generate", true);
-        dialog.button("Cancel", false);
-        dialog.show(stage);
-    }
-
-    private void showSecurityQuestionDialog() {
-        // Implementation for security question selection
-        // Would show dialog with question selection and answer fields
     }
 
     private void handleForgotPassword() {
@@ -290,28 +262,25 @@ public class LoginMenuView implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
-
+        stage.dispose();
+        skin.dispose();
+        background.dispose();
     }
-
-    // Other required methods (resize, pause, etc.) remain the same
 }

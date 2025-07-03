@@ -1,23 +1,5 @@
 {
 "com.badlogic.gdx.graphics.g2d.BitmapFont": {
-	"font": {
-		"file": "font-export.fnt",
-		"scaledSize": -1,
-		"markupEnabled": false,
-		"flip": false
-	},
-	"font-over": {
-		"file": "font-over-export.fnt",
-		"scaledSize": -1,
-		"markupEnabled": false,
-		"flip": false
-	},
-	"font-pressed": {
-		"file": "font-pressed-export.fnt",
-		"scaledSize": -1,
-		"markupEnabled": false,
-		"flip": false
-	},
 	"StardewValley": {
 		"file": "StardewValley.fnt",
 		"scaledSize": -1,
@@ -27,14 +9,14 @@
 },
 "com.badlogic.gdx.graphics.Color": {
 	"color": {
-		"r": 0.98039216,
-		"g": 0.5764706,
+		"r": 0.8627451,
+		"g": 0.48235294,
 		"b": 0.019607844,
 		"a": 1
 	},
 	"selected": {
-		"r": 0.98039216,
-		"g": 0.5764706,
+		"r": 0.8627451,
+		"g": 0.48235294,
 		"b": 0.019607844,
 		"a": 1
 	},
@@ -242,18 +224,9 @@
 		"checkboxOff": "checkbox-c",
 		"checkboxOver": "checkbox-over-c",
 		"font": "StardewValley",
-		"fontColor": "text-selected",
+		"fontColor": "text",
 		"downFontColor": "text-selected",
 		"checkedFontColor": "text-selected"
-	},
-	"radio": {
-		"checkboxOn": "radio-pressed-c",
-		"checkboxOff": "radio-c",
-		"checkboxOver": "radio-over-c",
-		"font": "font",
-		"fontColor": "color",
-		"downFontColor": "selected",
-		"checkedFontColor": "selected"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle": {
@@ -266,53 +239,23 @@
 "com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle": {
 	"default": {
 		"font": "StardewValley",
-		"fontColor": "text-selected",
+		"fontColor": "text",
 		"downFontColor": "text-selected",
 		"up": "button-c",
 		"down": "button-pressed-c",
 		"over": "button-over-c"
-	},
-	"checkbox": {
-		"imageUp": "checkbox-c",
-		"imageDown": "checkbox-pressed-c",
-		"imageOver": "checkbox-over-c",
-		"imageChecked": "checkbox-pressed-c",
-		"imageCheckedOver": "checkbox-pressed-over-c",
-		"font": "font",
-		"fontColor": "text",
-		"downFontColor": "text-selected",
-		"checkedFontColor": "text-selected"
-	},
-	"radio": {
-		"imageUp": "radio-c",
-		"imageDown": "radio-pressed-c",
-		"imageOver": "radio-over-c",
-		"imageChecked": "radio-pressed-c",
-		"imageCheckedOver": "radio-over-c",
-		"font": "font",
-		"fontColor": "text",
-		"downFontColor": "text-selected",
-		"checkedFontColor": "text-selected"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
 	"default": {
 		"font": "StardewValley",
 		"fontColor": "text"
-	},
-	"over": {
-		"font": "font-over",
-		"fontColor": "text"
-	},
-	"pressed": {
-		"font": "font-pressed",
-		"fontColor": "text"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle": {
 	"default": {
 		"font": "StardewValley",
-		"fontColorSelected": "selected",
+		"fontColorSelected": "text",
 		"fontColorUnselected": "text",
 		"selection": "color",
 		"background": "list-c"
@@ -341,7 +284,7 @@
 "com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle": {
 	"default": {
 		"font": "StardewValley",
-		"fontColor": "text-selected",
+		"fontColor": "text",
 		"background": "select-box-c",
 		"scrollStyle": "default",
 		"listStyle": "default",
@@ -389,22 +332,6 @@
 		"fontColor": "text",
 		"background": "textfield-c",
 		"focusedBackground": "textfield-selected-c",
-		"cursor": "color",
-		"selection": "selected"
-	},
-	"login": {
-		"font": "font",
-		"fontColor": "text",
-		"background": "textfield-login-c",
-		"focusedBackground": "textfield-login-selected-c",
-		"cursor": "color",
-		"selection": "selected"
-	},
-	"password": {
-		"font": "font",
-		"fontColor": "text",
-		"background": "textfield-password-c",
-		"focusedBackground": "textfield-password-selected-c",
 		"cursor": "color",
 		"selection": "selected"
 	}
