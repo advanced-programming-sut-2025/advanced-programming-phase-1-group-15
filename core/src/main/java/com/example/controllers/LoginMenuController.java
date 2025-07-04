@@ -65,21 +65,14 @@ public class LoginMenuController {
         return password.toString();
     }
 
-    public static Result pickQuestion(int questionNumber, String answer, String answerConfirm) {
-        if(questionNumber > 5 || questionNumber < 1) {
-            return new Result(false, "invalid question number!");
-        }
-        else if(!answer.equals(answerConfirm)) {
-            return new Result(false, "answer confirmation doesn't match!");
-        }
-
-        App.currentUser.setSecurityQuestion(App.securityQuestions[questionNumber - 1]);
+    public static Result pickQuestion(String question, String answer) {
+        App.currentUser.setSecurityQuestion(question);
         App.currentUser.setSecurityQuestionAnswer(answer);
         return new Result(true, "Thanks! your answer has been submitted successfully.");
     }
 
     public static Result loginUser(String username, String password, boolean stayLoggedIn) {
-        User user = User.loadUserFromFile(username);
+        User user = App.getUserByUsername(username);
         if(user == null) {
             return new Result(false, "username not found!");
         }

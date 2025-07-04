@@ -1,7 +1,7 @@
 package com.example.views;
 
 import com.example.controllers.CheatCodeController;
-import com.example.controllers.GameMenuController;
+import com.example.controllers.GameController;
 import com.example.models.App;
 import com.example.models.Game;
 import com.example.models.Player;
@@ -15,10 +15,10 @@ import com.example.models.relation.PlayerFriendship;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-public class GameMenu implements AppMenu {
+public class GameView implements AppMenu {
     private final Game game;
 
-    public GameMenu(Game game) {
+    public GameView(Game game) {
         this.game = game;
         game.build();
         App.currentGameMenu = this;
@@ -66,7 +66,6 @@ public class GameMenu implements AppMenu {
                 }
                 else {
                     App.currentGame = null;
-                    AppView.currentMenu = new MainMenu();
                     System.out.println("game exited successfully!");
                 }
             }
@@ -78,7 +77,6 @@ public class GameMenu implements AppMenu {
                 if(terminate.success()) {
                     App.recentGames.remove(game);
                     App.currentGame = null;
-                    AppView.currentMenu = new MainMenu();
                 }
             }
 
@@ -137,7 +135,7 @@ public class GameMenu implements AppMenu {
             }
 
             else if(GameMenuCommands.GREEN_HOUSE_BUILD_REGEX.matches(command)) {
-                 Result result = GameMenuController.buildGreenHouse();
+                 Result result = GameController.buildGreenHouse();
                  System.out.println(result.message());
             }
             else if(GameMenuCommands.WALK_REGEX.matches(command)) {
@@ -146,13 +144,13 @@ public class GameMenu implements AppMenu {
                 int x = matcher.matches() ? Integer.parseInt(matcher.group("x")) : 0;
                 int y = Integer.parseInt(matcher.group("y"));
 
-                Result result = GameMenuController.walk(x, y);
+                Result result = GameController.walk(x, y);
                 System.out.println(result.message());
 
                 if(result.success()) {
                     command = scanner.nextLine().trim();
                     if(command.equalsIgnoreCase("y")) {
-                        result = GameMenuController.setPosition(x, y);
+                        result = GameController.setPosition(x, y);
                         System.out.println(result.message());
 
                         if(!result.success()) {
@@ -189,7 +187,7 @@ public class GameMenu implements AppMenu {
                 String itemName = matcher.matches() ? matcher.group("itemName") : "";
                 int number = matcher.group("count") != null ? Integer.parseInt(matcher.group("count")) : -1;
 
-                Result result = GameMenuController.removeFromInventory(itemName, number);
+                Result result = GameController.removeFromInventory(itemName, number);
                 System.out.println(result.message());
             }
 
@@ -198,11 +196,11 @@ public class GameMenu implements AppMenu {
 
                 String toolName = matcher.matches() ? matcher.group("toolName") : "";
 
-                Result result = GameMenuController.equipTool(toolName);
+                Result result = GameController.equipTool(toolName);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.SHOW_CURRENT_TOOL_REGEX.matches(command)) {
-                Result result = GameMenuController.showCurrentTool();
+                Result result = GameController.showCurrentTool();
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.SHOW_ALL_TOOLS_REGEX.matches(command)) {
@@ -213,7 +211,7 @@ public class GameMenu implements AppMenu {
 
                 String toolName = matcher.matches() ? matcher.group("toolName") : "";
 
-                Result result = GameMenuController.upgradeTool(toolName);
+                Result result = GameController.upgradeTool(toolName);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.TOOL_USE_REGEX.matches(command)) {
@@ -222,7 +220,7 @@ public class GameMenu implements AppMenu {
                 int dx = matcher.matches() ? Integer.parseInt(matcher.group("dx")) : 0;
                 int dy = Integer.parseInt(matcher.group("dy"));
 
-                Result result = GameMenuController.useTool(dx, dy);
+                Result result = GameController.useTool(dx, dy);
                 System.out.println(result.message());
             }
 
@@ -234,10 +232,10 @@ public class GameMenu implements AppMenu {
 
                 Result result;
                 if(action.equalsIgnoreCase("put")) {
-                    result = GameMenuController.putInFridge(itemName);
+                    result = GameController.putInFridge(itemName);
                 }
                 else {
-                    result = GameMenuController.pickFromFridge(itemName);
+                    result = GameController.pickFromFridge(itemName);
                 }
 
                 System.out.println(result.message());
@@ -250,7 +248,7 @@ public class GameMenu implements AppMenu {
 
                 String foodName = matcher.matches() ? matcher.group("foodName") : "";
 
-                Result result = GameMenuController.eatFood(foodName);
+                Result result = GameController.eatFood(foodName);
                 System.out.println(result.message());
             }
 
@@ -263,12 +261,12 @@ public class GameMenu implements AppMenu {
 
                 Result result;
                 switch (buildingName) {
-                    case "barn" -> result = GameMenuController.buildBarn(0, x, y);
-                    case "big barn" -> result = GameMenuController.buildBarn(1, x, y);
-                    case "deluxe barn" -> result = GameMenuController.buildBarn(2, x, y);
-                    case "coop" -> result = GameMenuController.buildCoop(0, x, y);
-                    case "big coop" -> result = GameMenuController.buildCoop(1, x, y);
-                    default -> result = GameMenuController.buildCoop(2, x, y);
+                    case "barn" -> result = GameController.buildBarn(0, x, y);
+                    case "big barn" -> result = GameController.buildBarn(1, x, y);
+                    case "deluxe barn" -> result = GameController.buildBarn(2, x, y);
+                    case "coop" -> result = GameController.buildCoop(0, x, y);
+                    case "big coop" -> result = GameController.buildCoop(1, x, y);
+                    default -> result = GameController.buildCoop(2, x, y);
                 }
 
                 System.out.println(result.message());
@@ -279,7 +277,7 @@ public class GameMenu implements AppMenu {
                 String animal = matcher.matches() ? matcher.group("animal") : "";
                 String name = matcher.group("name");
 
-                Result result = GameMenuController.buyAnimal(animal, name);
+                Result result = GameController.buyAnimal(animal, name);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.PET_ANIMAL_REGEX.matches(command)) {
@@ -287,7 +285,7 @@ public class GameMenu implements AppMenu {
 
                 String name = matcher.matches() ? matcher.group("name") : "";
 
-                Result result = GameMenuController.petAnimal(name);
+                Result result = GameController.petAnimal(name);
                 System.out.println(result.message());
             }
             else if(CheatCodeCommands.ANIMAL_FRIENDSHIP_REGEX.matches(command)) {
@@ -309,7 +307,7 @@ public class GameMenu implements AppMenu {
                 int x = Integer.parseInt(matcher.group("x"));
                 int y = Integer.parseInt(matcher.group("y"));
 
-                Result result = GameMenuController.shepherdAnimal(name, x, y);
+                Result result = GameController.shepherdAnimal(name, x, y);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.FEED_ANIMAL_REGEX.matches(command)) {
@@ -317,11 +315,11 @@ public class GameMenu implements AppMenu {
 
                 String name = matcher.matches() ? matcher.group("name") : "";
 
-                Result result = GameMenuController.feedHayAnimal(name);
+                Result result = GameController.feedHayAnimal(name);
                 System.out.println(result.message());
             }
             else if(command.equals("produces")) {
-                Result result = GameMenuController.showAnimalProducts();
+                Result result = GameController.showAnimalProducts();
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.COLLECT_PRODUCE_REGEX.matches(command)) {
@@ -329,7 +327,7 @@ public class GameMenu implements AppMenu {
 
                 String name = matcher.matches() ? matcher.group("name") : "";
 
-                Result result = GameMenuController.collectProduce(name);
+                Result result = GameController.collectProduce(name);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.SELL_ANIMAL_REGEX.matches(command)) {
@@ -337,7 +335,7 @@ public class GameMenu implements AppMenu {
 
                 String name = matcher.matches() ? matcher.group("name") : "";
 
-                Result result = GameMenuController.sellAnimal(name);
+                Result result = GameController.sellAnimal(name);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.FISHING_REGEX.matches(command)) {
@@ -345,16 +343,16 @@ public class GameMenu implements AppMenu {
 
                 String fishingPole = matcher.matches() ? matcher.group("fishingPole") : "";
 
-                Result result = GameMenuController.fishing(fishingPole);
+                Result result = GameController.fishing(fishingPole);
                 System.out.println(result.message());
             }
 
             else if(GameMenuCommands.SHOW_STORE_PRODUCTS_REGEX.matches(command)) {
-                Result result = GameMenuController.showStoreProducts();
+                Result result = GameController.showStoreProducts();
                 System.out.print(result.message());
             }
             else if(GameMenuCommands.SHOW_AVAILABLE_PRODUCTS_REGEX.matches(command)) {
-                Result result = GameMenuController.showAvailableStoreProducts();
+                Result result = GameController.showAvailableStoreProducts();
                 System.out.print(result.message());
             }
             else if(GameMenuCommands.PURCHASE_PRODUCT_REGEX.matches(command)) {
@@ -364,7 +362,7 @@ public class GameMenu implements AppMenu {
                 String countStr = matcher.group("count");
                 int count = (countStr != null) ? Integer.parseInt(countStr) : 1;
 
-                Result result = GameMenuController.purchaseProduct(productName, count);
+                Result result = GameController.purchaseProduct(productName, count);
                 System.out.println(result.message());
             }
             else if(CheatCodeCommands.ADD_GOLD_REGEX.matches(command)) {
@@ -382,12 +380,12 @@ public class GameMenu implements AppMenu {
                 String countStr = matcher.group("count");
                 int count = (countStr != null) ? Integer.parseInt(countStr) : -1;
 
-                Result result = GameMenuController.sellProduct(productName, count);
+                Result result = GameController.sellProduct(productName, count);
                 System.out.println(result.message());
             }
 
             else if(command.equals("friendships")) {
-                Result result = GameMenuController.showFriendships();
+                Result result = GameController.showFriendships();
                 System.out.println("Your Friendships: ");
                 System.out.print(result.message());
             }
@@ -397,7 +395,7 @@ public class GameMenu implements AppMenu {
                 String username = matcher.matches() ? matcher.group("username") : "";
                 String message = matcher.group("message");
 
-                Result result = GameMenuController.talkFriendship(username, message);
+                Result result = GameController.talkFriendship(username, message);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.TALK_HISTORY_REGEX.matches(command)) {
@@ -405,7 +403,7 @@ public class GameMenu implements AppMenu {
 
                 String username = matcher.matches() ? matcher.group("username") : "";
 
-                Result result = GameMenuController.talkHistory(username);
+                Result result = GameController.talkHistory(username);
                 System.out.print(result.message());
             }
             else if(GameMenuCommands.GIFT_REGEX.matches(command)) {
@@ -415,7 +413,7 @@ public class GameMenu implements AppMenu {
                 String itemName = matcher.group("itemName");
                 int amount = Integer.parseInt(matcher.group("amount"));
 
-                Result result = GameMenuController.gift(username, itemName, amount);
+                Result result = GameController.gift(username, itemName, amount);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.GIFT_LIST_REGEX.matches(command)) {
@@ -423,7 +421,7 @@ public class GameMenu implements AppMenu {
 
                 String username = matcher.matches() ? matcher.group("username") : "";
 
-                Result result = GameMenuController.giftList(username);
+                Result result = GameController.giftList(username);
                 System.out.print(result.message());
             }
             else if(GameMenuCommands.GIFT_RATE_REGEX.matches(command)) {
@@ -433,7 +431,7 @@ public class GameMenu implements AppMenu {
                 int giftNumber = Integer.parseInt(matcher.group("giftNumber"));
                 int rate = Integer.parseInt(matcher.group("rate"));
 
-                Result result = GameMenuController.rateGift(username, giftNumber, rate);
+                Result result = GameController.rateGift(username, giftNumber, rate);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.GIFT_HISTORY_REGEX.matches(command)) {
@@ -441,7 +439,7 @@ public class GameMenu implements AppMenu {
 
                 String username = matcher.matches() ? matcher.group("username") : "";
 
-                Result result = GameMenuController.giftHistory(username);
+                Result result = GameController.giftHistory(username);
                 System.out.print(result.message());
             }
             else if(GameMenuCommands.HUG_REGEX.matches(command)) {
@@ -449,7 +447,7 @@ public class GameMenu implements AppMenu {
 
                 String username = matcher.matches() ? matcher.group("username") : "";
 
-                Result result = GameMenuController.hug(username);
+                Result result = GameController.hug(username);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.FLOWER_REGEX.matches(command)) {
@@ -457,7 +455,7 @@ public class GameMenu implements AppMenu {
 
                 String username = matcher.matches() ? matcher.group("username") : "";
 
-                Result result = GameMenuController.flower(username);
+                Result result = GameController.flower(username);
                 System.out.println(result.message());
             }
             else if(GameMenuCommands.MARRIAGE_REGEX.matches(command)) {
@@ -465,7 +463,7 @@ public class GameMenu implements AppMenu {
 
                 String username = matcher.matches() ? matcher.group("username") : "";
 
-                Result result = GameMenuController.marry(username);
+                Result result = GameController.marry(username);
                 System.out.println(result.message());
             }
             else if (GameMenuCommands.MARRIAGE_RESPOND_REGEX.matches(command)) {
@@ -474,7 +472,7 @@ public class GameMenu implements AppMenu {
                 String username = matcher.matches() ? matcher.group("username") : "";
                 String answer = matcher.group("answer");
 
-                Result result = GameMenuController.respondMarriage(username, answer);
+                Result result = GameController.respondMarriage(username, answer);
                 System.out.println(result.message());
             }
             else if(CheatCodeCommands.SET_FRIENDSHIP_REGEX.matches(command)) {
@@ -490,30 +488,30 @@ public class GameMenu implements AppMenu {
             else if(GameMenuCommands.CROP_INFO.matches(command)) {
                 Matcher matcher = GameMenuCommands.CROP_INFO.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.showCropInfo(matcher.group("craftName")));
+                System.out.println(GameController.showCropInfo(matcher.group("craftName")));
             }
             else if(GameMenuCommands.PLANT_MIXED_SEED.matches(command)) {
                 Matcher matcher = GameMenuCommands.PLANT_MIXED_SEED.matcher(command);
                 matcher.matches();
 
-                System.out.println(GameMenuController.plantMixedSeed(
+                System.out.println(GameController.plantMixedSeed(
                         Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy"))));
             }
             else if(GameMenuCommands.PLANT_SEED.matches(command)) {
                 Matcher matcher = GameMenuCommands.PLANT_SEED.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.plant(matcher.group("seed"),
+                System.out.println(GameController.plant(matcher.group("seed"),
                         Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy"))));
             }
             else if(GameMenuCommands.Recipe.matches(command)) {
                 Matcher matcher = GameMenuCommands.Recipe.matcher(command);
                 matcher.matches();
-                GameMenuController.ShowRecipe();
+                GameController.ShowRecipe();
             }
             else if(GameMenuCommands.Crafting.matches(command)) {
                 Matcher matcher = GameMenuCommands.Crafting.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.crafting(matcher.group("itemName")));
+                System.out.println(GameController.crafting(matcher.group("itemName")));
             }
             else if(CheatCodeCommands.ADD_ITEM.matches(command)) {
                 Matcher matcher = CheatCodeCommands.ADD_ITEM.matcher(command);
@@ -524,17 +522,17 @@ public class GameMenu implements AppMenu {
             else if (GameMenuCommands.PlaceItem.matches(command)) {
                 Matcher matcher = GameMenuCommands.PlaceItem.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.PlaceItem(matcher.group("itemName"), Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))));
+                System.out.println(GameController.PlaceItem(matcher.group("itemName"), Integer.parseInt(matcher.group("x")), Integer.parseInt(matcher.group("y"))));
             }
             else if(GameMenuCommands.ARTISAN_USE.matches(command)) {
                 Matcher matcher = GameMenuCommands.ARTISAN_USE.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.UseArtisan(matcher.group("artisanName"),matcher.group("itemName")));
+                System.out.println(GameController.UseArtisan(matcher.group("artisanName"),matcher.group("itemName")));
             }
             else if (GameMenuCommands.GET_ARTISAN.matches(command)) {
                 Matcher matcher = GameMenuCommands.GET_ARTISAN.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.GetArtisan(matcher.group("artisanName")));
+                System.out.println(GameController.GetArtisan(matcher.group("artisanName")));
             }
             else if(GameMenuCommands.HARVEST.matches(command)) {
                 Matcher matcher = GameMenuCommands.HARVEST.matcher(command);
@@ -545,7 +543,7 @@ public class GameMenu implements AppMenu {
             else if(GameMenuCommands.SHOW_PLANT.matches(command)) {
                 Matcher matcher = GameMenuCommands.SHOW_PLANT.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.showPlant(
+                System.out.println(GameController.showPlant(
                         Integer.parseInt(matcher.group("x")),Integer.parseInt(matcher.group("y"))
                 ));
             }
@@ -553,14 +551,14 @@ public class GameMenu implements AppMenu {
                 Matcher m = GameMenuCommands.MEET_NPC.matcher(command);
                 m.matches();
                 System.out.println(
-                        GameMenuController.meetNPC(m.group("npcName"))
+                        GameController.meetNPC(m.group("npcName"))
                 );
             }
             else if (GameMenuCommands.GIFT_NPC.matches(command)) {
                 Matcher m = GameMenuCommands.GIFT_NPC.matcher(command);
                 m.matches();
                 System.out.println(
-                        GameMenuController.giftNPC(
+                        GameController.giftNPC(
                                 m.group("npcName"),
                                 m.group("itemName")
                         )
@@ -568,12 +566,12 @@ public class GameMenu implements AppMenu {
             }
             else if (GameMenuCommands.FRIEND_LIST.matches(command)) {
                 System.out.println(
-                        GameMenuController.friendShipNPCList()
+                        GameController.friendShipNPCList()
                 );
             }
             else if (GameMenuCommands.QUEST_LIST.matches(command)) {
                 System.out.println(
-                        GameMenuController.questLists()
+                        GameController.questLists()
                 );
             }
             else if (GameMenuCommands.QUEST_FINISH.matches(command)) {
@@ -581,13 +579,13 @@ public class GameMenu implements AppMenu {
                 m.matches();
                 int idx = Integer.parseInt(m.group("index"));
                 System.out.println(
-                        GameMenuController.finishQuest(idx)
+                        GameController.finishQuest(idx)
                 );
             }
             else if(CheatCodeCommands.ADD_RECIPE.matches(command)) {
                 Matcher matcher = CheatCodeCommands.ADD_RECIPE.matcher(command);
                 matcher.matches();
-                GameMenuController.AddRecipe(matcher.group("name"));
+                GameController.AddRecipe(matcher.group("name"));
             }
             else if(GameMenuCommands.SHOW_COOKING_RECIPES_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.SHOW_COOKING_RECIPES_REGEX.matcher(command);
@@ -596,12 +594,12 @@ public class GameMenu implements AppMenu {
             else if(GameMenuCommands.PREPARE_FOOD_REGEX.matches(command)) {
                 Matcher matcher = GameMenuCommands.PREPARE_FOOD_REGEX.matcher(command);
                 matcher.matches();
-                System.out.println(GameMenuController.Cooking(matcher.group("foodName")));
+                System.out.println(GameController.Cooking(matcher.group("foodName")));
             }
             else if(GameMenuCommands.START_TRADE.matches(command)) {
                 Matcher matcher = GameMenuCommands.START_TRADE.matcher(command);
                 matcher.matches();
-                GameMenuController.StartTrade();
+                GameController.StartTrade();
                 AppView.currentMenu = new TradeMenu();
             }
             else if(CheatCodeCommands.ADD_ITEMS.matches(command)) {

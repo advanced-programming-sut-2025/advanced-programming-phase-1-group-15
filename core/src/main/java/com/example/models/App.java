@@ -1,6 +1,6 @@
 package com.example.models;
 
-import com.example.views.GameMenu;
+import com.example.views.GameView;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ public class App {
 
     public static ArrayList<Game> recentGames = new ArrayList<>();
     public static Game currentGame;
-    public static GameMenu currentGameMenu;
+    public static GameView currentGameMenu;
 
     public static boolean checkUsernameExists(String username) {
         for (User user : users) {

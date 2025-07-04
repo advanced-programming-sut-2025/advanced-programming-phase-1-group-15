@@ -12,6 +12,7 @@ import com.example.Main;
 import com.example.controllers.LoginMenuController;
 import com.example.models.App;
 import com.example.models.Result;
+import com.example.models.User;
 import com.example.models.enums.Gender;
 
 public class LoginMenuView implements Screen {
@@ -55,7 +56,6 @@ public class LoginMenuView implements Screen {
         createLoginPanel();
         createRegisterPanel();
         createSecurityQuestionPanel();
-        createForgotPasswordUI();
 
         mainTable.add(loginPanel).expand().fill();
         stage.addActor(mainTable);
@@ -197,7 +197,11 @@ public class LoginMenuView implements Screen {
         okButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                handleRegistration();
+                String question = questionBox.getSelected();
+                String answer = answerField.getText();
+
+                LoginMenuController.pickQuestion(question, answer);
+                game.setScreen(new MainMenuView(game));
             }
         });
     }
@@ -206,13 +210,116 @@ public class LoginMenuView implements Screen {
         forgotPasswordPanel = new Table();
         forgotPasswordPanel.center();
 
-        Label tempLabel = new Label("Forgot Password UI (Not implemented yet)", skin);
-        forgotPasswordPanel.add(tempLabel).row();
+        Label usernameLabel = new Label("Enter your username:", skin);
+        TextField usernameField = new TextField("", skin);
+        usernameField.setMessageText("Username");
+
+        Label questionLabel = new Label("", skin);
+        TextField answerField = new TextField("", skin);
+        answerField.setMessageText("answer");
+
+        Label chooseANewPasswordLabel = new Label("Choose a new password:", skin);
+        TextField newPasswordField = new TextField("", skin);
+        newPasswordField.setMessageText("New Password");
+        TextField confirmNewPasswordField = new TextField("", skin);
+        confirmNewPasswordField.setMessageText("Confirm New Password");
+
+        Label messageLabel = new Label("", skin);
+        messageLabel.setColor(Color.RED);
+
+        TextButton okButton = new TextButton("OK", skin);
+        TextButton submitButton = new TextButton("Submit", skin);
+        TextButton changeButton = new TextButton("Change Password", skin);
         TextButton backToLogin = new TextButton("Back to Login", skin);
-        forgotPasswordPanel.add(backToLogin).padTop(20).row();
+
+        forgotPasswordPanel.add(usernameLabel).padBottom(20).row();
+        forgotPasswordPanel.add(usernameField).width(400).padBottom(20).row();
+        forgotPasswordPanel.add(okButton).width(100).row();
+        forgotPasswordPanel.add(backToLogin).padBottom(10).row();
+        forgotPasswordPanel.add(messageLabel).row();
+
+        okButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                String username = usernameField.getText();
+                User user = App.getUserByUsername(username);
+                if (user != null) {
+                    forgotPasswordPanel.clearChildren();
+
+                    usernameField.setDisabled(true); okButton.setDisabled(true);
+                    questionLabel.setText(user.getSecurityQuestion()); messageLabel.setText("");
+                    forgotPasswordPanel.add(usernameLabel).padBottom(20).row();
+                    forgotPasswordPanel.add(usernameField).width(400).padBottom(20).row();
+                    forgotPasswordPanel.add(okButton).width(100).padBottom(20).row();
+                    forgotPasswordPanel.add(questionLabel).padBottom(20).row();
+                    forgotPasswordPanel.add(answerField).width(400).padBottom(20).row();
+                    forgotPasswordPanel.add(submitButton).width(150).row();
+
+                    forgotPasswordPanel.add(backToLogin).padBottom(10).row();
+                    forgotPasswordPanel.add(messageLabel).row();
+                }
+                else {
+                    messageLabel.setText("username not found!");
+                }
+            }
+        });
+
+        submitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                User user = App.getUserByUsername(usernameField.getText());
+                String answer = answerField.getText();
+
+                if(answer.equals(user.getSecurityQuestionAnswer())) {
+                    forgotPasswordPanel.clearChildren();
+
+                    answerField.setDisabled(true); submitButton.setDisabled(true); messageLabel.setText("");
+                    forgotPasswordPanel.add(usernameLabel).padBottom(20).row();
+                    forgotPasswordPanel.add(usernameField).width(400).padBottom(20).row();
+                    forgotPasswordPanel.add(okButton).width(100).padBottom(20).row();
+                    forgotPasswordPanel.add(questionLabel).padBottom(20).row();
+                    forgotPasswordPanel.add(answerField).width(400).padBottom(20).row();
+                    forgotPasswordPanel.add(submitButton).width(150).padBottom(20).row();
+                    forgotPasswordPanel.add(chooseANewPasswordLabel).padBottom(20).row();
+                    forgotPasswordPanel.add(newPasswordField).width(400).row();
+                    forgotPasswordPanel.add(confirmNewPasswordField).width(400).padBottom(20).row();
+                    forgotPasswordPanel.add(changeButton).padBottom(20).row();
+
+                    forgotPasswordPanel.add(backToLogin).padBottom(10).row();
+                    forgotPasswordPanel.add(messageLabel).row();
+                }
+                else {
+                    messageLabel.setText("Oops! Wrong Answer.");
+                }
+            }
+        });
+
+        changeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                User user = App.getUserByUsername(usernameField.getText());
+                String newPassword = newPasswordField.getText();
+                String confirmNewPassword = confirmNewPasswordField.getText();
+
+                if(newPassword.equals(confirmNewPassword)) {
+                    Result result = LoginMenuController.forgetPassword(newPassword, user);
+                    messageLabel.setText(result.getMessage());
+
+                    if(result.success()) {
+                        newPasswordField.setDisabled(true); confirmNewPasswordField.setDisabled(true); changeButton.setDisabled(true);
+                        messageLabel.setColor(Color.BLUE);
+                    }
+                }
+                else {
+                    messageLabel.setText("password confirmation doesn't match!");
+                }
+            }
+        });
+
         backToLogin.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                App.currentUser = null;
                 showLoginUI();
             }
         });
@@ -242,6 +349,7 @@ public class LoginMenuView implements Screen {
 
     private void showForgotPasswordUI() {
         mainTable.clearChildren();
+        createForgotPasswordUI();
         mainTable.add(forgotPasswordPanel).expand().fill();
     }
 
@@ -260,7 +368,7 @@ public class LoginMenuView implements Screen {
         messageLabelLogin.setText(result.message());
 
         if (result.success()) {
-
+            game.setScreen(new MainMenuView(game));
         }
     }
 
@@ -281,10 +389,6 @@ public class LoginMenuView implements Screen {
         if (result.success()) {
             showSecurityQuestionUI();
         }
-    }
-
-    private void handleForgotPassword() {
-        // Implementation for password recovery flow
     }
 
     @Override

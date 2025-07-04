@@ -1,5 +1,6 @@
 package com.example.views;
 
+import com.badlogic.gdx.Screen;
 import com.example.controllers.ProfileMenuController;
 import com.example.models.App;
 import com.example.models.Result;
@@ -9,7 +10,7 @@ import com.example.models.enums.commands.ProfileMenuCommands;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-public class ProfileMenu implements AppMenu {
+public class ProfileMenuView implements Screen {
     public void run(Scanner scanner) {
         String command = scanner.nextLine().trim();
 
@@ -20,7 +21,6 @@ public class ProfileMenu implements AppMenu {
         else if(Commands.checkSwitchRegex(command)) {
             String menuName = Commands.menuName(command);
             if(menuName.equals("main menu")) {
-                AppView.currentMenu = new MainMenu();
                 System.out.println("You are now back in main menu!");
             }
             else {
@@ -74,5 +74,40 @@ public class ProfileMenu implements AppMenu {
         else {
             System.out.println("invalid command");
         }
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void render(float delta) {
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }
