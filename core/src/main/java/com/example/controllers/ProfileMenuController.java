@@ -41,11 +41,8 @@ public class ProfileMenuController {
         return new Result(true, "Email successfully changed!");
     }
 
-    public static Result changePassword(String newPassword, String oldPassword) {
-        if(!oldPassword.equals(App.currentUser.getPassword())) {
-            return new Result(false, "first provide your current password correctly.");
-        }
-        else if(newPassword.equals(App.currentUser.getPassword())) {
+    public static Result changePassword(String newPassword) {
+        if(newPassword.equals(App.currentUser.getPassword())) {
             return new Result(false, "you should choose a new password!");
         }
         else if(newPassword.length() < 8) {

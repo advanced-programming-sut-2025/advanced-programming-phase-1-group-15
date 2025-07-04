@@ -102,7 +102,7 @@ public class MainMenuView implements Screen {
         profileMenuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new ProfileMenuView());
+                game.setScreen(new ProfileMenuView(game));
             }
         });
 
