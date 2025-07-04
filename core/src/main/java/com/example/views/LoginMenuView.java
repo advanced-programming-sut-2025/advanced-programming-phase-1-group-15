@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.example.Main;
 import com.example.controllers.LoginMenuController;
+import com.example.models.App;
 import com.example.models.Result;
 import com.example.models.enums.Gender;
 
@@ -22,12 +23,14 @@ public class LoginMenuView implements Screen {
     private Table mainTable;
     private Table loginPanel;
     private Table registerPanel;
+    private Table securityQuestionPanel;
     private Table forgotPasswordPanel;
 
     private TextField usernameFieldLogin, passwordFieldLogin;
     private TextField usernameFieldRegister, passwordFieldRegister, confirmPasswordField,
-        nicknameField, emailField;
+        nicknameField, emailField, answerField;
     private SelectBox<Gender> genderBox;
+    private SelectBox<String> questionBox;
     private Label messageLabelLogin, messageLabelRegister;
 
     private TextButton loginButton, registerButton, forgotPasswordButton;
@@ -51,6 +54,7 @@ public class LoginMenuView implements Screen {
 
         createLoginPanel();
         createRegisterPanel();
+        createSecurityQuestionPanel();
         createForgotPasswordUI();
 
         mainTable.add(loginPanel).expand().fill();
@@ -172,6 +176,32 @@ public class LoginMenuView implements Screen {
         });
     }
 
+    private void createSecurityQuestionPanel() {
+        securityQuestionPanel = new Table();
+        securityQuestionPanel.center();
+
+        Label titleLabel = new Label("Choose a Security Question.", skin);
+        answerField = new TextField("", skin);
+        answerField.setMessageText("answer");
+
+        questionBox = new SelectBox<>(skin);
+        questionBox.setItems(App.securityQuestions);
+
+        TextButton okButton = new TextButton("OK", skin);
+
+        securityQuestionPanel.add(titleLabel).padBottom(20).row();
+        securityQuestionPanel.add(questionBox).padBottom(15).row();
+        securityQuestionPanel.add(answerField).width(400).padBottom(10).row();
+        securityQuestionPanel.add(okButton).width(200).padRight(10);
+
+        okButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                handleRegistration();
+            }
+        });
+    }
+
     private void createForgotPasswordUI() {
         forgotPasswordPanel = new Table();
         forgotPasswordPanel.center();
@@ -197,6 +227,7 @@ public class LoginMenuView implements Screen {
         confirmPasswordField.setText("");
         nicknameField.setText("");
         emailField.setText("");
+        genderBox.setSelected(Gender.BOY);
         messageLabelRegister.setText("");
     }
 
@@ -214,6 +245,13 @@ public class LoginMenuView implements Screen {
         mainTable.add(forgotPasswordPanel).expand().fill();
     }
 
+    private void showSecurityQuestionUI() {
+        mainTable.clearChildren();
+        mainTable.add(securityQuestionPanel).expand().fill();
+
+        questionBox.setSelected(App.securityQuestions[0]);
+        answerField.setText("");
+    }
 
     private void handleLogin() {
         String username = usernameFieldLogin.getText();
@@ -241,7 +279,7 @@ public class LoginMenuView implements Screen {
         messageLabelRegister.setText(result.message());
 
         if (result.success()) {
-
+            showSecurityQuestionUI();
         }
     }
 
