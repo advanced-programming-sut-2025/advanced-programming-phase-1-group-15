@@ -8,7 +8,7 @@ import com.example.models.enums.commands.TradeMenuCommands;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-public class TradeMenu implements AppMenu {
+public class TradeMenu {
     public void run(Scanner scanner) {
         String command = scanner.nextLine().trim();
         if(Commands.checkShowCurrentMenuRegex(command)) {
@@ -43,7 +43,6 @@ public class TradeMenu implements AppMenu {
         }
         else if (TradeMenuCommands.BACK.matches(command)) {
             Matcher matcher = TradeMenuCommands.BACK.matcher(command);
-            AppView.currentMenu = App.currentGameMenu;
         }
         else {
             System.out.println("invalid command");

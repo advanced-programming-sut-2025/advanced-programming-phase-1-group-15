@@ -50,16 +50,6 @@ public class Player extends User implements TimeObserver {
 
     private DateAndTime lastUpdate = new DateAndTime();
 
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    private Game game;
-
     private ArrayList<CraftItem> availableCrafts = new ArrayList<>();
 
     private ArrayList<Food> availableFoods = new ArrayList<>(Arrays.asList(new Food(FoodType.FRIED_EGG),
@@ -114,9 +104,9 @@ public class Player extends User implements TimeObserver {
     }
 
     public int calculateWalkingEnergy(Position nextPosition) {
-        int tilesNeeded = game.getMap().findShortestPath(this, position, nextPosition);
+        int tilesNeeded = currentGame.getMap().findShortestPath(this, position, nextPosition);
         if(tilesNeeded == -1) return -1;
-        return game.getMap().calculatePath(position,nextPosition) / 5 + 1;
+        return currentGame.getMap().calculatePath(position,nextPosition) / 5 + 1;
     }
     public void walk(Position position) {
         int energyNeeded = calculateWalkingEnergy(position);

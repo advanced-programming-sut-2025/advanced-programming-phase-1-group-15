@@ -11,7 +11,6 @@ import com.example.models.time.TimeObserver;
 import com.example.models.weather.WeatherManagement;
 import java.util.ArrayList;
 
-
 public class Game implements TimeObserver {
     private ArrayList<Player> players = new ArrayList<>();
     private Player mainPlayer;
@@ -30,10 +29,11 @@ public class Game implements TimeObserver {
     public Game(ArrayList<Player> players) {
         this.players = players;
         for (Player player : players) {
-            player.setGame(this);
+            player.setCurrentGame(this);
         }
         this.currentPlayer = players.get(0);
     }
+
     public void build() {
         dateAndTime = new DateAndTime();
         weather = new WeatherManagement();

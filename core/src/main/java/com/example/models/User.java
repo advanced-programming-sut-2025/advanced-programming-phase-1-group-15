@@ -20,6 +20,7 @@ public class User {
     protected String securityQuestion;
     protected String securityQuestionAnswer;
 
+    protected Game currentGame = null;
     protected int maxEarnedGold = 0;
     protected int gameCount = 0;
 
@@ -84,6 +85,13 @@ public class User {
     }
     public void setGameCount(int gameCount) {
         this.gameCount = gameCount;
+    }
+
+    public Game getCurrentGame() {
+        return currentGame;
+    }
+    public void setCurrentGame(Game game) {
+        this.currentGame = game;
     }
 
     public User(String username, String password, String nickname, String email, Gender gender) {
