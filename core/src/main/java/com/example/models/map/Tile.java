@@ -1,5 +1,6 @@
 package com.example.models.map;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.App;
 import com.example.models.animals.Animal;
 import com.example.models.animals.Fish;
@@ -250,5 +251,12 @@ public class Tile {
         else {
             System.out.print('.');
         }
+
     }
+
+    public Sprite getSprite() {
+        return null;
+        // TODO : you should return suitable sprite based on the rilable object
+    }
+
 }

@@ -3,17 +3,19 @@ package com.example.views;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.example.Main;
 import com.example.controllers.CheatCodeController;
+import com.example.models.App;
 import com.example.models.Game;
+import com.example.models.Player;
 import com.example.models.Result;
+import com.example.models.map.Position;
+import com.example.models.map.Tile;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.Season;
 import com.example.models.weather.WeatherOption;
-import org.w3c.dom.Text;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -22,6 +24,10 @@ import java.util.concurrent.Executors;
 public class GameView implements Screen {
     private final Game game;
     private final Main main;
+
+    private final Integer tileSideLength = 48;
+    private final Integer screenWidth = 1920;
+    private final Integer screenHeight = 1080;
 
     private ExecutorService commandExecutor;
     private volatile boolean running = true;
@@ -47,6 +53,10 @@ public class GameView implements Screen {
         SpriteBatch batch = main.getBatch();
 
         batch.begin();
+
+        //TODO : first find the suitable Textures of tiles and areas and then uncomment bellow
+        //showMap(batch); // Should be completed
+
 
         game.getDateAndTime().updateDateAndTime(delta);
         drawClock(batch);
@@ -141,5 +151,54 @@ public class GameView implements Screen {
             }
         }
         scanner.close();
+    }
+
+
+    public void showMap(Batch batch){
+        Player currentPlayer = App.currentGame.getCurrentPlayer();
+        int beginX = Math.max(0,currentPlayer.getPosition().getX() - screenWidth/tileSideLength);
+        int beginY = Math.max(0,currentPlayer.getPosition().getY() - screenHeight/tileSideLength);
+        int finishX = Math.min(App.currentGame.getMap().COLS,
+            currentPlayer.getPosition().getX() + screenWidth/tileSideLength);
+        int finishY = Math.min(App.currentGame.getMap().ROWS,
+            currentPlayer.getPosition().getY() + screenHeight/tileSideLength);
+        for(int i=beginY; i<= finishY; i++){
+            for(int j=beginX; j<= finishX; j++){
+                Tile toBePrinted = App.currentGame.getMap().getTile(new Position(i,j));
+                printTile(toBePrinted,
+                    (i)*tileSideLength - screenWidth/2,
+                    (j)*tileSideLength - screenHeight/2,
+                    batch);
+            }
+        }
+        Sprite s;
+        Animation a;
+        TextureRegion region;
+        Texture texture;
+
+    }
+
+    public void printTile(Tile tile, int x, int y,Batch batch){
+        // TODO: return the sprite of current Tile
+        // or the are that conaints it
+        if(tile.getArea() == null){
+            batch.draw(tile.getSprite(),x,y,tileSideLength,tileSideLength);
+        }
+        else{
+            printArea(tile,batch);
+        }
+    }
+
+    public void printArea(Tile tile,Batch batch){
+        // TODO : find minX, minY, max X , max Y
+        int[] surrounding = tile.getArea().surrounding();
+        // TODO: find the centre
+        int realWidth = tileSideLength * (surrounding[2]-surrounding[0]);
+        int realHeight = tileSideLength * (surrounding[3]-surrounding[1]);
+        int cornerX = surrounding[0];
+        int cornerY = surrounding[1];
+        batch.draw(tile.getSprite(), cornerX, cornerY,realWidth,realHeight);
+        // TODO : scale the sprite of Area to the real width and length
+        // print the rectangle in the centre of the real rectangle
     }
 }

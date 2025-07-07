@@ -1,5 +1,6 @@
 package com.example.models.map;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
 import com.example.models.time.TimeObserver;
 
@@ -8,6 +9,10 @@ import java.util.ArrayList;
 public abstract class Area implements TimeObserver {
     protected AreaType areaType;
 
+    private int firstCol;
+    private int firstRow;
+    private int lastCol;
+    private int lastRow;
 
     protected ArrayList<ArrayList<Tile>> tiles;
 
@@ -35,6 +40,10 @@ public abstract class Area implements TimeObserver {
     }
     public Area(ArrayList<ArrayList<Tile>> tiles) {
         this.tiles = tiles;
+        this.firstCol = tiles.get(0).get(0).getPosition().x;
+        this.firstRow = tiles.get(0).get(0).getPosition().y;
+        this.lastCol = tiles.get(tiles.size()-1).get(tiles.get(0).size()-1).getPosition().x;
+        this.lastRow = tiles.get(tiles.size()-1).get(tiles.get(0).size()-1).getPosition().y;
     }
 
     public ArrayList<ArrayList<Tile>> getSubArea(ArrayList<ArrayList<Tile>> mapTiles, int firstCol, int lastCol, int firstRow, int lastRow) {
@@ -53,4 +62,14 @@ public abstract class Area implements TimeObserver {
     }
 
     public abstract void build();
+
+    public int[] surrounding(){
+        int[] answer = new int[]{firstCol, firstRow, lastCol, lastRow};
+        return answer;
+    }
+
+    public Sprite getSprite(){
+        return null;
+        //TODO: should be implemented and abstract
+    }
 }
