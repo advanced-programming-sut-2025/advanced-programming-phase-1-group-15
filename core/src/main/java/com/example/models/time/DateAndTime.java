@@ -24,6 +24,8 @@ public class DateAndTime {
     private DaysOfWeek dayOfWeek = DaysOfWeek.MONDAY;
     private int day = 1;
     private int hour = 9;
+    private int minute = 0;
+    private float s = 0;
 
     public void nextYear(){
         year++;
@@ -103,6 +105,22 @@ public class DateAndTime {
         }
     }
 
+    public void nextTenMinutes() {
+        if(minute == 50) {
+            minute = 0;
+            nextHour();
+        }
+        minute += 10;
+    }
+
+    public void updateDateAndTime(float delta) {
+        s += delta;
+        if(s > 10) {
+            s = 0;
+            nextTenMinutes();
+        }
+    }
+
     public int getYear() {
         return year;
     }
@@ -130,14 +148,18 @@ public class DateAndTime {
     public int getHour() {
         return hour;
     }
-    public String displayHour() {
-        return hour + ":00";
+
+    public int getMinute() {
+        return minute;
+    }
+    public String displayMinute() {
+        return String.format("%02d", minute);
     }
 
     public String displayDate() {
-        return displayDay() + " " + displaySeason() + " " + displayYear();
+        return displayDayOfWeek() + ". " + getDay();
     }
-    public String displayDateTime() {
-        return displayHour() + " " + displayDate();
+    public String displayTime() {
+        return getHour() + ":" + displayMinute();
     }
 }

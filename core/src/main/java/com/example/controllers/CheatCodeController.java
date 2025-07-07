@@ -8,6 +8,7 @@ import com.example.models.artisanry.ArtisanItem;
 import com.example.models.artisanry.ArtisanItemType;
 import com.example.models.crafting.CraftItem;
 import com.example.models.crafting.CraftItemType;
+import com.example.models.enums.commands.CheatCodeCommands;
 import com.example.models.farming.Crop;
 import com.example.models.farming.Crops;
 import com.example.models.farming.Fruit;
@@ -22,22 +23,102 @@ import com.example.models.stores.GeneralItemsType;
 import com.example.models.tools.BackPackable;
 import com.example.models.weather.WeatherOption;
 
+import java.util.regex.Matcher;
+
 public class CheatCodeController {
+    public static Result processCommand(String command) {
+        if(CheatCodeCommands.ADVANCE_TIME_REGEX.matches(command)) {
+            Matcher matcher = CheatCodeCommands.ADVANCE_TIME_REGEX.matcher(command);
+
+            int hours = matcher.matches() ? Integer.parseInt(matcher.group("hours")) : 0;
+
+            return CheatCodeController.cheatAdvanceTime(hours);
+        }
+        else if(CheatCodeCommands.ADVANCE_DATE_REGEX.matches(command)) {
+            Matcher matcher = CheatCodeCommands.ADVANCE_DATE_REGEX.matcher(command);
+
+            int days = matcher.matches() ? Integer.parseInt(matcher.group("days")) : 0;
+
+            return CheatCodeController.cheatAdvanceDate(days);
+        }
+        else if(CheatCodeCommands.WEATHER_SET_REGEX.matches(command)) {
+            Matcher matcher = CheatCodeCommands.WEATHER_SET_REGEX.matcher(command);
+
+            String weatherType = matcher.matches() ? matcher.group("weatherType") : "";
+
+            return CheatCodeController.cheatSetWeather(weatherType);
+        }
+        else if(CheatCodeCommands.ENERGY_SET_REGEX.matches(command)) {
+            Matcher matcher = CheatCodeCommands.ENERGY_SET_REGEX.matcher(command);
+
+            int value = matcher.matches() ? Integer.parseInt(matcher.group("value")) : 0;
+
+            return CheatCodeController.cheatSetEnergy(value);
+        }
+        else if(CheatCodeCommands.ENERGY_UNLIMITED_REGEX.matches(command)) {
+            return CheatCodeController.cheatUnlimitedEnergy();
+        }
+        else if(CheatCodeCommands.ANIMAL_FRIENDSHIP_REGEX.matches(command)) {
+            Matcher matcher = CheatCodeCommands.ANIMAL_FRIENDSHIP_REGEX.matcher(command);
+
+            String name = matcher.matches() ? matcher.group("name") : "";
+            int amount = Integer.parseInt(matcher.group("amount"));
+
+            return CheatCodeController.cheatAnimalFriendship(name, amount);
+        }
+        else if(CheatCodeCommands.ADD_GOLD_REGEX.matches(command)) {
+            Matcher matcher = CheatCodeCommands.ADD_GOLD_REGEX.matcher(command);
+
+            int amount = matcher.matches() ? Integer.parseInt(matcher.group("amount")) : 0;
+
+            return CheatCodeController.cheatAddGold(amount);
+        }
+        else if(CheatCodeCommands.SET_FRIENDSHIP_REGEX.matches(command)) {
+            Matcher matcher = CheatCodeCommands.SET_FRIENDSHIP_REGEX.matcher(command);
+
+            String username = matcher.matches() ? matcher.group("username") : "";
+            int level = Integer.parseInt(matcher.group("level"));
+
+           return CheatCodeController.cheatSetFriendship(username, level);
+        }
+        else if(CheatCodeCommands.ADD_ITEM.matches(command)) {
+            Matcher matcher = CheatCodeCommands.ADD_ITEM.matcher(command);
+            matcher.matches();
+            return CheatCodeController.cheatAddItem(matcher.group("itemName"),matcher.group("count"));
+        }
+        else if(CheatCodeCommands.ADD_ITEMS.matches(command)) {
+            Matcher matcher = CheatCodeCommands.ADD_ITEMS.matcher(command);
+            matcher.matches();
+            return CheatCodeController.AddItem(matcher.group("name"),Integer.parseInt(matcher.group("count")));
+        }
+        else if(CheatCodeCommands.CHEAT_THOR.matches(command)) {
+            Matcher matcher = CheatCodeCommands.CHEAT_THOR.matcher(command);
+            matcher.matches();
+            return CheatCodeController.cheatThor(
+                new Position(Integer.parseInt(matcher.group("x"))
+                    , Integer.parseInt(matcher.group("y"))));
+        }
+        else {
+            return new Result(false, "Invalid command!");
+        }
+    }
+
     public static Result cheatAdvanceTime(int hours) {
         if(hours < 0) {
             return new Result(false, "you can't travel back in time!");
         }
 
         App.currentGame.getDateAndTime().nextNHours(hours);
-        return new Result(true, App.currentGame.getDateAndTime().displayDateTime());
+        return new Result(true, App.currentGame.getDateAndTime().displayTime());
     }
+
     public static Result cheatAdvanceDate(int days) {
         if(days < 0) {
             return new Result(false, "you can't travel back in time!");
         }
 
         App.currentGame.getDateAndTime().nextNDays(days);
-        return new Result(true, App.currentGame.getDateAndTime().displayDateTime());
+        return new Result(true, App.currentGame.getDateAndTime().displayTime());
     }
 
     public static Result cheatSetWeather(String weatherType) {
