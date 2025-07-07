@@ -374,30 +374,30 @@ public class Player extends User implements TimeObserver {
     }
 
     public void attackOfCrows(){
-//        int remainder = RandomGenerator.getInstance().randomInt(0,15);
-//        if(farm.doesHaveScareCrow()) return;
-//        for(int i=0;i<farm.getTiles().size();i++) {
-//            for (int j = 0; j < farm.getTiles().get(i).size(); j++) {
-//                Tile tile = farm.getTiles().get(i).get(j);
-//                if(tile.getAreaType() == AreaType.GREENHOUSE) continue;
-//                if(tile.isPlowed()){
-//                    remainder++;    remainder %= 16;
-//                    if(remainder == 0){
-//                        if(RandomGenerator.getInstance().randomInt(0,3) == 1) {
-//                            if(tile.getObjectInTile() instanceof PloughedPlace) {
-//                                PloughedPlace place = (PloughedPlace) tile.getObjectInTile();
-//                                if(place.getHarvestable() instanceof Tree) {
-//                                    place.setAttackedByCrow(2);
-//                                }
-//                                else{
-//                                    place.unPlough();
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        int remainder = RandomGenerator.getInstance().randomInt(0,15);
+        if(farm.doesHaveScareCrow()) return;
+        for(int i=0;i<farm.getTiles().size();i++) {
+            for (int j = 0; j < farm.getTiles().get(i).size(); j++) {
+                Tile tile = farm.getTiles().get(i).get(j);
+                if(tile.getAreaType() == AreaType.GREENHOUSE) continue;
+                if(tile.isPlowed()){
+                    remainder++;    remainder %= 16;
+                    if(remainder == 0){
+                        if(RandomGenerator.getInstance().randomInt(0,3) == 1) {
+                            if(tile.getObjectInTile() instanceof PloughedPlace) {
+                                PloughedPlace place = (PloughedPlace) tile.getObjectInTile();
+                                if(place.getHarvestable() instanceof Tree) {
+                                    place.setAttackedByCrow(2);
+                                }
+                                else{
+                                    place.unPlough();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void ForagingSeedsAndCrops(){

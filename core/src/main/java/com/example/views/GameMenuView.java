@@ -24,7 +24,7 @@ public class GameMenuView implements Screen {
     private Texture background;
 
     private Table mainTable;
-    private Table gameMenuPanel, newGamePanel;
+    private Table gameMenuPanel, newGamePanel, chooseMapPanel;
 
     public GameMenuView(Main game) {
         this.game = game;
@@ -183,9 +183,7 @@ public class GameMenuView implements Screen {
         startButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Game newGame = new Game(players);
-                App.currentGame = newGame; App.recentGames.add(newGame);
-                game.setScreen(new GameView(newGame, game));
+                switchToChooseMapUI(players);
             }
         });
 
@@ -197,15 +195,74 @@ public class GameMenuView implements Screen {
         });
     }
 
-    public void switchToGameMenuUI() {
+    private void createChooseMapPanel(ArrayList<Player> players) {
+        chooseMapPanel = new Table();
+        chooseMapPanel.center();
+
+        Label titleLabel = new Label("Stardew Valley", skin);
+        Label descriptionLabel = new Label("Choose your Map:", skin);
+        ArrayList<Label> playerLabels = new ArrayList<>();
+        ArrayList<SelectBox<Integer>> selectBoxes = new ArrayList<>();
+
+        for(int i = 1; i <= players.size(); i++) {
+            Label playerLabel = new Label("Player " + i +": " + players.get(i - 1).getUsername(), skin);
+            playerLabel.setColor(Color.BLACK);
+            SelectBox<Integer> selectBox = new SelectBox<>(skin);
+            selectBox.setItems(1, 2, 3, 4);
+
+            playerLabels.add(playerLabel);
+            selectBoxes.add(selectBox);
+        }
+
+        Label messageLabel = new Label("", skin); messageLabel.setColor(Color.RED);
+        TextButton startButton = new TextButton("Start", skin);
+
+        chooseMapPanel.add(titleLabel).colspan(2).row();
+        chooseMapPanel.add(descriptionLabel).padBottom(20).colspan(2).row();
+        for(int i = 0; i < players.size(); i++) {
+            chooseMapPanel.add(playerLabels.get(i)).left(); chooseMapPanel.add(selectBoxes.get(i)).width(75).height(50).row();
+        }
+        chooseMapPanel.add(startButton).width(150).padTop(10).colspan(2).row();
+        chooseMapPanel.add(messageLabel).padTop(10).colspan(2).row();
+
+        startButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                for(int i = 0; i < selectBoxes.size() - 1; i++) {
+                    for(int j = i + 1; j < selectBoxes.size(); j++) {
+                        if(selectBoxes.get(i).getSelected().equals(selectBoxes.get(j).getSelected())) {
+                            messageLabel.setText("Each player has to choose a unique map number.");
+                            return;
+                        }
+                    }
+                }
+
+                for(int i = 0; i < players.size(); i++) {
+                    players.get(i).setMapNumber(selectBoxes.get(i).getSelected());
+                }
+
+                Game newGame = new Game(players);
+                App.currentGame = newGame; App.recentGames.add(newGame);
+                game.setScreen(new GameView(newGame, game));
+            }
+        });
+    }
+
+    private void switchToGameMenuUI() {
         mainTable.clearChildren();
         mainTable.add(gameMenuPanel).expand().fill();
     }
 
-    public void switchToNewGameUI() {
+    private void switchToNewGameUI() {
         mainTable.clearChildren();
         createNewGamePanel();
         mainTable.add(newGamePanel).expand().fill();
+    }
+
+    private void switchToChooseMapUI(ArrayList<Player> players) {
+        mainTable.clearChildren();
+        createChooseMapPanel(players);
+        mainTable.add(chooseMapPanel).expand().fill();
     }
 
     public void updatePlayersLabel(ArrayList<Player> players, Label playersLabel) {
