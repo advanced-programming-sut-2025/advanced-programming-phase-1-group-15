@@ -1,5 +1,6 @@
 package com.example.models.farming;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.App;
 import com.example.models.enums.Quality;
 import com.example.models.map.Tilable;
@@ -53,6 +54,11 @@ public class Crop extends Harvestable implements Tilable, BackPackable {
     @Override
     public boolean isOneTime(){
         return cropType.isOneTime();
+    }
+
+    @Override
+    public Sprite getSprite(){
+        return null;
     }
 
 }

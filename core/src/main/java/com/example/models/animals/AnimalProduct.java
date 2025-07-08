@@ -1,5 +1,6 @@
 package com.example.models.animals;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.tools.BackPackable;
 
 public class AnimalProduct  implements BackPackable {
@@ -42,5 +43,10 @@ public class AnimalProduct  implements BackPackable {
             case GOLD -> (int) (1.5 * price);
             case IRIDIUM -> 2 * price;
         };
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return null;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.models.farming;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.tools.BackPackable;
 
 public enum FruitType implements BackPackable {
@@ -31,5 +32,10 @@ public enum FruitType implements BackPackable {
     @Override
     public int getPrice() {
         return 0;
+    }
+
+    @Override
+    public Sprite getSprite(){
+        return null;
     }
 }

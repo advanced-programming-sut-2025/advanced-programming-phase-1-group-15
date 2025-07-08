@@ -1,5 +1,6 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
 import com.example.models.map.Tilable;
 import com.example.models.time.DateAndTime;
@@ -38,5 +39,11 @@ public class ShippingBin implements Tilable, TimeObserver {
             }
             items.clear();
         }
+    }
+
+
+    @Override
+    public Sprite getSprite() {
+        return null;
     }
 }

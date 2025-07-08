@@ -1,5 +1,6 @@
 package com.example.models.cooking;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.tools.BackPackable;
 
 public class Food implements BackPackable {
@@ -29,5 +30,10 @@ public class Food implements BackPackable {
 
     public int getEnergy() {
         return foodType.energy;
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return null;
     }
 }

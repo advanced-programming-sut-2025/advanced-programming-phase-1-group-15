@@ -1,5 +1,6 @@
 package com.example.models.artisanry;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.tools.BackPackable;
 
 public class ArtisanItem implements BackPackable {
@@ -40,5 +41,9 @@ public class ArtisanItem implements BackPackable {
     }
     public void setDay(int day) {
         this.day = day;
+    }
+
+    public Sprite getSprite() {
+        return null;
     }
 }

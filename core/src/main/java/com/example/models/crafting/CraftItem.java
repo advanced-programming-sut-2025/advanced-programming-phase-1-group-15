@@ -1,5 +1,6 @@
 package com.example.models.crafting;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.map.Tilable;
 import com.example.models.tools.BackPackable;
 
@@ -26,5 +27,10 @@ public class CraftItem implements Tilable, BackPackable {
     @Override
     public int getPrice() {
         return craftItemType.price;
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return null;
     }
 }

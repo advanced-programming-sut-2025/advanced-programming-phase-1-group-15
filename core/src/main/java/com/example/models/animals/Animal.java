@@ -1,5 +1,6 @@
 package com.example.models.animals;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.App;
 import com.example.models.map.AreaType;
 import com.example.models.map.Position;
@@ -178,5 +179,11 @@ public class Animal implements Tilable, TimeObserver {
             petted = false;
             fed = false;
         }
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return null;
+        // TODO
     }
 }

@@ -1,5 +1,6 @@
 package com.example.models.farming.GeneralPlants;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.artisanry.ArtisanItem;
 import com.example.models.artisanry.ArtisanItemType;
 import com.example.models.farming.Harvestable;
@@ -111,6 +112,11 @@ public class GiantPlant extends PloughedPlace implements Tilable {
                 parts.stream().allMatch(Tile::isWatered) ? "Yes" : "No",
                 fertilizer != null ? "Yes" : "No"
         );
+    }
+
+    @Override
+    public Sprite getSprite(){
+        return null;
     }
 
 }

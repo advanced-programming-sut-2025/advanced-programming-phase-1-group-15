@@ -1,5 +1,6 @@
 package com.example.models.farming;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.tools.BackPackable;
 
 public class CropProduct implements BackPackable {
@@ -39,5 +40,9 @@ public class CropProduct implements BackPackable {
     @Override
     public int getPrice() {
         return cropType.getBasePrice(); // TODO : should check effect of quality and other things on price
+    }
+
+    public Sprite getSprite(){
+        return null;
     }
 }

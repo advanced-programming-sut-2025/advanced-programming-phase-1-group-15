@@ -1,5 +1,6 @@
 package com.example.models.farming;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.tools.BackPackable;
 
 public class Fruit implements BackPackable {
@@ -39,6 +40,11 @@ public class Fruit implements BackPackable {
     @Override
     public String toString() {
         return String.format("%s", getName());
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return null;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.map.Tilable;
 
 import java.util.HashMap;
@@ -52,5 +53,10 @@ public class Fridge implements Tilable {
         }
 
         return display.toString();
+    }
+
+    @Override
+    public Sprite getSprite(){
+        return null;
     }
 }

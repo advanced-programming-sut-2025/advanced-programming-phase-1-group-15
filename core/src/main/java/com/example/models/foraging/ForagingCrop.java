@@ -1,5 +1,6 @@
 package com.example.models.foraging;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.map.Tilable;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.TimeObserver;
@@ -38,5 +39,10 @@ public class ForagingCrop implements Tilable, BackPackable, TimeObserver {
     @Override
     public int getPrice() {
         return foragingCropsType.basePrice;
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return null;
     }
 }

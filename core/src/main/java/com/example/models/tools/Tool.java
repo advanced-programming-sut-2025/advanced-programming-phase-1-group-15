@@ -1,5 +1,6 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
 import com.example.models.map.Tile;
 
@@ -52,5 +53,10 @@ public class Tool implements BackPackable {
     @Override
     public int getPrice() {
         return 0;
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return null;
     }
 }

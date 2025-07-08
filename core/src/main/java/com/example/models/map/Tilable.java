@@ -1,5 +1,7 @@
 package com.example.models.map;
 
-public interface Tilable {
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
+public interface Tilable {
+    public Sprite getSprite();
 }

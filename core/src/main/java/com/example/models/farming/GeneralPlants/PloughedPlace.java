@@ -1,5 +1,6 @@
 package com.example.models.farming.GeneralPlants;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.App;
 import com.example.models.Result;
 import com.example.models.artisanry.ArtisanItem;
@@ -316,6 +317,11 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
         if(this.harvestable instanceof Tree){
             tile.setObjectInTile(new ArtisanItem(ArtisanItemType.COAL));
         }
+    }
+
+    @Override
+    public Sprite getSprite(){
+        return null;
     }
 
 

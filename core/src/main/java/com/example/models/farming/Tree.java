@@ -1,5 +1,6 @@
 package com.example.models.farming;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.App;
 import com.example.models.map.Tilable;
 import com.example.models.time.TimeObserver;
@@ -42,5 +43,10 @@ public class Tree extends Harvestable implements Tilable, TimeObserver {
 
     public String getName(){
         return treeType.name().toLowerCase().replaceAll("_", " ");
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return null;
     }
 }

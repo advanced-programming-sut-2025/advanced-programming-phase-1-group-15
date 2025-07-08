@@ -1,5 +1,6 @@
 package com.example.models.animals;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.map.Tilable;
 import com.example.models.tools.BackPackable;
 
@@ -37,5 +38,9 @@ public class Fish implements BackPackable, Tilable {
             case GOLD -> (int) (1.5 * price);
             case IRIDIUM -> 2 * price;
         };
+    }
+
+    public Sprite getSprite(){
+        return null;
     }
 }

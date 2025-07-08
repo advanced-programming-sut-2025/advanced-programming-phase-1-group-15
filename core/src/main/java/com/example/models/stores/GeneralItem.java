@@ -1,5 +1,6 @@
 package com.example.models.stores;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.tools.BackPackable;
 
 public class GeneralItem implements BackPackable {
@@ -21,5 +22,10 @@ public class GeneralItem implements BackPackable {
     @Override
     public int getPrice() {
         return generalItemsType.price;
+    }
+
+    @Override
+    public Sprite getSprite(){
+        return null;
     }
 }
