@@ -2,7 +2,9 @@ package com.example.views;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameAssetManager {
@@ -25,15 +27,15 @@ public class GameAssetManager {
     public static void load() {
         font = new BitmapFont(Gdx.files.internal("UI/font.fnt"));
 
-        spring = new TextureRegion(new Texture(Gdx.files.internal("Sprites/spring.png")));
-        summer = new TextureRegion(new Texture(Gdx.files.internal("Sprites/summer.png")));
-        autumn = new TextureRegion(new Texture(Gdx.files.internal("Sprites/autumn.png")));
-        winter = new TextureRegion(new Texture(Gdx.files.internal("Sprites/winter.png")));
+        spring = new TextureRegion(new Texture(Gdx.files.internal("Sprites/time/spring.png")));
+        summer = new TextureRegion(new Texture(Gdx.files.internal("Sprites/time/summer.png")));
+        autumn = new TextureRegion(new Texture(Gdx.files.internal("Sprites/time/autumn.png")));
+        winter = new TextureRegion(new Texture(Gdx.files.internal("Sprites/time/winter.png")));
 
-        clock = new TextureRegion(new Texture("Sprites/clock.png"));
-        rainy = new TextureRegion(new Texture("Sprites/rainy.png"));
-        stormy = new TextureRegion(new Texture("Sprites/stormy.png"));
-        snowy = new TextureRegion(new Texture("Sprites/snowy.png"));
-        sunny = new TextureRegion(new Texture("Sprites/sunny.png"));
+        clock = new TextureRegion(new Texture("Sprites/time/clock.png"));
+        rainy = new TextureRegion(new Texture("Sprites/time/rainy.png"));
+        stormy = new TextureRegion(new Texture("Sprites/time/stormy.png"));
+        snowy = new TextureRegion(new Texture("Sprites/time/snowy.png"));
+        sunny = new TextureRegion(new Texture("Sprites/time/sunny.png"));
     }
 }
