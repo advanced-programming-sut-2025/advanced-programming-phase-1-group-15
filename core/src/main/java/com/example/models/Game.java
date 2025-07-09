@@ -9,6 +9,8 @@ import com.example.models.relation.PlayerFriendship;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.TimeObserver;
 import com.example.models.weather.WeatherManagement;
+import com.example.views.GameView;
+
 import java.util.ArrayList;
 
 public class Game implements TimeObserver {
@@ -21,6 +23,8 @@ public class Game implements TimeObserver {
 
     private ArrayList<ArrayList<Tile>> mapTiles;
     private Map map;
+
+    private GameView view;
 
     private final ArrayList<PlayerFriendship> friendships = new ArrayList<>();
 
@@ -104,6 +108,7 @@ public class Game implements TimeObserver {
 
         currentPlayer.unlock();
         currentPlayer = players.get(nextIndex);
+        view.updateMapCamera();
     }
 
     public DateAndTime getDateAndTime() {

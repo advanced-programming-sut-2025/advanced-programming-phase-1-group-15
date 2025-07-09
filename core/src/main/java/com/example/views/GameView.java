@@ -3,14 +3,18 @@ package com.example.views;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.example.Main;
 import com.example.controllers.CheatCodeController;
 import com.example.models.App;
 import com.example.models.Game;
+import com.example.models.GraphicalModels.HUDCamera;
+import com.example.models.GraphicalModels.MapCamera;
 import com.example.models.Player;
 import com.example.models.Result;
+import com.example.models.map.Map;
 import com.example.models.map.Position;
 import com.example.models.map.Tile;
 import com.example.models.time.DateAndTime;
@@ -29,6 +33,9 @@ public class GameView implements Screen {
     private final Integer screenWidth = 1920;
     private final Integer screenHeight = 1080;
 
+    private MapCamera mapCamera;
+    private HUDCamera hudCamera;
+
     private ExecutorService commandExecutor;
     private volatile boolean running = true;
 
@@ -39,24 +46,37 @@ public class GameView implements Screen {
 
         game.build();
 
+        mapCamera = new MapCamera(game.getCurrentPlayer());
+        hudCamera = new HUDCamera();
+
         commandExecutor = Executors.newSingleThreadExecutor();
         commandExecutor.submit(this::readTerminalInput);
     }
 
     @Override
     public void show() {
-
     }
 
     @Override
     public void render(float delta) {
-        SpriteBatch batch = main.getBatch();
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        mapCamera.setPlayer(game.getCurrentPlayer());
+        mapCamera.update();
+
+        SpriteBatch batch = main.getBatch();
+        batch.setProjectionMatrix(mapCamera.getCamera().combined);
         batch.begin();
 
         //TODO : first find the suitable Textures of tiles and areas and then uncomment bellow
         //showMap(batch); // Should be completed
 
+        batch.end();
+
+        hudCamera.update();
+        batch.setProjectionMatrix(hudCamera.getCamera().combined);
+        batch.begin();
 
         game.getDateAndTime().updateDateAndTime(delta);
         drawClock(batch);
@@ -66,7 +86,8 @@ public class GameView implements Screen {
 
     @Override
     public void resize(int width, int height) {
-
+        mapCamera.resize(width, height);
+        hudCamera.resize(width, height);
     }
 
     @Override
@@ -155,19 +176,20 @@ public class GameView implements Screen {
 
 
     public void showMap(Batch batch){
-        Player currentPlayer = App.currentGame.getCurrentPlayer();
-        int beginX = Math.max(0,currentPlayer.getPosition().getX() - screenWidth/tileSideLength);
-        int beginY = Math.max(0,currentPlayer.getPosition().getY() - screenHeight/tileSideLength);
-        int finishX = Math.min(App.currentGame.getMap().COLS,
-            currentPlayer.getPosition().getX() + screenWidth/tileSideLength);
-        int finishY = Math.min(App.currentGame.getMap().ROWS,
-            currentPlayer.getPosition().getY() + screenHeight/tileSideLength);
-        for(int i=beginY; i<= finishY; i++){
-            for(int j=beginX; j<= finishX; j++){
+        Map currentMap = game.getMap();
+//        Player currentPlayer = App.currentGame.getCurrentPlayer();
+//        int beginX = Math.max(0,currentPlayer.getPosition().getX() - screenWidth/tileSideLength);
+//        int beginY = Math.max(0,currentPlayer.getPosition().getY() - screenHeight/tileSideLength);
+//        int finishX = Math.min(currentMap.COLS,
+//            currentPlayer.getPosition().getX() + screenWidth/tileSideLength);
+//        int finishY = Math.min(App.currentGame.getMap().ROWS,
+//            currentPlayer.getPosition().getY() + screenHeight/tileSideLength);
+        for(int i=0; i<= currentMap.ROWS; i++){
+            for(int j=0; j<= currentMap.COLS; j++){
                 Tile toBePrinted = App.currentGame.getMap().getTile(new Position(i,j));
                 printTile(toBePrinted,
-                    (i)*tileSideLength - screenWidth/2,
-                    (j)*tileSideLength - screenHeight/2,
+                    (i)*tileSideLength,
+                    (j)*tileSideLength,
                     batch);
             }
         }
@@ -179,7 +201,6 @@ public class GameView implements Screen {
     }
 
     public void printTile(Tile tile, int x, int y,Batch batch){
-        // TODO: return the sprite of current Tile
         // or the are that conaints it
         if(tile.getArea() == null){
             batch.draw(tile.getSprite(),x,y,tileSideLength,tileSideLength);
@@ -190,15 +211,17 @@ public class GameView implements Screen {
     }
 
     public void printArea(Tile tile,Batch batch){
-        // TODO : find minX, minY, max X , max Y
         int[] surrounding = tile.getArea().surrounding();
-        // TODO: find the centre
         int realWidth = tileSideLength * (surrounding[2]-surrounding[0]);
         int realHeight = tileSideLength * (surrounding[3]-surrounding[1]);
         int cornerX = surrounding[0];
         int cornerY = surrounding[1];
         batch.draw(tile.getSprite(), cornerX, cornerY,realWidth,realHeight);
-        // TODO : scale the sprite of Area to the real width and length
         // print the rectangle in the centre of the real rectangle
+    }
+
+    public void updateMapCamera(){
+        mapCamera = new MapCamera(game.getCurrentPlayer());
+        mapCamera.update();
     }
 }
