@@ -86,30 +86,6 @@ public class Game implements TimeObserver {
     public void setMainPlayer(Player mainPlayer) {
         this.mainPlayer = mainPlayer;
     }
-    public void nextTurn() {
-        boolean allFainted = true;
-        for(Player player : players) {
-            allFainted = allFainted && player.isFainted();
-        }
-        if(allFainted) {
-            dateAndTime.nextDay();
-            return;
-        }
-
-        int currentIndex = players.indexOf(currentPlayer);
-        int nextIndex = (currentIndex + 1) % players.size();
-        while (players.get(nextIndex).isFainted()) {
-            nextIndex = (nextIndex + 1) % players.size();
-        }
-
-        if(nextIndex == 0) {
-            dateAndTime.nextHour();
-        }
-
-        currentPlayer.unlock();
-        currentPlayer = players.get(nextIndex);
-        view.updateMapCamera();
-    }
 
     public DateAndTime getDateAndTime() {
         return dateAndTime;

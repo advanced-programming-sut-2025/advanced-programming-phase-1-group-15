@@ -1,15 +1,20 @@
 package com.example.models;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.animals.Animal;
 import com.example.models.artisanry.ArtisanItem;
 import com.example.models.cooking.Food;
 import com.example.models.cooking.FoodType;
 import com.example.models.crafting.CraftItem;
+import com.example.models.enums.Direction;
+import com.example.models.enums.Gender;
 import com.example.models.farming.GeneralPlants.PloughedPlace;
 import com.example.models.farming.Tree;
 import com.example.models.foraging.ForagingSeedsType;
 import com.example.models.map.AreaType;
 import com.example.models.map.Farm;
+import com.example.models.map.Map;
 import com.example.models.map.Tile;
 import com.example.models.map.Position;
 import com.example.models.relation.PlayerFriendship;
@@ -19,6 +24,7 @@ import com.example.models.time.DateAndTime;
 import com.example.models.time.TimeObserver;
 import com.example.models.tools.*;
 import com.example.models.weather.WeatherOption;
+import com.example.views.GameAssetManager;
 
 import java.util.*;
 
@@ -29,9 +35,18 @@ public class Player extends User implements TimeObserver {
     private int CurrentId;
     private int mapNumber;
 
+    Animation<TextureRegion> walkUpAnimation;
+    Animation<TextureRegion> walkDownAnimation;
+    Animation<TextureRegion> walkLeftAnimation;
+    Animation<TextureRegion> walkRightAnimation;
+    TextureRegion currentFrame;
+    Direction direction = Direction.DOWN;
+    boolean isWalking = false;
+    float stateTime = 0f;
+
     private int gold = 1000;
-    private int energy = 200;
-    private int energyConsumed = 0;
+    private double energy = 200;
+    private double energyConsumed = 0;
     private boolean unlimitedEnergy = false;
     private boolean fainted = false;
 
@@ -82,6 +97,14 @@ public class Player extends User implements TimeObserver {
 
     public Player(User user) {
         super(user.getUsername(), user.getPassword(), user.getNickname(), user.getEmail(), user.getGender());
+
+        if(user.getGender().equals(Gender.BOY)) {
+            walkUpAnimation = GameAssetManager.boy_walking_up;
+            walkDownAnimation = GameAssetManager.boy_walking_down;
+            walkLeftAnimation = GameAssetManager.boy_walking_left;
+            walkRightAnimation = GameAssetManager.boy_walking_right;
+            currentFrame = walkDownAnimation.getKeyFrame(0);
+        }
     }
 
     public ArrayList<ArtisanItem> getArtisanItems() {
@@ -103,21 +126,28 @@ public class Player extends User implements TimeObserver {
         this.position = homePosition;
     }
 
-    public int calculateWalkingEnergy(Position nextPosition) {
-        int tilesNeeded = currentGame.getMap().findShortestPath(this, position, nextPosition);
-        if(tilesNeeded == -1) return -1;
-        return currentGame.getMap().calculatePath(position,nextPosition) / 5 + 1;
-    }
-    public void walk(Position position) {
-        int energyNeeded = calculateWalkingEnergy(position);
+    public void walk(int x, int y) {
+        if(x >= com.example.models.map.Map.COLS || y >= Map.ROWS || x < 0 || y < 0) {
+            return;
+        }
 
-        if(energyNeeded > energy) {
-            faint();
+        Tile tile = App.currentGame.getTile(x, y);
+        if(!tile.isEmpty()) {
+            return;
         }
-        else {
-            subtractEnergy(energyNeeded);
-            setPosition(position);
+        else if(tile.getAreaType().equals(AreaType.LAKE)) {
+            return;
         }
+        else if(tile.getAreaType().equals(AreaType.FARM)) {
+            Farm farm = (Farm) tile.getArea();
+            if(!checkTerritory(farm)) {
+                return;
+            }
+        }
+
+        isWalking = true;
+        subtractEnergy(0.1);
+        setPosition(new Position(x, y));
     }
 
     public Farm getFarm() {
@@ -174,30 +204,22 @@ public class Player extends User implements TimeObserver {
         inventory.removeCountFromBackPack(inventory.getItemByName("stone"), stone);
     }
 
-    public int getEnergy() {
+    public double getEnergy() {
         return energy;
     }
-    public void setEnergy(int energy) {
+    public void setEnergy(double energy) {
         this.energy = energy;
     }
-    public void subtractEnergy(int amount) {
+    public void subtractEnergy(double amount) {
         if(!unlimitedEnergy) {
             energyConsumed += amount;
             energy -= amount;
         }
     }
-    public void addEnergy(int amount) {
+    public void addEnergy(double amount) {
         energy = Math.min(200, energy + amount);
     }
 
-    public boolean isLocked() {
-        return !unlimitedEnergy && energyConsumed >= 50;
-    }
-    public void unlock() {
-        if(isLocked()) {
-            energyConsumed = 0;
-        }
-    }
 
     public void unlimitedEnergy() {
         unlimitedEnergy = true;
@@ -467,4 +489,43 @@ public class Player extends User implements TimeObserver {
         }
     }
 
+    public void setDirection(Direction direction){
+        this.direction = direction;
+    }
+
+    public void setWalking(boolean walking) {
+        isWalking = walking;
+    }
+
+    public void updateAnimation(float delta) {
+        if(isWalking) {
+            stateTime += delta;
+            switch (direction) {
+                case UP:
+                    currentFrame = walkUpAnimation.getKeyFrame(stateTime); break;
+                case DOWN:
+                    currentFrame = walkDownAnimation.getKeyFrame(stateTime); break;
+                case LEFT:
+                    currentFrame = walkLeftAnimation.getKeyFrame(stateTime); break;
+                case RIGHT:
+                    currentFrame = walkRightAnimation.getKeyFrame(stateTime); break;
+            }
+        }
+        else {
+            switch (direction) {
+                case UP:
+                    currentFrame = walkUpAnimation.getKeyFrame(0); break;
+                case DOWN:
+                    currentFrame = walkDownAnimation.getKeyFrame(0); break;
+                case LEFT:
+                    currentFrame = walkLeftAnimation.getKeyFrame(0); break;
+                case RIGHT:
+                    currentFrame = walkRightAnimation.getKeyFrame(0); break;
+            }
+        }
+    }
+
+    public TextureRegion getCurrentFrame() {
+        return currentFrame;
+    }
 }

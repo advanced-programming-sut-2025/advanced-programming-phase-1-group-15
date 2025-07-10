@@ -1,6 +1,7 @@
 package com.example.views;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,6 +15,7 @@ import com.example.models.GraphicalModels.HUDCamera;
 import com.example.models.GraphicalModels.MapCamera;
 import com.example.models.Player;
 import com.example.models.Result;
+import com.example.models.enums.Direction;
 import com.example.models.map.Map;
 import com.example.models.map.Position;
 import com.example.models.map.Tile;
@@ -29,11 +31,11 @@ public class GameView implements Screen {
     private final Game game;
     private final Main main;
 
-    private final Integer tileSideLength = 48;
+    private final Integer tileSideLength = 16;
     private final Integer screenWidth = 1920;
     private final Integer screenHeight = 1080;
 
-    private MapCamera mapCamera;
+    // private MapCamera mapCamera;
     private HUDCamera hudCamera;
 
     private ExecutorService commandExecutor;
@@ -42,11 +44,10 @@ public class GameView implements Screen {
     public GameView(Game game, Main main) {
         this.game = game;
         this.main = main;
-        GameAssetManager.load();
 
         game.build();
 
-        mapCamera = new MapCamera(game.getCurrentPlayer());
+        // mapCamera = new MapCamera(game.getCurrentPlayer());
         hudCamera = new HUDCamera();
 
         commandExecutor = Executors.newSingleThreadExecutor();
@@ -62,15 +63,19 @@ public class GameView implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        mapCamera.setPlayer(game.getCurrentPlayer());
-        mapCamera.update();
+        handleInput();
+        game.getCurrentPlayer().updateAnimation(delta);
+
+
+//        mapCamera.setPlayer(game.getCurrentPlayer());
+//        mapCamera.update();
 
         SpriteBatch batch = main.getBatch();
-        batch.setProjectionMatrix(mapCamera.getCamera().combined);
+        // batch.setProjectionMatrix(mapCamera.getCamera().combined);
         batch.begin();
 
-        //TODO : first find the suitable Textures of tiles and areas and then uncomment bellow
-        //showMap(batch); // Should be completed
+        showMap(batch);
+        drawPlayer(batch);
 
         batch.end();
 
@@ -86,7 +91,7 @@ public class GameView implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        mapCamera.resize(width, height);
+        // mapCamera.resize(width, height);
         hudCamera.resize(width, height);
     }
 
@@ -175,7 +180,7 @@ public class GameView implements Screen {
     }
 
 
-    public void showMap(Batch batch){
+    public void showMap(Batch batch) {
         Map currentMap = game.getMap();
 //        Player currentPlayer = App.currentGame.getCurrentPlayer();
 //        int beginX = Math.max(0,currentPlayer.getPosition().getX() - screenWidth/tileSideLength);
@@ -184,44 +189,73 @@ public class GameView implements Screen {
 //            currentPlayer.getPosition().getX() + screenWidth/tileSideLength);
 //        int finishY = Math.min(App.currentGame.getMap().ROWS,
 //            currentPlayer.getPosition().getY() + screenHeight/tileSideLength);
-        for(int i=0; i<= currentMap.ROWS; i++){
-            for(int j=0; j<= currentMap.COLS; j++){
-                Tile toBePrinted = App.currentGame.getMap().getTile(new Position(i,j));
+        for(int row = 0; row < currentMap.ROWS; row++){
+            for(int col = 0; col < currentMap.COLS; col++){
+                Tile toBePrinted = App.currentGame.getMap().getTile(row, col);
                 printTile(toBePrinted,
-                    (i)*tileSideLength,
-                    (j)*tileSideLength,
+                    (row)*tileSideLength,
+                    (col)*tileSideLength,
                     batch);
             }
         }
-        Sprite s;
-        Animation a;
-        TextureRegion region;
-        Texture texture;
-
     }
 
-    public void printTile(Tile tile, int x, int y,Batch batch){
-        // or the are that conaints it
-        if(tile.getArea() == null){
-            batch.draw(tile.getSprite(),x,y,tileSideLength,tileSideLength);
+    public void printTile(Tile tile, int x, int y, Batch batch){
+        // draws the background of the tile (area is never null)
+        if(tile.getAreaSprite() != null) {
+            batch.draw(tile.getAreaSprite(), x, y, tileSideLength, tileSideLength);
         }
-        else{
-            printArea(tile,batch);
+
+        // draws the object in tile if present
+        if(tile.getObjectSprite() != null) {
+            batch.draw(tile.getObjectSprite(), x, y, tileSideLength, tileSideLength);
         }
     }
 
-    public void printArea(Tile tile,Batch batch){
+    public void printArea(Tile tile, Batch batch){
         int[] surrounding = tile.getArea().surrounding();
         int realWidth = tileSideLength * (surrounding[2]-surrounding[0]);
         int realHeight = tileSideLength * (surrounding[3]-surrounding[1]);
         int cornerX = surrounding[0];
         int cornerY = surrounding[1];
-        batch.draw(tile.getSprite(), cornerX, cornerY,realWidth,realHeight);
+        batch.draw(tile.getAreaSprite(), cornerX, cornerY,realWidth,realHeight);
         // print the rectangle in the centre of the real rectangle
     }
 
     public void updateMapCamera(){
-        mapCamera = new MapCamera(game.getCurrentPlayer());
-        mapCamera.update();
+//        mapCamera = new MapCamera(game.getCurrentPlayer());
+//        mapCamera.update();
+    }
+
+    private void drawPlayer(SpriteBatch batch) {
+        Position pos = game.getCurrentPlayer().getPosition();
+        int drawX = pos.getX() * tileSideLength;
+        int drawY = pos.getY() * tileSideLength;
+        batch.draw(game.getCurrentPlayer().getCurrentFrame(), drawX, drawY);
+    }
+
+    private void handleInput() {
+        Player player = game.getCurrentPlayer();
+        player.setWalking(false);
+        Position currentPosition = player.getPosition();
+        int x = currentPosition.getX();
+        int y = currentPosition.getY();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            player.setDirection(Direction.UP);
+            player.walk(x, y + 1);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            player.setDirection(Direction.DOWN);
+            player.walk(x, y - 1);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            player.setDirection(Direction.LEFT);
+            player.walk(x - 1, y);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            player.setDirection(Direction.RIGHT);
+            player.walk(x + 1, y);
+        }
     }
 }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.example.views.GameAssetManager;
 import com.example.views.LoginMenuView;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
@@ -15,6 +16,7 @@ public class Main extends Game {
     public void create() {
         mainBatch = new SpriteBatch();
         setScreen(new LoginMenuView(this));
+        GameAssetManager.load();
     }
 
     @Override

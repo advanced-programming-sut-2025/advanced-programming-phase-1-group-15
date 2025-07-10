@@ -12,6 +12,7 @@ import com.example.models.foraging.Stone;
 import com.example.models.stores.*;
 import com.example.models.tools.Fridge;
 import com.example.models.tools.ShippingBin;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 
@@ -254,9 +255,26 @@ public class Tile {
 
     }
 
-    public Sprite getSprite() {
-        return null;
-        // TODO : you should return suitable sprite based on the rilable object
+    public Sprite getAreaSprite() {
+        if(area instanceof Map) {
+            return GameAssetManager.dirtSprite;
+        }
+        else if(area instanceof Farm) {
+            return GameAssetManager.grassSprite;
+        }
+        else if(area instanceof Lake) {
+            return GameAssetManager.lakeSprite;
+        }
+        else {
+            return null;
+        }
     }
 
+    public Sprite getObjectSprite() {
+        if(objectInTile != null) {
+            return objectInTile.getSprite();
+        }
+
+        return null;
+    }
 }

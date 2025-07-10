@@ -55,44 +55,6 @@ public class GameController {
         return new Result(true, "greenhouse built successfully!");
     }
 
-    public static Result walk(int x, int y) {
-        if(x >= Map.COLS || y >= Map.ROWS || x < 0 || y < 0) {
-            return new Result(false, "you are out of bounds!");
-        }
-
-        Tile tile = App.currentGame.getTile(x, y);
-        if(!tile.isEmpty()) {
-            return new Result(false, "you can't stand on a tile which is not empty.");
-        }
-        else if(tile.getAreaType().equals(AreaType.LAKE)) {
-            return new Result(false, "you're destination is in the lake!");
-        }
-        else if(tile.getAreaType().equals(AreaType.FARM)) {
-            Farm farm = (Farm) tile.getArea();
-            if(!getCurrentPlayer().checkTerritory(farm)) {
-                return new Result(false, "you cannot enter other players' territory.");
-            }
-        }
-
-        int energyNeeded = getCurrentPlayer().calculateWalkingEnergy(new Position(x, y));
-
-        if(energyNeeded == -1) {
-            return new Result(false, "tile is unreachable!");
-        }
-        return new Result(true, energyNeeded + " energy would be consumed. Do you agree? (y/n)");
-    }
-
-    public static Result setPosition(int x, int y) {
-        Position position = new Position(x, y);
-
-        getCurrentPlayer().walk(position);
-        if(getCurrentPlayer().isFainted()) {
-            return new Result(false, "Oops! you've fainted!");
-        }
-
-        return new Result(true, "moved to position " + position + " successfully.");
-    }
-
     public static Result removeFromInventory(String itemName, int count) {
         BackPackable item = getCurrentPlayer().getInventory().getItemByName(itemName);
         int availableCount = getCurrentPlayer().getInventory().getItemCount(itemName);

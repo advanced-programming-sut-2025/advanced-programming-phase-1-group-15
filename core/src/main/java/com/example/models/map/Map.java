@@ -25,6 +25,10 @@ public class Map extends Area {
     public static int ROWS = 50;
     public static int COLS = 100;
 
+    public Tile getTile(int row, int col) {
+        return tiles.get(row).get(col);
+    }
+
     public Tile getTile(Position pos) {
         return tiles.get(pos.getY()).get(pos.getX());
     }
