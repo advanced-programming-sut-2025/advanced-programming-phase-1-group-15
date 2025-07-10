@@ -5,21 +5,28 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.example.models.Player;
 
 public class MapCamera {
-
-
-    private OrthographicCamera camera;
+    private final OrthographicCamera camera;
     private Player player;
+    private static final float ZOOM = 2.0f;
 
     public MapCamera(Player player) {
         this.player = player;
         this.camera = new OrthographicCamera();
-        this.camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.camera.setToOrtho(false, Gdx.graphics.getWidth() / ZOOM, Gdx.graphics.getHeight() / ZOOM);
     }
 
-    public void update(){
+    public void update() {
         if (player == null) return;
-        camera.position.x = player.getPosition().x;
-        camera.position.y = player.getPosition().y;
+
+        float tileSize = 16f;
+        float mapWidth = com.example.models.map.Map.COLS * tileSize;
+        float mapHeight = com.example.models.map.Map.ROWS * tileSize;
+
+        camera.position.x = Math.max(camera.viewportWidth / 2f,
+            Math.min(player.getPosition().getX() * tileSize, mapWidth - camera.viewportWidth / 2f));
+        camera.position.y = Math.max(camera.viewportHeight / 2f,
+            Math.min(player.getPosition().getY() * tileSize, mapHeight - camera.viewportHeight / 2f));
+
         camera.update();
     }
 
@@ -28,8 +35,8 @@ public class MapCamera {
     }
 
     public void resize(int width, int height) {
-        camera.viewportWidth = width;
-        camera.viewportHeight = height;
+        camera.viewportWidth = width / ZOOM;
+        camera.viewportHeight = height / ZOOM;
         camera.update();
     }
 

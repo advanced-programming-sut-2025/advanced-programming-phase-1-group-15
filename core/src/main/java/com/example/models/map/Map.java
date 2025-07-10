@@ -22,8 +22,8 @@ import java.util.*;
 
 
 public class Map extends Area {
-    public static int ROWS = 50;
-    public static int COLS = 100;
+    public static int ROWS = 480;
+    public static int COLS = 480;
 
     public Tile getTile(int row, int col) {
         return tiles.get(row).get(col);
@@ -109,45 +109,6 @@ public class Map extends Area {
             System.out.print('_');
         }
         System.out.println();
-    }
-
-    public void mapGuide() {
-        System.out.println("Map Guide: ");
-        System.out.println("(players are shown by characters 'a' to 'd' based on their original order in game)");
-        System.out.println("--------------------");
-        System.out.println("horizontal borders _");
-        System.out.println("vertical borders |");
-        System.out.println("empty tile .");
-        System.out.println("house H");
-        System.out.println("lake ~");
-        System.out.println("greenhouse G");
-        System.out.println("quarry #");
-        System.out.println("tree T");
-        System.out.println("stone O");
-        System.out.println("cow C");
-        System.out.println("goat G");
-        System.out.println("Sheep S");
-        System.out.println("pig P");
-        System.out.println("chicken C");
-        System.out.println("duck D");
-        System.out.println("rabbit R");
-        System.out.println("dinosaur D");
-        System.out.println("fish Ɔ");
-        System.out.println("fridge F");
-        System.out.println("foraging minerals *");
-        System.out.println("craft items I");
-        System.out.println("shipping bin █");
-        System.out.println("ploughed tile X");
-        System.out.println("seeded tile S");
-        System.out.println("watered tile W");
-        System.out.println("rest state R");
-        System.out.println("blacksmith b");
-        System.out.println("joja mart j");
-        System.out.println("pierre general store p");
-        System.out.println("carpenter show c");
-        System.out.println("fish shop f");
-        System.out.println("marnie ranch m");
-        System.out.println("star drop saloon s");
     }
 
     public static boolean isBoundValid(Position pos) {

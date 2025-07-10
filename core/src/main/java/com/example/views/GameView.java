@@ -35,7 +35,7 @@ public class GameView implements Screen {
     private final Integer screenWidth = 1920;
     private final Integer screenHeight = 1080;
 
-    // private MapCamera mapCamera;
+    private MapCamera mapCamera;
     private HUDCamera hudCamera;
 
     private ExecutorService commandExecutor;
@@ -47,7 +47,7 @@ public class GameView implements Screen {
 
         game.build();
 
-        // mapCamera = new MapCamera(game.getCurrentPlayer());
+        mapCamera = new MapCamera(game.getCurrentPlayer());
         hudCamera = new HUDCamera();
 
         commandExecutor = Executors.newSingleThreadExecutor();
@@ -67,11 +67,11 @@ public class GameView implements Screen {
         game.getCurrentPlayer().updateAnimation(delta);
 
 
-//        mapCamera.setPlayer(game.getCurrentPlayer());
-//        mapCamera.update();
+        mapCamera.setPlayer(game.getCurrentPlayer());
+        mapCamera.update();
 
         SpriteBatch batch = main.getBatch();
-        // batch.setProjectionMatrix(mapCamera.getCamera().combined);
+        batch.setProjectionMatrix(mapCamera.getCamera().combined);
         batch.begin();
 
         showMap(batch);
@@ -91,7 +91,7 @@ public class GameView implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // mapCamera.resize(width, height);
+        mapCamera.resize(width, height);
         hudCamera.resize(width, height);
     }
 
@@ -182,19 +182,13 @@ public class GameView implements Screen {
 
     public void showMap(Batch batch) {
         Map currentMap = game.getMap();
-//        Player currentPlayer = App.currentGame.getCurrentPlayer();
-//        int beginX = Math.max(0,currentPlayer.getPosition().getX() - screenWidth/tileSideLength);
-//        int beginY = Math.max(0,currentPlayer.getPosition().getY() - screenHeight/tileSideLength);
-//        int finishX = Math.min(currentMap.COLS,
-//            currentPlayer.getPosition().getX() + screenWidth/tileSideLength);
-//        int finishY = Math.min(App.currentGame.getMap().ROWS,
-//            currentPlayer.getPosition().getY() + screenHeight/tileSideLength);
+
         for(int row = 0; row < currentMap.ROWS; row++){
             for(int col = 0; col < currentMap.COLS; col++){
                 Tile toBePrinted = App.currentGame.getMap().getTile(row, col);
                 printTile(toBePrinted,
-                    (row)*tileSideLength,
                     (col)*tileSideLength,
+                    (row)*tileSideLength,
                     batch);
             }
         }
