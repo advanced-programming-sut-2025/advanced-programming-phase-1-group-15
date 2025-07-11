@@ -1,5 +1,6 @@
 package com.example.models.stores;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.Player;
 import com.example.models.artisanry.ArtisanItem;
 import com.example.models.artisanry.ArtisanItemType;
@@ -38,6 +39,11 @@ public class StarDropSaloon extends Store {
     @Override
     public void build() {
 
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return null;
     }
 
     @Override

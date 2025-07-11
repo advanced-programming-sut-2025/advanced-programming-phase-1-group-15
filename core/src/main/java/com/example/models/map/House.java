@@ -1,19 +1,21 @@
 package com.example.models.map;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.time.DateAndTime;
 import com.example.models.tools.Fridge;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 
 public class House extends Area {
     public static int[][] coordinates = {
-            {3, 7, 5, 9},   //MAP 1
+            {30, 45, 70, 85},   //MAP 1
             {2, 6, 12, 16}, //MAP 2
             {5, 9, 3, 7}, //MAP 3
             {25, 29, 0, 4}   //MAP 4
     };
     public static int[][] playerCoordinates = {
-            {5, 6},   //MAP 1
+            {40, 69},   //MAP 1
             {65, 14}, //MAP 2
             {67, 35}, //MAP 3
             {28, 33}   //MAP 4
@@ -28,8 +30,8 @@ public class House extends Area {
     private Fridge fridge;
 
     public House(ArrayList<ArrayList<Tile>> houseTiles) {
+        super(houseTiles);
         this.areaType = AreaType.HOUSE;
-        this.tiles = houseTiles;
 
         for(ArrayList<Tile> row : houseTiles) {
             for(Tile tile : row) {
@@ -47,6 +49,11 @@ public class House extends Area {
                 }
             }
         }
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return GameAssetManager.house;
     }
 
     public Fridge getFridge() {

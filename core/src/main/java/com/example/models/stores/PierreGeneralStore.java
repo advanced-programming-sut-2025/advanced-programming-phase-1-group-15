@@ -1,5 +1,6 @@
 package com.example.models.stores;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
 import com.example.models.Player;
 import com.example.models.crafting.CraftItem;
@@ -50,6 +51,11 @@ public class PierreGeneralStore extends Store {
     @Override
     public void build() {
 
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return null;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.models.animals;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.map.Area;
 import com.example.models.map.AreaType;
 import com.example.models.time.DateAndTime;
@@ -40,6 +41,11 @@ public class Barn extends Area {
     @Override
     public void build() {
 
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return null;
     }
 
     @Override

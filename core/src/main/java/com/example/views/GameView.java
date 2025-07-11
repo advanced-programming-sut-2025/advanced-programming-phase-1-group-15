@@ -16,12 +16,14 @@ import com.example.models.GraphicalModels.MapCamera;
 import com.example.models.Player;
 import com.example.models.Result;
 import com.example.models.enums.Direction;
+import com.example.models.map.Area;
 import com.example.models.map.Map;
 import com.example.models.map.Position;
 import com.example.models.map.Tile;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.Season;
 import com.example.models.weather.WeatherOption;
+import org.w3c.dom.Text;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -187,8 +189,8 @@ public class GameView implements Screen {
             for(int col = 0; col < currentMap.COLS; col++){
                 Tile toBePrinted = App.currentGame.getMap().getTile(row, col);
                 printTile(toBePrinted,
-                    (col)*tileSideLength,
-                    (row)*tileSideLength,
+                    (col) * tileSideLength,
+                    (row) * tileSideLength,
                     batch);
             }
         }
@@ -199,6 +201,9 @@ public class GameView implements Screen {
         if(tile.getAreaSprite() != null) {
             batch.draw(tile.getAreaSprite(), x, y, tileSideLength, tileSideLength);
         }
+        else {
+            printArea(tile, batch);
+        }
 
         // draws the object in tile if present
         if(tile.getObjectSprite() != null) {
@@ -206,25 +211,27 @@ public class GameView implements Screen {
         }
     }
 
-    public void printArea(Tile tile, Batch batch){
-        int[] surrounding = tile.getArea().surrounding();
-        int realWidth = tileSideLength * (surrounding[2]-surrounding[0]);
-        int realHeight = tileSideLength * (surrounding[3]-surrounding[1]);
-        int cornerX = surrounding[0];
-        int cornerY = surrounding[1];
-        batch.draw(tile.getAreaSprite(), cornerX, cornerY,realWidth,realHeight);
-        // print the rectangle in the centre of the real rectangle
+    public void printArea(Tile tile, Batch batch) {
+        Area area = tile.getArea();
+        Position bottomLeft = area.getBottomLeftCorner();
+        int drawX = bottomLeft.x * tileSideLength;
+        int drawY = bottomLeft.y * tileSideLength;
+        int realWidth = tileSideLength * area.getWidth();
+        int realHeight = tileSideLength * area.getHeight();
+        if(area.getTexture() != null)  {
+            batch.draw(area.getTexture(), drawX, drawY, realWidth, realHeight);
+        }
     }
 
     public void updateMapCamera(){
-//        mapCamera = new MapCamera(game.getCurrentPlayer());
-//        mapCamera.update();
+        mapCamera = new MapCamera(game.getCurrentPlayer());
+        mapCamera.update();
     }
 
     private void drawPlayer(SpriteBatch batch) {
         Position pos = game.getCurrentPlayer().getPosition();
-        int drawX = pos.getX() * tileSideLength;
-        int drawY = pos.getY() * tileSideLength;
+        int drawX = pos.x * tileSideLength;
+        int drawY = pos.y * tileSideLength;
         batch.draw(game.getCurrentPlayer().getCurrentFrame(), drawX, drawY);
     }
 

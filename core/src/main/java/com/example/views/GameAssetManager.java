@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.util.Random;
+
 public class GameAssetManager {
     public static BitmapFont font;
 
@@ -14,7 +16,9 @@ public class GameAssetManager {
     public static TextureRegion spring, summer, autumn, winter;
     public static TextureRegion rainy, stormy, snowy, sunny;
 
-    public static Sprite grassSprite, dirtSprite, lakeSprite;
+    public static Sprite grass0, grass1, grass2, grass3;
+    public static Sprite dirtSprite, lakeSprite;
+    public static TextureRegion house, lake;
 
     public static Animation<TextureRegion> boy_walking_up, boy_walking_down, boy_walking_right, boy_walking_left;
 
@@ -32,9 +36,14 @@ public class GameAssetManager {
         snowy = loadRegion("Sprites/time/snowy.png");
         sunny = loadRegion("Sprites/time/sunny.png");
 
-        grassSprite = new Sprite(new Texture("Sprites/Map/grass.png"));
+        grass0 = new Sprite(new Texture("Sprites/Map/grass0.png"));
+        grass1 = new Sprite(new Texture("Sprites/Map/grass1.png"));
+        grass2 = new Sprite(new Texture("Sprites/Map/grass2.png"));
+
         dirtSprite = new Sprite(new Texture("Sprites/Map/dirt.png"));
         lakeSprite = new Sprite(new Texture("Sprites/Map/lake.png"));
+        house = new TextureRegion(new Texture("Sprites/Map/house.png"));
+        lake = new TextureRegion(new Texture("Sprites/Map/lake.png"));
 
         boy_walking_up = createAnimation("Sprites/Characters/b", 8, 11); boy_walking_up.setPlayMode(Animation.PlayMode.LOOP);
         boy_walking_down = createAnimation("Sprites/Characters/b", 0, 3); boy_walking_down.setPlayMode(Animation.PlayMode.LOOP);
@@ -52,6 +61,13 @@ public class GameAssetManager {
             frames[i - startIdx] = new TextureRegion(new Texture(basePath + i + ".png"));
         }
         return new Animation<>(0.01f, frames);
+    }
+
+    public static Sprite getGrassSprite(int x) {
+        return switch (x) {
+            case 1 -> grass1;
+            default -> grass0;
+        };
     }
 }
 

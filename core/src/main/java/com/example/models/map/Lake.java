@@ -1,16 +1,18 @@
 package com.example.models.map;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.RandomGenerator;
 import com.example.models.animals.Fish;
 import com.example.models.animals.FishType;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.Season;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 
 public class Lake extends Area {
     public static int[][] coordinates = {
-            {2, 13, 14, 19},   //MAP 1
+            {5, 25, 30, 45},   //MAP 1
             {25, 32, 1, 9}, //MAP 2
             {10, 15, 13, 18}, //MAP 3
             {5, 15, 10, 15}   //MAP 4
@@ -19,8 +21,8 @@ public class Lake extends Area {
     FishType todaysFishType;
 
     public Lake(ArrayList<ArrayList<Tile>> lakeTiles) {
+        super(lakeTiles);
         this.areaType = AreaType.LAKE;
-        this.tiles = lakeTiles;
 
         for(ArrayList<Tile> row : lakeTiles) {
             for(Tile tile : row) {
@@ -63,6 +65,11 @@ public class Lake extends Area {
 
     public void build() {
         randomFishGenerator(Season.SPRING);
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return GameAssetManager.lake;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.models.map;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.time.DateAndTime;
 
 import java.util.ArrayList;
@@ -22,6 +23,11 @@ public class NPCVillage extends Area {
     @Override
     public void build() {
 
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return null;
     }
 
     @Override

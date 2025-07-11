@@ -1,5 +1,6 @@
 package com.example.models.stores;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.Player;
 import com.example.models.foraging.ForagingMineral;
 import com.example.models.map.AreaType;
@@ -36,6 +37,11 @@ public class Blacksmith extends Store {
     @Override
     public void build() {
 
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return null;
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.example.models.map;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.Player;
 import com.example.models.time.TimeObserver;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -42,8 +44,18 @@ public abstract class Area implements TimeObserver {
         this.tiles = tiles;
         this.firstCol = tiles.get(0).get(0).getPosition().x;
         this.firstRow = tiles.get(0).get(0).getPosition().y;
-        this.lastCol = tiles.get(tiles.size()-1).get(tiles.get(0).size()-1).getPosition().x;
-        this.lastRow = tiles.get(tiles.size()-1).get(tiles.get(0).size()-1).getPosition().y;
+        this.lastCol = tiles.get(tiles.size() - 1).get(tiles.get(tiles.size() - 1).size() - 1).getPosition().x;
+        this.lastRow = tiles.get(tiles.size() - 1).get(tiles.get(tiles.size() - 1).size() - 1).getPosition().y;
+    }
+
+    public int getHeight() {
+        return lastRow - firstRow + 1;
+    }
+    public int getWidth() {
+        return lastCol - firstCol + 1;
+    }
+    public Position getBottomLeftCorner() {
+        return new Position(firstCol, firstRow);
     }
 
     public ArrayList<ArrayList<Tile>> getSubArea(ArrayList<ArrayList<Tile>> mapTiles, int firstCol, int lastCol, int firstRow, int lastRow) {
@@ -63,13 +75,5 @@ public abstract class Area implements TimeObserver {
 
     public abstract void build();
 
-    public int[] surrounding(){
-        int[] answer = new int[]{firstCol, firstRow, lastCol, lastRow};
-        return answer;
-    }
-
-    public Sprite getSprite(){
-        return null;
-        //TODO: should be implemented and abstract
-    }
+    abstract public TextureRegion getTexture();
 }

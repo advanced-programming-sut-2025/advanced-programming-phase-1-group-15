@@ -1,5 +1,6 @@
 package com.example.models.stores;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.Player;
 import com.example.models.cooking.Food;
 import com.example.models.cooking.FoodType;
@@ -35,6 +36,11 @@ public class FishShop extends Store {
     @Override
     public void build() {
 
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return null;
     }
 
     @Override

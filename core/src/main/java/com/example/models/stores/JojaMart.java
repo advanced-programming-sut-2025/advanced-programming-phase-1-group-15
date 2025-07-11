@@ -1,5 +1,6 @@
 package com.example.models.stores;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
 import com.example.models.Player;
 import com.example.models.foraging.ForagingSeeds;
@@ -41,6 +42,11 @@ public class JojaMart extends Store {
     @Override
     public void build() {
 
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return null;
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.example.models.tools.ShippingBin;
 import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Tile {
     private final Position position;
@@ -25,6 +26,8 @@ public class Tile {
 
     private Tilable objectInTile;
     private Area area;
+    private final int randomizer;
+    private static final Random rand = new Random();
 
     public void setWatered(boolean watered) {
         this.watered = watered;
@@ -37,6 +40,7 @@ public class Tile {
         this.position = new Position(x, y);
         this.objectInTile = null;
         this.area = null;
+        randomizer = rand.nextInt(20);
     }
 
     public static ArrayList<ArrayList<Tile>> buildMapTiles() {
@@ -260,10 +264,7 @@ public class Tile {
             return GameAssetManager.dirtSprite;
         }
         else if(area instanceof Farm) {
-            return GameAssetManager.grassSprite;
-        }
-        else if(area instanceof Lake) {
-            return GameAssetManager.lakeSprite;
+            return GameAssetManager.getGrassSprite(randomizer);
         }
         else {
             return null;
@@ -276,5 +277,9 @@ public class Tile {
         }
 
         return null;
+    }
+
+    public int getRandomizer() {
+        return randomizer;
     }
 }

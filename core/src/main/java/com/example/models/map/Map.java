@@ -1,5 +1,6 @@
 package com.example.models.map;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
 import com.example.models.Player;
 import com.example.models.stores.*;
@@ -22,8 +23,8 @@ import java.util.*;
 
 
 public class Map extends Area {
-    public static int ROWS = 480;
-    public static int COLS = 480;
+    public static int ROWS = 270;
+    public static int COLS = 270;
 
     public Tile getTile(int row, int col) {
         return tiles.get(row).get(col);
@@ -52,20 +53,25 @@ public class Map extends Area {
                     Farm.coordinates[i][3]), i + 1));
         }
 
-        innerAreas.add(new Blacksmith(getSubArea(tiles, Blacksmith.coordinates[0], Blacksmith.coordinates[1], Blacksmith.coordinates[2], Blacksmith.coordinates[3])));
-        innerAreas.add(new JojaMart(getSubArea(tiles, JojaMart.coordinates[0], JojaMart.coordinates[1], JojaMart.coordinates[2], JojaMart.coordinates[3])));
-        innerAreas.add(new PierreGeneralStore(getSubArea(tiles, PierreGeneralStore.coordinates[0], PierreGeneralStore.coordinates[1], PierreGeneralStore.coordinates[2], PierreGeneralStore.coordinates[3])));
-        innerAreas.add(new CarpenterShop(getSubArea(tiles, CarpenterShop.coordinates[0], CarpenterShop.coordinates[1], CarpenterShop.coordinates[2], CarpenterShop.coordinates[3])));
-        innerAreas.add(new FishShop(getSubArea(tiles, FishShop.coordinates[0], FishShop.coordinates[1], FishShop.coordinates[2], FishShop.coordinates[3])));
-        innerAreas.add(new MarnieRanch(getSubArea(tiles, MarnieRanch.coordinates[0], MarnieRanch.coordinates[1], MarnieRanch.coordinates[2], MarnieRanch.coordinates[3])));
-        innerAreas.add(new StarDropSaloon(getSubArea(tiles, StarDropSaloon.coordinates[0], StarDropSaloon.coordinates[1], StarDropSaloon.coordinates[2], StarDropSaloon.coordinates[3])));
-        innerAreas.add(new NPCVillage(getSubArea(tiles, NPCVillage.coordinates[0][0], NPCVillage.coordinates[0][1], NPCVillage.coordinates[0][2],NPCVillage.coordinates[0][3])));
-        innerAreas.add(new NPCVillage(getSubArea(tiles, NPCVillage.coordinates[1][0], NPCVillage.coordinates[1][1], NPCVillage.coordinates[1][2],NPCVillage.coordinates[1][3])));
+//        innerAreas.add(new Blacksmith(getSubArea(tiles, Blacksmith.coordinates[0], Blacksmith.coordinates[1], Blacksmith.coordinates[2], Blacksmith.coordinates[3])));
+//        innerAreas.add(new JojaMart(getSubArea(tiles, JojaMart.coordinates[0], JojaMart.coordinates[1], JojaMart.coordinates[2], JojaMart.coordinates[3])));
+//        innerAreas.add(new PierreGeneralStore(getSubArea(tiles, PierreGeneralStore.coordinates[0], PierreGeneralStore.coordinates[1], PierreGeneralStore.coordinates[2], PierreGeneralStore.coordinates[3])));
+//        innerAreas.add(new CarpenterShop(getSubArea(tiles, CarpenterShop.coordinates[0], CarpenterShop.coordinates[1], CarpenterShop.coordinates[2], CarpenterShop.coordinates[3])));
+//        innerAreas.add(new FishShop(getSubArea(tiles, FishShop.coordinates[0], FishShop.coordinates[1], FishShop.coordinates[2], FishShop.coordinates[3])));
+//        innerAreas.add(new MarnieRanch(getSubArea(tiles, MarnieRanch.coordinates[0], MarnieRanch.coordinates[1], MarnieRanch.coordinates[2], MarnieRanch.coordinates[3])));
+//        innerAreas.add(new StarDropSaloon(getSubArea(tiles, StarDropSaloon.coordinates[0], StarDropSaloon.coordinates[1], StarDropSaloon.coordinates[2], StarDropSaloon.coordinates[3])));
+//        innerAreas.add(new NPCVillage(getSubArea(tiles, NPCVillage.coordinates[0][0], NPCVillage.coordinates[0][1], NPCVillage.coordinates[0][2],NPCVillage.coordinates[0][3])));
+//        innerAreas.add(new NPCVillage(getSubArea(tiles, NPCVillage.coordinates[1][0], NPCVillage.coordinates[1][1], NPCVillage.coordinates[1][2],NPCVillage.coordinates[1][3])));
 
         for(Area innerArea : innerAreas){
             innerArea.setParentArea(this);
             innerArea.build();
         }
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return null;
     }
 
     @Override

@@ -1,6 +1,9 @@
 package com.example.models.map;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
+import com.example.models.Game;
 import com.example.models.Player;
 import com.example.models.RandomGenerator;
 import com.example.models.animals.Animal;
@@ -14,15 +17,16 @@ import com.example.models.foraging.ForagingMineralType;
 import com.example.models.foraging.Stone;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.Season;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 
 public class Farm extends Area {
     public static int[][] coordinates = {
-            {0, 40, 0, 20},   //MAP 1
-            {60, 100, 0, 20}, //MAP 2
-            {60, 100, 30, 50}, //MAP 3
-            {0, 40, 30, 50}   //MAP 4
+            {0, 90, 0, 90},   //MAP 1
+            {180, 270, 0, 90}, //MAP 2
+            {0, 90, 180, 270}, //MAP 3
+            {180, 270, 180, 270}   //MAP 4
     };
 
     private GreenHouse greenHouse;
@@ -122,11 +126,11 @@ public class Farm extends Area {
                 Lake.coordinates[number - 1][2], Lake.coordinates[number - 1][3])));
         innerAreas.add(new House(getSubArea(tiles, House.coordinates[number - 1][0], House.coordinates[number - 1][1],
                 House.coordinates[number - 1][2], House.coordinates[number - 1][3])));
-        greenHouse = new GreenHouse(getSubArea(tiles, GreenHouse.coordinates[number - 1][0],
-                GreenHouse.coordinates[number - 1][1], GreenHouse.coordinates[number - 1][2], GreenHouse.coordinates[number - 1][3]));
-        innerAreas.add(greenHouse);
-        innerAreas.add(new Quarry(getSubArea(tiles, Quarry.coordinates[number - 1][0],
-                Quarry.coordinates[number - 1][1], Quarry.coordinates[number - 1][2], Quarry.coordinates[number - 1][3])));
+//        greenHouse = new GreenHouse(getSubArea(tiles, GreenHouse.coordinates[number - 1][0],
+//                GreenHouse.coordinates[number - 1][1], GreenHouse.coordinates[number - 1][2], GreenHouse.coordinates[number - 1][3]));
+//        innerAreas.add(greenHouse);
+//        innerAreas.add(new Quarry(getSubArea(tiles, Quarry.coordinates[number - 1][0],
+//                Quarry.coordinates[number - 1][1], Quarry.coordinates[number - 1][2], Quarry.coordinates[number - 1][3])));
 
         for(Area innerArea : innerAreas){
             innerArea.setParentArea(this);
@@ -136,6 +140,11 @@ public class Farm extends Area {
 
         randomTreeGenerator(Season.SPRING);
         randomMineralGenerator();
+    }
+
+    @Override
+    public TextureRegion getTexture() {
+        return null;
     }
 
     public boolean place(Animal animal) {

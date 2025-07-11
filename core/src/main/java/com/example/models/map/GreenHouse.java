@@ -1,5 +1,6 @@
 package com.example.models.map;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.time.DateAndTime;
 
 import java.util.ArrayList;
@@ -36,6 +37,12 @@ public class GreenHouse extends Area {
     public void build() {
 
     }
+
+    @Override
+    public TextureRegion getTexture() {
+        return null;
+    }
+
     public void repair() {
 
     }
