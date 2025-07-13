@@ -10,15 +10,15 @@ import java.util.ArrayList;
 public class House extends Area {
     public static int[][] coordinates = {
             {30, 45, 70, 85},   //MAP 1
-            {2, 6, 12, 16}, //MAP 2
-            {5, 9, 3, 7}, //MAP 3
-            {25, 29, 0, 4}   //MAP 4
+            {10, 25, 25, 40}, //MAP 2
+            {25, 40, 35, 50}, //MAP 3
+            {45, 60, 45, 60}   //MAP 4
     };
     public static int[][] playerCoordinates = {
             {40, 69},   //MAP 1
-            {65, 14}, //MAP 2
-            {67, 35}, //MAP 3
-            {28, 33}   //MAP 4
+            {195, 24}, //MAP 2
+            {30, 214}, //MAP 3
+            {224, 230}   //MAP 4
     };
     public static int[][] fridgeCoordinates = {
             {3, 5},   //MAP 1

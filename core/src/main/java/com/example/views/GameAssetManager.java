@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import java.util.Random;
-
 public class GameAssetManager {
     public static BitmapFont font;
 
@@ -17,7 +15,9 @@ public class GameAssetManager {
     public static TextureRegion rainy, stormy, snowy, sunny;
 
     public static Sprite grass0, grass1, grass2, grass3;
-    public static Sprite dirtSprite, lakeSprite;
+    public static Sprite land0, land1, land2, land3;
+    public static Sprite stone;
+
     public static TextureRegion house, lake;
 
     public static Animation<TextureRegion> boy_walking_up, boy_walking_down, boy_walking_right, boy_walking_left;
@@ -40,8 +40,13 @@ public class GameAssetManager {
         grass1 = new Sprite(new Texture("Sprites/Map/grass1.png"));
         grass2 = new Sprite(new Texture("Sprites/Map/grass2.png"));
 
-        dirtSprite = new Sprite(new Texture("Sprites/Map/dirt.png"));
-        lakeSprite = new Sprite(new Texture("Sprites/Map/lake.png"));
+        land0 = new Sprite(new Texture("Sprites/Map/land0.png"));
+        land1 = new Sprite(new Texture("Sprites/Map/land1.png"));
+        land2 = new Sprite(new Texture("Sprites/Map/land2.png"));
+        land3 = new Sprite(new Texture("Sprites/Map/land3.png"));
+
+        stone = new Sprite(new Texture("Sprites/Map/stone.png"));
+
         house = new TextureRegion(new Texture("Sprites/Map/house.png"));
         lake = new TextureRegion(new Texture("Sprites/Map/lake.png"));
 
@@ -63,11 +68,26 @@ public class GameAssetManager {
         return new Animation<>(0.01f, frames);
     }
 
-    public static Sprite getGrassSprite(int x) {
-        return switch (x) {
-            case 1 -> grass1;
-            default -> grass0;
-        };
+    public static Sprite getGrassSprite(int randomizer) {
+        switch (randomizer) {
+            case 1:
+                return grass1;
+            default:
+                return grass0;
+        }
+    }
+
+    public static Sprite getLandSprite(int randomizer) {
+        switch (randomizer) {
+            case 1:
+                return land1;
+            case 2:
+                return land2;
+            case 3:
+                return land3;
+            default:
+                return land0;
+        }
     }
 }
 

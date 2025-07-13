@@ -209,6 +209,7 @@ public class GameView implements Screen {
         String dateStr = dateAndTime.displayDate();
         String timeStr = dateAndTime.displayTime();
         String goldStr = String.valueOf(gold);
+        String energyStr = "Energy: " + (int) game.getCurrentPlayer().getEnergy();
 
         float textX = x + clockWidth / 2;
 
@@ -217,6 +218,8 @@ public class GameView implements Screen {
         font.draw(batch, timeStr, textX + 10, screenHeight - 125);
         font.setColor(Color.FIREBRICK);
         font.draw(batch, goldStr, x + 70, y + 40);
+        font.getData().setScale(1f);
+        font.draw(batch, energyStr, 0, screenHeight);
 
         TextureRegion weatherIcon;
         TextureRegion seasonIcon;

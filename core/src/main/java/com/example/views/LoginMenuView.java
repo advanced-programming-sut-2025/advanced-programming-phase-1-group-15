@@ -73,6 +73,8 @@ public class LoginMenuView implements Screen {
         passwordFieldLogin.setPasswordCharacter('*');
         passwordFieldLogin.setMessageText("Password");
 
+        CheckBox stayLoggedInBox = new CheckBox("Stay Logged In", skin);
+
         loginButton = new TextButton("Login", skin);
         forgotPasswordButton = new TextButton("Forgot Password?", skin);
         TextButton switchToRegisterButton = new TextButton("Create Account", skin);
@@ -82,6 +84,7 @@ public class LoginMenuView implements Screen {
         loginPanel.add(titleLabel).padBottom(20).row();
         loginPanel.add(usernameFieldLogin).width(400).padBottom(15).row();
         loginPanel.add(passwordFieldLogin).width(400).padBottom(15).row();
+        loginPanel.add(stayLoggedInBox).width(400).padBottom(15).row();
         loginPanel.add(loginButton).width(200).padBottom(10).row();
         loginPanel.add(forgotPasswordButton).width(300).padBottom(5).row();
         loginPanel.add(switchToRegisterButton).width(250).padBottom(15).row();

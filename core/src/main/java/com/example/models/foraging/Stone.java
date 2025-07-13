@@ -1,5 +1,8 @@
 package com.example.models.foraging;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.example.views.GameAssetManager;
+
 public class Stone extends ForagingMineral {
     public Stone() {
 
@@ -18,5 +21,10 @@ public class Stone extends ForagingMineral {
     @Override
     public int getPrice() {
         return 0;
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return GameAssetManager.stone;
     }
 }

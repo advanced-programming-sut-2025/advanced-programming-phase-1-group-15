@@ -18,7 +18,7 @@ public class MainMenuView implements Screen {
     private Texture background;
 
     private Table mainTable;
-    private TextButton gameMenuButton, profileMenuButton, logoutButton;
+    private TextButton gameMenuButton, profileMenuButton, logoutButton, exitButton;
 
     public MainMenuView(Main game) {
         this.game = game;
@@ -84,6 +84,7 @@ public class MainMenuView implements Screen {
         gameMenuButton = new TextButton("Game Menu", skin);
         profileMenuButton = new TextButton("Profile Menu", skin);
         logoutButton = new TextButton("Logout", skin);
+        exitButton = new TextButton("Exit", skin);
 
         mainTable.add(gameNameLabel).row();
         mainTable.add(titleLabel).row();
@@ -91,6 +92,7 @@ public class MainMenuView implements Screen {
         mainTable.add(gameMenuButton).width(300).row();
         mainTable.add(profileMenuButton).width(300).row();
         mainTable.add(logoutButton).width(200).padTop(10).row();
+        mainTable.add(exitButton).width(200).padTop(10).row();
 
         gameMenuButton.addListener(new ChangeListener() {
             @Override
@@ -111,6 +113,13 @@ public class MainMenuView implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 App.currentUser = null;
                 game.setScreen(new LoginMenuView(game));
+            }
+        });
+
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
             }
         });
     }

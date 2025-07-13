@@ -28,6 +28,9 @@ public class Main extends Game {
     @Override
     public void dispose() {
         mainBatch.dispose();
+        if (screen != null) {
+            screen.dispose();
+        }
     }
 
     public SpriteBatch getBatch() {

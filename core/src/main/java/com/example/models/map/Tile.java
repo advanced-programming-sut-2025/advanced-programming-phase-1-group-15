@@ -40,7 +40,7 @@ public class Tile {
         this.position = new Position(x, y);
         this.objectInTile = null;
         this.area = null;
-        randomizer = rand.nextInt(20);
+        randomizer = rand.nextInt(100);
     }
 
     public static ArrayList<ArrayList<Tile>> buildMapTiles() {
@@ -261,7 +261,7 @@ public class Tile {
 
     public Sprite getAreaSprite() {
         if(area instanceof Map) {
-            return GameAssetManager.dirtSprite;
+            return GameAssetManager.getLandSprite(randomizer);
         }
         else if(area instanceof Farm) {
             return GameAssetManager.getGrassSprite(randomizer);
