@@ -81,11 +81,6 @@ public class CheatCodeController {
 
            return CheatCodeController.cheatSetFriendship(username, level);
         }
-        else if(CheatCodeCommands.ADD_ITEM.matches(command)) {
-            Matcher matcher = CheatCodeCommands.ADD_ITEM.matcher(command);
-            matcher.matches();
-            return CheatCodeController.cheatAddItem(matcher.group("itemName"),matcher.group("count"));
-        }
         else if(CheatCodeCommands.ADD_ITEMS.matches(command)) {
             Matcher matcher = CheatCodeCommands.ADD_ITEMS.matcher(command);
             matcher.matches();

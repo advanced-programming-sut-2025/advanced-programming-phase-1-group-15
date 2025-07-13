@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.example.Main;
 import com.example.controllers.CheatCodeController;
 import com.example.models.App;
@@ -35,14 +36,14 @@ public class GameView implements Screen {
     private final Main main;
 
     private final Integer tileSideLength = 16;
-    private final Integer screenWidth = 1920;
-    private final Integer screenHeight = 1080;
 
     private MapCamera mapCamera;
     private HUDCamera hudCamera;
 
     private ExecutorService commandExecutor;
     private volatile boolean running = true;
+
+    private InventoryMenuOverlay inventoryMenuOverlay;
 
     public GameView(Game game, Main main) {
         this.game = game;
@@ -55,6 +56,8 @@ public class GameView implements Screen {
 
         commandExecutor = Executors.newSingleThreadExecutor();
         commandExecutor.submit(this::readTerminalInput);
+
+        this.inventoryMenuOverlay = new InventoryMenuOverlay(main, game);
     }
 
     @Override
@@ -71,20 +74,22 @@ public class GameView implements Screen {
         SpriteBatch batch = main.getBatch();
 
         printMapRelatedStuff(batch);
+        printHUDRelatedStuff(batch, delta);
 
-        printHUDRelatedStuff(batch,delta);
-
-        boolean recieved = HUDRelatedInput(batch);
-
-        if(!recieved) {
+        boolean received = HUDRelatedInput(batch);
+        if (!received) {
             mapRelatedInput(batch);
+        }
+
+        if(inventoryMenuOverlay.isVisible()) {
+            inventoryMenuOverlay.draw(delta);
         }
     }
 
     // print map related
     // print menu , clock ...
     // handle meno , clock input
-    // hendle map input
+    // handle map input
 
     public void printMapRelatedStuff(SpriteBatch batch){
         mapCamera.setPlayer(game.getCurrentPlayer());
@@ -109,7 +114,7 @@ public class GameView implements Screen {
         batch.end();
     }
 
-    public boolean HUDRelatedInput(SpriteBatch batch){
+    public boolean HUDRelatedInput(SpriteBatch batch) {
         hudCamera.update();
         batch.setProjectionMatrix(hudCamera.getCamera().combined);
         batch.begin();
@@ -144,6 +149,10 @@ public class GameView implements Screen {
             player.setDirection(Direction.RIGHT);
             player.walk(x + 1, y);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            inventoryMenuOverlay.setVisible(!inventoryMenuOverlay.isVisible());
+        }
+
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             int posX = Gdx.input.getX();
             int posY = Gdx.input.getY();
@@ -163,6 +172,7 @@ public class GameView implements Screen {
     public void resize(int width, int height) {
         mapCamera.resize(width, height);
         hudCamera.resize(width, height);
+        inventoryMenuOverlay.resize(width, height);
     }
 
     @Override
