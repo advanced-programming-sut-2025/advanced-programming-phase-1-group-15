@@ -20,6 +20,7 @@ import com.example.models.map.Area;
 import com.example.models.map.Map;
 import com.example.models.map.Position;
 import com.example.models.map.Tile;
+import com.example.models.stores.Store;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.Season;
 import com.example.models.weather.WeatherOption;
@@ -65,14 +66,29 @@ public class GameView implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        handleInput();
         game.getCurrentPlayer().updateAnimation(delta);
 
+        SpriteBatch batch = main.getBatch();
 
+        printMapRelatedStuff(batch);
+
+        printHUDRelatedStuff(batch,delta);
+
+        boolean recieved = HUDRelatedInput(batch);
+
+        if(!recieved) {
+            mapRelatedInput(batch);
+        }
+    }
+
+    // print map related
+    // print menu , clock ...
+    // handle meno , clock input
+    // hendle map input
+
+    public void printMapRelatedStuff(SpriteBatch batch){
         mapCamera.setPlayer(game.getCurrentPlayer());
         mapCamera.update();
-
-        SpriteBatch batch = main.getBatch();
         batch.setProjectionMatrix(mapCamera.getCamera().combined);
         batch.begin();
 
@@ -80,7 +96,9 @@ public class GameView implements Screen {
         drawPlayer(batch);
 
         batch.end();
+    }
 
+    public void printHUDRelatedStuff(SpriteBatch batch,float delta){
         hudCamera.update();
         batch.setProjectionMatrix(hudCamera.getCamera().combined);
         batch.begin();
@@ -88,6 +106,56 @@ public class GameView implements Screen {
         game.getDateAndTime().updateDateAndTime(delta);
         drawClock(batch);
 
+        batch.end();
+    }
+
+    public boolean HUDRelatedInput(SpriteBatch batch){
+        hudCamera.update();
+        batch.setProjectionMatrix(hudCamera.getCamera().combined);
+        batch.begin();
+        batch.end();
+        return false;
+    }
+
+    public void mapRelatedInput(SpriteBatch batch){
+        mapCamera.update();
+        batch.setProjectionMatrix(mapCamera.getCamera().combined);
+        batch.begin();
+
+        Player player = game.getCurrentPlayer();
+        player.setWalking(false);
+        Position currentPosition = player.getPosition();
+        int x = currentPosition.getX();
+        int y = currentPosition.getY();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+            player.setDirection(Direction.UP);
+            player.walk(x, y + 1);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            player.setDirection(Direction.DOWN);
+            player.walk(x, y - 1);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+            player.setDirection(Direction.LEFT);
+            player.walk(x - 1, y);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+            player.setDirection(Direction.RIGHT);
+            player.walk(x + 1, y);
+        }
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            int posX = Gdx.input.getX();
+            int posY = Gdx.input.getY();
+            // TODO : change posX and posY to suitable numbers for tiles 2D array
+            Tile clickedTile = App.currentGame.getTile(posX/tileSideLength,posY/tileSideLength);
+            // TODO: check if it is hud and handle it
+            // TODO: else if , check the tile and handel it
+            if(clickedTile.getArea() instanceof Store){
+                Store store = (Store) clickedTile.getArea();
+                // TODO : show Store menu
+            }
+        }
         batch.end();
     }
 
@@ -235,28 +303,4 @@ public class GameView implements Screen {
         batch.draw(game.getCurrentPlayer().getCurrentFrame(), drawX, drawY);
     }
 
-    private void handleInput() {
-        Player player = game.getCurrentPlayer();
-        player.setWalking(false);
-        Position currentPosition = player.getPosition();
-        int x = currentPosition.getX();
-        int y = currentPosition.getY();
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            player.setDirection(Direction.UP);
-            player.walk(x, y + 1);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            player.setDirection(Direction.DOWN);
-            player.walk(x, y - 1);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            player.setDirection(Direction.LEFT);
-            player.walk(x - 1, y);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            player.setDirection(Direction.RIGHT);
-            player.walk(x + 1, y);
-        }
-    }
 }
