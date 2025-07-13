@@ -97,7 +97,7 @@ public class Player extends User implements TimeObserver {
 
     public Player(User user) {
         super(user.getUsername(), user.getPassword(), user.getNickname(), user.getEmail(), user.getGender());
-
+        this.currentGame = App.currentGame;
         if(user.getGender().equals(Gender.BOY)) {
             walkUpAnimation = GameAssetManager.boy_walking_up;
             walkDownAnimation = GameAssetManager.boy_walking_down;

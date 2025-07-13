@@ -5,14 +5,20 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.controllers.CheatCodeController;
 import com.example.models.App;
 import com.example.models.Game;
 import com.example.models.GraphicalModels.HUDCamera;
 import com.example.models.GraphicalModels.MapCamera;
+import com.example.models.GraphicalModels.PopUpMenus.FriendsMenu;
 import com.example.models.Player;
 import com.example.models.Result;
 import com.example.models.enums.Direction;
@@ -24,7 +30,6 @@ import com.example.models.stores.Store;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.Season;
 import com.example.models.weather.WeatherOption;
-import org.w3c.dom.Text;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
@@ -44,6 +49,11 @@ public class GameView implements Screen {
     private ExecutorService commandExecutor;
     private volatile boolean running = true;
 
+    private Stage hudStage;
+    private Skin skin;
+
+    private FriendsMenu friendsMenu;
+
     public GameView(Game game, Main main) {
         this.game = game;
         this.main = main;
@@ -53,12 +63,48 @@ public class GameView implements Screen {
         mapCamera = new MapCamera(game.getCurrentPlayer());
         hudCamera = new HUDCamera();
 
+        hudStage = new Stage(new ScreenViewport());
+
+        // TODO: Initialize your skin here
+        skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
+
         commandExecutor = Executors.newSingleThreadExecutor();
         commandExecutor.submit(this::readTerminalInput);
     }
 
     @Override
     public void show() {
+        setupUI();
+
+        if (skin != null) {
+            friendsMenu = new FriendsMenu(skin, "Friends");
+        }
+
+        // Set input processor to handle both game input and UI input
+        Gdx.input.setInputProcessor(hudStage);
+    }
+
+    private void setupUI() {
+        if (skin == null) return;
+
+        TextButton friendsButton = new TextButton("Friends", skin);
+        friendsButton.setSize(100, 40);
+        friendsButton.setPosition(10, Gdx.graphics.getHeight() - 50); // Top-left corner
+
+        friendsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (friendsMenu != null) {
+                    friendsMenu.show(hudStage);
+                }
+            }
+        });
+
+        hudStage.addActor(friendsButton);
+
+
+
+        // Add more UI buttons here as needed
     }
 
     @Override
@@ -79,12 +125,14 @@ public class GameView implements Screen {
         if(!recieved) {
             mapRelatedInput(batch);
         }
-    }
 
-    // print map related
-    // print menu , clock ...
-    // handle meno , clock input
-    // hendle map input
+        hudStage.act(delta);
+        hudStage.draw();
+
+        if (friendsMenu != null) {
+            friendsMenu.render(delta);
+        }
+    }
 
     public void printMapRelatedStuff(SpriteBatch batch){
         mapCamera.setPlayer(game.getCurrentPlayer());
@@ -110,11 +158,7 @@ public class GameView implements Screen {
     }
 
     public boolean HUDRelatedInput(SpriteBatch batch){
-        hudCamera.update();
-        batch.setProjectionMatrix(hudCamera.getCamera().combined);
-        batch.begin();
-        batch.end();
-        return false;
+        return hudStage.touchDown(Gdx.input.getX(), Gdx.input.getY(), 0, 0);
     }
 
     public void mapRelatedInput(SpriteBatch batch){
@@ -163,6 +207,13 @@ public class GameView implements Screen {
     public void resize(int width, int height) {
         mapCamera.resize(width, height);
         hudCamera.resize(width, height);
+        hudStage.getViewport().update(width, height, true);
+
+        if (friendsMenu != null) {
+            friendsMenu.resize(width, height);
+        }
+
+        setupUI();
     }
 
     @Override
@@ -177,13 +228,23 @@ public class GameView implements Screen {
 
     @Override
     public void hide() {
-
+        if (friendsMenu != null) {
+            friendsMenu.hide();
+        }
     }
 
     @Override
     public void dispose() {
         running = false;
         commandExecutor.shutdownNow();
+
+        hudStage.dispose();
+        if (friendsMenu != null) {
+            friendsMenu.dispose();
+        }
+        if (skin != null) {
+            skin.dispose();
+        }
     }
 
     private void drawClock(SpriteBatch batch) {
@@ -266,7 +327,6 @@ public class GameView implements Screen {
             }
         }
     }
-
     public void printTile(Tile tile, int x, int y, Batch batch){
         // draws the background of the tile (area is never null)
         if(tile.getAreaSprite() != null) {
