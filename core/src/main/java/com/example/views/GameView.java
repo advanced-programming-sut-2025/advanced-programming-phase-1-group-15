@@ -49,6 +49,8 @@ public class GameView implements Screen {
     private ExecutorService commandExecutor;
     private volatile boolean running = true;
 
+    private InventoryMenuOverlay inventoryMenuOverlay;
+
     private Stage hudStage;
     private Skin skin;
 
@@ -70,6 +72,8 @@ public class GameView implements Screen {
 
         commandExecutor = Executors.newSingleThreadExecutor();
         commandExecutor.submit(this::readTerminalInput);
+
+        this.inventoryMenuOverlay = new InventoryMenuOverlay(main, game);
     }
 
     @Override
@@ -187,6 +191,9 @@ public class GameView implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
             player.setDirection(Direction.RIGHT);
             player.walk(x + 1, y);
+        }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            inventoryMenuOverlay.setVisible(!inventoryMenuOverlay.isVisible());
         }
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             int posX = Gdx.input.getX();
