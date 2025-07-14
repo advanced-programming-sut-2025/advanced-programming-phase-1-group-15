@@ -1,9 +1,6 @@
 package com.example.views;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -63,6 +60,8 @@ public class GameView implements Screen {
     private final ExecutorService commandExecutor;
     private volatile boolean running = true;
 
+    private InputMultiplexer gameInputMultiplexer; // Declare multiplexer here
+
     private final PauseMenuOverlay pauseMenuOverlay;
 
     public GameView(Game game, Main main) {
@@ -81,7 +80,7 @@ public class GameView implements Screen {
         commandExecutor = Executors.newSingleThreadExecutor();
         commandExecutor.submit(this::readTerminalInput);
 
-        this.pauseMenuOverlay = new PauseMenuOverlay(main, game);
+        this.pauseMenuOverlay = new PauseMenuOverlay(main, game, this::restoreGameInput);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class GameView implements Screen {
         setupInputHandling();
 
         if (skin != null) {
-            friendsMenu = new FriendsMenu(skin, "Friends");
+            friendsMenu = new FriendsMenu(skin, "Friends", this::restoreGameInput);
         }
     }
 
@@ -130,7 +129,9 @@ public class GameView implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (friendsMenu != null) {
-                    friendsMenu.show(uiStage);
+                    // When FriendsMenu is shown, set its stage as the input processor
+                    friendsMenu.show(); // Use the new show() method without parentStage
+                    Gdx.input.setInputProcessor(friendsMenu.getStage());
                 }
             }
         });
@@ -145,11 +146,14 @@ public class GameView implements Screen {
     }
 
     private void setupInputHandling() {
-        com.badlogic.gdx.InputMultiplexer multiplexer = new com.badlogic.gdx.InputMultiplexer();
-        multiplexer.addProcessor(uiStage);
-        multiplexer.addProcessor(gameInputProcessor);
+        gameInputMultiplexer = new com.badlogic.gdx.InputMultiplexer();
+        gameInputMultiplexer.addProcessor(uiStage);
+        gameInputMultiplexer.addProcessor(gameInputProcessor);
+        Gdx.input.setInputProcessor(gameInputMultiplexer); // Set the primary game input multiplexer
+    }
 
-        Gdx.input.setInputProcessor(multiplexer);
+    public void restoreGameInput() {
+        Gdx.input.setInputProcessor(gameInputMultiplexer);
     }
 
     @Override
@@ -275,9 +279,6 @@ public class GameView implements Screen {
 
     @Override
     public void hide() {
-        if (friendsMenu != null) {
-            friendsMenu.hide();
-        }
     }
 
     @Override
@@ -292,6 +293,8 @@ public class GameView implements Screen {
         if (skin != null) {
             skin.dispose();
         }
+
+        pauseMenuOverlay.dispose();
     }
 
     private void readTerminalInput() {
@@ -355,6 +358,10 @@ public class GameView implements Screen {
     private class GameInputProcessor implements InputProcessor {
         @Override
         public boolean keyDown(int keycode) {
+            if (pauseMenuOverlay.isVisible() || (friendsMenu != null && friendsMenu.isVisible())) {
+                return false;
+            }
+
             Player player = game.getCurrentPlayer();
             Position currentPosition = player.getPosition();
             int x = currentPosition.getX();
@@ -380,7 +387,13 @@ public class GameView implements Screen {
                     player.walk(x + 1, y);
                     return true;
                 case Input.Keys.ESCAPE:
-                    pauseMenuOverlay.setVisible(!pauseMenuOverlay.isVisible());
+                    if (pauseMenuOverlay.isVisible()) {
+                        pauseMenuOverlay.setVisible(false);
+                        restoreGameInput();
+                    } else {
+                        pauseMenuOverlay.setVisible(true);
+                        Gdx.input.setInputProcessor(pauseMenuOverlay.getStage());
+                    }
                     return true;
             }
             return false;
@@ -388,6 +401,10 @@ public class GameView implements Screen {
 
         @Override
         public boolean keyUp(int keycode) {
+            if (pauseMenuOverlay.isVisible() || (friendsMenu != null && friendsMenu.isVisible())) {
+                return false;
+            }
+
             Player player = game.getCurrentPlayer();
 
             switch (keycode) {
@@ -408,6 +425,10 @@ public class GameView implements Screen {
 
         @Override
         public boolean touchDown(int x, int y, int pointer, int button) {
+            if (pauseMenuOverlay.isVisible() || (friendsMenu != null && friendsMenu.isVisible())) {
+                return false;
+            }
+
             if (button == Input.Buttons.LEFT) {
                 Vector3 worldCoords = mapCamera.getCamera().unproject(new com.badlogic.gdx.math.Vector3(x, y, 0));
 

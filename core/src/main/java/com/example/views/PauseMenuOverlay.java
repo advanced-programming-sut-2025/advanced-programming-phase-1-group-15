@@ -31,11 +31,15 @@ public class PauseMenuOverlay {
     private final Table mapContent = new Table();
     private final Table settingsContent = new Table();
 
-    private final Label tooltipLabel = new Label("", new Skin(Gdx.files.internal("UI/StardewValley.json")));
+    private final Skin toolTipSkin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
+    private final Label tooltipLabel = new Label("", toolTipSkin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
 
-    public PauseMenuOverlay(Main main, Game game) {
+    private final Runnable onHideCallback; // field for callback
+
+    public PauseMenuOverlay(Main main, Game game, Runnable onHideCallback) {
         this.game = game;
+        this.onHideCallback = onHideCallback;
         stage = new Stage(new ScreenViewport(), main.getBatch());
         skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
 
@@ -74,6 +78,9 @@ public class PauseMenuOverlay {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 setVisible(false);
+                if (onHideCallback != null) {
+                    onHideCallback.run();
+                }
             }
         });
         rootTable.add(closeButton).right().pad(10);
@@ -148,9 +155,6 @@ public class PauseMenuOverlay {
         rootTable.setVisible(visible);
         if (visible) {
             refresh();
-            Gdx.input.setInputProcessor(stage);
-        } else {
-            Gdx.input.setInputProcessor(null);
         }
     }
 
@@ -235,5 +239,15 @@ public class PauseMenuOverlay {
         settingsContent.setVisible(false);
 
         content.setVisible(true);
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void dispose() {
+        stage.dispose();
+        skin.dispose();
+        toolTipSkin.dispose();
     }
 }

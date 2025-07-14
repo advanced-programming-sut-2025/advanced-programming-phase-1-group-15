@@ -18,8 +18,8 @@ public class FriendsMenu extends PopUpMenu {
 
     Player currentPlayer;
 
-    public FriendsMenu(Skin skin, String title) {
-        super(skin, title, calculateWidth(), calculateHeight());
+    public FriendsMenu(Skin skin, String title, Runnable onHideCallback) {
+        super(skin, title, calculateWidth(), calculateHeight(),onHideCallback);
         currentPlayer= App.currentGame.getCurrentPlayer();
     }
 
@@ -95,5 +95,6 @@ public class FriendsMenu extends PopUpMenu {
 
         w.add(closeButton).bottom().padTop(10).row();
     }
+
 
 }

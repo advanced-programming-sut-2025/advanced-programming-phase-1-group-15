@@ -15,12 +15,14 @@ public abstract class PopUpMenu {
     protected Stage stage;
     protected Window window;
     protected Skin skin;
-    protected Stage parentStage;
     private Actor backgroundDim;
     private boolean isVisible = false;
 
-    public PopUpMenu(Skin skin, String title, float width, float height) {
+    private Runnable onHideCallback;
+
+    public PopUpMenu(Skin skin, String title, float width, float height, Runnable onHideCallback) {
         this.skin = skin;
+        this.onHideCallback = onHideCallback;
 
         window = new Window(title, skin);
         window.setSize(width, height);
@@ -43,10 +45,13 @@ public abstract class PopUpMenu {
         stage.addActor(window);
     }
 
+    public PopUpMenu(Skin skin, String title, float width, float height) {
+        this(skin, title, width, height, null);
+    }
+
     protected abstract void populate(Window w);
 
     private void addCloseButton() {
-        // Create close button in the title bar
         TextButton closeButton = new TextButton("X", skin);
         closeButton.addListener(new ChangeListener() {
             @Override
@@ -87,10 +92,9 @@ public abstract class PopUpMenu {
         );
     }
 
-    public void show(Stage parentStage) {
+    public void show() {
         if (isVisible) return;
 
-        this.parentStage = parentStage;
         isVisible = true;
 
         backgroundDim.setVisible(true);
@@ -98,8 +102,6 @@ public abstract class PopUpMenu {
         window.setVisible(true);
         window.getColor().a = 0f;
         window.addAction(Actions.fadeIn(0.3f));
-
-        Gdx.input.setInputProcessor(stage);
     }
 
     public void hide() {
@@ -112,8 +114,8 @@ public abstract class PopUpMenu {
             Actions.run(() -> {
                 window.setVisible(false);
                 backgroundDim.setVisible(false);
-                if (parentStage != null) {
-                    Gdx.input.setInputProcessor(parentStage);
+                if (onHideCallback != null) {
+                    onHideCallback.run(); // Execute the callback to restore input
                 }
             })
         ));
@@ -138,5 +140,9 @@ public abstract class PopUpMenu {
 
     public boolean isVisible() {
         return isVisible;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }
