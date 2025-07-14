@@ -11,28 +11,30 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.models.Game;
 import com.example.models.tools.BackPack;
 import com.example.models.tools.BackPackable;
 
-public class InventoryMenuOverlay {
+public class PauseMenuOverlay {
     private final Stage stage;
     private final Table rootTable;
     private final Skin skin;
     private boolean visible;
     private final Game game;
 
-    private Table inventoryContent;
+    private final Table inventoryContent;
     private final Table skillsContent = new Table();
     private final Table friendshipContent = new Table();
     private final Table mapContent = new Table();
+    private final Table settingsContent = new Table();
 
     private final Label tooltipLabel = new Label("", new Skin(Gdx.files.internal("UI/StardewValley.json")));
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
 
-    public InventoryMenuOverlay(Main main, Game game) {
+    public PauseMenuOverlay(Main main, Game game) {
         this.game = game;
         stage = new Stage(new ScreenViewport(), main.getBatch());
         skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
@@ -49,11 +51,13 @@ public class InventoryMenuOverlay {
         TextButton skillsTab = new TextButton("Skills", skin);
         TextButton friendshipTab = new TextButton("Friendship", skin);
         TextButton mapTab = new TextButton("Map", skin);
+        TextButton settingsTab = new TextButton("Settings", skin);
 
         tabBar.add(inventoryTab).pad(5);
         tabBar.add(skillsTab).pad(5);
         tabBar.add(friendshipTab).pad(5);
         tabBar.add(mapTab).pad(5);
+        tabBar.add(settingsTab).pad(5);
         rootTable.add(tabBar).expandX().top().row();
 
         inventoryContent = createInventoryContent();
@@ -62,20 +66,21 @@ public class InventoryMenuOverlay {
         contentStack.add(skillsContent);
         contentStack.add(friendshipContent);
         contentStack.add(mapContent);
+        contentStack.add(settingsContent);
         rootTable.add(contentStack).expand().fill().row();
 
         TextButton closeButton = new TextButton("X Close", skin);
-        closeButton.addListener(event -> {
-            if (closeButton.isPressed()) {
+        closeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
                 setVisible(false);
-                return true;
             }
-            return false;
         });
         rootTable.add(closeButton).right().pad(10);
 
+        tooltipLabel.setColor(Color.BLACK);
         tooltipContainer.background(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
-        tooltipContainer.setVisible(false);
+        tooltipContainer.setWidth(600); tooltipContainer.setHeight(50); tooltipContainer.setVisible(false);
         stage.addActor(rootTable);
         stage.addActor(tooltipContainer);
 
@@ -83,40 +88,35 @@ public class InventoryMenuOverlay {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 refresh();
-                inventoryContent.setVisible(true);
-                skillsContent.setVisible(false);
-                friendshipContent.setVisible(false);
-                mapContent.setVisible(false);
+                changeTab(inventoryContent);
             }
         });
 
         skillsTab.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                inventoryContent.setVisible(false);
-                skillsContent.setVisible(true);
-                friendshipContent.setVisible(false);
-                mapContent.setVisible(false);
+                changeTab(skillsContent);
             }
         });
 
         friendshipTab.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                inventoryContent.setVisible(false);
-                skillsContent.setVisible(false);
-                friendshipContent.setVisible(true);
-                mapContent.setVisible(false);
+                changeTab(friendshipContent);
             }
         });
 
         mapTab.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                inventoryContent.setVisible(false);
-                skillsContent.setVisible(false);
-                friendshipContent.setVisible(false);
-                mapContent.setVisible(true);
+                changeTab(mapContent);
+            }
+        });
+
+        settingsTab.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                changeTab(settingsContent);
             }
         });
     }
@@ -127,6 +127,7 @@ public class InventoryMenuOverlay {
 
         if (tooltipContainer.isVisible()) {
             tooltipContainer.pack();
+            tooltipContainer.setWidth(600); tooltipContainer.setHeight(50);
             tooltipContainer.setPosition(Gdx.input.getX() - tooltipContainer.getWidth() / 2f,
                 Gdx.graphics.getHeight() - Gdx.input.getY());
         }
@@ -187,20 +188,25 @@ public class InventoryMenuOverlay {
         });
 
         itemList.addListener(new InputListener() {
+            @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
-                String hovered = itemList.getItemAt(itemList.getSelectedIndex());
-                if (hovered != null && !hovered.isEmpty()) {
-                    BackPackable hoveredItem = inventory.getItemByName(hovered.split(" x")[0]);
-                    if (hoveredItem != null) {
-                        tooltipLabel.setText(hoveredItem.getDescription());
-                        tooltipContainer.setVisible(true);
+                int index = itemList.getSelectedIndex();
+                if (index >= 0) {
+                    String item = itemList.getItems().get(index);
+                    if (item != null && !item.isEmpty()) {
+                        String itemName = item.split(" x")[0];
+                        BackPackable hoveredItem = inventory.getItemByName(itemName);
+                        if (hoveredItem != null) {
+                            tooltipLabel.setText(hoveredItem.getDescription());
+                            tooltipContainer.setVisible(true);
+                            return true;
+                        }
                     }
-                } else {
-                    tooltipContainer.setVisible(false);
                 }
-                return true;
+                return false;
             }
 
+            @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 tooltipContainer.setVisible(false);
             }
@@ -211,7 +217,7 @@ public class InventoryMenuOverlay {
 
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
-        table.add(buttonRow).left();
+        table.add(buttonRow).bottom().left();
 
         return table;
     }
@@ -219,5 +225,15 @@ public class InventoryMenuOverlay {
     private void refresh() {
         inventoryContent.clear();
         inventoryContent.add(createInventoryContent()).expand().fill();
+    }
+
+    private void changeTab(Table content) {
+        inventoryContent.setVisible(false);
+        skillsContent.setVisible(false);
+        friendshipContent.setVisible(false);
+        mapContent.setVisible(false);
+        settingsContent.setVisible(false);
+
+        content.setVisible(true);
     }
 }

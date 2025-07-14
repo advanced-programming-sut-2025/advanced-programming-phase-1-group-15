@@ -46,14 +46,13 @@ public class GameView implements Screen {
     private MapCamera mapCamera;
     private HUDCamera hudCamera;
 
-    private ExecutorService commandExecutor;
+    private final ExecutorService commandExecutor;
     private volatile boolean running = true;
 
-    private InventoryMenuOverlay inventoryMenuOverlay;
+    private final PauseMenuOverlay pauseMenuOverlay;
 
-    private Stage hudStage;
-    private Skin skin;
-
+    private final Stage hudStage;
+    private final Skin skin;
     private FriendsMenu friendsMenu;
 
     public GameView(Game game, Main main) {
@@ -66,14 +65,12 @@ public class GameView implements Screen {
         hudCamera = new HUDCamera();
 
         hudStage = new Stage(new ScreenViewport());
-
-        // TODO: Initialize your skin here
         skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
 
         commandExecutor = Executors.newSingleThreadExecutor();
         commandExecutor.submit(this::readTerminalInput);
 
-        this.inventoryMenuOverlay = new InventoryMenuOverlay(main, game);
+        this.pauseMenuOverlay = new PauseMenuOverlay(main, game);
     }
 
     @Override
@@ -92,8 +89,8 @@ public class GameView implements Screen {
         if (skin == null) return;
 
         TextButton friendsButton = new TextButton("Friends", skin);
-        friendsButton.setSize(100, 40);
-        friendsButton.setPosition(10, Gdx.graphics.getHeight() - 50); // Top-left corner
+        friendsButton.setSize(150, 50);
+        friendsButton.setPosition(0, Gdx.graphics.getHeight() - 100);
 
         friendsButton.addListener(new ChangeListener() {
             @Override
@@ -105,8 +102,6 @@ public class GameView implements Screen {
         });
 
         hudStage.addActor(friendsButton);
-
-
 
         // Add more UI buttons here as needed
     }
@@ -124,18 +119,21 @@ public class GameView implements Screen {
 
         printHUDRelatedStuff(batch,delta);
 
-        boolean recieved = HUDRelatedInput(batch);
+        boolean received = HUDRelatedInput(batch);
 
-        if(!recieved) {
+        if(!received) {
             mapRelatedInput(batch);
         }
 
+
+        // These lines should be probably moved to another class ****
         hudStage.act(delta);
         hudStage.draw();
 
         if (friendsMenu != null) {
             friendsMenu.render(delta);
         }
+        // **********************************************************
     }
 
     public void printMapRelatedStuff(SpriteBatch batch){
@@ -159,6 +157,7 @@ public class GameView implements Screen {
         drawClock(batch);
 
         batch.end();
+        pauseMenuOverlay.draw(delta);
     }
 
     public boolean HUDRelatedInput(SpriteBatch batch){
@@ -193,7 +192,7 @@ public class GameView implements Screen {
             player.walk(x + 1, y);
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            inventoryMenuOverlay.setVisible(!inventoryMenuOverlay.isVisible());
+            pauseMenuOverlay.setVisible(!pauseMenuOverlay.isVisible());
         }
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             int posX = Gdx.input.getX();
@@ -201,7 +200,7 @@ public class GameView implements Screen {
             // TODO : change posX and posY to suitable numbers for tiles 2D array
             Tile clickedTile = App.currentGame.getTile(posX/tileSideLength,posY/tileSideLength);
             // TODO: check if it is hud and handle it
-            // TODO: else if , check the tile and handel it
+            // TODO: else if , check the tile and handle it
             if(clickedTile.getArea() instanceof Store){
                 Store store = (Store) clickedTile.getArea();
                 // TODO : show Store menu
@@ -334,6 +333,7 @@ public class GameView implements Screen {
             }
         }
     }
+
     public void printTile(Tile tile, int x, int y, Batch batch){
         // draws the background of the tile (area is never null)
         if(tile.getAreaSprite() != null) {
@@ -359,11 +359,6 @@ public class GameView implements Screen {
         if(area.getTexture() != null)  {
             batch.draw(area.getTexture(), drawX, drawY, realWidth, realHeight);
         }
-    }
-
-    public void updateMapCamera(){
-        mapCamera = new MapCamera(game.getCurrentPlayer());
-        mapCamera.update();
     }
 
     private void drawPlayer(SpriteBatch batch) {
