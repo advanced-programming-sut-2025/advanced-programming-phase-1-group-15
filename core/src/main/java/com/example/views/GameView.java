@@ -2,15 +2,19 @@ package com.example.views;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.controllers.CheatCodeController;
@@ -44,16 +48,22 @@ public class GameView implements Screen {
     private final Integer screenHeight = 1080;
 
     private MapCamera mapCamera;
-    private HUDCamera hudCamera;
+    private Stage uiStage;
+    private Skin skin;
 
+    // UI
+    private Table hudTable;
+    private Label energyLabel;
+
+    // Pop-up menus
+    private FriendsMenu friendsMenu;
+
+    // Input handling
+    private GameInputProcessor gameInputProcessor;
     private final ExecutorService commandExecutor;
     private volatile boolean running = true;
 
     private final PauseMenuOverlay pauseMenuOverlay;
-
-    private final Stage hudStage;
-    private final Skin skin;
-    private FriendsMenu friendsMenu;
 
     public GameView(Game game, Main main) {
         this.game = game;
@@ -62,10 +72,11 @@ public class GameView implements Screen {
         game.build();
 
         mapCamera = new MapCamera(game.getCurrentPlayer());
-        hudCamera = new HUDCamera();
 
-        hudStage = new Stage(new ScreenViewport());
+        uiStage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
+
+        gameInputProcessor = new GameInputProcessor();
 
         commandExecutor = Executors.newSingleThreadExecutor();
         commandExecutor.submit(this::readTerminalInput);
@@ -76,34 +87,69 @@ public class GameView implements Screen {
     @Override
     public void show() {
         setupUI();
+        setupInputHandling();
 
         if (skin != null) {
             friendsMenu = new FriendsMenu(skin, "Friends");
         }
-
-        // Set input processor to handle both game input and UI input
-        Gdx.input.setInputProcessor(hudStage);
     }
 
     private void setupUI() {
         if (skin == null) return;
 
+        hudTable = new Table();
+        hudTable.setFillParent(true);
+        hudTable.top().right();
+
+        createHUDComponents();
+
+        createControlButtons();
+
+        uiStage.addActor(hudTable);
+    }
+
+    private void createHUDComponents() {
+        energyLabel = new Label("", skin);
+        energyLabel.setColor(Color.BLACK);
+
+        // Energy label in top-left
+        Table energyTable = new Table();
+        energyTable.setFillParent(true);
+        energyTable.top().left();
+        energyTable.add(energyLabel).padTop(10).padLeft(10);
+
+        uiStage.addActor(energyTable);
+    }
+
+    private void createControlButtons() {
+        // Friends button
         TextButton friendsButton = new TextButton("Friends", skin);
         friendsButton.setSize(150, 50);
-        friendsButton.setPosition(0, Gdx.graphics.getHeight() - 100);
 
         friendsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (friendsMenu != null) {
-                    friendsMenu.show(hudStage);
+                    friendsMenu.show(uiStage);
                 }
             }
         });
 
-        hudStage.addActor(friendsButton);
+        // Button layout table
+        Table buttonTable = new Table();
+        buttonTable.setFillParent(true);
+        buttonTable.top().left();
+        buttonTable.add(friendsButton).padTop(50).padLeft(10);
 
-        // Add more UI buttons here as needed
+        uiStage.addActor(buttonTable);
+    }
+
+    private void setupInputHandling() {
+        com.badlogic.gdx.InputMultiplexer multiplexer = new com.badlogic.gdx.InputMultiplexer();
+        multiplexer.addProcessor(uiStage);
+        multiplexer.addProcessor(gameInputProcessor);
+
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
@@ -112,31 +158,26 @@ public class GameView implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.getCurrentPlayer().updateAnimation(delta);
+        game.getDateAndTime().updateDateAndTime(delta);
 
         SpriteBatch batch = main.getBatch();
 
-        printMapRelatedStuff(batch);
+        renderMap(batch);
 
-        printHUDRelatedStuff(batch,delta);
+        renderHUD(batch, delta);
 
-        boolean received = HUDRelatedInput(batch);
-
-        if(!received) {
-            mapRelatedInput(batch);
-        }
-
-
-        // These lines should be probably moved to another class ****
-        hudStage.act(delta);
-        hudStage.draw();
+        updateUIComponents();
+        uiStage.act(delta);
+        uiStage.draw();
 
         if (friendsMenu != null) {
             friendsMenu.render(delta);
         }
-        // **********************************************************
+
+        pauseMenuOverlay.draw(delta);
     }
 
-    public void printMapRelatedStuff(SpriteBatch batch){
+    private void renderMap(SpriteBatch batch) {
         mapCamera.setPlayer(game.getCurrentPlayer());
         mapCamera.update();
         batch.setProjectionMatrix(mapCamera.getCamera().combined);
@@ -148,109 +189,18 @@ public class GameView implements Screen {
         batch.end();
     }
 
-    public void printHUDRelatedStuff(SpriteBatch batch,float delta){
-        hudCamera.update();
-        batch.setProjectionMatrix(hudCamera.getCamera().combined);
+    private void renderHUD(SpriteBatch batch, float delta) {
+        batch.setProjectionMatrix(uiStage.getCamera().combined);
         batch.begin();
 
-        game.getDateAndTime().updateDateAndTime(delta);
         drawClock(batch);
 
         batch.end();
-        pauseMenuOverlay.draw(delta);
     }
 
-    public boolean HUDRelatedInput(SpriteBatch batch){
-        return hudStage.touchDown(Gdx.input.getX(), Gdx.input.getY(), 0, 0);
-    }
-
-    public void mapRelatedInput(SpriteBatch batch){
-        mapCamera.update();
-        batch.setProjectionMatrix(mapCamera.getCamera().combined);
-        batch.begin();
-
-        Player player = game.getCurrentPlayer();
-        player.setWalking(false);
-        Position currentPosition = player.getPosition();
-        int x = currentPosition.getX();
-        int y = currentPosition.getY();
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            player.setDirection(Direction.UP);
-            player.walk(x, y + 1);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            player.setDirection(Direction.DOWN);
-            player.walk(x, y - 1);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-            player.setDirection(Direction.LEFT);
-            player.walk(x - 1, y);
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-            player.setDirection(Direction.RIGHT);
-            player.walk(x + 1, y);
-        }
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            pauseMenuOverlay.setVisible(!pauseMenuOverlay.isVisible());
-        }
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            int posX = Gdx.input.getX();
-            int posY = Gdx.input.getY();
-            // TODO : change posX and posY to suitable numbers for tiles 2D array
-            Tile clickedTile = App.currentGame.getTile(posX/tileSideLength,posY/tileSideLength);
-            // TODO: check if it is hud and handle it
-            // TODO: else if , check the tile and handle it
-            if(clickedTile.getArea() instanceof Store){
-                Store store = (Store) clickedTile.getArea();
-                // TODO : show Store menu
-            }
-        }
-        batch.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        mapCamera.resize(width, height);
-        hudCamera.resize(width, height);
-        hudStage.getViewport().update(width, height, true);
-
-        if (friendsMenu != null) {
-            friendsMenu.resize(width, height);
-        }
-
-        setupUI();
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-        if (friendsMenu != null) {
-            friendsMenu.hide();
-        }
-    }
-
-    @Override
-    public void dispose() {
-        running = false;
-        commandExecutor.shutdownNow();
-
-        hudStage.dispose();
-        if (friendsMenu != null) {
-            friendsMenu.dispose();
-        }
-        if (skin != null) {
-            skin.dispose();
-        }
+    private void updateUIComponents() {
+        int energy = (int) game.getCurrentPlayer().getEnergy();
+        energyLabel.setText("Energy: " + energy);
     }
 
     private void drawClock(SpriteBatch batch) {
@@ -276,7 +226,6 @@ public class GameView implements Screen {
         String dateStr = dateAndTime.displayDate();
         String timeStr = dateAndTime.displayTime();
         String goldStr = String.valueOf(gold);
-        String energyStr = "Energy: " + (int) game.getCurrentPlayer().getEnergy();
 
         float textX = x + clockWidth / 2;
 
@@ -286,7 +235,6 @@ public class GameView implements Screen {
         font.setColor(Color.FIREBRICK);
         font.draw(batch, goldStr, x + 70, y + 40);
         font.getData().setScale(1f);
-        font.draw(batch, energyStr, 0, screenHeight);
 
         TextureRegion weatherIcon;
         TextureRegion seasonIcon;
@@ -307,6 +255,45 @@ public class GameView implements Screen {
         batch.draw(seasonIcon, x + 210, screenHeight - 105, 4 * seasonIcon.getRegionWidth(), 4 * seasonIcon.getRegionHeight());
     }
 
+    @Override
+    public void resize(int width, int height) {
+        mapCamera.resize(width, height);
+        uiStage.getViewport().update(width, height, true);
+
+        if (friendsMenu != null) {
+            friendsMenu.resize(width, height);
+        }
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+        if (friendsMenu != null) {
+            friendsMenu.hide();
+        }
+    }
+
+    @Override
+    public void dispose() {
+        running = false;
+        commandExecutor.shutdownNow();
+
+        uiStage.dispose();
+        if (friendsMenu != null) {
+            friendsMenu.dispose();
+        }
+        if (skin != null) {
+            skin.dispose();
+        }
+    }
+
     private void readTerminalInput() {
         Scanner scanner = new Scanner(System.in);
         while (running) {
@@ -319,9 +306,8 @@ public class GameView implements Screen {
         scanner.close();
     }
 
-
     public void showMap(Batch batch) {
-        Map currentMap = game.getMap();
+        com.example.models.map.Map currentMap = game.getMap();
 
         for(int row = 0; row < currentMap.ROWS; row++){
             for(int col = 0; col < currentMap.COLS; col++){
@@ -335,7 +321,6 @@ public class GameView implements Screen {
     }
 
     public void printTile(Tile tile, int x, int y, Batch batch){
-        // draws the background of the tile (area is never null)
         if(tile.getAreaSprite() != null) {
             batch.draw(tile.getAreaSprite(), x, y, tileSideLength, tileSideLength);
         }
@@ -343,14 +328,13 @@ public class GameView implements Screen {
             printArea(tile, batch);
         }
 
-        // draws the object in tile if present
         if(tile.getObjectSprite() != null) {
             batch.draw(tile.getObjectSprite(), x, y, tileSideLength, tileSideLength);
         }
     }
 
     public void printArea(Tile tile, Batch batch) {
-        Area area = tile.getArea();
+        com.example.models.map.Area area = tile.getArea();
         Position bottomLeft = area.getBottomLeftCorner();
         int drawX = bottomLeft.x * tileSideLength;
         int drawY = bottomLeft.y * tileSideLength;
@@ -366,6 +350,109 @@ public class GameView implements Screen {
         int drawX = pos.x * tileSideLength;
         int drawY = pos.y * tileSideLength;
         batch.draw(game.getCurrentPlayer().getCurrentFrame(), drawX, drawY);
+    }
+
+    private class GameInputProcessor implements InputProcessor {
+        @Override
+        public boolean keyDown(int keycode) {
+            Player player = game.getCurrentPlayer();
+            Position currentPosition = player.getPosition();
+            int x = currentPosition.getX();
+            int y = currentPosition.getY();
+
+            player.setWalking(false);
+
+            switch (keycode) {
+                case Input.Keys.W:
+                    player.setDirection(Direction.UP);
+                    player.walk(x, y + 1);
+                    return true;
+                case Input.Keys.S:
+                    player.setDirection(Direction.DOWN);
+                    player.walk(x, y - 1);
+                    return true;
+                case Input.Keys.A:
+                    player.setDirection(Direction.LEFT);
+                    player.walk(x - 1, y);
+                    return true;
+                case Input.Keys.D:
+                    player.setDirection(Direction.RIGHT);
+                    player.walk(x + 1, y);
+                    return true;
+                case Input.Keys.ESCAPE:
+                    pauseMenuOverlay.setVisible(!pauseMenuOverlay.isVisible());
+                    return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean keyUp(int keycode) {
+            Player player = game.getCurrentPlayer();
+
+            switch (keycode) {
+                case Input.Keys.W:
+                case Input.Keys.S:
+                case Input.Keys.A:
+                case Input.Keys.D:
+                    player.setWalking(false);
+                    return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean keyTyped(char c) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDown(int x, int y, int pointer, int button) {
+            if (button == Input.Buttons.LEFT) {
+                Vector3 worldCoords = mapCamera.getCamera().unproject(new com.badlogic.gdx.math.Vector3(x, y, 0));
+
+                int tileX = (int) (worldCoords.x / tileSideLength);
+                int tileY = (int) (worldCoords.y / tileSideLength);
+
+                if (tileX >= 0 && tileX < game.getMap().COLS &&
+                    tileY >= 0 && tileY < game.getMap().ROWS) {
+
+                    Tile clickedTile = App.currentGame.getTile(tileX, tileY);
+
+                    if (clickedTile.getArea() instanceof Store) {
+                        Store store = (Store) clickedTile.getArea();
+                        // TODO: show Store menu
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public boolean touchUp(int i, int i1, int i2, int i3) {
+            return false;
+        }
+
+        @Override
+        public boolean touchCancelled(int i, int i1, int i2, int i3) {
+            return false;
+        }
+
+        @Override
+        public boolean touchDragged(int i, int i1, int i2) {
+            return false;
+        }
+
+        @Override
+        public boolean mouseMoved(int i, int i1) {
+            return false;
+        }
+
+        @Override
+        public boolean scrolled(float v, float v1) {
+            return false;
+        }
     }
 
 }
