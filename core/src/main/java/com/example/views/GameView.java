@@ -6,25 +6,19 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.controllers.CheatCodeController;
 import com.example.models.App;
 import com.example.models.Game;
-import com.example.models.GraphicalModels.HUDCamera;
 import com.example.models.GraphicalModels.MapCamera;
 import com.example.models.GraphicalModels.PopUpMenus.FriendsMenu;
 import com.example.models.Player;
 import com.example.models.Result;
 import com.example.models.enums.Direction;
-import com.example.models.map.Area;
-import com.example.models.map.Map;
 import com.example.models.map.Position;
 import com.example.models.map.Tile;
 import com.example.models.stores.Store;
@@ -41,12 +35,12 @@ public class GameView implements Screen {
     private final Main main;
 
     private final Integer tileSideLength = 16;
-    private final Integer screenWidth = 1920;
-    private final Integer screenHeight = 1080;
+    private static final Integer screenWidth = 1920;
+    private static final Integer screenHeight = 1080;
 
-    private MapCamera mapCamera;
-    private Stage uiStage;
-    private Skin skin;
+    private final MapCamera mapCamera;
+    private final Stage uiStage;
+    private final Skin skin;
 
     // UI
     private Table hudTable;
@@ -56,11 +50,11 @@ public class GameView implements Screen {
     private FriendsMenu friendsMenu;
 
     // Input handling
-    private GameInputProcessor gameInputProcessor;
+    private final GameInputProcessor gameInputProcessor;
     private final ExecutorService commandExecutor;
     private volatile boolean running = true;
 
-    private InputMultiplexer gameInputMultiplexer; // Declare multiplexer here
+    private InputMultiplexer gameInputMultiplexer;
 
     private final PauseMenuOverlay pauseMenuOverlay;
 
@@ -109,7 +103,7 @@ public class GameView implements Screen {
 
     private void createHUDComponents() {
         energyLabel = new Label("", skin);
-        energyLabel.setColor(Color.BLACK);
+        energyLabel.setColor(Color.FIREBRICK);
 
         // Energy label in top-left
         Table energyTable = new Table();
@@ -146,7 +140,7 @@ public class GameView implements Screen {
     }
 
     private void setupInputHandling() {
-        gameInputMultiplexer = new com.badlogic.gdx.InputMultiplexer();
+        gameInputMultiplexer = new InputMultiplexer();
         gameInputMultiplexer.addProcessor(uiStage);
         gameInputMultiplexer.addProcessor(gameInputProcessor);
         Gdx.input.setInputProcessor(gameInputMultiplexer); // Set the primary game input multiplexer
@@ -407,15 +401,13 @@ public class GameView implements Screen {
 
             Player player = game.getCurrentPlayer();
 
-            switch (keycode) {
-                case Input.Keys.W:
-                case Input.Keys.S:
-                case Input.Keys.A:
-                case Input.Keys.D:
+            return switch (keycode) {
+                case Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D -> {
                     player.setWalking(false);
-                    return true;
-            }
-            return false;
+                    yield true;
+                }
+                default -> false;
+            };
         }
 
         @Override
