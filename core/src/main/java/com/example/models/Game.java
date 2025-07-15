@@ -35,6 +35,7 @@ public class Game implements TimeObserver {
         for (Player player : players) {
             player.setCurrentGame(this);
         }
+        this.mainPlayer = players.get(0);
         this.currentPlayer = players.get(0);
     }
 

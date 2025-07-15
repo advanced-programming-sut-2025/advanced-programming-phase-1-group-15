@@ -382,10 +382,20 @@ public class GameView implements Screen {
                     return true;
                 case Input.Keys.ESCAPE:
                     if (pauseMenuOverlay.isVisible()) {
-                        pauseMenuOverlay.setVisible(false);
+                        pauseMenuOverlay.setVisible(false, 0);
                         restoreGameInput();
                     } else {
-                        pauseMenuOverlay.setVisible(true);
+                        pauseMenuOverlay.setVisible(true, 1);
+                        Gdx.input.setInputProcessor(pauseMenuOverlay.getStage());
+                    }
+                    return true;
+                case Input.Keys.M:
+                    if (pauseMenuOverlay.isVisible()) {
+                        pauseMenuOverlay.setVisible(false, 0);
+                        restoreGameInput();
+                    }
+                    else {
+                        pauseMenuOverlay.setVisible(true, 4);
                         Gdx.input.setInputProcessor(pauseMenuOverlay.getStage());
                     }
                     return true;

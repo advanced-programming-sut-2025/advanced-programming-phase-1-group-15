@@ -3,6 +3,7 @@ package com.example.views;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -13,23 +14,28 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
+import com.example.models.App;
 import com.example.models.Game;
 import com.example.models.Player;
+import com.example.models.map.Map;
+import com.example.models.map.Tile;
 import com.example.models.tools.BackPack;
 import com.example.models.tools.BackPackable;
 
 public class PauseMenuOverlay {
     private final Stage stage;
     private final Table rootTable;
-    private final Skin skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));;
+    private final Skin skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
     private boolean visible;
+
+    private final Main main;
     private final Game game;
 
     private final Table inventoryContent;
     private final Table skillsContent;
     private final Table friendshipContent = new Table();
-    private final Table mapContent = new Table();
-    private final Table settingsContent = new Table();
+    private final Table mapContent;
+    private final Table settingsContent;
 
     private final Label tooltipLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
@@ -37,14 +43,15 @@ public class PauseMenuOverlay {
     private final Runnable onHideCallback; // field for callback
 
     public PauseMenuOverlay(Main main, Game game, Runnable onHideCallback) {
+        this.main = main;
         this.game = game;
         this.onHideCallback = onHideCallback;
         stage = new Stage(new ScreenViewport(), main.getBatch());
 
         rootTable = new Table(skin);
         rootTable.setFillParent(false);
-        rootTable.setSize(800, 600);
-        rootTable.setPosition(Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f - 300);
+        rootTable.setSize(800, 700);
+        rootTable.setPosition(Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f - 350);
         rootTable.setVisible(false);
         rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
 
@@ -64,6 +71,8 @@ public class PauseMenuOverlay {
 
         inventoryContent = createInventoryContent();
         skillsContent = createSkillsContent();
+        mapContent = createMapContent();
+        settingsContent = createSettingsContent();
         Stack contentStack = new Stack();
         contentStack.add(inventoryContent);
         contentStack.add(skillsContent);
@@ -77,7 +86,7 @@ public class PauseMenuOverlay {
         closeButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                setVisible(false);
+                setVisible(false, 0);
                 if (onHideCallback != null) {
                     onHideCallback.run();
                 }
@@ -103,6 +112,7 @@ public class PauseMenuOverlay {
         skillsTab.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                refresh();
                 changeTab(skillsContent);
             }
         });
@@ -110,6 +120,7 @@ public class PauseMenuOverlay {
         friendshipTab.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                refresh();
                 changeTab(friendshipContent);
             }
         });
@@ -117,6 +128,7 @@ public class PauseMenuOverlay {
         mapTab.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                refresh();
                 changeTab(mapContent);
             }
         });
@@ -124,6 +136,7 @@ public class PauseMenuOverlay {
         settingsTab.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                refresh();
                 changeTab(settingsContent);
             }
         });
@@ -149,11 +162,30 @@ public class PauseMenuOverlay {
         return visible;
     }
 
-    public void setVisible(boolean visible) {
+    public void setVisible(boolean visible, int tabNumber) {
         this.visible = visible;
         rootTable.setVisible(visible);
         if (visible) {
             refresh();
+            switch (tabNumber) {
+                case 1:
+                    changeTab(inventoryContent);
+                    break;
+                case 2:
+                    changeTab(skillsContent);
+                    break;
+                case 3:
+                    changeTab(friendshipContent);
+                    break;
+                case 4:
+                    changeTab(mapContent);
+                    break;
+                case 5:
+                    changeTab(settingsContent);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -296,10 +328,119 @@ public class PauseMenuOverlay {
         return table;
     }
 
+    private Table createMapContent() {
+        Table table = new Table(skin);
+
+        Label titleLabel = new Label("World Map:", skin);
+        titleLabel.setColor(Color.FIREBRICK);
+
+        // Custom actor that draws the map scaled down
+        Actor mapActor = new Actor() {
+            private final float scale = 0.1f;
+            private final float tileSideLength = 16f;
+
+            @Override
+            public void draw(Batch batch, float parentAlpha) {
+                super.draw(batch, parentAlpha);
+                com.example.models.map.Map currentMap = game.getMap();
+
+                for (int row = 0; row < Map.ROWS; row++) {
+                    for (int col = 0; col < Map.COLS; col++) {
+                        Tile tile = currentMap.getTile(row, col);
+                        float x = getX() + col * tileSideLength * scale;
+                        float y = getY() + row * tileSideLength * scale;
+                        float size = tileSideLength * scale;
+
+                        if (tile.getAreaSprite() != null) {
+                            batch.draw(tile.getAreaSprite(), x, y, size, size);
+                        } else {
+                            drawArea(batch, tile);
+                        }
+
+                        if (tile.getObjectSprite() != null) {
+                            batch.draw(tile.getObjectSprite(), x, y, size, size);
+                        }
+                    }
+                }
+                drawPlayers(batch);
+            }
+
+            @Override
+            public float getWidth() {
+                return Map.COLS * tileSideLength * scale;
+            }
+
+            @Override
+            public float getHeight() {
+                return Map.ROWS * tileSideLength * scale;
+            }
+
+            public void drawArea(Batch batch, Tile tile) {
+                com.example.models.map.Area area = tile.getArea();
+                float x = getX() + area.getBottomLeftCorner().x * tileSideLength * scale;
+                float y = getY() + area.getBottomLeftCorner().y * tileSideLength * scale;
+                float sizeX = area.getWidth() * tileSideLength * scale;
+                float sizeY = area.getHeight() * tileSideLength * scale;
+                if (area.getTexture() != null) {
+                    batch.draw(area.getTexture(), x, y, sizeX, sizeY);
+                }
+            }
+
+            public void drawPlayers(Batch batch) {
+                for(Player player : game.getPlayers()) {
+                    float x = getX() + player.getPosition().x * tileSideLength * scale;
+                    float y = getY() + player.getPosition().y * tileSideLength * scale;
+                    float size = 5 * tileSideLength * scale;
+                    batch.draw(player.getFace(), x, y, size, size);
+                }
+            }
+        };
+
+        table.add(titleLabel).row();
+        table.add(mapActor).expand().fill();
+
+        return table;
+    }
+
+    private Table createSettingsContent() {
+        Table table = new Table(skin);
+
+        Label titleLabel = new Label("Settings:", skin); titleLabel.setColor(Color.FIREBRICK);
+        TextButton terminateGameButton = new TextButton("Terminate Game", skin);
+        TextButton quitButton = new TextButton("Quit", skin);
+        TextButton removePlayerButton = new TextButton("- Remove Player", skin);
+        Label messageLabel = new Label("", skin); messageLabel.setColor(Color.FIREBRICK);
+
+
+        terminateGameButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(game.getCurrentPlayer().equals(game.getMainPlayer())) {
+                    App.recentGames.remove(game);
+                    App.currentGame = null;
+                    main.setScreen(new MainMenuView(main));
+                }
+                else {
+                    messageLabel.setText("You don't have permissions to fully terminate the game!");
+                }
+            }
+        });
+
+        table.add(titleLabel).padBottom(10).row();
+        table.add(terminateGameButton).width(300).row();
+        table.add(quitButton).width(300).row();
+        table.add(removePlayerButton).width(300).row();
+        table.add(messageLabel).padTop(40).row();
+
+        return table;
+    }
+
     private void refresh() {
-        inventoryContent.clear(); skillsContent.clear();
+        inventoryContent.clear(); skillsContent.clear(); mapContent.clear(); settingsContent.clear();
         inventoryContent.add(createInventoryContent()).expand().fill();
         skillsContent.add(createSkillsContent()).expand().fill();
+        mapContent.add(createMapContent()).expand().fill();
+        settingsContent.add(createSettingsContent()).expand().fill();
     }
 
     private void changeTab(Table content) {

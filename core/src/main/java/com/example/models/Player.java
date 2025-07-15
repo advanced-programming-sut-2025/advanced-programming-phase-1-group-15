@@ -35,6 +35,7 @@ public class Player extends User implements TimeObserver {
     private int CurrentId;
     private int mapNumber;
 
+    TextureRegion face;
     Animation<TextureRegion> walkUpAnimation;
     Animation<TextureRegion> walkDownAnimation;
     Animation<TextureRegion> walkLeftAnimation;
@@ -46,7 +47,6 @@ public class Player extends User implements TimeObserver {
 
     private int gold = 1000;
     private double energy = 200;
-    private double energyConsumed = 0;
     private boolean unlimitedEnergy = false;
     private boolean fainted = false;
 
@@ -99,6 +99,7 @@ public class Player extends User implements TimeObserver {
         super(user.getUsername(), user.getPassword(), user.getNickname(), user.getEmail(), user.getGender());
         this.currentGame = App.currentGame;
         if(user.getGender().equals(Gender.BOY)) {
+            face = GameAssetManager.boy_face;
             walkUpAnimation = GameAssetManager.boy_walking_up;
             walkDownAnimation = GameAssetManager.boy_walking_down;
             walkLeftAnimation = GameAssetManager.boy_walking_left;
@@ -212,8 +213,10 @@ public class Player extends User implements TimeObserver {
     }
     public void subtractEnergy(double amount) {
         if(!unlimitedEnergy) {
-            energyConsumed += amount;
             energy -= amount;
+            if(energy <= 0) {
+                faint();
+            }
         }
     }
     public void addEnergy(double amount) {
@@ -442,7 +445,6 @@ public class Player extends User implements TimeObserver {
             rejected = false;
         }
         if(dateAndTime.getHour() == 9) {
-            energyConsumed = 0;
             if(fainted) {
                 fainted = false;
                 if(rejected) {
@@ -525,6 +527,9 @@ public class Player extends User implements TimeObserver {
         }
     }
 
+    public TextureRegion getFace() {
+        return face;
+    }
     public TextureRegion getCurrentFrame() {
         return currentFrame;
     }
