@@ -79,9 +79,7 @@ public class DateAndTime {
             this.day++;
         }
 
-        this.hour = 9;
         nextDayOfWeek();
-        notifyObservers();
     }
     public void nextNDays(int n) {
         for(int i = 0; i < n; i++) {
@@ -110,12 +108,14 @@ public class DateAndTime {
             minute = 0;
             nextHour();
         }
-        minute += 10;
+        else {
+            minute += 10;
+        }
     }
 
     public void updateDateAndTime(float delta) {
         s += delta;
-        if(s > 10) {
+        if(s >= 10) {
             s = 0;
             nextTenMinutes();
         }

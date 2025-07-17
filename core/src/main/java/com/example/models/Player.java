@@ -35,7 +35,7 @@ public class Player extends User implements TimeObserver {
     private int CurrentId;
     private int mapNumber;
 
-    TextureRegion face;
+    TextureRegion face, faintedAnimation;
     Animation<TextureRegion> walkUpAnimation;
     Animation<TextureRegion> walkDownAnimation;
     Animation<TextureRegion> walkLeftAnimation;
@@ -100,6 +100,7 @@ public class Player extends User implements TimeObserver {
         this.currentGame = App.currentGame;
         if(user.getGender().equals(Gender.BOY)) {
             face = GameAssetManager.boy_face;
+            faintedAnimation = GameAssetManager.boy_fainted;
             walkUpAnimation = GameAssetManager.boy_walking_up;
             walkDownAnimation = GameAssetManager.boy_walking_down;
             walkLeftAnimation = GameAssetManager.boy_walking_left;
@@ -125,9 +126,13 @@ public class Player extends User implements TimeObserver {
     }
     public void goHome() {
         this.position = homePosition;
+        this.direction = Direction.DOWN;
     }
 
     public void walk(int x, int y) {
+        if(fainted) {
+            return;
+        }
         if(x >= com.example.models.map.Map.COLS || y >= Map.ROWS || x < 0 || y < 0) {
             return;
         }
@@ -531,6 +536,9 @@ public class Player extends User implements TimeObserver {
         return face;
     }
     public TextureRegion getCurrentFrame() {
+        if(fainted) {
+            return faintedAnimation;
+        }
         return currentFrame;
     }
 }

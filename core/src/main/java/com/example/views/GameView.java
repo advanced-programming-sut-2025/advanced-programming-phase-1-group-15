@@ -306,10 +306,22 @@ public class GameView implements Screen {
     public void showMap(Batch batch) {
         com.example.models.map.Map currentMap = game.getMap();
 
+        // prints the background
         for(int row = 0; row < currentMap.ROWS; row++){
             for(int col = 0; col < currentMap.COLS; col++){
                 Tile toBePrinted = App.currentGame.getMap().getTile(row, col);
-                printTile(toBePrinted,
+                printTileBackground(toBePrinted,
+                    (col) * tileSideLength,
+                    (row) * tileSideLength,
+                    batch);
+            }
+        }
+
+        // prints other objects
+        for(int row = 0; row < currentMap.ROWS; row++){
+            for(int col = 0; col < currentMap.COLS; col++){
+                Tile toBePrinted = App.currentGame.getMap().getTile(row, col);
+                printTileObject(toBePrinted,
                     (col) * tileSideLength,
                     (row) * tileSideLength,
                     batch);
@@ -317,16 +329,17 @@ public class GameView implements Screen {
         }
     }
 
-    public void printTile(Tile tile, int x, int y, Batch batch){
+    public void printTileBackground(Tile tile, int x, int y, Batch batch){
         if(tile.getAreaSprite() != null) {
             batch.draw(tile.getAreaSprite(), x, y, tileSideLength, tileSideLength);
         }
         else {
             printArea(tile, batch);
         }
-
+    }
+    public void printTileObject(Tile tile, int x, int y, Batch batch) {
         if(tile.getObjectSprite() != null) {
-            batch.draw(tile.getObjectSprite(), x, y, tileSideLength, tileSideLength);
+            batch.draw(tile.getObjectSprite(), x, y);
         }
     }
 

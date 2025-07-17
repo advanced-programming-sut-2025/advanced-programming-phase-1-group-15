@@ -225,7 +225,7 @@ public class Farm extends Area {
 
     @Override
     public void update(DateAndTime dateAndTime) {
-        if(dateAndTime.getDay() == 1 || dateAndTime.getDay() == 14) {
+        if((dateAndTime.getDay() == 1 || dateAndTime.getDay() == 14) && dateAndTime.getHour() == 9) {
             randomTreeGenerator(dateAndTime.getSeason());
             randomMineralGenerator();
         }

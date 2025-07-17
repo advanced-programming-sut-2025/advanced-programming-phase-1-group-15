@@ -24,7 +24,7 @@ public class GameAssetManager {
 
     public static TextureRegion house, lake;
 
-    public static TextureRegion boy_face;
+    public static TextureRegion boy_face, boy_fainted;
     public static Animation<TextureRegion> boy_walking_up, boy_walking_down, boy_walking_right, boy_walking_left;
 
     public static void load() {
@@ -63,6 +63,7 @@ public class GameAssetManager {
         lake = new TextureRegion(new Texture("Sprites/Map/lake.png"));
 
         boy_face = new TextureRegion(new Texture("Sprites/Characters/b_face.png"));
+        boy_fainted = new TextureRegion(new Texture("Sprites/Characters/b_fainted.png"));
         boy_walking_up = createAnimation("Sprites/Characters/b", 8, 11); boy_walking_up.setPlayMode(Animation.PlayMode.LOOP);
         boy_walking_down = createAnimation("Sprites/Characters/b", 0, 3); boy_walking_down.setPlayMode(Animation.PlayMode.LOOP);
         boy_walking_right = createAnimation("Sprites/Characters/b", 4, 7); boy_walking_right.setPlayMode(Animation.PlayMode.LOOP);
