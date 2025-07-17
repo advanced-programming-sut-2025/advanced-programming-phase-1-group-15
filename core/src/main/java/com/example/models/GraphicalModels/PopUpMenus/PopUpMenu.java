@@ -3,12 +3,14 @@ package com.example.models.GraphicalModels.PopUpMenus;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public abstract class PopUpMenu {
@@ -18,7 +20,7 @@ public abstract class PopUpMenu {
     private Actor backgroundDim;
     private boolean isVisible = false;
 
-    private Runnable onHideCallback;
+    private final Runnable onHideCallback;
 
     public PopUpMenu(Skin skin, String title, float width, float height, Runnable onHideCallback) {
         this.skin = skin;
@@ -43,10 +45,6 @@ public abstract class PopUpMenu {
         window.setVisible(false);
         stage.addActor(backgroundDim);
         stage.addActor(window);
-    }
-
-    public PopUpMenu(Skin skin, String title, float width, float height) {
-        this(skin, title, width, height, null);
     }
 
     protected abstract void populate(Window w);
@@ -75,9 +73,9 @@ public abstract class PopUpMenu {
         backgroundDim.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         backgroundDim.setVisible(false);
 
-        backgroundDim.addListener(new ChangeListener() {
+        backgroundDim.addListener(new ClickListener(){
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void clicked(InputEvent event, float x, float y) {
                 hide();
             }
         });
@@ -109,16 +107,12 @@ public abstract class PopUpMenu {
 
         isVisible = false;
 
-        window.addAction(Actions.sequence(
-            Actions.fadeOut(0.3f),
-            Actions.run(() -> {
-                window.setVisible(false);
-                backgroundDim.setVisible(false);
-                if (onHideCallback != null) {
-                    onHideCallback.run(); // Execute the callback to restore input
-                }
-            })
-        ));
+        window.setVisible(false);
+        backgroundDim.setVisible(false);
+
+        if (onHideCallback != null) {
+            onHideCallback.run();
+        }
     }
 
     public void render(float delta) {

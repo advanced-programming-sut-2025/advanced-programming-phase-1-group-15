@@ -19,8 +19,8 @@ public class FriendsMenu extends PopUpMenu {
     Player currentPlayer;
 
     public FriendsMenu(Skin skin, String title, Runnable onHideCallback) {
-        super(skin, title, calculateWidth(), calculateHeight(),onHideCallback);
-        currentPlayer= App.currentGame.getCurrentPlayer();
+        super(skin, title, calculateWidth(), calculateHeight(), onHideCallback);
+        currentPlayer = App.currentGame.getCurrentPlayer();
     }
 
     private static float calculateWidth() {
@@ -84,16 +84,6 @@ public class FriendsMenu extends PopUpMenu {
         scrollPane.setScrollingDisabled(true, false);
 
         w.add(scrollPane).expand().fill().row();
-
-        TextButton closeButton = new TextButton("Close", skin);
-        closeButton.addListener(new com.badlogic.gdx.scenes.scene2d.utils.ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, com.badlogic.gdx.scenes.scene2d.Actor actor) {
-                hide();
-            }
-        });
-
-        w.add(closeButton).bottom().padTop(10).row();
     }
 
 

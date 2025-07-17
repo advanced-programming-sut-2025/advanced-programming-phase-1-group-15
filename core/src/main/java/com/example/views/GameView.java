@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.controllers.CheatCodeController;
@@ -16,6 +17,7 @@ import com.example.models.App;
 import com.example.models.Game;
 import com.example.models.GraphicalModels.MapCamera;
 import com.example.models.GraphicalModels.PopUpMenus.FriendsMenu;
+import com.example.models.GraphicalModels.PopUpMenus.PopUpMenu;
 import com.example.models.Player;
 import com.example.models.Result;
 import com.example.models.enums.Direction;
@@ -45,9 +47,10 @@ public class GameView implements Screen {
     // UI
     private Table hudTable;
     private Label energyLabel;
+    private Label currentToolLabel;
 
     // Pop-up menus
-    private FriendsMenu friendsMenu;
+    private PopUpMenu popUpMenu;
 
     // Input handling
     private final GameInputProcessor gameInputProcessor;
@@ -81,10 +84,6 @@ public class GameView implements Screen {
     public void show() {
         setupUI();
         setupInputHandling();
-
-        if (skin != null) {
-            friendsMenu = new FriendsMenu(skin, "Friends", this::restoreGameInput);
-        }
     }
 
     private void setupUI() {
@@ -92,7 +91,7 @@ public class GameView implements Screen {
 
         hudTable = new Table();
         hudTable.setFillParent(true);
-        hudTable.top().right();
+        hudTable.top().left();
 
         createHUDComponents();
 
@@ -103,40 +102,36 @@ public class GameView implements Screen {
 
     private void createHUDComponents() {
         energyLabel = new Label("", skin);
-        energyLabel.setColor(Color.FIREBRICK);
+        energyLabel.setColor(Color.FIREBRICK); energyLabel.setAlignment(Align.left);
+        currentToolLabel = new Label("", skin);
+        currentToolLabel.setColor(Color.FIREBRICK); currentToolLabel.setAlignment(Align.left);
 
-        // Energy label in top-left
-        Table energyTable = new Table();
-        energyTable.setFillParent(true);
-        energyTable.top().left();
-        energyTable.add(energyLabel).padTop(10).padLeft(10);
-
-        uiStage.addActor(energyTable);
+        hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
+        hudTable.add(currentToolLabel).padTop(5).padLeft(10).left().row();
     }
 
     private void createControlButtons() {
-        // Friends button
         TextButton friendsButton = new TextButton("Friends", skin);
-        friendsButton.setSize(150, 50);
+        TextButton toolsButton = new TextButton("Tools", skin);
+
+        float buttonWidth = 125f;
+        float buttonHeight = 60f;
 
         friendsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (friendsMenu != null) {
-                    // When FriendsMenu is shown, set its stage as the input processor
-                    friendsMenu.show(); // Use the new show() method without parentStage
-                    Gdx.input.setInputProcessor(friendsMenu.getStage());
-                }
+                popUpMenu = new FriendsMenu(skin, "Friends:", this::restoreGameInput);
+                popUpMenu.show();
+                Gdx.input.setInputProcessor(popUpMenu.getStage());
+            }
+
+            private void restoreGameInput() {
+                Gdx.input.setInputProcessor(gameInputMultiplexer);
             }
         });
 
-        // Button layout table
-        Table buttonTable = new Table();
-        buttonTable.setFillParent(true);
-        buttonTable.top().left();
-        buttonTable.add(friendsButton).padTop(50).padLeft(10);
-
-        uiStage.addActor(buttonTable);
+        hudTable.add(friendsButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
+        hudTable.add(toolsButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
     }
 
     private void setupInputHandling() {
@@ -168,8 +163,8 @@ public class GameView implements Screen {
         uiStage.act(delta);
         uiStage.draw();
 
-        if (friendsMenu != null) {
-            friendsMenu.render(delta);
+        if (popUpMenu != null) {
+            popUpMenu.render(delta);
         }
 
         pauseMenuOverlay.draw(delta);
@@ -199,6 +194,13 @@ public class GameView implements Screen {
     private void updateUIComponents() {
         int energy = (int) game.getCurrentPlayer().getEnergy();
         energyLabel.setText("Energy: " + energy);
+        if(game.getCurrentPlayer().getCurrentTool() != null) {
+            String currentTool = game.getCurrentPlayer().getCurrentTool().getName();
+            currentToolLabel.setText("Current Tool: " + currentTool);
+        }
+        else {
+            currentToolLabel.setText("Current Tool: -");
+        }
     }
 
     private void drawClock(SpriteBatch batch) {
@@ -258,8 +260,8 @@ public class GameView implements Screen {
         mapCamera.resize(width, height);
         uiStage.getViewport().update(width, height, true);
 
-        if (friendsMenu != null) {
-            friendsMenu.resize(width, height);
+        if (popUpMenu != null) {
+            popUpMenu.resize(width, height);
         }
     }
 
@@ -281,8 +283,8 @@ public class GameView implements Screen {
         commandExecutor.shutdownNow();
 
         uiStage.dispose();
-        if (friendsMenu != null) {
-            friendsMenu.dispose();
+        if (popUpMenu != null) {
+            popUpMenu.dispose();
         }
         if (skin != null) {
             skin.dispose();
@@ -365,7 +367,7 @@ public class GameView implements Screen {
     private class GameInputProcessor implements InputProcessor {
         @Override
         public boolean keyDown(int keycode) {
-            if (pauseMenuOverlay.isVisible() || (friendsMenu != null && friendsMenu.isVisible())) {
+            if (pauseMenuOverlay.isVisible() || (popUpMenu != null && popUpMenu.isVisible())) {
                 return false;
             }
 
@@ -418,7 +420,7 @@ public class GameView implements Screen {
 
         @Override
         public boolean keyUp(int keycode) {
-            if (pauseMenuOverlay.isVisible() || (friendsMenu != null && friendsMenu.isVisible())) {
+            if (pauseMenuOverlay.isVisible() || (popUpMenu != null && popUpMenu.isVisible())) {
                 return false;
             }
 
@@ -440,7 +442,7 @@ public class GameView implements Screen {
 
         @Override
         public boolean touchDown(int x, int y, int pointer, int button) {
-            if (pauseMenuOverlay.isVisible() || (friendsMenu != null && friendsMenu.isVisible())) {
+            if (pauseMenuOverlay.isVisible() || (popUpMenu != null && popUpMenu.isVisible())) {
                 return false;
             }
 
