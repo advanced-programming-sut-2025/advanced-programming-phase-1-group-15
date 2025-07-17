@@ -142,6 +142,13 @@ public class GameView implements Screen {
     }
 
     public void restoreGameInput() {
+        if (gameInputMultiplexer == null) {
+            setupInputHandling();
+        }
+        gameInputMultiplexer.clear();
+        gameInputMultiplexer.addProcessor(uiStage);
+        gameInputMultiplexer.addProcessor(gameInputProcessor);
+
         Gdx.input.setInputProcessor(gameInputMultiplexer);
     }
 

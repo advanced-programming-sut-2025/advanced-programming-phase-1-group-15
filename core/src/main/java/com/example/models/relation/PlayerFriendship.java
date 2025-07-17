@@ -180,4 +180,8 @@ public class PlayerFriendship implements TimeObserver {
             hugToday = false;
         }
     }
+
+    public boolean isMarry(){
+        return marry;
+    }
 }
