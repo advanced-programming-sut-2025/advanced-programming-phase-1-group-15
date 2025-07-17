@@ -60,7 +60,7 @@ public class GameView implements Screen {
     private InputMultiplexer gameInputMultiplexer;
 
     private final PauseMenuOverlay pauseMenuOverlay;
-
+    private final CraftingMenu craftingMenu;
     public GameView(Game game, Main main) {
         this.game = game;
         this.main = main;
@@ -78,6 +78,7 @@ public class GameView implements Screen {
         commandExecutor.submit(this::readTerminalInput);
 
         this.pauseMenuOverlay = new PauseMenuOverlay(main, game, this::restoreGameInput);
+        this.craftingMenu = new CraftingMenu(main, game, this::restoreGameInput);
     }
 
     @Override
@@ -175,6 +176,7 @@ public class GameView implements Screen {
         }
 
         pauseMenuOverlay.draw(delta);
+        craftingMenu.draw(delta);
     }
 
     private void renderMap(SpriteBatch batch) {
@@ -298,6 +300,7 @@ public class GameView implements Screen {
         }
 
         pauseMenuOverlay.dispose();
+        craftingMenu.dispose();
     }
 
     private void readTerminalInput() {
@@ -419,6 +422,15 @@ public class GameView implements Screen {
                     else {
                         pauseMenuOverlay.setVisible(true, 4);
                         Gdx.input.setInputProcessor(pauseMenuOverlay.getStage());
+                    }
+                    return true;
+                case Input.Keys.B:
+                    if (craftingMenu.isVisible()) {
+                        craftingMenu.setVisible(false);
+                    }
+                    else {
+                        craftingMenu.setVisible(true);
+                        Gdx.input.setInputProcessor(craftingMenu.getStage());
                     }
                     return true;
             }

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class CraftingMenu {
     private final Stage stage;
     private final Skin skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
-    private boolean visible;
+    private boolean visible = false;
     private final Table table;
     private final Main main;
     private final Game game;
@@ -29,6 +29,7 @@ public class CraftingMenu {
         this.onHideCallback = onHideCallback;
         stage = new Stage(new ScreenViewport(), main.getBatch());
         this.table = createCraftingContent();
+        stage.addActor(table);
     }
     private Table createCraftingContent() {
         Table table = new Table(skin);
@@ -45,6 +46,7 @@ public class CraftingMenu {
         scrollPane.setScrollingDisabled(true, false);
         Label titleLabel = new Label("Crafting Item:", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Desc: ", skin);
+        TextButton backButton = new TextButton("exit", skin);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
 
         itemList.addListener(new InputListener() {
@@ -69,13 +71,52 @@ public class CraftingMenu {
                 return false;
             }
         });
+        TextButton exitButton = new TextButton("Exit", skin);
+        exitButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                setVisible(false); // Hide menu
+                onHideCallback.run(); // Restore game input
+                return true;
+            }
+        });
         Table bottomRow = new Table();
         bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
-
+        bottomRow.add(exitButton).right().padLeft(20).size(100, 40);
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
         table.add(bottomRow).bottom();
 
         return table;
     }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+    public void dispose() {
+        stage.dispose();
+        skin.dispose();
+    }
+    public void draw(float delta) {
+        if (!visible) return;
+        stage.act(delta);
+
+        if (table.isVisible()) {
+            table.pack();
+            table.setPosition(
+                (Gdx.graphics.getWidth() - table.getPrefWidth()) / 2f,
+                (Gdx.graphics.getHeight() - table.getPrefHeight()) / 2f
+            );
+        }
+        stage.draw();
+    }
+
 }
