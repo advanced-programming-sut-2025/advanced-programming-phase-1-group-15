@@ -1,6 +1,8 @@
 package com.example.models;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.enums.Gender;
+import com.example.views.GameAssetManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -19,6 +21,8 @@ public class User {
 
     protected String securityQuestion;
     protected String securityQuestionAnswer;
+
+    private TextureRegion avatar;
 
     protected Game currentGame = null;
     protected int maxEarnedGold = 0;
@@ -101,6 +105,13 @@ public class User {
         this.nickname = nickname;
         this.email = email;
         this.gender = gender;
+
+        if (gender.equals(Gender.BOY)) {
+            avatar = GameAssetManager.boy_default_avatar;
+        }
+        else {
+            avatar = GameAssetManager.girl_default_avatar;
+        }
     }
 
     @Override
@@ -146,6 +157,13 @@ public class User {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public TextureRegion getAvatar() {
+        return avatar;
+    }
+    public void setAvatar(TextureRegion avatar) {
+        this.avatar = avatar;
     }
 }
 

@@ -3,6 +3,7 @@ package com.example.views;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.example.Main;
 import com.example.models.App;
+import org.w3c.dom.Text;
 
 public class MainMenuView implements Screen {
     private final Main game;
@@ -79,20 +81,31 @@ public class MainMenuView implements Screen {
 
         Label gameNameLabel = new Label("Stardew Valley", skin);
         Label titleLabel = new Label("Main Menu", skin);
-        Label welcomeLabel = new Label("Welcome " + App.currentUser.getNickname() + "!", skin);
 
+        Table rightCol = new Table();
+        Label welcomeLabel = new Label("Welcome " + App.currentUser.getNickname() + "!", skin);
+        Image avatar = new Image(App.currentUser.getAvatar());
+
+        Table leftCol = new Table();
         gameMenuButton = new TextButton("Game Menu", skin);
         profileMenuButton = new TextButton("Profile Menu", skin);
         logoutButton = new TextButton("Logout", skin);
         exitButton = new TextButton("Exit", skin);
 
-        mainTable.add(gameNameLabel).row();
-        mainTable.add(titleLabel).row();
-        mainTable.add(welcomeLabel).padBottom(20).row();
-        mainTable.add(gameMenuButton).width(300).row();
-        mainTable.add(profileMenuButton).width(300).row();
-        mainTable.add(logoutButton).width(200).padTop(10).row();
-        mainTable.add(exitButton).width(200).padTop(10).row();
+        mainTable.add(gameNameLabel).colspan(2).row();
+        mainTable.add(titleLabel).colspan(2).padBottom(50).row();
+
+        rightCol.add(welcomeLabel).row();
+        rightCol.add(new Label("Your Avatar:", skin)).padBottom(10).row();
+        rightCol.add(avatar).size(150).center().row();
+
+        leftCol.add(gameMenuButton).width(300).row();
+        leftCol.add(profileMenuButton).width(300).row();
+        leftCol.add(logoutButton).width(200).padTop(10).row();
+        leftCol.add(exitButton).width(200).padTop(10).row();
+
+        mainTable.add(leftCol).top().padRight(100);
+        mainTable.add(rightCol).top();
 
         gameMenuButton.addListener(new ChangeListener() {
             @Override

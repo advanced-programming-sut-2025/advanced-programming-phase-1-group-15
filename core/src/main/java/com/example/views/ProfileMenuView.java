@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -16,6 +17,7 @@ import com.example.models.Result;
 import com.example.models.User;
 import com.example.models.enums.commands.Commands;
 import com.example.models.enums.commands.ProfileMenuCommands;
+import org.w3c.dom.Text;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -27,6 +29,7 @@ public class ProfileMenuView implements Screen {
     private Texture background;
 
     private Table mainTable;
+    private Image avatar;
 
     public ProfileMenuView(Main game) {
         this.game = game;
@@ -98,6 +101,9 @@ public class ProfileMenuView implements Screen {
         TextField passwordField = new TextField(user.getPassword(), skin);
         TextField nicknameField = new TextField(user.getNickname(), skin);
         TextField emailField = new TextField(user.getEmail(), skin);
+        SelectBox<String> avatarBox = new SelectBox<>(skin);
+        avatarBox.setItems("Boy Default", "Girl Default", "Abigail", "Marnie", "Sam", "Sebastian");
+        avatar = new Image(App.currentUser.getAvatar());
 
         TextButton changeUsernameButton = new TextButton("Change", skin);
         TextButton changePasswordButton = new TextButton("Change", skin);
@@ -117,6 +123,13 @@ public class ProfileMenuView implements Screen {
         mainTable.add(new Label("Nickname: ", skin)); mainTable.add(nicknameField).width(400); mainTable.add(changeNicknameButton).row();
         mainTable.add(new Label("Email: ", skin)); mainTable.add(emailField).width(400); mainTable.add(changeEmailButton).row();
         mainTable.add(genderLabel).padBottom(20).colspan(3).row();
+
+        Table avatarTable = new Table();
+        avatarTable.add(new Label("Avatar: ", skin)).left();
+        avatarTable.add(avatarBox).width(200).right();
+        mainTable.add(avatarTable).colspan(3).row();
+        mainTable.add(avatar).size(150).padTop(10).colspan(3).row();
+
         mainTable.add(backButton).width(200).padTop(10).colspan(3).row();
         mainTable.add(messageLabel).padTop(10).colspan(3).row();
 
@@ -164,6 +177,18 @@ public class ProfileMenuView implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(new MainMenuView(game));
+            }
+        });
+
+        avatarBox.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                String selection = avatarBox.getSelected().toLowerCase().replaceAll(" ", "_");
+                String path = "Sprites/Characters/" + selection + "_avatar.png";
+                TextureRegion newAvatar = new TextureRegion(new Texture(Gdx.files.internal(path)));
+
+                App.currentUser.setAvatar(newAvatar);
+                avatar.setDrawable(new Image(newAvatar).getDrawable());
             }
         });
     }

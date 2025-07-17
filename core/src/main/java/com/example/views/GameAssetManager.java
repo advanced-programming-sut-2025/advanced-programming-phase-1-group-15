@@ -10,6 +10,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class GameAssetManager {
     public static BitmapFont font;
 
+    // avatars
+    public static TextureRegion boy_default_avatar, sam_avatar, sebastian_avatar;
+    public static TextureRegion girl_default_avatar, abigail_avatar, marnie_avatar;
+
     public static TextureRegion clock;
     public static TextureRegion spring, summer, autumn, winter;
     public static TextureRegion rainy, stormy, snowy, sunny;
@@ -25,6 +29,13 @@ public class GameAssetManager {
 
     public static void load() {
         font = new BitmapFont(Gdx.files.internal("UI/font.fnt"));
+
+        boy_default_avatar = new TextureRegion(new Texture(Gdx.files.internal("Sprites/Characters/boy_default_avatar.png")));
+        sam_avatar = new TextureRegion(new Texture(Gdx.files.internal("Sprites/Characters/sam_avatar.png")));
+        sebastian_avatar = new TextureRegion(new Texture(Gdx.files.internal("Sprites/Characters/sebastian_avatar.png")));
+        girl_default_avatar = new TextureRegion(new Texture(Gdx.files.internal("Sprites/Characters/girl_default_avatar.png")));
+        abigail_avatar = new TextureRegion(new Texture(Gdx.files.internal("Sprites/Characters/abigail_avatar.png")));
+        marnie_avatar = new TextureRegion(new Texture(Gdx.files.internal("Sprites/Characters/marnie_avatar.png")));
 
         spring = loadRegion("Sprites/time/spring.png");
         summer = loadRegion("Sprites/time/summer.png");
