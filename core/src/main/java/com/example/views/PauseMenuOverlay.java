@@ -12,15 +12,20 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.models.App;
 import com.example.models.Game;
 import com.example.models.Player;
+import com.example.models.crafting.CraftItem;
+import com.example.models.crafting.CraftItemType;
 import com.example.models.map.Map;
 import com.example.models.map.Tile;
 import com.example.models.tools.BackPack;
 import com.example.models.tools.BackPackable;
+
+import java.util.ArrayList;
 
 public class PauseMenuOverlay {
     private final Stage stage;
@@ -327,7 +332,6 @@ public class PauseMenuOverlay {
 
         return table;
     }
-
     private Table createMapContent() {
         Table table = new Table(skin);
 

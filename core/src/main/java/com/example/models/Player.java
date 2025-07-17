@@ -379,7 +379,6 @@ public class Player extends User implements TimeObserver {
     }
 
     public void showAvailableCrafts() {
-
     }
     public String showAvailableFoods() {
         StringBuilder display = new StringBuilder();
