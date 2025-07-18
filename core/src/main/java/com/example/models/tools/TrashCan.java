@@ -1,6 +1,8 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
+import com.example.views.GameAssetManager;
 
 public class TrashCan extends Tool {
     double returnPercentage;
@@ -55,9 +57,30 @@ public class TrashCan extends Tool {
         return "you can't upgrade this tool.";
     }
 
-    public int use(BackPackable item, int amount, Player player) {
+    public void use(BackPackable item, int amount, Player player) {
         int returnAmount = (int) (returnPercentage * amount * item.getPrice());
         player.addGold(returnAmount);
-        return returnAmount;
+        player.getInventory().removeCountFromBackPack(item, amount);
+    }
+
+    @Override
+    public Sprite getSprite() {
+        switch (toolLevel) {
+            case COPPER -> {
+                return GameAssetManager.copper_trash_can;
+            }
+            case IRON -> {
+                return GameAssetManager.iron_trash_can;
+            }
+            case GOLD -> {
+                return GameAssetManager.gold_trash_can;
+            }
+            case IRIDIUM -> {
+                return GameAssetManager.iridium_trash_can;
+            }
+            default -> {
+                return GameAssetManager.trash_can;
+            }
+        }
     }
 }

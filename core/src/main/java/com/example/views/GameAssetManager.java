@@ -31,9 +31,11 @@ public class GameAssetManager {
     public static Sprite axe, copper_axe, iron_axe, gold_axe, iridium_axe;
     public static Sprite hoe, copper_hoe, iron_hoe, gold_hoe, iridium_hoe;
     public static Sprite pickaxe, copper_pickaxe, iron_pickaxe, gold_pickaxe, iridium_pickaxe;
+    public static Sprite watering_can, copper_watering_can, iron_watering_can, gold_watering_can, iridium_watering_can;
+    public static Sprite trash_can, copper_trash_can, iron_trash_can, gold_trash_can, iridium_trash_can;
     public static Sprite scythe, gold_scythe, iridium_scythe;
     public static Sprite training_rod, bamboo_rod, fiberglass_rod, iridium_rod;
-    public static Sprite milk_pail, shear;
+    public static Sprite milk_pail, shear, shipping_bin;
 
     public static void load() {
         font = new BitmapFont(Gdx.files.internal("UI/font.fnt"));
@@ -104,8 +106,21 @@ public class GameAssetManager {
         fiberglass_rod = new Sprite(new Texture("Sprites/Tools/Fiberglass_Rod.png"));
         iridium_rod = new Sprite(new Texture("Sprites/Tools/Iridium_Rod.png"));
 
+        watering_can = new Sprite(new Texture("Sprites/Tools/Watering_Can.png"));
+        copper_watering_can = new Sprite(new Texture("Sprites/Tools/Copper_Watering_Can.png"));
+        iron_watering_can = new Sprite(new Texture("Sprites/Tools/Iron_Watering_Can.png"));
+        gold_watering_can = new Sprite(new Texture("Sprites/Tools/Gold_Watering_Can.png"));
+        iridium_watering_can = new Sprite(new Texture("Sprites/Tools/Iridium_Watering_Can.png"));
+
+        trash_can = new Sprite(new Texture("Sprites/Tools/Trash_Can.png"));
+        copper_trash_can = new Sprite(new Texture("Sprites/Tools/Trash_Can_Copper.png"));
+        iron_trash_can = new Sprite(new Texture("Sprites/Tools/Trash_Can_Iron.png"));
+        gold_trash_can = new Sprite(new Texture("Sprites/Tools/Trash_Can_Gold.png"));
+        iridium_trash_can = new Sprite(new Texture("Sprites/Tools/Trash_Can_Iridium.png"));
+
         milk_pail = new Sprite(new Texture("Sprites/Tools/Milk_Pail.png"));
         shear = new Sprite(new Texture("Sprites/Tools/Shears.png"));
+        shipping_bin = new Sprite(new Texture("Sprites/Tools/Shipping_Bin.png"));
     }
 
     private static TextureRegion loadRegion(String path) {

@@ -1,8 +1,10 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
+import com.example.views.GameAssetManager;
 
 public class WateringCan extends Tool {
     private int waterAmount;
@@ -115,6 +117,27 @@ public class WateringCan extends Tool {
         else {
             user.subtractEnergy(energyConsume);
             return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";
+        }
+    }
+
+    @Override
+    public Sprite getSprite() {
+        switch (toolLevel) {
+            case COPPER -> {
+                return GameAssetManager.copper_watering_can;
+            }
+            case IRON -> {
+                return GameAssetManager.iron_watering_can;
+            }
+            case GOLD -> {
+                return GameAssetManager.gold_watering_can;
+            }
+            case IRIDIUM -> {
+                return GameAssetManager.iridium_watering_can;
+            }
+            default -> {
+                return GameAssetManager.watering_can;
+            }
         }
     }
 }

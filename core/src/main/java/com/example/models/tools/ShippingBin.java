@@ -5,6 +5,7 @@ import com.example.models.Player;
 import com.example.models.map.Tilable;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.TimeObserver;
+import com.example.views.GameAssetManager;
 
 import java.util.HashMap;
 
@@ -44,6 +45,6 @@ public class ShippingBin implements Tilable, TimeObserver {
 
     @Override
     public Sprite getSprite() {
-        return null;
+        return GameAssetManager.shipping_bin;
     }
 }

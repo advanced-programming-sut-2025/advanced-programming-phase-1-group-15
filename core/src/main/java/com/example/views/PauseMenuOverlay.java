@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,8 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.models.App;
@@ -24,6 +28,7 @@ import com.example.models.map.Map;
 import com.example.models.map.Tile;
 import com.example.models.tools.BackPack;
 import com.example.models.tools.BackPackable;
+import com.example.models.tools.TrashCan;
 
 import java.util.ArrayList;
 
@@ -287,16 +292,20 @@ public class PauseMenuOverlay {
         Label descriptionLabel = new Label("Desc: ", skin);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
 
-        ImageButton trashButton = new ImageButton(new TextureRegionDrawable(new Texture("Sprites/trashcan.png")));
-        trashButton.addListener(new ChangeListener() {
+        TrashCan trashCan = game.getCurrentPlayer().getTrashCan();
+        Sprite trashSprite = trashCan.getSprite();
+        trashSprite.setSize(48, 48);
+        Image trashIcon = new Image(new TextureRegionDrawable(trashSprite));
+
+        trashIcon.addListener(new ClickListener() {
             @Override
-            public void changed(ChangeEvent event, Actor actor) {
+            public void clicked(InputEvent event, float x, float y) {
                 String selected = itemList.getSelected();
                 if (selected != null && !selected.isEmpty()) {
                     String itemName = selected.split(" x")[0];
                     BackPackable item = inventory.getItemByName(itemName);
                     if (item != null) {
-                        inventory.removeFromBackPack(item);
+                        trashCan.use(item, inventory.getItems().get(item), game.getCurrentPlayer());
                         refresh();
                     }
                 }
@@ -323,7 +332,7 @@ public class PauseMenuOverlay {
         });
 
         Table bottomRow = new Table();
-        bottomRow.add(trashButton).left();
+        bottomRow.add(trashIcon).size(48, 48).left();
         bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
 
         table.add(titleLabel).padBottom(10).row();

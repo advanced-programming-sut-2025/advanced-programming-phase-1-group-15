@@ -55,30 +55,30 @@ public class GameController {
         return new Result(true, "greenhouse built successfully!");
     }
 
-    public static Result removeFromInventory(String itemName, int count) {
-        BackPackable item = getCurrentPlayer().getInventory().getItemByName(itemName);
-        int availableCount = getCurrentPlayer().getInventory().getItemCount(itemName);
-        if(item == null) {
-            return new Result(false, "You don't have that item.");
-        }
-        else if(count > availableCount) {
-            return new Result(false, "You only have " + availableCount + " " + item.getName() + " in your inventory.");
-        }
-
-        TrashCan trashCan = getCurrentPlayer().getTrashCan();
-        if(count == -1) {
-            int returnedAmount = trashCan.use(item, availableCount, getCurrentPlayer());
-            getCurrentPlayer().getInventory().removeFromBackPack(item);
-            return new Result(true, item.getName() + " moved to trash can.\n" +
-                    returnedAmount + " gold added to your account.");
-        }
-        else {
-            int returnedAmount = trashCan.use(item, count, getCurrentPlayer());
-            getCurrentPlayer().getInventory().removeCountFromBackPack(item, count);
-            return new Result(true, count + " " + item.getName() + " moved to trash can.\n" +
-                    returnedAmount + " gold added to your account.");
-        }
-    }
+//    public static Result removeFromInventory(String itemName, int count) {
+//        BackPackable item = getCurrentPlayer().getInventory().getItemByName(itemName);
+//        int availableCount = getCurrentPlayer().getInventory().getItemCount(itemName);
+//        if(item == null) {
+//            return new Result(false, "You don't have that item.");
+//        }
+//        else if(count > availableCount) {
+//            return new Result(false, "You only have " + availableCount + " " + item.getName() + " in your inventory.");
+//        }
+//
+//        TrashCan trashCan = getCurrentPlayer().getTrashCan();
+//        if(count == -1) {
+//            int returnedAmount = trashCan.use(item, availableCount, getCurrentPlayer());
+//            getCurrentPlayer().getInventory().removeFromBackPack(item);
+//            return new Result(true, item.getName() + " moved to trash can.\n" +
+//                    returnedAmount + " gold added to your account.");
+//        }
+//        else {
+//            int returnedAmount = trashCan.use(item, count, getCurrentPlayer());
+//            getCurrentPlayer().getInventory().removeCountFromBackPack(item, count);
+//            return new Result(true, count + " " + item.getName() + " moved to trash can.\n" +
+//                    returnedAmount + " gold added to your account.");
+//        }
+//    }
 
     public static Result equipTool(String toolName) {
         Tool tool = (Tool) getCurrentPlayer().getInventory().getItemByName(toolName);
