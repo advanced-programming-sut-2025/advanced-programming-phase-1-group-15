@@ -1,11 +1,13 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
 import com.example.models.farming.Seed;
 import com.example.models.farming.Tree;
 import com.example.models.map.Tile;
 import com.example.models.stores.GeneralItem;
 import com.example.models.stores.GeneralItemsType;
+import com.example.views.GameAssetManager;
 
 public class Axe extends Tool {
     public Axe() {
@@ -108,6 +110,27 @@ public class Axe extends Tool {
         }
         else {
             return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";
+        }
+    }
+
+    @Override
+    public Sprite getSprite() {
+        switch (toolLevel) {
+            case COPPER -> {
+                return GameAssetManager.copper_axe;
+            }
+            case IRON -> {
+                return GameAssetManager.iron_axe;
+            }
+            case GOLD -> {
+                return GameAssetManager.gold_axe;
+            }
+            case IRIDIUM -> {
+                return GameAssetManager.iridium_axe;
+            }
+            default -> {
+                return GameAssetManager.axe;
+            }
         }
     }
 }

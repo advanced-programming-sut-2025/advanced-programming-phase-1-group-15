@@ -1,8 +1,10 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
 import com.example.models.farming.GeneralPlants.PloughedPlace;
 import com.example.models.map.Tile;
+import com.example.views.GameAssetManager;
 
 public class Scythe extends Tool {
     public Scythe() {
@@ -39,5 +41,10 @@ public class Scythe extends Tool {
         else {
             return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";
         }
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return GameAssetManager.scythe;
     }
 }

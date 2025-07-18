@@ -1,11 +1,13 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
 import com.example.models.animals.Fish;
 import com.example.models.animals.ProductQuality;
 import com.example.models.map.Lake;
 import com.example.models.map.Tile;
 import com.example.models.weather.WeatherOption;
+import com.example.views.GameAssetManager;
 
 public class FishingPole extends Tool {
     public FishingPole() {
@@ -85,5 +87,23 @@ public class FishingPole extends Tool {
     @Override
     public String use(Tile tile, Player user) {
         return "this command is not applicable to fishing pole.";
+    }
+
+    @Override
+    public Sprite getSprite() {
+        switch (toolLevel) {
+            case BAMBOO -> {
+                return GameAssetManager.bamboo_rod;
+            }
+            case FIBERGLASS -> {
+                return GameAssetManager.fiberglass_rod;
+            }
+            case IRIDIUM -> {
+                return GameAssetManager.iridium_rod;
+            }
+            default -> {
+                return GameAssetManager.training_rod;
+            }
+        }
     }
 }

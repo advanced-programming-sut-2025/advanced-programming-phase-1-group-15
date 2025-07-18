@@ -1,8 +1,10 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
+import com.example.views.GameAssetManager;
 
 public class Hoe extends Tool {
     public Hoe() {
@@ -77,5 +79,26 @@ public class Hoe extends Tool {
         tile.plow();
         user.subtractEnergy(energyConsume);
         return "tile " + tile.getPosition() + " plowed!\n" + energyConsume + " energy has been consumed.";
+    }
+
+    @Override
+    public Sprite getSprite() {
+        switch (toolLevel) {
+            case COPPER -> {
+                return GameAssetManager.copper_hoe;
+            }
+            case IRON -> {
+                return GameAssetManager.iron_hoe;
+            }
+            case GOLD -> {
+                return GameAssetManager.gold_hoe;
+            }
+            case IRIDIUM -> {
+                return GameAssetManager.iridium_hoe;
+            }
+            default -> {
+                return GameAssetManager.hoe;
+            }
+        }
     }
 }

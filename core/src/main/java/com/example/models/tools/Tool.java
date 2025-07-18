@@ -10,7 +10,6 @@ public class Tool implements BackPackable {
 
     protected int price;
 
-    protected boolean upgradable;
     protected ToolLevel toolLevel;
 
     public static Tool toolFactory(ToolType toolType) {
@@ -58,5 +57,9 @@ public class Tool implements BackPackable {
     @Override
     public Sprite getSprite() {
         return null;
+    }
+
+    public ToolLevel getToolLevel() {
+        return toolLevel;
     }
 }

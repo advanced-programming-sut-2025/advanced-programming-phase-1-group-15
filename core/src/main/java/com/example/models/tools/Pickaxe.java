@@ -1,9 +1,11 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
 import com.example.models.foraging.ForagingMineral;
 import com.example.models.foraging.Stone;
 import com.example.models.map.Tile;
+import com.example.views.GameAssetManager;
 
 public class Pickaxe extends Tool {
     public Pickaxe() {
@@ -114,5 +116,26 @@ public class Pickaxe extends Tool {
         }
 
         return "unsuccessful attempt!";
+    }
+
+    @Override
+    public Sprite getSprite() {
+        switch (toolLevel) {
+            case COPPER -> {
+                return GameAssetManager.copper_pickaxe;
+            }
+            case IRON -> {
+                return GameAssetManager.iron_pickaxe;
+            }
+            case GOLD -> {
+                return GameAssetManager.gold_pickaxe;
+            }
+            case IRIDIUM -> {
+                return GameAssetManager.iridium_pickaxe;
+            }
+            default -> {
+                return GameAssetManager.pickaxe;
+            }
+        }
     }
 }

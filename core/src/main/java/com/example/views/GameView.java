@@ -18,6 +18,7 @@ import com.example.models.Game;
 import com.example.models.GraphicalModels.MapCamera;
 import com.example.models.GraphicalModels.PopUpMenus.FriendsMenu;
 import com.example.models.GraphicalModels.PopUpMenus.PopUpMenu;
+import com.example.models.GraphicalModels.PopUpMenus.ToolsMenu;
 import com.example.models.Player;
 import com.example.models.Result;
 import com.example.models.enums.Direction;
@@ -122,6 +123,19 @@ public class GameView implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 popUpMenu = new FriendsMenu(skin, "Friends:", this::restoreGameInput);
+                popUpMenu.show();
+                Gdx.input.setInputProcessor(popUpMenu.getStage());
+            }
+
+            private void restoreGameInput() {
+                Gdx.input.setInputProcessor(gameInputMultiplexer);
+            }
+        });
+
+        toolsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                popUpMenu = new ToolsMenu(skin, "Tools:", this::restoreGameInput);
                 popUpMenu.show();
                 Gdx.input.setInputProcessor(popUpMenu.getStage());
             }

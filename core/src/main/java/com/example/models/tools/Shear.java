@@ -1,10 +1,12 @@
 package com.example.models.tools;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
 import com.example.models.animals.Animal;
 import com.example.models.animals.AnimalProduct;
 import com.example.models.animals.AnimalType;
 import com.example.models.map.Tile;
+import com.example.views.GameAssetManager;
 
 public class Shear extends Tool implements BackPackable {
     public Shear() {
@@ -44,5 +46,10 @@ public class Shear extends Tool implements BackPackable {
         else {
             return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";
         }
+    }
+
+    @Override
+    public Sprite getSprite() {
+        return GameAssetManager.shear;
     }
 }

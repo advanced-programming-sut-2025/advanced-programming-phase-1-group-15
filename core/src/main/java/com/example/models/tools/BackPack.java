@@ -3,6 +3,7 @@ package com.example.models.tools;
 import com.example.models.Player;
 import com.example.models.foraging.Stone;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BackPack extends Tool {
@@ -60,12 +61,15 @@ public class BackPack extends Tool {
         return itemsCount == capacity;
     }
     public void addToBackPack(BackPackable item, int amount) {
-        if(!(item instanceof FishingPole)) {
-            for(BackPackable bp : items.keySet()) {
-                if (bp.getName().equalsIgnoreCase(item.getName())) {
-                    items.put(bp, items.get(bp) + amount);
-                    return;
-                }
+        if(item instanceof Tool) {
+            items.put(item, 1);
+            return;
+        }
+
+        for(BackPackable bp : items.keySet()) {
+            if (bp.getName().equalsIgnoreCase(item.getName())) {
+                items.put(bp, items.get(bp) + amount);
+                return;
             }
         }
 
@@ -120,15 +124,15 @@ public class BackPack extends Tool {
         return display.toString();
     }
 
-    public String showTools() {
-        StringBuilder display = new StringBuilder();
+    public ArrayList<Tool> getTools() {
+        ArrayList<Tool> tools = new ArrayList<>();
 
         for(BackPackable item : items.keySet()) {
             if(item instanceof Tool tool) {
-                display.append(tool.getName()).append("    Level: ").append(tool.toolLevel).append("\n");
+                tools.add(tool);
             }
         }
 
-        return display.toString();
+        return tools;
     }
 }

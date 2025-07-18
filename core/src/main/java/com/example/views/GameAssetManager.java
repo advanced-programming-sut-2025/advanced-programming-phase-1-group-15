@@ -27,6 +27,14 @@ public class GameAssetManager {
     public static TextureRegion boy_face, boy_fainted;
     public static Animation<TextureRegion> boy_walking_up, boy_walking_down, boy_walking_right, boy_walking_left;
 
+    // Tools
+    public static Sprite axe, copper_axe, iron_axe, gold_axe, iridium_axe;
+    public static Sprite hoe, copper_hoe, iron_hoe, gold_hoe, iridium_hoe;
+    public static Sprite pickaxe, copper_pickaxe, iron_pickaxe, gold_pickaxe, iridium_pickaxe;
+    public static Sprite scythe, gold_scythe, iridium_scythe;
+    public static Sprite training_rod, bamboo_rod, fiberglass_rod, iridium_rod;
+    public static Sprite milk_pail, shear;
+
     public static void load() {
         font = new BitmapFont(Gdx.files.internal("UI/font.fnt"));
 
@@ -68,6 +76,36 @@ public class GameAssetManager {
         boy_walking_down = createAnimation("Sprites/Characters/b", 0, 3); boy_walking_down.setPlayMode(Animation.PlayMode.LOOP);
         boy_walking_right = createAnimation("Sprites/Characters/b", 4, 7); boy_walking_right.setPlayMode(Animation.PlayMode.LOOP);
         boy_walking_left = createAnimation("Sprites/Characters/b", 12, 15); boy_walking_left.setPlayMode(Animation.PlayMode.LOOP);
+
+        axe = new Sprite(new Texture("Sprites/Tools/Axe.png"));
+        copper_axe = new Sprite(new Texture("Sprites/Tools/Copper_Axe.png"));
+        iron_axe = new Sprite(new Texture("Sprites/Tools/Iron_Axe.png"));
+        gold_axe = new Sprite(new Texture("Sprites/Tools/Gold_Axe.png"));
+        iridium_axe = new Sprite(new Texture("Sprites/Tools/Iridium_Axe.png"));
+
+        hoe = new Sprite(new Texture("Sprites/Tools/Hoe.png"));
+        copper_hoe = new Sprite(new Texture("Sprites/Tools/Copper_Hoe.png"));
+        iron_hoe = new Sprite(new Texture("Sprites/Tools/Iron_Hoe.png"));
+        gold_hoe = new Sprite(new Texture("Sprites/Tools/Gold_Hoe.png"));
+        iridium_hoe = new Sprite(new Texture("Sprites/Tools/Iridium_Hoe.png"));
+
+        pickaxe = new Sprite(new Texture("Sprites/Tools/Pickaxe.png"));
+        copper_pickaxe = new Sprite(new Texture("Sprites/Tools/Copper_Pickaxe.png"));
+        iron_pickaxe = new Sprite(new Texture("Sprites/Tools/Iron_Pickaxe.png"));
+        gold_pickaxe = new Sprite(new Texture("Sprites/Tools/Gold_Pickaxe.png"));
+        iridium_pickaxe = new Sprite(new Texture("Sprites/Tools/Iridium_Pickaxe.png"));
+
+        scythe = new Sprite(new Texture("Sprites/Tools/Scythe.png"));
+        gold_scythe = new Sprite(new Texture("Sprites/Tools/Gold_Scythe.png"));
+        iridium_scythe = new Sprite(new Texture("Sprites/Tools/Iridium_Scythe.png"));
+
+        training_rod = new Sprite(new Texture("Sprites/Tools/Training_Rod.png"));
+        bamboo_rod = new Sprite(new Texture("Sprites/Tools/Bamboo_Rod.png"));
+        fiberglass_rod = new Sprite(new Texture("Sprites/Tools/Fiberglass_Rod.png"));
+        iridium_rod = new Sprite(new Texture("Sprites/Tools/Iridium_Rod.png"));
+
+        milk_pail = new Sprite(new Texture("Sprites/Tools/Milk_Pail.png"));
+        shear = new Sprite(new Texture("Sprites/Tools/Shears.png"));
     }
 
     private static TextureRegion loadRegion(String path) {
