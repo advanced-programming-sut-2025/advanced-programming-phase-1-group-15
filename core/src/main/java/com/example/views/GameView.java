@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -19,16 +20,22 @@ import com.example.models.GraphicalModels.MapCamera;
 import com.example.models.GraphicalModels.PopUpMenus.FriendsMenu;
 import com.example.models.GraphicalModels.PopUpMenus.PopUpMenu;
 import com.example.models.GraphicalModels.PopUpMenus.ToolsMenu;
+import com.example.models.GraphicalModels.RightClickMenus.NPCRightClickMenu;
+import com.example.models.GraphicalModels.RightClickMenus.PlayerRightClickMenu;
+import com.example.models.GraphicalModels.RightClickMenus.RightClickMenu;
 import com.example.models.Player;
 import com.example.models.Result;
 import com.example.models.enums.Direction;
 import com.example.models.map.Position;
 import com.example.models.map.Tile;
+import com.example.models.npcs.DefaultNPCs;
+import com.example.models.npcs.NPC;
 import com.example.models.stores.Store;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.Season;
 import com.example.models.weather.WeatherOption;
 
+import java.awt.*;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -52,6 +59,9 @@ public class GameView implements Screen {
 
     // Pop-up menus
     private PopUpMenu popUpMenu;
+
+    // right-click menus
+    private RightClickMenu rightClickMenu;
 
     // Input handling
     private final GameInputProcessor gameInputProcessor;
@@ -388,6 +398,12 @@ public class GameView implements Screen {
         batch.draw(game.getCurrentPlayer().getCurrentFrame(), drawX, drawY);
     }
 
+    private Tile surroundTile(int x, int y){
+        Position pos = new Position(x/tileSideLength, y/tileSideLength);
+        Tile tile = App.currentGame.getMap().getTile(pos);
+        return tile;
+    }
+
     private class GameInputProcessor implements InputProcessor {
         @Override
         public boolean keyDown(int keycode) {
@@ -479,23 +495,56 @@ public class GameView implements Screen {
                 return false;
             }
 
-            if (button == Input.Buttons.LEFT) {
-                Vector3 worldCoords = mapCamera.getCamera().unproject(new com.badlogic.gdx.math.Vector3(x, y, 0));
+            Vector3 worldCoords = mapCamera.getCamera().unproject(new Vector3(x, y, 0));
+            int tileX = (int) (worldCoords.x / tileSideLength);
+            int tileY = (int) (worldCoords.y / tileSideLength);
 
-                int tileX = (int) (worldCoords.x / tileSideLength);
-                int tileY = (int) (worldCoords.y / tileSideLength);
+            if (tileX >= 0 && tileX < game.getMap().COLS &&
+                tileY >= 0 && tileY < game.getMap().ROWS) {
 
-                if (tileX >= 0 && tileX < game.getMap().COLS &&
-                    tileY >= 0 && tileY < game.getMap().ROWS) {
+                Tile clickedTile = App.currentGame.getTile(tileX, tileY);
 
-                    Tile clickedTile = App.currentGame.getTile(tileX, tileY);
+                if (button == Input.Buttons.RIGHT) {
 
+                    Tile tile = surroundTile(tileX, tileY);
+                    for(NPC npc : DefaultNPCs.getInstance().defaultOnes.values()) {
+                        if(npc.getHomeLocation().getPosition().x == x/tileSideLength){
+                            if(npc.getHomeLocation().getPosition().y == y/tileSideLength){
+                                if(rightClickMenu != null){
+                                    rightClickMenu.dispose();
+                                }
+                                rightClickMenu = new NPCRightClickMenu(skin,npc,GameView.this::restoreGameInput);
+                                rightClickMenu.show(x,y);
+                                Gdx.input.setInputProcessor(rightClickMenu.getStage());
+                                return true;
+                            }
+                        }
+                    }
+
+                    for(Player player: App.currentGame.getPlayers()) {
+                        if(player.equals(App.currentGame.getCurrentPlayer())){
+                            continue;
+                        }
+                        if(player.getPosition().x == x/tileSideLength && player.getPosition().y == y/tileSideLength){
+                            if(rightClickMenu!=null){
+                                rightClickMenu.dispose();
+                            }
+                            rightClickMenu = new PlayerRightClickMenu(skin, player, GameView.this::restoreGameInput);
+                            rightClickMenu.show(x,y);
+                            Gdx.input.setInputProcessor(rightClickMenu.getStage());
+                            return true;
+                        }
+                    }
+                }
+
+                // Left-click handling (your existing code)
+                if (button == Input.Buttons.LEFT) {
                     if (clickedTile.getArea() instanceof Store) {
                         Store store = (Store) clickedTile.getArea();
                         // TODO: show Store menu
                     }
+                    return true;
                 }
-                return true;
             }
             return false;
         }

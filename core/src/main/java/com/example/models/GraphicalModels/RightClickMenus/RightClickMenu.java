@@ -1,4 +1,4 @@
-package com.example.models.GraphicalModels.PopUpMenus;
+package com.example.models.GraphicalModels.RightClickMenus;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -7,67 +7,47 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public abstract class PopUpMenu {
-    protected Stage stage;
-    protected Window window;
-    protected Skin skin;
+public abstract class RightClickMenu {
+    protected final Skin skin;
+    protected final Stage stage;
+    protected final Table menuTable;
+    protected boolean isVisible = false;
     private Actor backgroundDim;
-    private boolean isVisible = false;
-
     private final Runnable onHideCallback;
 
-    public PopUpMenu(Skin skin, String title, float width, float height, Runnable onHideCallback) {
+    public RightClickMenu(Skin skin, Runnable onHideCallback) {
         this.skin = skin;
         this.onHideCallback = onHideCallback;
+        this.stage = new Stage(new ScreenViewport());
+        this.menuTable = new Table(skin);
 
-        window = new Window(title, skin);
-        window.setSize(width, height);
-        window.setModal(true);
-        window.setMovable(false);
-        window.setResizable(false);
-
-        centerWindow();
-
-        addCloseButton();
-
-        populate(window);
-
-        stage = new Stage(new ScreenViewport());
+        this.menuTable.setBackground(skin.getDrawable("default-round"));
+        this.menuTable.pad(10);
 
         createBackgroundDim();
 
-        window.setVisible(false);
-        stage.addActor(backgroundDim);
-        stage.addActor(window);
+        this.stage.addActor(backgroundDim);
+        this.stage.addActor(menuTable);
+
+        menuTable.setVisible(false);
+        backgroundDim.setVisible(false);
+
+        setupMenuContent();
     }
 
-    protected abstract void populate(Window w);
-
-    private void addCloseButton() {
-        TextButton closeButton = new TextButton("X", skin);
-        closeButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                hide();
-            }
-        });
-
-        window.getTitleTable().add(closeButton).padRight(5).size(20, 20);
-    }
+    protected abstract void setupMenuContent();
 
     private void createBackgroundDim() {
         backgroundDim = new Actor() {
             @Override
             public void draw(com.badlogic.gdx.graphics.g2d.Batch batch, float parentAlpha) {
-                batch.setColor(0, 0, 0, 0.5f);
+                batch.setColor(0, 0, 0, 0.3f);
                 batch.draw(skin.getRegion("white"), 0, 0,
-                    Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+                        Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
                 batch.setColor(Color.WHITE);
             }
         };
@@ -82,33 +62,48 @@ public abstract class PopUpMenu {
         });
     }
 
-    private void centerWindow() {
-        float screenWidth = Gdx.graphics.getWidth();
-        float screenHeight = Gdx.graphics.getHeight();
-        window.setPosition(
-            (screenWidth - window.getWidth()) / 2,
-            (screenHeight - window.getHeight()) / 2
-        );
-    }
-
-    public void show() {
+    public void show(float screenX, float screenY) {
         if (isVisible) return;
 
         isVisible = true;
 
-        backgroundDim.setVisible(true);
+        menuTable.pack();
+        positionMenu(screenX, screenY);
 
-        window.setVisible(true);
-        window.getColor().a = 0f;
-        window.addAction(Actions.fadeIn(0.3f));
+        backgroundDim.setVisible(true);
+        menuTable.setVisible(true);
+        menuTable.getColor().a = 0f;
+        menuTable.addAction(Actions.fadeIn(0.2f));
+    }
+
+    private void positionMenu(float screenX, float screenY) {
+        float menuWidth = menuTable.getWidth();
+        float menuHeight = menuTable.getHeight();
+        float stageWidth = stage.getWidth();
+        float stageHeight = stage.getHeight();
+
+        if (screenX + menuWidth > stageWidth) {
+            screenX = stageWidth - menuWidth;
+        }
+        if (screenX < 0) {
+            screenX = 0;
+        }
+
+        if (screenY + menuHeight > stageHeight) {
+            screenY = stageHeight - menuHeight;
+        }
+        if (screenY < 0) {
+            screenY = 0;
+        }
+
+        menuTable.setPosition(screenX, screenY);
     }
 
     public void hide() {
         if (!isVisible) return;
 
         isVisible = false;
-
-        window.setVisible(false);
+        menuTable.setVisible(false);
         backgroundDim.setVisible(false);
 
         if (onHideCallback != null) {
@@ -125,7 +120,6 @@ public abstract class PopUpMenu {
 
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
-        centerWindow();
         backgroundDim.setBounds(0, 0, width, height);
     }
 
