@@ -80,24 +80,24 @@ public class GameController {
 //        }
 //    }
 
-    public static Result equipTool(String toolName) {
-        Tool tool = (Tool) getCurrentPlayer().getInventory().getItemByName(toolName);
-
-        if(tool == null) {
-            return new Result(false, "You don't have that tool.");
-        }
-
-        getCurrentPlayer().setCurrentTool(tool);
-        return new Result(true, "equipped tool " + tool.getName() + " successfully.");
-    }
-    public static Result showCurrentTool() {
-        Tool tool = getCurrentPlayer().getCurrentTool();
-        if(tool == null) {
-            return new Result(false, "you're not holding any tool!");
-        }
-
-        return new Result(true, tool.getName());
-    }
+//    public static Result equipTool(String toolName) {
+//        Tool tool = (Tool) getCurrentPlayer().getInventory().getItemByName(toolName);
+//
+//        if(tool == null) {
+//            return new Result(false, "You don't have that tool.");
+//        }
+//
+//        getCurrentPlayer().setCurrentTool(tool);
+//        return new Result(true, "equipped tool " + tool.getName() + " successfully.");
+//    }
+//    public static Result showCurrentTool() {
+//        Tool tool = getCurrentPlayer().getCurrentTool();
+//        if(tool == null) {
+//            return new Result(false, "you're not holding any tool!");
+//        }
+//
+//        return new Result(true, tool.getName());
+//    }
     public static Result upgradeTool(String toolName) {
         Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
 
@@ -113,20 +113,20 @@ public class GameController {
 
         return new Result(true, tool.upgrade(getCurrentPlayer()));
     }
-    public static Result useTool(int dx, int dy) {
-        Tool tool = getCurrentPlayer().getCurrentTool();
-        if(tool == null) {
-            return new Result(false, "choose a tool first");
-        }
-        Position usePosition = new Position(getCurrentPlayer().getPosition().x + dx, getCurrentPlayer().getPosition().y + dy);
-        if(!Map.isBoundValid(usePosition)) {
-            return new Result(false, "you are out of bounds!");
-        }
-
-        Tile useTile = App.currentGame.getTile(usePosition);
-
-        return new Result(true, tool.use(useTile, getCurrentPlayer()));
-    }
+//    public static Result useTool(int dx, int dy) {
+////        Tool tool = getCurrentPlayer().getCurrentTool();
+//        if(tool == null) {
+//            return new Result(false, "choose a tool first");
+//        }
+//        Position usePosition = new Position(getCurrentPlayer().getPosition().x + dx, getCurrentPlayer().getPosition().y + dy);
+//        if(!Map.isBoundValid(usePosition)) {
+//            return new Result(false, "you are out of bounds!");
+//        }
+//
+//        Tile useTile = App.currentGame.getTile(usePosition);
+//
+//        return new Result(true, tool.use(useTile, getCurrentPlayer()));
+//    }
 
     public static Result putInFridge(String itemName) {
         Tile tile = App.currentGame.getTile(getCurrentPlayer().getPosition());

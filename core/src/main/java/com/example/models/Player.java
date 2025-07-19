@@ -52,7 +52,7 @@ public class Player extends User implements TimeObserver {
 
     private BackPack inventory = new BackPack();
     private TrashCan trashCan = new TrashCan();
-    private Tool currentTool = null;
+    private BackPackable currentItem = null;
 
     private int farmingAbility = 0;
     private int farmingLevel = 0;
@@ -255,11 +255,11 @@ public class Player extends User implements TimeObserver {
         return trashCan;
     }
 
-    public Tool getCurrentTool() {
-        return currentTool;
+    public BackPackable getCurrentItem() {
+        return currentItem;
     }
-    public void setCurrentTool(Tool currentTool) {
-        this.currentTool = currentTool;
+    public void setCurrentItem(BackPackable currentItem) {
+        this.currentItem = currentItem;
     }
 
     public int getFarmingAbility() {

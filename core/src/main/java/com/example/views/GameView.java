@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -35,7 +36,6 @@ import com.example.models.time.DateAndTime;
 import com.example.models.time.Season;
 import com.example.models.weather.WeatherOption;
 
-import java.awt.*;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,11 +51,12 @@ public class GameView implements Screen {
     private final MapCamera mapCamera;
     private final Stage uiStage;
     private final Skin skin;
+    private final ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     // UI
     private Table hudTable;
     private Label energyLabel;
-    private Label currentToolLabel;
+    private Label currentItemLabel;
 
     // Pop-up menus
     private PopUpMenu popUpMenu;
@@ -115,11 +116,11 @@ public class GameView implements Screen {
     private void createHUDComponents() {
         energyLabel = new Label("", skin);
         energyLabel.setColor(Color.FIREBRICK); energyLabel.setAlignment(Align.left);
-        currentToolLabel = new Label("", skin);
-        currentToolLabel.setColor(Color.FIREBRICK); currentToolLabel.setAlignment(Align.left);
+        currentItemLabel = new Label("", skin);
+        currentItemLabel.setColor(Color.FIREBRICK); currentItemLabel.setAlignment(Align.left);
 
         hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
-        hudTable.add(currentToolLabel).padTop(5).padLeft(10).left().row();
+        hudTable.add(currentItemLabel).padTop(5).padLeft(10).left().row();
     }
 
     private void createControlButtons() {
@@ -188,6 +189,7 @@ public class GameView implements Screen {
         SpriteBatch batch = main.getBatch();
 
         renderMap(batch);
+        renderHeldItemCursor(batch);
 
         renderHUD(batch, delta);
 
@@ -227,12 +229,12 @@ public class GameView implements Screen {
     private void updateUIComponents() {
         int energy = (int) game.getCurrentPlayer().getEnergy();
         energyLabel.setText("Energy: " + energy);
-        if(game.getCurrentPlayer().getCurrentTool() != null) {
-            String currentTool = game.getCurrentPlayer().getCurrentTool().getName();
-            currentToolLabel.setText("Current Tool: " + currentTool);
+        if(game.getCurrentPlayer().getCurrentItem() != null) {
+            String currentItem = game.getCurrentPlayer().getCurrentItem().getName();
+            currentItemLabel.setText("You're holding: " + currentItem);
         }
         else {
-            currentToolLabel.setText("Current Tool: -");
+            currentItemLabel.setText("You're holding: -");
         }
     }
 
@@ -314,7 +316,7 @@ public class GameView implements Screen {
     public void dispose() {
         running = false;
         commandExecutor.shutdownNow();
-
+        shapeRenderer.dispose();
         uiStage.dispose();
         if (popUpMenu != null) {
             popUpMenu.dispose();
@@ -322,7 +324,6 @@ public class GameView implements Screen {
         if (skin != null) {
             skin.dispose();
         }
-
         pauseMenuOverlay.dispose();
         craftingMenu.dispose();
     }
@@ -575,4 +576,35 @@ public class GameView implements Screen {
         }
     }
 
+    private void renderHeldItemCursor(SpriteBatch batch) {
+        Player player = game.getCurrentPlayer();
+        if (player.getCurrentItem() == null) return;
+
+        Vector3 mouseWorld = mapCamera.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        int mouseTileX = (int) (mouseWorld.x / tileSideLength);
+        int mouseTileY = (int) (mouseWorld.y / tileSideLength);
+
+        Position playerPos = player.getPosition();
+
+        if (Math.abs(mouseTileX - playerPos.getX()) <= 1 && Math.abs(mouseTileY - playerPos.getY()) <= 1) {
+            shapeRenderer.setProjectionMatrix(mapCamera.getCamera().combined);
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(Color.BLUE);
+            shapeRenderer.rect(mouseTileX * tileSideLength, mouseTileY * tileSideLength, tileSideLength, tileSideLength);
+            shapeRenderer.end();
+
+            TextureRegion heldSprite = player.getCurrentItem().getSprite();
+            if (heldSprite != null) {
+                batch.begin();
+                batch.draw(
+                    heldSprite,
+                    mouseWorld.x - tileSideLength / 2f,
+                    mouseWorld.y - tileSideLength / 2f,
+                    tileSideLength,
+                    tileSideLength
+                );
+                batch.end();
+            }
+        }
+    }
 }

@@ -323,6 +323,7 @@ public class PauseMenuOverlay {
                         BackPackable hoveredItem = inventory.getItemByName(itemName);
                         if (hoveredItem != null) {
                             descriptionLabel.setText("Desc: " + hoveredItem.getDescription());
+                            game.getCurrentPlayer().setCurrentItem(hoveredItem);
                             return true;
                         }
                     }

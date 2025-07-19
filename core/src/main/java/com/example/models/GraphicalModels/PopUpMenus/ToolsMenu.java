@@ -111,7 +111,7 @@ public class ToolsMenu extends PopUpMenu {
                     lvl.setText("lvl: " + t.getToolLevel());
                     switch (t.getToolLevel()) {
                         case COPPER -> lvl.setColor(Color.FIREBRICK);
-                        case IRON   -> lvl.setColor(Color.LIGHT_GRAY);
+                        case IRON   -> lvl.setColor(Color.DARK_GRAY);
                         case GOLD   -> lvl.setColor(Color.GOLD);
                         case IRIDIUM-> lvl.setColor(Color.MAGENTA);
                     }
@@ -134,7 +134,7 @@ public class ToolsMenu extends PopUpMenu {
         sprites.get(i).addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                player.setCurrentTool(tools.get(i));
+                player.setCurrentItem(tools.get(i));
                 hide();
             }
         });
