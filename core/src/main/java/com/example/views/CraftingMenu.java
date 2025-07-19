@@ -87,7 +87,7 @@ public class CraftingMenu {
                             }
                         }
                         if (current != null) {
-                            descriptionLabel.setText("Desc: " + current.getDescription());
+                            descriptionLabel.setText("Desc: " + current.getCraftItemType().getRecipe());
                             return true;
                         }
                     }
