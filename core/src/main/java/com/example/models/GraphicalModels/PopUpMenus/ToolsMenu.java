@@ -13,18 +13,58 @@ import com.example.models.App;
 import com.example.models.Player;
 import com.example.models.tools.Tool;
 
+import java.util.ArrayList;
+
 public class ToolsMenu extends PopUpMenu {
     private static final float WIDTH = 700f;
     private static final float HEIGHT = 800f;
     private static final float PADDING = 10f;
 
+    private final ArrayList<Tool> tools;
+    private final ArrayList<Image> sprites = new ArrayList<>();
+    private final ArrayList<Label> nameLabels = new ArrayList<>();
+    private final ArrayList<Label> levelLabels = new ArrayList<>();
+    private final ArrayList<TextButton> upgradeButtons = new ArrayList<>();
+    private Label messageLabel;
+
     public ToolsMenu(Skin skin, String title, Runnable onHideCallback) {
         super(skin, title, WIDTH, HEIGHT, onHideCallback);
+
+        Player currentPlayer = App.currentGame.getCurrentPlayer();
+        tools = currentPlayer.getInventory().getTools();
+
+        for(Tool tool : tools) {
+            Sprite toolSprite = tool.getSprite();
+            toolSprite.setSize(48, 48);
+            Image toolIcon = new Image(new TextureRegionDrawable(toolSprite));
+            sprites.add(toolIcon);
+
+            Label nameLabel = new Label(tool.getName(), skin);
+            nameLabels.add(nameLabel);
+
+            Label levelLabel = new Label("lvl: " + tool.getToolLevel(), skin);
+            levelLabel.setAlignment(Align.left);
+            switch(tool.getToolLevel()) {
+                case COPPER -> levelLabel.setColor(Color.FIREBRICK);
+                case IRON -> levelLabel.setColor(Color.DARK_GRAY);
+                case GOLD -> levelLabel.setColor(Color.GOLD);
+                case IRIDIUM -> levelLabel.setColor(Color.MAGENTA);
+            }
+            levelLabels.add(levelLabel);
+
+            TextButton upgradeButton = new TextButton("UPGRADE", skin);
+            if(tool.isUpgradable(currentPlayer)) {
+                upgradeButton.setColor(Color.GREEN);
+            }
+            else {
+                upgradeButton.setColor(Color.RED);
+            }
+            upgradeButtons.add(upgradeButton);
+        }
     }
 
     @Override
     protected void populate(Window w) {
-        Player currentPlayer = App.currentGame.getCurrentPlayer();
         Table contentTable = new Table();
         contentTable.pad(PADDING);
         contentTable.top();
@@ -32,53 +72,74 @@ public class ToolsMenu extends PopUpMenu {
         Label headerLabel = new Label("Your Tools:", skin);
         contentTable.add(headerLabel).colspan(4).padBottom(PADDING).row();
 
-        for (Tool tool : currentPlayer.getInventory().getTools()) {
-            contentTable.add(createToolRow(tool)).expandX().fillX().padBottom(5).row();
+        for (int i = 0; i < tools.size(); i++) {
+            contentTable.add(createToolRow(i)).expandX().fillX().center().padBottom(5).row();
         }
-
 
         ScrollPane scrollPane = new ScrollPane(contentTable, skin);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(false, true);
 
         w.add(scrollPane).expand().fill().row();
+
+        messageLabel = new Label("", skin);
+        w.add(messageLabel).colspan(4).padTop(PADDING).row();
     }
 
-    private Table createToolRow(Tool tool) {
+    private Table createToolRow(int i) {
         Player player = App.currentGame.getCurrentPlayer();
         Table toolRow = new Table();
         toolRow.left().padBottom(10);
 
-        Sprite toolSprite = tool.getSprite();
-        toolSprite.setSize(48, 48);
-        Image toolIcon = new Image(new TextureRegionDrawable(toolSprite));
-        toolRow.add(toolIcon).size(48, 48).left().padRight(PADDING);
+        toolRow.add(sprites.get(i)).size(48, 48).left().padRight(PADDING);
+        toolRow.add(nameLabels.get(i)).width(200).padRight(PADDING);
+        toolRow.add(levelLabels.get(i)).width(200).left().padRight(PADDING);
 
-        Label nameLabel = new Label(tool.getName(), skin);
-        toolRow.add(nameLabel).width(200).padRight(PADDING);
-
-        Label levelLabel = new Label("lvl: " + tool.getToolLevel(), skin);
-        levelLabel.setAlignment(Align.left);
-        toolRow.add(levelLabel).width(200).left().padRight(PADDING);
-
-        // Upgrade button
-        TextButton upgradeButton = new TextButton("UPGRADE", skin);
-        upgradeButton.setColor(Color.GREEN);
-        upgradeButton.addListener(new ChangeListener() {
+        upgradeButtons.get(i).addListener(new ChangeListener() {
+            final Tool t = tools.get(i);
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // upgrade logic
+                if(tools.get(i).isUpgradable(player)) {
+                    messageLabel.setColor(Color.GREEN);
+                    messageLabel.setText(tools.get(i).upgrade(player));
+
+                    Sprite spr = tools.get(i).getSprite();
+                    spr.setSize(48,48);
+                    sprites.get(i).setDrawable(new TextureRegionDrawable(t.getSprite()));
+
+                    Label lvl = levelLabels.get(i);
+                    lvl.setText("lvl: " + t.getToolLevel());
+                    switch (t.getToolLevel()) {
+                        case COPPER -> lvl.setColor(Color.FIREBRICK);
+                        case IRON   -> lvl.setColor(Color.LIGHT_GRAY);
+                        case GOLD   -> lvl.setColor(Color.GOLD);
+                        case IRIDIUM-> lvl.setColor(Color.MAGENTA);
+                    }
+
+                    for(int i = 0; i < upgradeButtons.size(); i++) {
+                        if (tools.get(i).isUpgradable(player)) {
+                            upgradeButtons.get(i).setColor(Color.GREEN);
+                        } else {
+                            upgradeButtons.get(i).setColor(Color.RED);
+                        }
+                    }
+                }
+                else {
+                    messageLabel.setColor(Color.RED);
+                    messageLabel.setText(tools.get(i).upgrade(player));
+                }
             }
         });
 
-        toolIcon.addListener(new ClickListener() {
+        sprites.get(i).addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                player.setCurrentTool(tool);
+                player.setCurrentTool(tools.get(i));
+                hide();
             }
         });
 
-        toolRow.add(upgradeButton).width(150).height(60).right();
+        toolRow.add(upgradeButtons.get(i)).width(150).height(60).right();
 
         return toolRow;
     }

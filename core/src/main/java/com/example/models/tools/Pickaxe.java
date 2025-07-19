@@ -46,11 +46,31 @@ public class Pickaxe extends Tool {
     }
 
     @Override
+    public boolean isUpgradable(Player user) {
+        switch (toolLevel) {
+            case NORMAL -> {
+                return user.getInventory().getItemCount("copper") >= 5;
+            }
+            case COPPER -> {
+                return user.getInventory().getItemCount("iron") >= 5;
+            }
+            case IRON -> {
+                return user.getInventory().getItemCount("gold") >= 5;
+            }
+            case GOLD -> {
+                return user.getInventory().getItemCount("iridium") >= 5;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public String upgrade(Player user) {
         switch (toolLevel) {
             case NORMAL -> {
                 if(user.getInventory().getItemCount("copper") < 5) {
-                    return "not enough cooper!";
+                    return "you need to have at least 5 copper.";
                 }
                 user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("copper"), 5);
                 toolLevel = ToolLevel.COPPER;
@@ -58,7 +78,7 @@ public class Pickaxe extends Tool {
             }
             case COPPER -> {
                 if(user.getInventory().getItemCount("iron") < 5) {
-                    return "not enough iron!";
+                    return "you need to have at least 5 iron.";
                 }
                 user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("iron"), 5);
                 toolLevel = ToolLevel.IRON;
@@ -66,7 +86,7 @@ public class Pickaxe extends Tool {
             }
             case IRON -> {
                 if(user.getInventory().getItemCount("gold") < 5) {
-                    return "not enough gold!";
+                    return "you need to have at least 5 gold.";
                 }
                 user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("gold"), 5);
                 toolLevel = ToolLevel.GOLD;
@@ -74,7 +94,7 @@ public class Pickaxe extends Tool {
             }
             case GOLD -> {
                 if(user.getInventory().getItemCount("iridium") < 5) {
-                    return "not enough iridium!";
+                    return "you need to have at least 5 iridium.";
                 }
                 user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("iridium"), 5);
                 toolLevel = ToolLevel.IRIDIUM;
@@ -82,7 +102,7 @@ public class Pickaxe extends Tool {
             }
         }
 
-        return "you can't upgrade this tool.";
+        return "this tool is at maximum level!";
     }
 
     @Override

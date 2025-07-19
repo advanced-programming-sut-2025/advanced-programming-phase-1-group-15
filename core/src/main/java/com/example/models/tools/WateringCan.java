@@ -48,46 +48,66 @@ public class WateringCan extends Tool {
     }
 
     @Override
+    public boolean isUpgradable(Player user) {
+        switch (toolLevel) {
+            case NORMAL -> {
+                return user.getInventory().getItemCount("copper") >= 5;
+            }
+            case COPPER -> {
+                return user.getInventory().getItemCount("iron") >= 5;
+            }
+            case IRON -> {
+                return user.getInventory().getItemCount("gold") >= 5;
+            }
+            case GOLD -> {
+                return user.getInventory().getItemCount("iridium") >= 5;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public String upgrade(Player user) {
         switch (toolLevel) {
             case NORMAL -> {
                 if(user.getInventory().getItemCount("copper") < 5) {
-                    return "not enough cooper!";
+                    return "you need to have at least 5 copper.";
                 }
                 user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("copper"), 5);
                 toolLevel = ToolLevel.COPPER;
                 capacity = 70;
-                return "your axe upgraded to COPPER!";
+                return "your watering can upgraded to COPPER!";
             }
             case COPPER -> {
                 if(user.getInventory().getItemCount("iron") < 5) {
-                    return "not enough iron!";
+                    return "you need to have at least 5 iron.";
                 }
                 user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("iron"), 5);
                 toolLevel = ToolLevel.IRON;
-                return "your axe upgraded to IRON!";
+                return "your watering can upgraded to IRON!";
             }
             case IRON -> {
                 if(user.getInventory().getItemCount("gold") < 5) {
-                    return "not enough gold!";
+                    return "you need to have at least 5 gold.";
                 }
                 user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("gold"), 5);
                 toolLevel = ToolLevel.GOLD;
                 capacity = 85;
-                return "your axe upgraded to GOLD!";
+                return "your watering can upgraded to GOLD!";
             }
             case GOLD -> {
                 if(user.getInventory().getItemCount("iridium") < 5) {
-                    return "not enough iridium!";
+                    return "you need to have at least 5 iridium.";
                 }
                 user.getInventory().removeCountFromBackPack(user.getInventory().getItemByName("iridium"), 5);
                 toolLevel = ToolLevel.IRIDIUM;
                 capacity = 100;
-                return "your axe upgraded to IRIDIUM!";
+                return "your watering can upgraded to IRIDIUM!";
             }
         }
 
-        return "you can't upgrade this tool.";
+        return "this tool is at maximum level!";
     }
 
     @Override

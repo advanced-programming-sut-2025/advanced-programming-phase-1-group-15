@@ -36,8 +36,6 @@ public abstract class PopUpMenu {
 
         addCloseButton();
 
-        populate(window);
-
         stage = new Stage(new ScreenViewport());
 
         createBackgroundDim();
@@ -93,6 +91,9 @@ public abstract class PopUpMenu {
 
     public void show() {
         if (isVisible) return;
+
+        // this may cause us some problems!
+        populate(window);
 
         isVisible = true;
 

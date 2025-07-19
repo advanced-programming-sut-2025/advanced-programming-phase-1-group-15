@@ -23,6 +23,11 @@ public class Shear extends Tool implements BackPackable {
     }
 
     @Override
+    public String upgrade(Player user) {
+        return "this tool is not upgradable.";
+    }
+
+    @Override
     public String use(Tile tile, Player user) {
         int energyConsume = 4;
         if(energyConsume > user.getEnergy()) {

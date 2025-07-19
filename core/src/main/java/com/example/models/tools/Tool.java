@@ -35,6 +35,9 @@ public class Tool implements BackPackable {
         return null;
     }
 
+    public boolean isUpgradable(Player user) {
+        return false;
+    }
     public String upgrade(Player user) {
         return "";
     }
