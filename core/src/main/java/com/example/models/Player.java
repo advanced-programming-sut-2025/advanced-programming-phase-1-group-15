@@ -66,7 +66,6 @@ public class Player extends User implements TimeObserver {
     private DateAndTime lastUpdate = new DateAndTime();
 
     private ArrayList<CraftItem> availableCrafts = new ArrayList<>();
-
     private ArrayList<Food> availableFoods = new ArrayList<>(Arrays.asList(new Food(FoodType.FRIED_EGG),
             new Food(FoodType.BACKED_FISH), new Food(FoodType.SALAD)));
 
@@ -320,7 +319,6 @@ public class Player extends User implements TimeObserver {
     public ArrayList<CraftItem> getAvailableCrafts() {
         return availableCrafts;
     }
-
     public void addToAvailableFoods(Food food) {
         availableFoods.add(food);
     }

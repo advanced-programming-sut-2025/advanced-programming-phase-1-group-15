@@ -2,15 +2,19 @@ package com.example.views;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.models.Game;
 import com.example.models.crafting.CraftItem;
+import com.example.models.crafting.CraftItemType;
 import com.example.models.tools.BackPack;
 
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ public class CraftingMenu {
     private final Stage stage;
     private final Skin skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
     private boolean visible = false;
+    private final Table rootTable;
     private final Table table;
     private final Main main;
     private final Game game;
@@ -28,12 +33,31 @@ public class CraftingMenu {
         this.game = game;
         this.onHideCallback = onHideCallback;
         stage = new Stage(new ScreenViewport(), main.getBatch());
+        rootTable = new Table(skin);
+        rootTable.setFillParent(false);
+        rootTable.setSize(800, 700);
+        rootTable.setPosition(Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f - 350);
+        rootTable.setVisible(false);
+        rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
         this.table = createCraftingContent();
-        stage.addActor(table);
+        rootTable.add(table).expand().fill().pad(20).row();
+        TextButton exitButton = new TextButton("Exit", skin);
+        exitButton.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                setVisible(false);
+                onHideCallback.run();
+                return true;
+            }
+        });
+        rootTable.add(exitButton).right().pad(10);
+        stage.addActor(rootTable);
     }
     private Table createCraftingContent() {
         Table table = new Table(skin);
         BackPack inventory = game.getCurrentPlayer().getInventory();
+        game.getCurrentPlayer().getAvailableCrafts().add(new CraftItem(CraftItemType.BEE_HOUSE));
+        game.getCurrentPlayer().getAvailableCrafts().add(new CraftItem(CraftItemType.DEHYDRATOR));
         ArrayList<CraftItem> craftItems = game.getCurrentPlayer().getAvailableCrafts();
         Array<String> itemName = new Array<>();
         for (CraftItem availableCraft : game.getCurrentPlayer().getAvailableCrafts()) {
@@ -71,22 +95,12 @@ public class CraftingMenu {
                 return false;
             }
         });
-        TextButton exitButton = new TextButton("Exit", skin);
-        exitButton.addListener(new InputListener() {
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                setVisible(false); // Hide menu
-                onHideCallback.run(); // Restore game input
-                return true;
-            }
-        });
         Table bottomRow = new Table();
+        bottomRow.top().right();
         bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
-        bottomRow.add(exitButton).right().padLeft(20).size(100, 40);
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
         table.add(bottomRow).bottom();
-
         return table;
     }
 
@@ -96,6 +110,7 @@ public class CraftingMenu {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+        rootTable.setVisible(visible);
     }
 
     public Stage getStage() {
@@ -108,14 +123,6 @@ public class CraftingMenu {
     public void draw(float delta) {
         if (!visible) return;
         stage.act(delta);
-
-        if (table.isVisible()) {
-            table.pack();
-            table.setPosition(
-                (Gdx.graphics.getWidth() - table.getPrefWidth()) / 2f,
-                (Gdx.graphics.getHeight() - table.getPrefHeight()) / 2f
-            );
-        }
         stage.draw();
     }
 
