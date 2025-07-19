@@ -2,6 +2,7 @@ package com.example.models.tools;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.animals.Fish;
 import com.example.models.animals.ProductQuality;
 import com.example.models.map.Lake;
@@ -85,8 +86,8 @@ public class FishingPole extends Tool {
     }
 
     @Override
-    public String use(Tile tile, Player user) {
-        return "this command is not applicable to fishing pole.";
+    public Result use(Tile tile, Player user) {
+        return new Result(false, "this command is not applicable to fishing pole.");
     }
 
     @Override

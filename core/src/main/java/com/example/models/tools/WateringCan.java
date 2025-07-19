@@ -2,6 +2,7 @@ package com.example.models.tools;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
 import com.example.views.GameAssetManager;
@@ -111,32 +112,32 @@ public class WateringCan extends Tool {
     }
 
     @Override
-    public String use(Tile tile, Player user) {
+    public Result use(Tile tile, Player user) {
         int energyConsume = calculateEnergyConsume(tile, user);
         if(energyConsume > user.getEnergy()) {
-            return "you do not have enough energy to use this tool.";
+            return new Result(false, "you do not have enough energy to use this tool.");
         }
 
         if(waterAmount == capacity && tile.getAreaType().equals(AreaType.LAKE)) {
-            return "can already filled!";
+            return new Result(false, "can already filled!");
         }
         else if(waterAmount == 0 && (tile.getAreaType().equals(AreaType.FARM) || tile.getAreaType().equals(AreaType.GREENHOUSE))) {
-            return "fill the can first!";
+            return new Result(false, "fill the can first!");
         }
         else if(waterAmount < capacity && tile.getAreaType().equals(AreaType.LAKE)) {
             user.subtractEnergy(energyConsume);
             waterAmount = capacity;
-            return "can filled. " + energyConsume + " energy has been consumed.";
+            return new Result(true, "can filled. " + energyConsume + " energy has been consumed.");
         }
         else if(waterAmount > 0 && (tile.getAreaType().equals(AreaType.FARM) || tile.getAreaType().equals(AreaType.GREENHOUSE))) {
             user.subtractEnergy(energyConsume);
             waterAmount--;
             tile.water();
-            return "tile " + tile.getPosition() + " watered.\n" + energyConsume + " energy has been consumed.";
+            return new Result(true, "tile " + tile.getPosition() + " watered.\n" + energyConsume + " energy has been consumed.");
         }
         else {
             user.subtractEnergy(energyConsume);
-            return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";
+            return new Result(false, "unsuccessful attempt! " + energyConsume + " energy has been consumed.");
         }
     }
 

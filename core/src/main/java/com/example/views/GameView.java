@@ -15,9 +15,11 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.controllers.CheatCodeController;
+import com.example.controllers.GameController;
 import com.example.models.App;
 import com.example.models.Game;
 import com.example.models.GraphicalModels.MapCamera;
+import com.example.models.GraphicalModels.NotificationLabel;
 import com.example.models.GraphicalModels.PopUpMenus.FriendsMenu;
 import com.example.models.GraphicalModels.PopUpMenus.PopUpMenu;
 import com.example.models.GraphicalModels.PopUpMenus.ToolsMenu;
@@ -27,6 +29,7 @@ import com.example.models.GraphicalModels.RightClickMenus.RightClickMenu;
 import com.example.models.Player;
 import com.example.models.Result;
 import com.example.models.enums.Direction;
+import com.example.models.map.Map;
 import com.example.models.map.Position;
 import com.example.models.map.Tile;
 import com.example.models.npcs.DefaultNPCs;
@@ -57,6 +60,7 @@ public class GameView implements Screen {
     private Table hudTable;
     private Label energyLabel;
     private Label currentItemLabel;
+    private NotificationLabel notificationLabel;
 
     // Pop-up menus
     private PopUpMenu popUpMenu;
@@ -108,8 +112,6 @@ public class GameView implements Screen {
 
         createHUDComponents();
 
-        createControlButtons();
-
         uiStage.addActor(hudTable);
     }
 
@@ -118,12 +120,11 @@ public class GameView implements Screen {
         energyLabel.setColor(Color.FIREBRICK); energyLabel.setAlignment(Align.left);
         currentItemLabel = new Label("", skin);
         currentItemLabel.setColor(Color.FIREBRICK); currentItemLabel.setAlignment(Align.left);
+        notificationLabel = new NotificationLabel(skin);
 
         hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
         hudTable.add(currentItemLabel).padTop(5).padLeft(10).left().row();
-    }
 
-    private void createControlButtons() {
         TextButton friendsButton = new TextButton("Friends", skin);
         TextButton toolsButton = new TextButton("Tools", skin);
 
@@ -158,6 +159,7 @@ public class GameView implements Screen {
 
         hudTable.add(friendsButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(toolsButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
+        hudTable.add(notificationLabel).expand().bottom().center().padBottom(20).row();
     }
 
     private void setupInputHandling() {
@@ -500,14 +502,12 @@ public class GameView implements Screen {
             int tileX = (int) (worldCoords.x / tileSideLength);
             int tileY = (int) (worldCoords.y / tileSideLength);
 
-            if (tileX >= 0 && tileX < game.getMap().COLS &&
-                tileY >= 0 && tileY < game.getMap().ROWS) {
+            if (tileX >= 0 && tileX < Map.COLS &&
+                tileY >= 0 && tileY < Map.ROWS) {
 
                 Tile clickedTile = App.currentGame.getTile(tileX, tileY);
 
                 if (button == Input.Buttons.RIGHT) {
-
-                    Tile tile = surroundTile(tileX, tileY);
                     for(NPC npc : DefaultNPCs.getInstance().defaultOnes.values()) {
                         if(npc.getHomeLocation().getPosition().x == x/tileSideLength){
                             if(npc.getHomeLocation().getPosition().y == y/tileSideLength){
@@ -544,6 +544,9 @@ public class GameView implements Screen {
                         Store store = (Store) clickedTile.getArea();
                         // TODO: show Store menu
                     }
+
+                    Result result = GameController.useToolOrPlaceItem(game.getCurrentPlayer(), clickedTile);
+                    notificationLabel.showMessage(result.message(), result.success() ? Color.GREEN : Color.RED);
                     return true;
                 }
             }

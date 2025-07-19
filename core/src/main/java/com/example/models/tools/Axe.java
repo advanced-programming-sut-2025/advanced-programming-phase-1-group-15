@@ -2,12 +2,15 @@ package com.example.models.tools;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.farming.Seed;
 import com.example.models.farming.Tree;
 import com.example.models.map.Tile;
 import com.example.models.stores.GeneralItem;
 import com.example.models.stores.GeneralItemsType;
 import com.example.views.GameAssetManager;
+
+import java.util.ResourceBundle;
 
 public class Axe extends Tool {
     public Axe() {
@@ -108,10 +111,10 @@ public class Axe extends Tool {
     }
 
     @Override
-    public String use(Tile tile, Player user) {
+    public Result use(Tile tile, Player user) {
         int energyConsume = calculateEnergyConsume(tile, user);
         if(energyConsume > user.getEnergy()) {
-            return "you do not have enough energy to use this tool.";
+            return new Result(false, "you do not have enough energy to use this tool.");
         }
 
         user.subtractEnergy(energyConsume);
@@ -126,10 +129,10 @@ public class Axe extends Tool {
             user.upgradeForagingAbility(10);
             tile.empty();
 
-            return count + " " + s.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.";
+            return new Result(true, count + " " + s.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.");
         }
         else {
-            return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";
+            return new Result(false, "unsuccessful attempt! " + energyConsume + " energy has been consumed.");
         }
     }
 

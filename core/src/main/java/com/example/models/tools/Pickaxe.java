@@ -2,6 +2,7 @@ package com.example.models.tools;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.foraging.ForagingMineral;
 import com.example.models.foraging.Stone;
 import com.example.models.map.Tile;
@@ -106,17 +107,17 @@ public class Pickaxe extends Tool {
     }
 
     @Override
-    public String use(Tile tile, Player user) {
+    public Result use(Tile tile, Player user) {
         int energyConsume = calculateEnergyConsume(tile, user);
         if(energyConsume > user.getEnergy()) {
-            return "you do not have enough energy to use this tool.";
+            return new Result(false, "you do not have enough energy to use this tool.");
         }
 
         user.subtractEnergy(energyConsume);
         if(successfulAttempt(tile)) {
             if(tile.isPlowed()) {
                 tile.unplow();
-                return "tile " + tile.getPosition() + " unplowed.\n" + energyConsume + " energy has been consumed.";
+                return new Result(true, "tile " + tile.getPosition() + " unplowed.\n" + energyConsume + " energy has been consumed.");
             }
             else if(tile.getObjectInTile() instanceof ForagingMineral fm) {
                 int count = user.getMiningLevel() >= 2 ? 2 : 1;
@@ -128,14 +129,14 @@ public class Pickaxe extends Tool {
                 user.upgradeMiningAbility(10);
                 tile.empty();
 
-                return count + " " + fm.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.";
+                return new Result(true, count + " " + fm.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.");
             }
         }
         else {
-            return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";
+            return new Result(false, "unsuccessful attempt! " + energyConsume + " energy has been consumed.");
         }
 
-        return "unsuccessful attempt!";
+        return new Result(false, "unsuccessful attempt!");
     }
 
     @Override

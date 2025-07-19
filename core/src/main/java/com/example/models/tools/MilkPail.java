@@ -2,6 +2,7 @@ package com.example.models.tools;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.animals.Animal;
 import com.example.models.animals.AnimalProduct;
 import com.example.models.animals.AnimalType;
@@ -28,28 +29,28 @@ public class MilkPail extends Tool {
     }
 
     @Override
-    public String use(Tile tile, Player user) {
+    public Result use(Tile tile, Player user) {
         int energyConsume = 4;
         if(energyConsume > user.getEnergy()) {
-            return "you do not have enough energy to use this tool.";
+            return new Result(false, "you do not have enough energy to use this tool.");
         }
 
         user.subtractEnergy(energyConsume);
         if(successfulAttempt(tile)) {
             Animal animal = (Animal) tile.getObjectInTile();
             if(animal.getCurrentProduct() == null) {
-                return "no milk to collect!";
+                return new Result(false, "no milk to collect!");
             }
             else {
                 AnimalProduct product = animal.getCurrentProduct();
                 user.getInventory().addToBackPack(product, 1);
                 animal.setCurrentProduct(null);
 
-                return 1 + " " + product.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.";
+                return new Result(true, 1 + " " + product.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.");
             }
         }
         else {
-            return "unsuccessful attempt! " + energyConsume + " energy has been consumed.";
+            return new Result(false, "unsuccessful attempt! " + energyConsume + " energy has been consumed.");
         }
     }
 

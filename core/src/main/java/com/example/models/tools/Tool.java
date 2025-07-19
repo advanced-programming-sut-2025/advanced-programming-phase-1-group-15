@@ -2,7 +2,10 @@ package com.example.models.tools;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.map.Tile;
+
+import java.util.ResourceBundle;
 
 public class Tool implements BackPackable {
     protected ToolType toolType;
@@ -31,7 +34,7 @@ public class Tool implements BackPackable {
         return 0;
     }
 
-    public String use(Tile tile, Player user) {
+    public Result use(Tile tile, Player user) {
         return null;
     }
 

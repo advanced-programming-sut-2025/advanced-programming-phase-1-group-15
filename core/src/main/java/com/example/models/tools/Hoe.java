@@ -2,6 +2,7 @@ package com.example.models.tools;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
 import com.example.views.GameAssetManager;
@@ -86,19 +87,19 @@ public class Hoe extends Tool {
     }
 
     @Override
-    public String use(Tile tile, Player user) {
+    public Result use(Tile tile, Player user) {
         int energyConsume = calculateEnergyConsume(tile, user);
         if(energyConsume > user.getEnergy()) {
-            return "you do not have enough energy to use this tool.";
+            return new Result(false, "you do not have enough energy to use this tool.");
         }
         else if(!tile.getAreaType().equals(AreaType.FARM) && !tile.getAreaType().equals(AreaType.GREENHOUSE)) {
             user.subtractEnergy(energyConsume);
-            return "you can only use hoe on your farm or greenhouse tiles.";
+            return new Result(false, "you can only use hoe on your farm or greenhouse tiles.");
         }
 
         tile.plow();
         user.subtractEnergy(energyConsume);
-        return "tile " + tile.getPosition() + " plowed!\n" + energyConsume + " energy has been consumed.";
+        return new Result(true, "tile " + tile.getPosition() + " plowed!\n" + energyConsume + " energy has been consumed.");
     }
 
     @Override

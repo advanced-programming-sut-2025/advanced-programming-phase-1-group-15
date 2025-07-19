@@ -36,6 +36,27 @@ public class GameController {
         return App.currentGame.getCurrentPlayer();
     }
 
+    public static Result useToolOrPlaceItem(Player player, Tile tile) {
+        if(player.getCurrentItem() != null) {
+            if(player.getCurrentItem() instanceof Tool tool) {
+                return tool.use(tile, player);
+            }
+            else {
+                if(tile.isEmpty()) {
+                    tile.setObjectInTile(player.getCurrentItem());
+                    player.getInventory().removeCountFromBackPack(player.getCurrentItem(), 1);
+                    player.setCurrentItem(null);
+                    return new Result(true, "Item placed successfully.");
+                }
+                else {
+                    return new Result(false, "This tile isn't empty!");
+                }
+            }
+        }
+
+        return new Result(false, "You have to hold an item first.");
+    }
+
     public static Result buildGreenHouse() {
         GreenHouse greenHouse = getCurrentPlayer().getFarm().getGreenHouse();
 
