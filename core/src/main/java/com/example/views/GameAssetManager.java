@@ -22,7 +22,7 @@ public class GameAssetManager {
     public static Sprite land0, land1, land2, land3;
     public static Sprite stone, wood;
 
-    public static TextureRegion house, lake;
+    public static TextureRegion house, lake, broken_greenhouse, greenhouse;
 
     public static TextureRegion boy_face, boy_fainted;
     public static Animation<TextureRegion> boy_walking_up, boy_walking_down, boy_walking_right, boy_walking_left;
@@ -73,6 +73,8 @@ public class GameAssetManager {
 
         house = new TextureRegion(new Texture("Sprites/Map/house.png"));
         lake = new TextureRegion(new Texture("Sprites/Map/lake.png"));
+        broken_greenhouse = new TextureRegion(new Texture("Sprites/Map/broken_greenhouse.png"));
+        greenhouse = new TextureRegion(new Texture("Sprites/Map/greenhouse.png"));
 
         boy_face = new TextureRegion(new Texture("Sprites/Characters/b_face.png"));
         boy_fainted = new TextureRegion(new Texture("Sprites/Characters/b_fainted.png"));

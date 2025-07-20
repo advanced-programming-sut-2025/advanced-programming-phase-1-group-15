@@ -13,9 +13,9 @@ import java.util.ArrayList;
 public class Lake extends Area {
     public static int[][] coordinates = {
             {5, 25, 30, 45},   //MAP 1
-            {25, 32, 1, 9}, //MAP 2
-            {10, 15, 13, 18}, //MAP 3
-            {5, 15, 10, 15}   //MAP 4
+            {25, 40, 45, 65}, //MAP 2
+            {50, 70, 50, 70}, //MAP 3
+            {5, 25, 10, 25}   //MAP 4
     };
 
     FishType todaysFishType;
