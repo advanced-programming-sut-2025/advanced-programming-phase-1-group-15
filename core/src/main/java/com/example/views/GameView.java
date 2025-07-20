@@ -21,6 +21,7 @@ import com.example.models.Game;
 import com.example.models.GraphicalModels.MapCamera;
 import com.example.models.GraphicalModels.NotificationLabel;
 import com.example.models.GraphicalModels.PopUpMenus.FriendsMenu;
+import com.example.models.GraphicalModels.PopUpMenus.GreenHouseMenu;
 import com.example.models.GraphicalModels.PopUpMenus.PopUpMenu;
 import com.example.models.GraphicalModels.PopUpMenus.ToolsMenu;
 import com.example.models.GraphicalModels.RightClickMenus.NPCRightClickMenu;
@@ -29,6 +30,7 @@ import com.example.models.GraphicalModels.RightClickMenus.RightClickMenu;
 import com.example.models.Player;
 import com.example.models.Result;
 import com.example.models.enums.Direction;
+import com.example.models.map.GreenHouse;
 import com.example.models.map.Map;
 import com.example.models.map.Position;
 import com.example.models.map.Tile;
@@ -540,12 +542,18 @@ public class GameView implements Screen {
 
                 // Left-click handling (your existing code)
                 if (button == Input.Buttons.LEFT) {
-                    if (clickedTile.getArea() instanceof Store) {
+                    if(clickedTile.getArea() instanceof GreenHouse greenHouse && !greenHouse.isBuilt()){
+                        popUpMenu = new GreenHouseMenu(skin, "Repair GREENHOUSE", this::restoreGameInput, greenHouse);
+                        popUpMenu.show();
+                        Gdx.input.setInputProcessor(popUpMenu.getStage());
+                    }
+
+                    else if (clickedTile.getArea() instanceof Store) {
                         Store store = (Store) clickedTile.getArea();
                         // TODO: show Store menu
                     }
 
-                    if(checkCursorInAdjacent()) {
+                    else if(checkCursorInAdjacent()) {
                         Result result = GameController.useToolOrPlaceItem(game.getCurrentPlayer(), clickedTile);
                         notificationLabel.showMessage(result.message(), result.success() ? Color.BLACK : Color.RED);
                     }
@@ -553,6 +561,10 @@ public class GameView implements Screen {
                 }
             }
             return false;
+        }
+
+        private void restoreGameInput() {
+            Gdx.input.setInputProcessor(gameInputMultiplexer);
         }
 
         @Override
