@@ -7,6 +7,7 @@ import com.example.models.artisanry.ArtisanItem;
 import com.example.models.cooking.Food;
 import com.example.models.cooking.FoodType;
 import com.example.models.crafting.CraftItem;
+import com.example.models.crafting.CraftItemType;
 import com.example.models.enums.Direction;
 import com.example.models.enums.Gender;
 import com.example.models.farming.GeneralPlants.PloughedPlace;
@@ -49,7 +50,7 @@ public class Player extends User implements TimeObserver {
     private double energy = 200;
     private boolean unlimitedEnergy = false;
     private boolean fainted = false;
-
+    private Fridge fridge = new Fridge();
     private BackPack inventory = new BackPack();
     private TrashCan trashCan = new TrashCan();
     private BackPackable currentItem = null;
@@ -356,6 +357,10 @@ public class Player extends User implements TimeObserver {
 
     public ArrayList<TradeWhitMoney> getTradesWithMoneyHistory() {
         return tradesWithMoneyHistory;
+    }
+
+    public Fridge getFridge() {
+        return fridge;
     }
 
     public void setGold(int gold) {

@@ -83,7 +83,7 @@ public enum CraftItemType {
             Ability.farmingAbility,
             2,
             0),
-    BEE_HOUSE("40 wood + 8 coal + 1 iron ba",
+    BEE_HOUSE("40 wood + 8 coal + 1 iron bar",
             new HashMap<>(){{
                 //put(ForagingMineralType.Wood,20);
                 put(new ForagingMineral(ForagingMineralType.COAL),8);

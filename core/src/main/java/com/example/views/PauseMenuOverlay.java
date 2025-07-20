@@ -283,7 +283,6 @@ public class PauseMenuOverlay {
             .map(entry -> entry.getKey().getName() + " x" + entry.getValue())
             .toArray(String[]::new);
         itemList.setItems(items);
-
         ScrollPane scrollPane = new ScrollPane(itemList, skin);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(true, false);
@@ -311,7 +310,6 @@ public class PauseMenuOverlay {
                 }
             }
         });
-
         itemList.addListener(new InputListener() {
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
@@ -463,7 +461,6 @@ public class PauseMenuOverlay {
         friendshipContent.setVisible(false);
         mapContent.setVisible(false);
         settingsContent.setVisible(false);
-
         content.setVisible(true);
     }
 

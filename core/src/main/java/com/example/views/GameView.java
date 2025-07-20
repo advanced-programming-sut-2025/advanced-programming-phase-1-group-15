@@ -79,6 +79,7 @@ public class GameView implements Screen {
 
     private final PauseMenuOverlay pauseMenuOverlay;
     private final CraftingMenu craftingMenu;
+    private final CookingMenu cookingMenu;
     public GameView(Game game, Main main) {
         this.game = game;
         this.main = main;
@@ -97,6 +98,7 @@ public class GameView implements Screen {
 
         this.pauseMenuOverlay = new PauseMenuOverlay(main, game, this::restoreGameInput);
         this.craftingMenu = new CraftingMenu(main, game, this::restoreGameInput);
+        this.cookingMenu = new CookingMenu(main, game, this::restoreGameInput);
     }
 
     @Override
@@ -207,6 +209,7 @@ public class GameView implements Screen {
 
         pauseMenuOverlay.draw(delta);
         craftingMenu.draw(delta);
+        cookingMenu.draw(delta);
     }
 
     private void renderMap(SpriteBatch batch) {
@@ -330,6 +333,7 @@ public class GameView implements Screen {
         }
         pauseMenuOverlay.dispose();
         craftingMenu.dispose();
+        cookingMenu.dispose();
     }
 
     private void readTerminalInput() {
@@ -412,7 +416,7 @@ public class GameView implements Screen {
     private class GameInputProcessor implements InputProcessor {
         @Override
         public boolean keyDown(int keycode) {
-            if (pauseMenuOverlay.isVisible() || (popUpMenu != null && popUpMenu.isVisible())) {
+            if (pauseMenuOverlay.isVisible() || craftingMenu.isVisible() || cookingMenu.isVisible() || (popUpMenu != null && popUpMenu.isVisible())) {
                 return false;
             }
 
@@ -462,12 +466,22 @@ public class GameView implements Screen {
                 case Input.Keys.B:
                     if (craftingMenu.isVisible()) {
                         craftingMenu.setVisible(false);
+                        restoreGameInput();
                     }
                     else {
                         craftingMenu.setVisible(true);
                         Gdx.input.setInputProcessor(craftingMenu.getStage());
                     }
                     return true;
+                case Input.Keys.C:
+                    if (cookingMenu.isVisible()){
+                        cookingMenu.setVisible(false , 0);
+                        restoreGameInput();
+                    }
+                    else {
+                        cookingMenu.setVisible(true, 1);
+                        Gdx.input.setInputProcessor(cookingMenu.getStage());
+                    }
             }
             return false;
         }

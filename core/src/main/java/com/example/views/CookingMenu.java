@@ -1,0 +1,252 @@
+package com.example.views;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.example.Main;
+import com.example.models.Game;
+import com.example.models.cooking.Food;
+import com.example.models.crafting.CraftItem;
+import com.example.models.farming.Crop;
+import com.example.models.farming.Crops;
+import com.example.models.tools.BackPackable;
+import com.example.models.tools.Fridge;
+import com.example.models.tools.TrashCan;
+
+import java.util.ArrayList;
+
+public class CookingMenu {
+    private final Stage stage;
+    private final Skin skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
+    private boolean visible = false;
+    private final Table rootTable;
+    private final Table recipe;
+    private final Table fridge;
+    private final Main main;
+    private final Game game;
+    private final Runnable onHideCallback;
+    private final Label tooltipLabel = new Label("", skin);
+    private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
+    public CookingMenu(Main main, Game game, Runnable onHideCallback) {
+        this.main = main;
+        this.game = game;
+        this.onHideCallback = onHideCallback;
+        this.stage = new Stage(new ScreenViewport(), main.getBatch());
+        rootTable = new Table(skin);
+        rootTable.setFillParent(false);
+        rootTable.setSize(800, 700);
+        rootTable.setPosition(Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f - 350);
+        rootTable.setVisible(false);
+        rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
+        Table tabBar = new Table(skin);
+        TextButton recipeTab = new TextButton("Recipe", skin);
+        TextButton fridgeTab = new TextButton("Fridge", skin);
+        tabBar.add(recipeTab).pad(5);
+        tabBar.add(fridgeTab).pad(5);
+        rootTable.add(tabBar).expandX().top().padTop(10).row();
+        this.recipe = createCookingContent();
+        this.fridge = createFridgeContent();
+        Stack stack = new Stack();
+        stack.add(recipe);
+        stack.add(fridge);
+        rootTable.add(stack).expand().fill().row();
+        TextButton closeButton = new TextButton("X Close", skin);
+        closeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setVisible(false , 0);
+                if (onHideCallback != null) {
+                    onHideCallback.run();
+                }
+            }
+        });
+        rootTable.add(closeButton).right().pad(10);
+        recipeTab.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                refresh();
+                changeTab(recipeTab);
+            }
+        });
+        fridgeTab.addListener(new ChangeListener() {
+            public void changed(ChangeEvent event, Actor actor) {
+                refresh();
+                changeTab(fridgeTab);
+            }
+        });
+        tooltipLabel.setColor(Color.BROWN);
+        tooltipContainer.background(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
+        tooltipContainer.pad(20);
+        tooltipContainer.setVisible(false);
+        stage.addActor(rootTable);
+        stage.addActor(tooltipContainer);
+    }
+    public void draw(float delta) {
+        if (!visible) return;
+        stage.act(delta);
+
+        if (tooltipContainer.isVisible()) {
+            tooltipContainer.pack();
+            tooltipContainer.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+        }
+
+        stage.draw();
+    }
+    private Table createCookingContent() {
+        ArrayList<Food> availableFoods = game.getCurrentPlayer().getAvailableFoods();
+        Array<String> itemName = new Array<>();
+        for (Food availableFood : availableFoods) {
+           itemName.add(availableFood.getName());
+        }
+        List<String> itemList = new List<>(skin);
+        itemList.setItems(itemName);
+        ScrollPane scrollPane = new ScrollPane(itemList,skin);
+        Label titleLabel = new Label("Recipe: ", skin); titleLabel.setColor(Color.FIREBRICK);
+        Label descriptionLabel = new Label("Desc: ", skin);
+        descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
+        itemList.addListener(new InputListener() {
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                int index = itemList.getSelectedIndex();
+                if (index >= 0) {
+                    String item = itemList.getItems().get(index);
+                    if (item != null && !item.isEmpty()) {
+                        String itemName = item.split(" x")[0];
+                        Food current = null;
+                        for (Food food : game.getCurrentPlayer().getAvailableFoods()) {
+                            if (food.getName().equals(itemName)) {
+                                current = food;
+                            }
+                        }
+                        if (current != null) {
+                            descriptionLabel.setText("Desc: " + current.getRecipe());
+                            return true;
+                        }
+                        else {
+                            descriptionLabel.setText("Desc: ");
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+        Table table = new Table(skin);
+        Table bottomRow = new Table();
+        bottomRow.top().right();
+        bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
+        table.add(titleLabel).padBottom(10).row();
+        table.add(scrollPane).expand().fill().pad(10).row();
+        table.add(bottomRow).bottom();
+        return table;
+    }
+    private Table createFridgeContent() {
+        Fridge fridge = game.getCurrentPlayer().getFridge();
+        Crop crop = new Crop(Crops.TOMATO);
+        Crop crop2 = new Crop(Crops.CARROT);
+        fridge.addToFridge(crop , 3);
+        fridge.addToFridge(crop2 , 4);
+        List<String> itemList = new List<>(skin);
+        String[] items = fridge.getItems().entrySet().stream()
+                .map(entry -> entry.getKey().getName() + " x" + entry.getValue())
+                .toArray(String[]::new);
+        itemList.setItems(items);
+        itemList.setItems(items);
+        ScrollPane scrollPane = new ScrollPane(itemList, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        Label titleLabel = new Label("Fridge Items:", skin); titleLabel.setColor(Color.FIREBRICK);
+        TrashCan trashCan = game.getCurrentPlayer().getTrashCan();
+        Sprite trashSprite = trashCan.getSprite();
+        trashSprite.setSize(48, 48);
+        Image trashIcon = new Image(new TextureRegionDrawable(trashSprite));
+        trashIcon.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String selected = itemList.getSelected();
+                if (selected != null && !selected.isEmpty()) {
+                    String itemName = selected.split(" x")[0];
+                    BackPackable item = fridge.getItemByName(itemName);
+                    if (item != null) {
+                        trashCan.use(item, fridge.getItems().get(item), game.getCurrentPlayer());
+                        refresh();
+                    }
+                }
+            }
+        });
+        itemList.addListener(new InputListener() {
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                int index = itemList.getSelectedIndex();
+                if (index >= 0) {
+                    String item = itemList.getItems().get(index);
+                    if (item != null && !item.isEmpty()) {
+                        String itemName = item.split(" x")[0];
+                        BackPackable hoveredItem = fridge.getItemByName(itemName);
+                        if (hoveredItem != null) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+        Table table = new Table(skin);
+        Table bottomRow = new Table();
+        bottomRow.add(trashIcon).size(48, 48).left();
+        table.add(titleLabel).padBottom(10).row();
+        table.add(scrollPane).expand().fill().pad(10).row();
+        table.add(bottomRow).bottom();
+        return table;
+    }
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible, int tabNumber) {
+        this.visible = visible;
+        rootTable.setVisible(visible);
+        if (visible) {
+            refresh();
+            switch (tabNumber) {
+                case 1:
+                    changeTab(recipe);
+                    break;
+                case 2:
+                    changeTab(fridge);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+    public void dispose() {
+        stage.dispose();
+        skin.dispose();
+    }
+    private void refresh() {
+        recipe.clear(); fridge.clear();
+        recipe.add(createCookingContent()).expand().fill();
+        fridge.add(createFridgeContent()).expand().fill();
+    }
+    private void changeTab(Table content) {
+        recipe.setVisible(false);
+        fridge.setVisible(false);
+        content.setVisible(true);
+    }
+}

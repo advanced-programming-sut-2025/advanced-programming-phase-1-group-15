@@ -19,6 +19,8 @@ import com.example.models.tools.BackPack;
 
 import java.util.ArrayList;
 
+import static java.time.zone.ZoneRulesProvider.refresh;
+
 public class CraftingMenu {
     private final Stage stage;
     private final Skin skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
@@ -55,7 +57,6 @@ public class CraftingMenu {
     }
     private Table createCraftingContent() {
         Table table = new Table(skin);
-        BackPack inventory = game.getCurrentPlayer().getInventory();
         game.getCurrentPlayer().getAvailableCrafts().add(new CraftItem(CraftItemType.BEE_HOUSE));
         game.getCurrentPlayer().getAvailableCrafts().add(new CraftItem(CraftItemType.DEHYDRATOR));
         ArrayList<CraftItem> craftItems = game.getCurrentPlayer().getAvailableCrafts();
@@ -70,9 +71,7 @@ public class CraftingMenu {
         scrollPane.setScrollingDisabled(true, false);
         Label titleLabel = new Label("Crafting Item:", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Desc: ", skin);
-        TextButton backButton = new TextButton("exit", skin);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
-
         itemList.addListener(new InputListener() {
             public boolean mouseMoved(InputEvent event, float x, float y) {
                 int index = itemList.getSelectedIndex();
@@ -88,6 +87,10 @@ public class CraftingMenu {
                         }
                         if (current != null) {
                             descriptionLabel.setText("Desc: " + current.getCraftItemType().getRecipe());
+                            return true;
+                        }
+                        else {
+                            descriptionLabel.setText("Desc: ");
                             return true;
                         }
                     }
