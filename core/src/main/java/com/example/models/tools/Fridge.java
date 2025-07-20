@@ -32,7 +32,6 @@ public class Fridge implements Tilable {
                 return;
             }
         }
-
         items.put(item, amount);
     }
 
