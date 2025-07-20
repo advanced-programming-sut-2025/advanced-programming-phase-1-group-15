@@ -87,7 +87,7 @@ public class FishingPole extends Tool {
 
     @Override
     public Result use(Tile tile, Player user) {
-        return new Result(false, "this command is not applicable to fishing pole.");
+        return new Result(false, "left click is not applicable to fishing pole.");
     }
 
     @Override

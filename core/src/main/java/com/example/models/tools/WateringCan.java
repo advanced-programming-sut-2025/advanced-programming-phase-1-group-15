@@ -133,7 +133,7 @@ public class WateringCan extends Tool {
             user.subtractEnergy(energyConsume);
             waterAmount--;
             tile.water();
-            return new Result(true, "tile " + tile.getPosition() + " watered.\n" + energyConsume + " energy has been consumed.");
+            return new Result(true, "tile watered.\n" + energyConsume + " energy has been consumed.");
         }
         else {
             user.subtractEnergy(energyConsume);

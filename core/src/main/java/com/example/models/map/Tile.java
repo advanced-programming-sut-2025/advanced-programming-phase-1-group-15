@@ -264,6 +264,9 @@ public class Tile {
             return GameAssetManager.getLandSprite(randomizer);
         }
         else if(area instanceof Farm) {
+            if(plowed) {
+                return GameAssetManager.plowed_tile;
+            }
             return GameAssetManager.getGrassSprite(randomizer);
         }
         else {

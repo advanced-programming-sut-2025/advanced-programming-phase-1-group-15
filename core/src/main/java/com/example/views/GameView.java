@@ -159,7 +159,7 @@ public class GameView implements Screen {
 
         hudTable.add(friendsButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(toolsButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
-        hudTable.add(notificationLabel).expand().bottom().center().padBottom(20).row();
+        hudTable.add(notificationLabel).expandX().bottom().center().padTop(700).row();
     }
 
     private void setupInputHandling() {
@@ -545,8 +545,10 @@ public class GameView implements Screen {
                         // TODO: show Store menu
                     }
 
-                    Result result = GameController.useToolOrPlaceItem(game.getCurrentPlayer(), clickedTile);
-                    notificationLabel.showMessage(result.message(), result.success() ? Color.GREEN : Color.RED);
+                    if(checkCursorInAdjacent()) {
+                        Result result = GameController.useToolOrPlaceItem(game.getCurrentPlayer(), clickedTile);
+                        notificationLabel.showMessage(result.message(), result.success() ? Color.BLACK : Color.RED);
+                    }
                     return true;
                 }
             }
@@ -581,7 +583,6 @@ public class GameView implements Screen {
 
     private void renderHeldItemCursor(SpriteBatch batch) {
         Player player = game.getCurrentPlayer();
-        if (player.getCurrentItem() == null) return;
 
         Vector3 mouseWorld = mapCamera.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         int mouseTileX = (int) (mouseWorld.x / tileSideLength);
@@ -596,18 +597,30 @@ public class GameView implements Screen {
             shapeRenderer.rect(mouseTileX * tileSideLength, mouseTileY * tileSideLength, tileSideLength, tileSideLength);
             shapeRenderer.end();
 
-            TextureRegion heldSprite = player.getCurrentItem().getSprite();
-            if (heldSprite != null) {
-                batch.begin();
-                batch.draw(
-                    heldSprite,
-                    mouseWorld.x - tileSideLength / 2f,
-                    mouseWorld.y - tileSideLength / 2f,
-                    tileSideLength,
-                    tileSideLength
-                );
-                batch.end();
+            if (player.getCurrentItem() != null) {
+                TextureRegion heldSprite = player.getCurrentItem().getSprite();
+                if (heldSprite != null) {
+                    batch.begin();
+                    batch.draw(
+                        heldSprite,
+                        mouseWorld.x - tileSideLength / 2f,
+                        mouseWorld.y - tileSideLength / 2f,
+                        tileSideLength,
+                        tileSideLength
+                    );
+                    batch.end();
+                }
             }
         }
+    }
+
+    private boolean checkCursorInAdjacent() {
+        Vector3 mouseWorld = mapCamera.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        int mouseTileX = (int) (mouseWorld.x / tileSideLength);
+        int mouseTileY = (int) (mouseWorld.y / tileSideLength);
+
+        Position playerPos = game.getCurrentPlayer().getPosition();
+
+        return Math.abs(mouseTileX - playerPos.getX()) <= 1 && Math.abs(mouseTileY - playerPos.getY()) <= 1;
     }
 }

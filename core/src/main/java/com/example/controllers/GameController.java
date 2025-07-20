@@ -42,10 +42,18 @@ public class GameController {
                 return tool.use(tile, player);
             }
             else {
+                if(tile.getArea() instanceof House) {
+                    return new Result(false, "You can't place an item in the house!");
+                }
+                if(tile.getArea() instanceof Lake) {
+                    return new Result(false, "You can't place an item in the lake!");
+                }
                 if(tile.isEmpty()) {
                     tile.setObjectInTile(player.getCurrentItem());
                     player.getInventory().removeCountFromBackPack(player.getCurrentItem(), 1);
-                    player.setCurrentItem(null);
+                    if (player.getInventory().getItemCount(player.getCurrentItem().getName()) == 0) {
+                        player.setCurrentItem(null);
+                    }
                     return new Result(true, "Item placed successfully.");
                 }
                 else {

@@ -18,9 +18,9 @@ public class GameAssetManager {
     public static TextureRegion spring, summer, autumn, winter;
     public static TextureRegion rainy, stormy, snowy, sunny;
 
-    public static Sprite grass0, grass1, grass2, grass3;
+    public static Sprite grass0, grass1, grass2, plowed_tile;
     public static Sprite land0, land1, land2, land3;
-    public static Sprite stone;
+    public static Sprite stone, wood;
 
     public static TextureRegion house, lake;
 
@@ -61,6 +61,7 @@ public class GameAssetManager {
         grass0 = new Sprite(new Texture("Sprites/Map/grass0.png"));
         grass1 = new Sprite(new Texture("Sprites/Map/grass1.png"));
         grass2 = new Sprite(new Texture("Sprites/Map/grass2.png"));
+        plowed_tile = new Sprite(new Texture("Sprites/Map/plowed_tile.png"));
 
         land0 = new Sprite(new Texture("Sprites/Map/land0.png"));
         land1 = new Sprite(new Texture("Sprites/Map/land1.png"));
@@ -68,6 +69,7 @@ public class GameAssetManager {
         land3 = new Sprite(new Texture("Sprites/Map/land3.png"));
 
         stone = new Sprite(new Texture("Sprites/Map/stone.png"));
+        wood = new Sprite(new Texture("Sprites/Map/wood.png"));
 
         house = new TextureRegion(new Texture("Sprites/Map/house.png"));
         lake = new TextureRegion(new Texture("Sprites/Map/lake.png"));

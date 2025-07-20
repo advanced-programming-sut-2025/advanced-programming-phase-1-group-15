@@ -137,7 +137,7 @@ public class Player extends User implements TimeObserver {
         }
 
         Tile tile = App.currentGame.getTile(x, y);
-        if(!tile.isEmpty()) {
+        if(!tile.isEmpty() && !(tile.getObjectInTile() instanceof PloughedPlace)) {
             return;
         }
         else if(tile.getAreaType().equals(AreaType.LAKE)) {
@@ -269,8 +269,9 @@ public class Player extends User implements TimeObserver {
     }
     public void upgradeFarmingAbility(int amount) {
         this.farmingAbility += amount;
-        if(farmingAbility > 100 * farmingLevel + 50 && farmingLevel != 4) {
+        if(farmingAbility >= 100 * farmingLevel + 50 && farmingLevel != 4) {
             farmingLevel++;
+            farmingAbility = 0;
         }
     }
 
@@ -282,8 +283,9 @@ public class Player extends User implements TimeObserver {
     }
     public void upgradeMiningAbility(int amount) {
         this.miningAbility += amount;
-        if(miningAbility > 100 * miningLevel + 50 && miningLevel != 4) {
+        if(miningAbility >= 100 * miningLevel + 50 && miningLevel != 4) {
             miningLevel++;
+            miningAbility = 0;
         }
     }
 
@@ -295,8 +297,9 @@ public class Player extends User implements TimeObserver {
     }
     public void upgradeForagingAbility(int amount) {
         this.foragingAbility += amount;
-        if(foragingAbility > 100 * foragingLevel + 50 && foragingLevel != 4) {
+        if(foragingAbility >= 100 * foragingLevel + 50 && foragingLevel != 4) {
             foragingLevel++;
+            foragingAbility = 0;
         }
     }
 
@@ -308,8 +311,9 @@ public class Player extends User implements TimeObserver {
     }
     public void upgradeFishingAbility(int amount) {
         this.fishingAbility += amount;
-        if(fishingAbility > 100 * fishingLevel + 50 && fishingLevel != 4) {
+        if(fishingAbility >= 100 * fishingLevel + 50 && fishingLevel != 4) {
             fishingLevel++;
+            fishingAbility = 0;
         }
     }
 

@@ -16,8 +16,8 @@ public class Pickaxe extends Tool {
     }
 
     public boolean successfulAttempt(Tile tile) {
-        if(tile.isEmpty()) {
-            return tile.isPlowed();
+        if(tile.isPlowed()) {
+            return true;
         }
         else return tile.getObjectInTile() instanceof ForagingMineral;
     }
@@ -117,13 +117,10 @@ public class Pickaxe extends Tool {
         if(successfulAttempt(tile)) {
             if(tile.isPlowed()) {
                 tile.unplow();
-                return new Result(true, "tile " + tile.getPosition() + " unplowed.\n" + energyConsume + " energy has been consumed.");
+                return new Result(true, "tile unplowed.\n" + energyConsume + " energy has been consumed.");
             }
             else if(tile.getObjectInTile() instanceof ForagingMineral fm) {
                 int count = user.getMiningLevel() >= 2 ? 2 : 1;
-                if(fm instanceof Stone) {
-                    count = user.getMiningLevel() >= 2 ? 100 : 50;
-                }
 
                 user.addToBackPack(fm, count);
                 user.upgradeMiningAbility(10);

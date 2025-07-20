@@ -96,10 +96,16 @@ public class Hoe extends Tool {
             user.subtractEnergy(energyConsume);
             return new Result(false, "you can only use hoe on your farm or greenhouse tiles.");
         }
+        else if(tile.isPlowed()) {
+            return new Result(false, "this tile is already plowed!");
+        }
+        else if(!tile.isEmpty()) {
+            return new Result(false, "this tile isn't empty!");
+        }
 
         tile.plow();
         user.subtractEnergy(energyConsume);
-        return new Result(true, "tile " + tile.getPosition() + " plowed!\n" + energyConsume + " energy has been consumed.");
+        return new Result(true, "tile plowed!\n" + energyConsume + " energy has been consumed.");
     }
 
     @Override
