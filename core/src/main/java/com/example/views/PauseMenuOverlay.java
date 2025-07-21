@@ -26,6 +26,7 @@ import com.example.models.crafting.CraftItem;
 import com.example.models.crafting.CraftItemType;
 import com.example.models.map.Map;
 import com.example.models.map.Tile;
+import com.example.models.relation.PlayerFriendship;
 import com.example.models.tools.BackPack;
 import com.example.models.tools.BackPackable;
 import com.example.models.tools.TrashCan;
@@ -43,7 +44,7 @@ public class PauseMenuOverlay {
 
     private final Table inventoryContent;
     private final Table skillsContent;
-    private final Table friendshipContent = new Table();
+    private final Table friendshipContent;
     private final Table mapContent;
     private final Table settingsContent;
 
@@ -81,6 +82,7 @@ public class PauseMenuOverlay {
 
         inventoryContent = createInventoryContent();
         skillsContent = createSkillsContent();
+        friendshipContent = createFriendshipContent();
         mapContent = createMapContent();
         settingsContent = createSettingsContent();
         Stack contentStack = new Stack();
@@ -274,6 +276,144 @@ public class PauseMenuOverlay {
         return table;
     }
 
+    private Table createFriendshipContent() {
+        Table mainTable = new Table(skin);
+        mainTable.pad(20f);
+
+        Table contentTable = new Table(skin);
+        contentTable.pad(20f);
+        contentTable.top();
+
+        Label headerLabel = new Label("Friendships", skin);
+        headerLabel.setFontScale(1.2f);
+        headerLabel.setColor(Color.FIREBRICK);
+        contentTable.add(headerLabel).colspan(3).padBottom(15).row();
+
+        Table headerRow = new Table();
+        Label nameHeader = new Label("Name", skin);
+        nameHeader.setColor(Color.BLACK);
+        Label levelHeader = new Label("Level", skin);
+        levelHeader.setColor(Color.BLACK);
+        Label actionsHeader = new Label("Actions", skin);
+        actionsHeader.setColor(Color.BLACK);
+
+        headerRow.add(nameHeader).width(150f).left().padRight(10);
+        headerRow.add(levelHeader).width(200f).center().padRight(10);
+        headerRow.add(actionsHeader).width(100f).center();
+
+        contentTable.add(headerRow).fillX().padBottom(10).row();
+
+        contentTable.add(new Label("", skin)).colspan(3).height(2).row();
+
+        int friendCount = 0;
+        if (game.getFriendships() != null && !game.getFriendships().isEmpty()) {
+            for (PlayerFriendship friendship : game.getFriendships()) {
+                Player otherPlayer = getOtherPlayer(friendship, game.getCurrentPlayer());
+                if (otherPlayer == null) continue;
+
+                Table friendRow = createFriendRowForPause(friendship, otherPlayer);
+                contentTable.add(friendRow).fillX().height(40f).padBottom(5).row();
+                friendCount++;
+            }
+        }
+
+        if (friendCount == 0) {
+            headerRow.setVisible(false);
+
+            Label noFriendsLabel = new Label("No friends yet!", skin);
+            noFriendsLabel.setColor(Color.GRAY);
+            noFriendsLabel.setFontScale(1.1f);
+            contentTable.add(noFriendsLabel).colspan(3).center().padTop(50).row();
+
+            Label helpText = new Label("Make friends by talking to other players!", skin);
+            helpText.setColor(Color.LIGHT_GRAY);
+            helpText.setFontScale(0.9f);
+            contentTable.add(helpText).colspan(3).center().padTop(10).row();
+        }
+
+        ScrollPane scrollPane = new ScrollPane(contentTable, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        scrollPane.setScrollBarPositions(false, true);
+
+        mainTable.add(scrollPane).expand().fill().row();
+        return mainTable;
+    }
+
+    private Player getOtherPlayer(PlayerFriendship friendship, Player currentPlayer) {
+        if(friendship.getPlayer1().equals(currentPlayer)) {
+            return friendship.getPlayer2();
+        } else if(friendship.getPlayer2().equals(currentPlayer)) {
+            return friendship.getPlayer1();
+        }
+        return null;
+    }
+
+    private Table createFriendRowForPause(PlayerFriendship friendship, Player otherPlayer) {
+        Table friendRow = new Table();
+        friendRow.left();
+
+        // Name label with better styling
+        Label nameLabel = new Label(otherPlayer.getNickname(), skin);
+        nameLabel.setFontScale(1.1f);
+        nameLabel.setColor(Color.DARK_GRAY);
+        friendRow.add(nameLabel).width(150f).left().padRight(10);
+
+        String levelText = "Level: " + friendship.getLevel();
+        if (friendship.isMarry()) {
+            levelText += " " + "♥".repeat(Math.min(friendship.getLevel(), 5));
+        } else {
+            levelText += " " + "★".repeat(Math.min(friendship.getLevel(), 5));
+        }
+
+        Label levelLabel = new Label(levelText, skin);
+        levelLabel.setColor(friendship.isMarry() ? Color.RED : Color.GOLD);
+        friendRow.add(levelLabel).width(200f).center().padRight(10);
+
+        TextButton giftButton = new TextButton("Gift", skin);
+        giftButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                showGiftDialog(otherPlayer, friendship);
+            }
+        });
+
+        friendRow.add(giftButton).width(80f).height(30f).center();
+
+        return friendRow;
+    }
+
+    private void showGiftDialog(Player recipient, PlayerFriendship friendship) {
+        Dialog giftDialog = new Dialog("Gift to " + recipient.getNickname(), skin) {
+            @Override
+            protected void result(Object object) {
+                if ((Boolean) object) {
+                    showSimpleMessage("Gift feature coming soon!");
+                }
+            }
+        };
+
+        giftDialog.text("Select an item from your inventory to gift to " + recipient.getNickname() + ".");
+        giftDialog.text("(Full gift system available in main game interface)");
+
+        giftDialog.button("OK", true);
+        giftDialog.button("Cancel", false);
+
+        giftDialog.show(stage);
+    }
+
+    private void showSimpleMessage(String message) {
+        Dialog messageDialog = new Dialog("Info", skin) {
+            @Override
+            protected void result(Object object) {
+            }
+        };
+
+        messageDialog.text(message);
+        messageDialog.button("OK", true);
+        messageDialog.show(stage);
+    }
+
     private Table createInventoryContent() {
         Table table = new Table(skin);
         BackPack inventory = game.getCurrentPlayer().getInventory();
@@ -448,9 +588,15 @@ public class PauseMenuOverlay {
     }
 
     private void refresh() {
-        inventoryContent.clear(); skillsContent.clear(); mapContent.clear(); settingsContent.clear();
+        inventoryContent.clear();
+        skillsContent.clear();
+        friendshipContent.clear();
+        mapContent.clear();
+        settingsContent.clear();
+
         inventoryContent.add(createInventoryContent()).expand().fill();
         skillsContent.add(createSkillsContent()).expand().fill();
+        friendshipContent.add(createFriendshipContent()).expand().fill();
         mapContent.add(createMapContent()).expand().fill();
         settingsContent.add(createSettingsContent()).expand().fill();
     }
