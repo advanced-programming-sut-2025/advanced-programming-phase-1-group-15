@@ -264,10 +264,10 @@ public class Tile {
             return GameAssetManager.getLandSprite(randomizer);
         }
         else if(area instanceof Farm) {
-            if(plowed) {
-                return GameAssetManager.plowed_tile;
-            }
             return GameAssetManager.getGrassSprite(randomizer);
+        }
+        else if(area instanceof Quarry) {
+            return GameAssetManager.getQuarrySprite(randomizer);
         }
         else {
             return null;

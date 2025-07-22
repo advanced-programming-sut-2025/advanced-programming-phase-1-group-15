@@ -20,6 +20,7 @@ public class GameAssetManager {
 
     public static Sprite grass0, grass1, grass2, plowed_tile;
     public static Sprite land0, land1, land2, land3;
+    public static Sprite quarry0, quarry1;
     public static Sprite stone, wood;
 
     public static TextureRegion house, lake, broken_greenhouse, greenhouse;
@@ -67,6 +68,9 @@ public class GameAssetManager {
         land1 = new Sprite(new Texture("Sprites/Map/land1.png"));
         land2 = new Sprite(new Texture("Sprites/Map/land2.png"));
         land3 = new Sprite(new Texture("Sprites/Map/land3.png"));
+
+        quarry0 = new Sprite(new Texture("Sprites/Map/quarry0.png"));
+        quarry1 = new Sprite(new Texture("Sprites/Map/quarry1.png"));
 
         stone = new Sprite(new Texture("Sprites/Map/stone.png"));
         wood = new Sprite(new Texture("Sprites/Map/wood.png"));
@@ -149,15 +153,20 @@ public class GameAssetManager {
     }
 
     public static Sprite getLandSprite(int randomizer) {
+        return switch (randomizer) {
+            case 1 -> land1;
+            case 2 -> land2;
+            case 3 -> land3;
+            default -> land0;
+        };
+    }
+
+    public static Sprite getQuarrySprite(int randomizer) {
         switch (randomizer) {
             case 1:
-                return land1;
-            case 2:
-                return land2;
-            case 3:
-                return land3;
+                return quarry1;
             default:
-                return land0;
+                return quarry0;
         }
     }
 }

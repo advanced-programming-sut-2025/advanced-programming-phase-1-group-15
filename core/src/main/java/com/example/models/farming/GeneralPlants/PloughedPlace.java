@@ -11,6 +11,7 @@ import com.example.models.time.DateAndTime;
 import com.example.models.time.TimeObserver;
 import com.example.models.weather.WeatherObserver;
 import com.example.models.weather.WeatherOption;
+import com.example.views.GameAssetManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -321,12 +322,8 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
 
     @Override
     public Sprite getSprite(){
-        return null;
+        return GameAssetManager.plowed_tile;
     }
-
-
-
-
 }
 
 

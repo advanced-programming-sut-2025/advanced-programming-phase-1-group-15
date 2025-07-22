@@ -129,8 +129,8 @@ public class Farm extends Area {
         greenHouse = new GreenHouse(getSubArea(tiles, GreenHouse.coordinates[number - 1][0],
                 GreenHouse.coordinates[number - 1][1], GreenHouse.coordinates[number - 1][2], GreenHouse.coordinates[number - 1][3]));
         innerAreas.add(greenHouse);
-//        innerAreas.add(new Quarry(getSubArea(tiles, Quarry.coordinates[number - 1][0],
-//                Quarry.coordinates[number - 1][1], Quarry.coordinates[number - 1][2], Quarry.coordinates[number - 1][3])));
+        innerAreas.add(new Quarry(getSubArea(tiles, Quarry.coordinates[number - 1][0],
+                Quarry.coordinates[number - 1][1], Quarry.coordinates[number - 1][2], Quarry.coordinates[number - 1][3])));
 
         for(Area innerArea : innerAreas){
             innerArea.setParentArea(this);

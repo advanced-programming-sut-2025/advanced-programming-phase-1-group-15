@@ -7,15 +7,15 @@ import java.util.ArrayList;
 
 public class Quarry extends Area {
     public static int[][] coordinates = {
-            {31, 37, 3, 7},   //MAP 1
-            {12, 16, 16, 20}, //MAP 2
-            {35, 39, 0, 5}, //MAP 3
-            {27, 31, 13, 18}   //MAP 4
+            {65, 80, 3, 18},   //MAP 1
+            {65, 80, 65, 80}, //MAP 2
+            {65, 80, 10, 25}, //MAP 3
+            {10, 25, 65, 80}   //MAP 4
     };
 
     public Quarry(ArrayList<ArrayList<Tile>> quarryTiles) {
+        super(quarryTiles);
         this.areaType = AreaType.QUARRY;
-        this.tiles = quarryTiles;
 
         for(ArrayList<Tile> row : quarryTiles) {
             for(Tile tile : row) {
@@ -31,10 +31,6 @@ public class Quarry extends Area {
     @Override
     public TextureRegion getTexture() {
         return null;
-    }
-
-    public void repair() {
-
     }
 
     @Override

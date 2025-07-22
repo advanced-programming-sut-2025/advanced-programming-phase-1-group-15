@@ -556,20 +556,22 @@ public class GameView implements Screen {
 
                 // Left-click handling (your existing code)
                 if (button == Input.Buttons.LEFT) {
-                    if(clickedTile.getArea() instanceof GreenHouse greenHouse && !greenHouse.isBuilt()){
-                        popUpMenu = new GreenHouseMenu(skin, "Repair GREENHOUSE", this::restoreGameInput, greenHouse);
-                        popUpMenu.show();
-                        Gdx.input.setInputProcessor(popUpMenu.getStage());
-                    }
+                    if(checkCursorInAdjacent()) {
+                        if(clickedTile.getArea() instanceof GreenHouse greenHouse && !greenHouse.isBuilt()){
+                            popUpMenu = new GreenHouseMenu(skin, "Repair GREENHOUSE", this::restoreGameInput, greenHouse);
+                            popUpMenu.show();
+                            Gdx.input.setInputProcessor(popUpMenu.getStage());
+                        }
 
-                    else if (clickedTile.getArea() instanceof Store) {
-                        Store store = (Store) clickedTile.getArea();
-                        // TODO: show Store menu
-                    }
+                        else if (clickedTile.getArea() instanceof Store) {
+                            Store store = (Store) clickedTile.getArea();
+                            // TODO: show Store menu
+                        }
 
-                    else if(checkCursorInAdjacent()) {
-                        Result result = GameController.useToolOrPlaceItem(game.getCurrentPlayer(), clickedTile);
-                        notificationLabel.showMessage(result.message(), result.success() ? Color.BLACK : Color.RED);
+                        else {
+                            Result result = GameController.useToolOrPlaceItem(game.getCurrentPlayer(), clickedTile);
+                            notificationLabel.showMessage(result.message(), result.success() ? Color.BLACK : Color.RED);
+                        }
                     }
                     return true;
                 }

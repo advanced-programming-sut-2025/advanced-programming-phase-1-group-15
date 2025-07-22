@@ -9,13 +9,12 @@ import java.util.ArrayList;
 public class GreenHouse extends Area {
     public static int[][] coordinates = {
             {1, 12, 75, 85},   //MAP 1
-            {15, 21, 7, 12}, //MAP 2
-            {20, 26, 10, 15}, //MAP 3
-            {33, 39, 15, 20}   //MAP 4
+            {76, 87, 2, 12}, //MAP 2
+            {2, 13, 76, 86}, //MAP 3
+            {70, 81, 70, 80}   //MAP 4
     };
 
     private boolean built = false;
-    private Position waterBox;
 
     public boolean isBuilt() {
         return built;
