@@ -16,6 +16,8 @@ import com.example.models.Game;
 import com.example.models.crafting.CraftItem;
 import com.example.models.crafting.CraftItemType;
 import com.example.models.tools.BackPack;
+import com.example.models.tools.BackPackable;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -128,5 +130,25 @@ public class CraftingMenu {
         stage.act(delta);
         stage.draw();
     }
-
+    public boolean isAvailable(CraftItem craftItem) {
+        if (game.getCurrentPlayer().getInventory().checkFilled()){
+            return false;
+        }
+        for (BackPackable item : craftItem.getCraftItemType().getIngredients().keySet()) {
+            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) == null) {
+                return false;
+            }
+            int num = craftItem.getCraftItemType().getIngredients().get(item.getName());
+            int total = game.getCurrentPlayer().getInventory().getItemCount(item.getName());
+            if (total < num) {
+                return false;
+            }
+        }
+        for (BackPackable item : craftItem.getCraftItemType().getIngredients().keySet()) {
+            int num = craftItem.getCraftItemType().getIngredients().get(item.getName());
+            game.getCurrentPlayer().getInventory().removeCountFromBackPack(item , num);
+        }
+        game.getCurrentPlayer().getInventory().addToBackPack(craftItem , 1);
+        return true;
+    }
 }

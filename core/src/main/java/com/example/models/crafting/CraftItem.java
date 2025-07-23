@@ -6,8 +6,10 @@ import com.example.models.tools.BackPackable;
 
 public class CraftItem implements Tilable, BackPackable {
     private final CraftItemType craftItemType;
+    private final Sprite sprite;
     public CraftItem(CraftItemType craftItemType) {
         this.craftItemType = craftItemType;
+        this.sprite = new Sprite(craftItemType.texture);
     }
 
     public CraftItemType getCraftItemType() {
@@ -31,6 +33,6 @@ public class CraftItem implements Tilable, BackPackable {
 
     @Override
     public Sprite getSprite() {
-        return null;
+        return sprite;
     }
 }
