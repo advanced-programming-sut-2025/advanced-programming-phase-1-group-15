@@ -278,4 +278,8 @@ public enum FoodType {
     public String getName() {
         return this.name().toLowerCase().replaceAll("_", " ");
     }
+
+    public HashMap<BackPackable, Integer> getIngredients() {
+        return ingredients;
+    }
 }

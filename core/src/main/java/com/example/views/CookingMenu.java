@@ -229,4 +229,40 @@ public class CookingMenu {
         fridge.setVisible(false);
         content.setVisible(true);
     }
+    public boolean isAvailable(Food food) {
+        if (game.getCurrentPlayer().getInventory().checkFilled()) {
+            return false;
+        }
+        for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
+            boolean found = false;
+            int num  = food.getFoodType().getIngredients().get(item);
+            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
+                found = true;
+                int total = game.getCurrentPlayer().getInventory().getItemCount(item.getName());
+                if (total < num) {
+                    return false;
+                }
+            }
+            if (!found) {
+                if (game.getCurrentPlayer().getFridge().getItemByName(item.getName()) != null) {
+                    int total = game.getCurrentPlayer().getFridge().getItemCount(item.getName());
+                    if (total < num) {
+                        return false;
+                    }
+                }
+            }
+        }
+        for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
+            boolean found = false;
+            int num  = food.getFoodType().getIngredients().get(item);
+            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
+                found = true;
+                game.getCurrentPlayer().getInventory().removeCountFromBackPack(item , num);
+            }
+            if (!found) {
+                game.getCurrentPlayer().getFridge().removeCountFromFridge(item , num);
+            }
+        }
+        return true;
+    }
 }

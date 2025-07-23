@@ -9,6 +9,10 @@ public class Food implements BackPackable {
         this.foodType = foodType;
     }
 
+    public FoodType getFoodType() {
+        return foodType;
+    }
+
     @Override
     public String getName() {
         return foodType.name().toLowerCase().replaceAll("_", " ");

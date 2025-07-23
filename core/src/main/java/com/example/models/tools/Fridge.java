@@ -38,7 +38,17 @@ public class Fridge implements Tilable {
     public void removeFromFridge(BackPackable item) {
         items.remove(item);
     }
-
+    public boolean removeCountFromFridge(BackPackable item, int amount) {
+        if(amount == items.get(item)) {
+            removeFromFridge(item);
+            return true;
+        }
+        if(amount > items.get(item)) {
+            return false;
+        }
+        items.put(item, items.get(item) - amount);
+        return true;
+    }
     public String display() {
         if(items.isEmpty()) {
             return "You don't have any items in your fridge\n";
