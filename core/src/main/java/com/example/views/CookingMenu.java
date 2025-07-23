@@ -116,6 +116,9 @@ public class CookingMenu {
         ScrollPane scrollPane = new ScrollPane(itemList,skin);
         Label titleLabel = new Label("Recipe: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Desc: ", skin);
+        Image foodIcon = new Image();
+        foodIcon.setSize(48, 48);
+        foodIcon.setVisible(false);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
         itemList.addListener(new InputListener() {
             public boolean mouseMoved(InputEvent event, float x, float y) {
@@ -132,6 +135,10 @@ public class CookingMenu {
                         }
                         if (current != null) {
                             descriptionLabel.setText("Desc: " + current.getRecipe());
+                            Sprite sprite = current.getSprite();
+                            sprite.setSize(48, 48);
+                            foodIcon.setDrawable(new TextureRegionDrawable(sprite));
+                            foodIcon.setVisible(true);
                             return true;
                         }
                         else {
@@ -146,6 +153,7 @@ public class CookingMenu {
         Table table = new Table(skin);
         Table bottomRow = new Table();
         bottomRow.top().right();
+        bottomRow.add(foodIcon).size(60, 60).left();
         bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();

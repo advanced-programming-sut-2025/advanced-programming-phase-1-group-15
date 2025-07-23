@@ -4,9 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.tools.BackPackable;
 
 public class Food implements BackPackable {
-    private FoodType foodType;
+    private final FoodType foodType;
+    private final Sprite sprite;
     public Food(FoodType foodType) {
         this.foodType = foodType;
+        this.sprite = new Sprite(foodType.texture);
     }
 
     public FoodType getFoodType() {
@@ -38,6 +40,6 @@ public class Food implements BackPackable {
 
     @Override
     public Sprite getSprite() {
-        return null;
+        return sprite;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.models.cooking;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.example.models.animals.*;
 import com.example.models.artisanry.ArtisanItem;
 import com.example.models.artisanry.ArtisanItemType;
@@ -17,7 +18,7 @@ public enum FoodType {
             }},
             50,
             false,
-            3),
+            3 , new Texture("Sprites/Food/Fried_Egg.png")),
     BACKED_FISH("1 sardine + 1 salmon + 1 wheat",
             new HashMap<>(){{
                 put(new Fish(FishType.SALMON),1);
@@ -26,7 +27,7 @@ public enum FoodType {
             }},
             75,
             false,
-            100),
+            100 , new Texture("Sprites/Food/Baked_Fish.png")),
     SALAD("1 leek + 1 dandelion",
             new HashMap<>(){{
                 put(new ForagingCrop(ForagingCropsType.LEEK),1);
@@ -34,7 +35,7 @@ public enum FoodType {
             }},
             113,
             false,
-            110),
+            110 , new Texture("Sprites/Food/Salad (1).png")),
     OMELET("1 egg + 1 milk",
             new HashMap<>(){{
                 put(new AnimalProduct(AnimalProductType.EGG),1);
@@ -42,17 +43,16 @@ public enum FoodType {
             }},
             100,
             false,
-            125),
+            125 , new Texture("Sprites/Food/Omelet.png")),
     PUMPKIN_PIE("1 pumpkin + 1 wheat flour + 1 milk + 1 sugar",
             new HashMap<>(){{
                 put(new Crop(Crops.PUMPKIN),1);
                 put(new Crop(Crops.WHEAT),1);
                 put(new AnimalProduct(AnimalProductType.COW_MILK),1);
-
             }},
             225,
             false,
-            385),
+            385 , new Texture("Sprites/Food/Pumpkin_Pie.png")),
     SPAGHETTI("1 wheat flour + 1 tomato",
             new HashMap<>(){{
                 put(new Crop(Crops.WHEAT),1);
@@ -60,7 +60,7 @@ public enum FoodType {
             }},
             75,
             false,
-            120),
+            120 , new Texture("Sprites/Food/Spaghetti.png")),
     PIZZA("1 wheat flour + 1 tomato + 1 cheese",
             new HashMap<>(){{
                 put(new Crop(Crops.WHEAT),1);
@@ -69,7 +69,7 @@ public enum FoodType {
             }},
             150,
             false,
-            300),
+            300 , new Texture("Sprites/Food/Pizza.png")),
     PIZZA_LARGE("1 wheat flour + 1 tomato + 1 cheese",
             new HashMap<>(){{
                 put(new Crop(Crops.WHEAT),1);
@@ -78,14 +78,14 @@ public enum FoodType {
             }},
             150,
             false,
-            300),
+            300 , new Texture("Sprites/Food/Pizza.png")),
     TORTILLA("1 corn",
             new HashMap<>(){{
                 put(new Crop(Crops.CORN),1);
             }},
             50,
             false,
-            50),
+            50 , new Texture("Sprites/Food/Tortilla.png")),
     MAKI_ROLL("1 any fish + 1 rice + 1 fiber",
             new HashMap<>(){{
                 put(new Crop(Crops.UN_MILLED_RICE),1);
@@ -94,14 +94,14 @@ public enum FoodType {
             }},
             100,
             false,
-            220),
+            220 ,new Texture("Sprites/Food/Maki_Roll.png")),
     TRIPLE_SHOT_ESPRESSO("3 coffee",
             new HashMap<>(){{
                 put(new Crop(Crops.COFFEE_BEEN),3);
             }},
             200,
             true,
-            450),
+            450 ,new Texture("Sprites/Food/Triple_Shot_Espresso.png")),
     COOKIE("1 wheat flour + 1 sugar + 1 egg",
             new HashMap<>(){{
                 put(new Crop(Crops.WHEAT),1);
@@ -110,7 +110,7 @@ public enum FoodType {
             }},
             90,
             false,
-            140),
+            140, new Texture("Sprites/Food/Cookie.png")),
     HASHBROWNS_OIL_CORN("1 potato + 1 oil",
             new HashMap<>(){{
                 put(new Crop(Crops.POTATO),1);
@@ -118,7 +118,7 @@ public enum FoodType {
             }},
             90,
             true,
-            120),
+            120 ,new Texture("Sprites/Food/Hashbrowns.png")),
     HASHBROWNS_OIL_SUNFLOWER("1 potato + 1 oil",
             new HashMap<>(){{
                 put(new Crop(Crops.POTATO),1);
@@ -126,14 +126,15 @@ public enum FoodType {
             }},
             90,
             true,
-            120),HASH_BROWNS_OIL_SUNFLOWER_SEED("1 potato + 1 oil",
+            120 ,new Texture("Sprites/Food/Hashbrowns.png")),
+    HASH_BROWNS_OIL_SUNFLOWER_SEED("1 potato + 1 oil",
             new HashMap<>(){{
                 put(new Crop(Crops.POTATO),1);
                 put(new ArtisanItem(ArtisanItemType.OIL_SUNFLOWER_SEED),1);
             }},
             90,
             true,
-            120),
+            120 ,new Texture("Sprites/Food/Hashbrowns.png")),
     HASHBROWNS_TRUFFLE_OIL("1 potato + 1 oil",
             new HashMap<>(){{
                 put(new Crop(Crops.POTATO),1);
@@ -141,7 +142,7 @@ public enum FoodType {
             }},
             90,
             true,
-            120),
+            120 ,new Texture("Sprites/Food/Hashbrowns.png")),
     PANCAKES("1 wheat flour + 1 egg",
             new HashMap<>(){{
                 put(new Crop(Crops.WHEAT),1);
@@ -149,7 +150,7 @@ public enum FoodType {
             }},
             90,
             true,
-            80),
+            80, new Texture("Sprites/Food/Pancakes.png")),
     FRUIT_SALAD("1 blueberry + 1 melon + 1 apricot",
             new HashMap<>(){{
                 put(new Crop(Crops.BLUEBERRY),1);
@@ -158,7 +159,7 @@ public enum FoodType {
             }},
             263,
             false,
-            450),
+            450 ,new Texture("Sprites/Food/Fruit_Salad.png")),
     RED_PLATE("1 red cabbage + 1 radish",
             new HashMap<>(){{
                 put(new Crop(Crops.RED_CABBAGE),1);
@@ -166,14 +167,14 @@ public enum FoodType {
             }},
             240,
             true,
-            400),
+            400 ,new Texture("Sprites/Food/Red_Plate.png")),
     BREAD("1 wheat flour",
             new HashMap<>(){{
                 put(new Crop(Crops.WHEAT),1);
             }},
             50,
             false,
-            60),
+            60 ,new Texture("Sprites/Food/Bread.png")),
     SALMON_DINNER("1 salmon + 1 amaranth + 1 kale",
             new HashMap<>(){{
                 put(new Fish(FishType.SALMON),1);
@@ -182,7 +183,7 @@ public enum FoodType {
             }},
             125,
             false,
-            300),
+            300 ,new Texture("Sprites/Food/Salmon_Dinner.png")),
     VEGETABLE_MEDLEY("1 tomato + 1 beet",
             new HashMap<>(){{
                 put(new Crop(Crops.TOMATO),1);
@@ -190,7 +191,7 @@ public enum FoodType {
             }},
             165,
             false,
-            120),
+            120 ,new Texture("Sprites/Food/Vegetable_Medley.png")),
     FARMERS_LAUNCH("1 omelet + 1 parsnip",
             new HashMap<>(){{
                 put(new Crop(Crops.PARSNIP),1);
@@ -198,7 +199,7 @@ public enum FoodType {
             }},
             200,
             true,
-            150),
+            150 , new Texture("Sprites/Food/Farmer%27s_Lunch.png")),
     SURVIVAL_BURGERS("1 bread + 1 carrot + 1 eggplant",
             new HashMap<>(){{
                 put(new Food(FoodType.BREAD),1);
@@ -207,43 +208,43 @@ public enum FoodType {
             }},
             125,
             true,
-            180),
+            180 ,new Texture("Sprites/Food/Survival_Burger.png")),
     DISH_O_THE_SEA_CORN("2 sardines + 1 hash browns",
             new HashMap<>(){{
                 put(new Food(FoodType.HASHBROWNS_OIL_CORN),1);
             }},
             150,
             true,
-            220),
+            220 ,new Texture("Sprites/Food/Dish_O%27_The_Sea.png")),
     DISH_O_THE_SEA_SUNFLOWER("2 sardines + 1 hash browns",
             new HashMap<>(){{
                 put(new Food(FoodType.HASHBROWNS_OIL_SUNFLOWER),1);
             }},
             150,
             true,
-            220),
+            220 ,new Texture("Sprites/Food/Dish_O%27_The_Sea.png")),
     DISH_O_THE_SEA_SUNFLOWER_SEED("2 sardines + 1 hash browns",
             new HashMap<>(){{
                 put(new Food(FoodType.HASH_BROWNS_OIL_SUNFLOWER_SEED),1);
             }},
             150,
             true,
-            220),
+            220 ,new Texture("Sprites/Food/Dish_O%27_The_Sea.png")),
     DISH_O_THE_SEA_TRUFFLE_OIL("2 sardines + 1 hash browns",
             new HashMap<>(){{
                 put(new Food(FoodType.HASHBROWNS_TRUFFLE_OIL),1);
             }},
             150,
             true,
-            220),
-    SEA_FORM_PUDDING("1 flounder + 1 midnight carp",
+            220 ,new Texture("Sprites/Food/Dish_O%27_The_Sea.png")),
+    SEA_FOAM_PUDDING("1 flounder + 1 midnight carp",
             new HashMap<>(){{
                 put(new Fish(FishType.FLOUNDER),1);
                 put(new Fish(FishType.MIDNIGHT_CARP),1);
             }},
             175,
             true,
-            300),
+            300 ,new Texture("Sprites/Food/Seafoam_Pudding.png")),
     MINERS_TREAT_MILK("2 carrot + 1 suger + 1 milk",
             new HashMap<>(){{
                 put(new Crop(Crops.CARROT),1);
@@ -251,7 +252,7 @@ public enum FoodType {
             }},
             125,
             true,
-            200),
+            200 ,new Texture("Sprites/Food/Miner%27s_Treat.png")),
     MINERS_TREAT_LARGE_MILK("2 carrot + 1 suger + 1 milk",
             new HashMap<>(){{
                 put(new Crop(Crops.CARROT),1);
@@ -259,20 +260,21 @@ public enum FoodType {
             }},
             125,
             true,
-            200);
+            200 ,new Texture("Sprites/Food/Miner%27s_Treat.png"));
 
     public  final String recipe;
     public final HashMap<BackPackable, Integer> ingredients;
     public final int energy;
     public final boolean buff;
     public final int price;
-
-    FoodType(String recipe, HashMap<BackPackable, Integer> ingredients, int energy, boolean buff, int price) {
+    public final Texture texture;
+    FoodType(String recipe, HashMap<BackPackable, Integer> ingredients, int energy, boolean buff, int price , Texture texture) {
         this.recipe = recipe;
         this.ingredients = ingredients;
         this.energy = energy;
         this.buff = buff;
         this.price = price;
+        this.texture = texture;
     }
 
     public String getName() {
@@ -281,5 +283,8 @@ public enum FoodType {
 
     public HashMap<BackPackable, Integer> getIngredients() {
         return ingredients;
+    }
+    public Texture getTexture() {
+        return texture;
     }
 }

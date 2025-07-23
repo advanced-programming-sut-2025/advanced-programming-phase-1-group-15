@@ -3,6 +3,7 @@ package com.example.views;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -17,6 +18,7 @@ import com.example.models.crafting.CraftItem;
 import com.example.models.crafting.CraftItemType;
 import com.example.models.tools.BackPack;
 import com.example.models.tools.BackPackable;
+import com.example.models.tools.TrashCan;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -73,6 +75,9 @@ public class CraftingMenu {
         scrollPane.setScrollingDisabled(true, false);
         Label titleLabel = new Label("Crafting Item:", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Desc: ", skin);
+        Image craftIcon = new Image();
+        craftIcon.setSize(48, 48);
+        craftIcon.setVisible(false);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
         itemList.addListener(new InputListener() {
             public boolean mouseMoved(InputEvent event, float x, float y) {
@@ -89,6 +94,10 @@ public class CraftingMenu {
                         }
                         if (current != null) {
                             descriptionLabel.setText("Desc: " + current.getCraftItemType().getRecipe());
+                            Sprite sprite = current.getSprite();
+                            sprite.setSize(48, 48);
+                            craftIcon.setDrawable(new TextureRegionDrawable(sprite));
+                            craftIcon.setVisible(true);
                             return true;
                         }
                         else {
@@ -102,6 +111,7 @@ public class CraftingMenu {
         });
         Table bottomRow = new Table();
         bottomRow.top().right();
+        bottomRow.add(craftIcon).size(60, 60).left();
         bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
