@@ -9,21 +9,17 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.models.Game;
 import com.example.models.crafting.CraftItem;
 import com.example.models.crafting.CraftItemType;
-import com.example.models.tools.BackPack;
 import com.example.models.tools.BackPackable;
-import com.example.models.tools.TrashCan;
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
-import static java.time.zone.ZoneRulesProvider.refresh;
 
 public class CraftingMenu {
     private final Stage stage;
@@ -45,7 +41,9 @@ public class CraftingMenu {
         rootTable.setPosition(Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f - 350);
         rootTable.setVisible(false);
         rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
-        this.table = createCraftingContent();
+        TextButton craftButton = new TextButton("Craft", skin);
+        final Label errorLabel = new Label("", skin);
+        this.table = createCraftingContent(craftButton , errorLabel);
         rootTable.add(table).expand().fill().pad(20).row();
         TextButton exitButton = new TextButton("Exit", skin);
         exitButton.addListener(new InputListener() {
@@ -56,10 +54,12 @@ public class CraftingMenu {
                 return true;
             }
         });
+        rootTable.add(errorLabel).width(700).row();
+        rootTable.add(craftButton).right().pad(10).row();
         rootTable.add(exitButton).right().pad(10);
         stage.addActor(rootTable);
     }
-    private Table createCraftingContent() {
+    private Table createCraftingContent(TextButton craftButton , Label errorLabel) {
         Table table = new Table(skin);
         game.getCurrentPlayer().getAvailableCrafts().add(new CraftItem(CraftItemType.BEE_HOUSE));
         game.getCurrentPlayer().getAvailableCrafts().add(new CraftItem(CraftItemType.DEHYDRATOR));
@@ -78,6 +78,26 @@ public class CraftingMenu {
         Image craftIcon = new Image();
         craftIcon.setSize(48, 48);
         craftIcon.setVisible(false);
+        final CraftItem[] current = new CraftItem[1];
+        craftButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (current[0] != null) {
+                    if (isAvailable(current[0])) {
+                        showError("You make it successfully" , errorLabel);
+                    } else {
+                        if (game.getCurrentPlayer().getInventory().checkFilled()){
+                            showError("You don't have enough capacity" , errorLabel);
+                        }
+                        else{
+                            showError("You don't have enough material" , errorLabel);
+                        }
+                    }
+                }
+            }
+        });
+        errorLabel.setColor(Color.RED);
+        errorLabel.setVisible(false);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
         itemList.addListener(new InputListener() {
             public boolean mouseMoved(InputEvent event, float x, float y) {
@@ -86,15 +106,16 @@ public class CraftingMenu {
                     String item = itemList.getItems().get(index);
                     if (item != null && !item.isEmpty()) {
                         String itemName = item.split(" x")[0];
-                        CraftItem current = null ;
+                        current[0] = null;
                         for (CraftItem craftItem : craftItems) {
                             if(craftItem.getName().equals(itemName)) {
-                                current = craftItem;
+                                current[0] = craftItem;
+                                break;
                             }
                         }
-                        if (current != null) {
-                            descriptionLabel.setText("Desc: " + current.getCraftItemType().getRecipe());
-                            Sprite sprite = current.getSprite();
+                        if (current[0] != null) {
+                            descriptionLabel.setText("Desc: " + current[0].getCraftItemType().getRecipe());
+                            Sprite sprite = current[0].getSprite();
                             sprite.setSize(48, 48);
                             craftIcon.setDrawable(new TextureRegionDrawable(sprite));
                             craftIcon.setVisible(true);
@@ -141,6 +162,7 @@ public class CraftingMenu {
         stage.draw();
     }
     public boolean isAvailable(CraftItem craftItem) {
+        if (craftItem == null) return false;
         if (game.getCurrentPlayer().getInventory().checkFilled()){
             return false;
         }
@@ -160,5 +182,15 @@ public class CraftingMenu {
         }
         game.getCurrentPlayer().getInventory().addToBackPack(craftItem , 1);
         return true;
+    }
+    private void showError(String message, Label errorLabel) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                errorLabel.setVisible(false);
+            }
+        }, 2);
     }
 }
