@@ -10,8 +10,6 @@ import com.example.models.stores.GeneralItem;
 import com.example.models.stores.GeneralItemsType;
 import com.example.views.GameAssetManager;
 
-import java.util.ResourceBundle;
-
 public class Axe extends Tool {
     public Axe() {
         this.toolType = ToolType.AXE;
@@ -23,7 +21,15 @@ public class Axe extends Tool {
         if(tile.isEmpty()) {
             return false;
         }
-        else return tile.getObjectInTile() instanceof Tree;
+        else if(tile.getObjectInTile() instanceof Tree) {
+            return true;
+        }
+        else if(tile.getObjectInTile() instanceof GeneralItem generalItem) {
+            return generalItem.getName().equals("wood");
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
@@ -119,17 +125,23 @@ public class Axe extends Tool {
 
         user.subtractEnergy(energyConsume);
         if(successfulAttempt(tile)) {
-            Tree tr = (Tree) tile.getObjectInTile();
-            Seed s = new Seed(tr.getSeedType());
-            int count = user.getForagingLevel() >= 2 ? 2 : 1;
+            if(tile.getObjectInTile() instanceof Tree tr) {
+                Seed s = new Seed(tr.getSeedType());
+                int count = user.getForagingLevel() >= 2 ? 2 : 1;
 
 
-            user.addToBackPack(s, count);
-            user.addToBackPack(new GeneralItem(GeneralItemsType.WOOD), 100);
-            user.upgradeForagingAbility(10);
-            tile.empty();
+                user.addToBackPack(s, count);
+                user.addToBackPack(new GeneralItem(GeneralItemsType.WOOD), 50);
+                user.upgradeForagingAbility(10);
+                tile.empty();
 
-            return new Result(true, count + " " + s.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.");
+                return new Result(true, count + " " + s.getName() + " + 50 wood added to your inventory.\n" + energyConsume + " energy has been consumed.");
+            }
+            else {
+                user.addToBackPack(new GeneralItem(GeneralItemsType.WOOD), 1);
+                tile.empty();
+                return new Result(true, "1 wood added to your inventory.\n" + energyConsume + " energy has been consumed.");
+            }
         }
         else {
             return new Result(false, "unsuccessful attempt! " + energyConsume + " energy has been consumed.");

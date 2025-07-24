@@ -30,6 +30,6 @@ public class ForagingMineral implements Tilable, BackPackable {
 
     @Override
     public Sprite getSprite() {
-        return null;
+        return foragingMineralType.sprite;
     }
 }
