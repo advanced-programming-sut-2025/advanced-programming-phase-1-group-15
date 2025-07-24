@@ -14,9 +14,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.models.Game;
+import com.example.models.animals.AnimalProduct;
+import com.example.models.animals.AnimalProductType;
 import com.example.models.cooking.Food;
 import com.example.models.crafting.CraftItem;
 import com.example.models.farming.Crop;
@@ -119,6 +122,30 @@ public class CookingMenu {
         Image foodIcon = new Image();
         foodIcon.setSize(48, 48);
         foodIcon.setVisible(false);
+        final Food[] current = new Food[1];
+        TextButton cookButton = new TextButton("Cook", skin);
+        Label errorLabel = new Label("", skin);
+        cookButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (current[0] != null) {
+                    if (isAvailable(current[0])) {
+                        showError("You make it successfully" , errorLabel);
+                        errorLabel.setColor(Color.GREEN);
+                    } else {
+                        if (game.getCurrentPlayer().getInventory().checkFilled()){
+                            showError("You don't have enough capacity" , errorLabel);
+                            errorLabel.setColor(Color.RED);
+                        }
+                        else{
+                            showError("You don't have enough material" , errorLabel);
+                            errorLabel.setColor(Color.RED);
+                        }
+                    }
+                }
+            }
+        });
+        errorLabel.setVisible(false);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
         itemList.addListener(new InputListener() {
             public boolean mouseMoved(InputEvent event, float x, float y) {
@@ -127,15 +154,15 @@ public class CookingMenu {
                     String item = itemList.getItems().get(index);
                     if (item != null && !item.isEmpty()) {
                         String itemName = item.split(" x")[0];
-                        Food current = null;
+                        current[0] = null;
                         for (Food food : game.getCurrentPlayer().getAvailableFoods()) {
                             if (food.getName().equals(itemName)) {
-                                current = food;
+                                current[0] = food;
                             }
                         }
-                        if (current != null) {
-                            descriptionLabel.setText("Desc: " + current.getRecipe());
-                            Sprite sprite = current.getSprite();
+                        if (current[0] != null) {
+                            descriptionLabel.setText("Desc: " + current[0].getRecipe());
+                            Sprite sprite = current[0].getSprite();
                             sprite.setSize(48, 48);
                             foodIcon.setDrawable(new TextureRegionDrawable(sprite));
                             foodIcon.setVisible(true);
@@ -157,13 +184,16 @@ public class CookingMenu {
         bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
-        table.add(bottomRow).bottom();
+        table.add(bottomRow).bottom().row();
+        table.add(errorLabel).width(700).row();
+        table.add(cookButton).right().row();
         return table;
     }
     private Table createFridgeContent() {
         Fridge fridge = game.getCurrentPlayer().getFridge();
         fridge.addToFridge(new Crop(Crops.TOMATO) , 3);
         fridge.addToFridge(new Crop(Crops.CARROT) , 4);
+        fridge.addToFridge(new AnimalProduct(AnimalProductType.EGG) , 1);
         List<String> itemList = new List<>(skin);
         String[] items = fridge.getItems().entrySet().stream()
                 .map(entry -> entry.getKey().getName() + "  x" + entry.getValue())
@@ -253,11 +283,15 @@ public class CookingMenu {
             }
             if (!found) {
                 if (game.getCurrentPlayer().getFridge().getItemByName(item.getName()) != null) {
+                    found = true;
                     int total = game.getCurrentPlayer().getFridge().getItemCount(item.getName());
                     if (total < num) {
                         return false;
                     }
                 }
+            }
+            if (!found) {
+                return false;
             }
         }
         for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
@@ -271,6 +305,17 @@ public class CookingMenu {
                 game.getCurrentPlayer().getFridge().removeCountFromFridge(item , num);
             }
         }
+        game.getCurrentPlayer().getInventory().addToBackPack(food,1);
         return true;
+    }
+    private void showError(String message, Label errorLabel) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                errorLabel.setVisible(false);
+            }
+        }, 2);
     }
 }

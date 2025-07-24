@@ -85,18 +85,20 @@ public class CraftingMenu {
                 if (current[0] != null) {
                     if (isAvailable(current[0])) {
                         showError("You make it successfully" , errorLabel);
+                        errorLabel.setColor(Color.GREEN);
                     } else {
                         if (game.getCurrentPlayer().getInventory().checkFilled()){
                             showError("You don't have enough capacity" , errorLabel);
+                            errorLabel.setColor(Color.RED);
                         }
                         else{
                             showError("You don't have enough material" , errorLabel);
+                            errorLabel.setColor(Color.RED);
                         }
                     }
                 }
             }
         });
-        errorLabel.setColor(Color.RED);
         errorLabel.setVisible(false);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
         itemList.addListener(new InputListener() {
