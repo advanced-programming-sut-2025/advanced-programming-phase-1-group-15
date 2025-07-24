@@ -1,5 +1,6 @@
 package com.example.models.farming;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.time.Season;
 
 import java.util.ArrayList;
@@ -494,6 +495,7 @@ public enum Crops{
     private final boolean edible;
     private final boolean CanBecomeGiant;
     private final int energy;
+    //private final TextureRegion[] sprites;
 
     public boolean canGrowInThisSeason(Season currentSeason){
         for(Season s: season){

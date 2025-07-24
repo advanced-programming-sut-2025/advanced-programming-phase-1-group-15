@@ -38,6 +38,53 @@ public class GameAssetManager {
     public static Sprite training_rod, bamboo_rod, fiberglass_rod, iridium_rod;
     public static Sprite milk_pail, shear, shipping_bin;
 
+    //NPCs
+    public static Sprite abigail,harvey,leah,robin,sebastian;
+
+    //Crops
+    public static Sprite blue_jazz,blue_jazz_1,blue_jazz_2,blue_jazz_3,blue_jazz_4,blue_jazz_5;
+    public static Sprite carrot,carrot_1,carrot_2,carrot_3,carrot_4;
+    public static Sprite cauliflower,cauliflower_1,cauliflower_2,cauliflower_3,cauliflower_4,cauliflower_5,cauliflower_6;
+    public static Sprite coffee_been,coffee_been_1,coffee_been_2,coffee_been_3,coffee_been_4,coffee_been_5,coffee_been_6,coffee_been_7;
+    public static Sprite garlic,garlic_1,garlic_2,garlic_3,garlic_4,garlic_5;
+    public static Sprite green_been,green_been_1,green_been_2,green_been_3,green_been_4,green_been_5,green_been_6,green_been_7,green_been_8;
+    public static Sprite parsnip,parsnip_1,parsnip_2,parsnip_3,parsnip_4,parsnip_5;
+    public static Sprite kale, kale_1, kale_2, kale_3, kale_4, kale_5;
+    public static Sprite potato, potato_1, potato_2, potato_3, potato_4, potato_5, potato_6;
+    public static Sprite rhubarb, rhubarb_1, rhubarb_2, rhubarb_3, rhubarb_4, rhubarb_5, rhubarb_6;
+    public static Sprite strawberry, strawberry_1, strawberry_2, strawberry_3, strawberry_4, strawberry_5, strawberry_6,strawberry_7;
+    public static Sprite tulip, tulip_1, tulip_2, tulip_3, tulip_4, tulip_5, tulip_6;
+    public static Sprite un_milled_rice, un_milled_rice_1, un_milled_rice_2, un_milled_rice_3, un_milled_rice_4, un_milled_rice_5;
+    public static Sprite blueberry, blueberry_1, blueberry_2, blueberry_3, blueberry_4, blueberry_5, blueberry_6, blueberry_7;
+    public static Sprite corn, corn_1, corn_2, corn_3, corn_4, corn_5, corn_6, corn_7;
+    public static Sprite hops, hops_1, hops_2, hops_3, hops_4, hops_5, hops_6, hops_7, hops_8;
+    public static Sprite hot_pepper, hot_pepper_1, hot_pepper_2, hot_pepper_3, hot_pepper_4, hot_pepper_5, hot_pepper_6;
+    public static Sprite melon, melon_1, melon_2, melon_3, melon_4, melon_5, melon_6;
+    public static Sprite poppy, poppy_1, poppy_2, poppy_3, poppy_4, poppy_5, poppy_6;
+    public static Sprite radish, radish_1, radish_2, radish_3, radish_4, radish_5;
+    public static Sprite red_cabbage, red_cabbage_1, red_cabbage_2, red_cabbage_3, red_cabbage_4, red_cabbage_5, red_cabbage_6;
+    public static Sprite star_fruit, star_fruit_1, star_fruit_2, star_fruit_3, star_fruit_4, star_fruit_5, star_fruit_6;
+    public static Sprite summer_spangle, summer_spangle_1, summer_spangle_2, summer_spangle_3, summer_spangle_4, summer_spangle_5;
+    public static Sprite summer_squash, summer_squash_1, summer_squash_2, summer_squash_3, summer_squash_4, summer_squash_5, summer_squash_6, summer_squash_7;
+    public static Sprite sunflower, sunflower_1, sunflower_2, sunflower_3, sunflower_4, sunflower_5;
+    public static Sprite tomato, tomato_1, tomato_2, tomato_3, tomato_4, tomato_5, tomato_6, tomato_7;
+    public static Sprite wheat, wheat_1, wheat_2, wheat_3, wheat_4, wheat_5;
+    public static Sprite amaranth, amaranth_1, amaranth_2, amaranth_3, amaranth_4, amaranth_5;
+    public static Sprite artichoke, artichoke_1, artichoke_2, artichoke_3, artichoke_4, artichoke_5, artichoke_6;
+    public static Sprite beet, beet_1, beet_2, beet_3, beet_4, beet_5;
+    public static Sprite bok_choy, bok_choy_1, bok_choy_2, bok_choy_3, bok_choy_4, bok_choy_5;
+    public static Sprite broccoli, broccoli_1, broccoli_2, broccoli_3, broccoli_4, broccoli_5;
+    public static Sprite cranberry, cranberry_1, cranberry_2, cranberry_3, cranberry_4, cranberry_5, cranberry_6, cranberry_7;
+    public static Sprite eggplant, eggplant_1, eggplant_2, eggplant_3, eggplant_4, eggplant_5, eggplant_6, eggplant_7;
+    public static Sprite fairy_rose, fairy_rose_1, fairy_rose_2, fairy_rose_3, fairy_rose_4, fairy_rose_5;
+    public static Sprite grape, grape_1, grape_2, grape_3, grape_4, grape_5, grape_6, grape_7;
+    public static Sprite pumpkin, pumpkin_1, pumpkin_2, pumpkin_3, pumpkin_4, pumpkin_5, pumpkin_6;
+    public static Sprite yam, yam_1, yam_2, yam_3, yam_4, yam_5;
+    public static Sprite sweet_gem_berry, sweet_gem_berry_1, sweet_gem_berry_2, sweet_gem_berry_3, sweet_gem_berry_4, sweet_gem_berry_5, sweet_gem_berry_6;
+    public static Sprite powder_melon, powder_melon_1, powder_melon_2, powder_melon_3, powder_melon_4, powder_melon_5, powder_melon_6;
+    public static Sprite ancient_fruit, ancient_fruit_1, ancient_fruit_2, ancient_fruit_3, ancient_fruit_4, ancient_fruit_5, ancient_fruit_6, ancient_fruit_7;
+
+
     public static void load() {
         font = new BitmapFont(Gdx.files.internal("UI/font.fnt"));
 
@@ -129,6 +176,65 @@ public class GameAssetManager {
         milk_pail = new Sprite(new Texture("Sprites/Tools/Milk_Pail.png"));
         shear = new Sprite(new Texture("Sprites/Tools/Shears.png"));
         shipping_bin = new Sprite(new Texture("Sprites/Tools/Shipping_Bin.png"));
+
+        abigail = new Sprite(new Texture("Sprites/NPCs/Abigail.png"));
+        harvey = new Sprite(new Texture("Sprites/NPCs/Harvey.png"));
+        leah = new Sprite(new Texture("Sprites/NPCs/Leah.png"));
+        robin = new Sprite(new Texture("Sprites/NPCs/Robin.png"));
+        sebastian = new Sprite(new Texture("Sprites/NPCs/Sebastian.png"));
+
+        blue_jazz     = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Blue_Jazz.png")));
+        blue_jazz_1   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Blue_Jazz_Stage_1.png")));
+        blue_jazz_2   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Blue_Jazz_Stage_2.png")));
+        blue_jazz_3   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Blue_Jazz_Stage_3.png")));
+        blue_jazz_4   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Blue_Jazz_Stage_4.png")));
+        blue_jazz_5   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Blue_Jazz_Stage_5.png")));
+
+        carrot        = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Carrot.png")));
+        carrot_1      = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Carrot_Stage_1.png")));
+        carrot_2      = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Carrot_Stage_2.png")));
+        carrot_3      = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Carrot_Stage_3.png")));
+        carrot_4      = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Carrot_Stage_4.png")));
+
+        cauliflower   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Cauliflower_Seeds.png")));
+        cauliflower_1 = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Cauliflower_Stage_1.png")));
+        cauliflower_2 = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Cauliflower_Stage_2.png")));
+        cauliflower_3 = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Cauliflower_Stage_3.png")));
+        cauliflower_4 = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Cauliflower_Stage_4.png")));
+        cauliflower_5 = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Cauliflower_Stage_5.png")));
+        cauliflower_6 = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Cauliflower_Stage_6.png")));
+
+        coffee_been     = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Coffee_Bean.png")));
+        coffee_been_1   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Coffee_Stage_1.png")));
+        coffee_been_2   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Coffee_Stage_2.png")));
+        coffee_been_3   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Coffee_Stage_3.png")));
+        coffee_been_4   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Coffee_Stage_4.png")));
+        coffee_been_5   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Coffee_Stage_5.png")));
+        coffee_been_6   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Coffee_Stage_6.png")));
+        coffee_been_7   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Coffee_Stage_7.png")));
+
+        garlic         = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Garlic_Seeds.png")));
+        garlic_1       = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Garlic_Stage_1.png")));
+        garlic_2       = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Garlic_Stage_2.png")));
+        garlic_3       = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Garlic_Stage_3.png")));
+        garlic_4       = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Garlic_Stage_4.png")));
+        garlic_5       = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Garlic_Stage_5.png")));
+
+        green_been_1     = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Green_Bean.png")));
+        green_been_2   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Green_Bean_Stage_2.png")));
+        green_been_3   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Green_Bean_Stage_3.png")));
+        green_been_4   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Green_Bean_Stage_4.png")));
+        green_been_5   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Green_Bean_Stage_5.png")));
+        green_been_6   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Green_Bean_Stage_6.png")));
+        green_been_7   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Green_Bean_Stage_7.png")));
+        green_been_8   = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Green_Bean_Stage_8.png")));
+
+        parsnip        = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Parsnip_Seeds.png")));
+        parsnip_1      = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Parsnip_Stage_1.png")));
+        parsnip_2      = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Parsnip_Stage_2.png")));
+        parsnip_3      = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Parsnip_Stage_3.png")));
+        parsnip_4      = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Parsnip_Stage_4.png")));
+        parsnip_5      = new Sprite(new Texture(Gdx.files.internal("Sprites/Crops/Parsnip_Stage_5.png")));
     }
 
     private static TextureRegion loadRegion(String path) {

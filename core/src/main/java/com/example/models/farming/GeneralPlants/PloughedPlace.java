@@ -322,6 +322,12 @@ public class PloughedPlace implements TimeObserver , Tilable , WeatherObserver {
 
     @Override
     public Sprite getSprite(){
+        if(currentState instanceof PloughedPlace){
+            return GameAssetManager.plowed_tile;
+        }
+        else if(currentState instanceof SeededState){
+
+        }
         return GameAssetManager.plowed_tile;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.models.npcs;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
 import com.example.models.Player;
 import com.example.models.RandomGenerator;
@@ -19,6 +20,7 @@ public class NPC implements TimeObserver {
     protected String job;
     private Tile homeLocation;
     private int lastDayUpdate = App.currentGame.getDateAndTime().getDay();
+    private TextureRegion sprite;
 
     protected ArrayList<BackPackable> favourites = new ArrayList<>();
 
@@ -34,10 +36,11 @@ public class NPC implements TimeObserver {
 
     protected HashMap<Player, NPCFriendShip> friendships = new HashMap<>();
 
-    public NPC(String name, String job, Tile homeLocation) {
+    public NPC(String name, String job, Tile homeLocation, TextureRegion sprite) {
         this.name = name;
         this.job = job;
         this.homeLocation = homeLocation;
+        this.sprite = sprite;
     }
 
     public Tile getHomeLocation() {
@@ -146,5 +149,9 @@ public class NPC implements TimeObserver {
                 }
             }
         }
+    }
+
+    public TextureRegion getSprite() {
+        return sprite;
     }
 }

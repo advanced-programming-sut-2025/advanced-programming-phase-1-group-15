@@ -219,6 +219,7 @@ public class GameView implements Screen {
         batch.begin();
 
         showMap(batch);
+        drawNPCs(batch);
         drawPlayer(batch);
 
         batch.end();
@@ -405,6 +406,15 @@ public class GameView implements Screen {
         int drawX = pos.x * tileSideLength;
         int drawY = pos.y * tileSideLength;
         batch.draw(game.getCurrentPlayer().getCurrentFrame(), drawX, drawY);
+    }
+
+    private void drawNPCs(SpriteBatch batch) {
+        for(NPC npc : DefaultNPCs.getInstance().defaultOnes.values()){
+            Position pos = npc.getHomeLocation().getPosition();
+            int drawX = pos.x * tileSideLength;
+            int drawY = pos.y * tileSideLength;
+            batch.draw(npc.getSprite(), drawX, drawY);
+        }
     }
 
     private Tile surroundTile(int x, int y){

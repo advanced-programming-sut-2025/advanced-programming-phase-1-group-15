@@ -5,6 +5,7 @@ import com.example.models.animals.Fish;
 import com.example.models.animals.FishType;
 import com.example.models.map.Map;
 import com.example.models.map.Position;
+import com.example.views.GameAssetManager;
 
 import java.util.HashMap;
 
@@ -29,7 +30,7 @@ public class DefaultNPCs {
         HashMap<String, NPC> list = new HashMap<>();
 
         // Sebastian
-        NPC seb = new NPC("Sebastian", "Programmer", gameMap.getTile(new Position(25, 27)));
+        NPC seb = new NPC("Sebastian", "Programmer", gameMap.getTile(new Position(25, 27)),GameAssetManager.sebastian);
         seb.favourites.add(new Fish(FishType.MIDNIGHT_CARP));
         seb.favourites.add(new Fish(FishType.GLACIER_FISH));
         seb.favourites.add(new Fish(FishType.SQUID));
@@ -39,7 +40,7 @@ public class DefaultNPCs {
         list.put(seb.getName(), seb);
 
         // Abigail
-        NPC abi = new NPC("Abigail", "Adventurer", gameMap.getTile(new Position(25, 25)));
+        NPC abi = new NPC("Abigail", "Adventurer", gameMap.getTile(new Position(25, 25)),GameAssetManager.abigail);
         abi.favourites.add(new Fish(FishType.FLOUNDER));
         abi.favourites.add(new Fish(FishType.HERRING));
         abi.favourites.add(new Fish(FishType.SUNFISH));
@@ -49,7 +50,7 @@ public class DefaultNPCs {
         list.put(abi.getName(), abi);
 
         // Harvey
-        NPC harv = new NPC("Harvey", "Doctor", gameMap.getTile(new Position(27, 25)));
+        NPC harv = new NPC("Harvey", "Doctor", gameMap.getTile(new Position(27, 25)),GameAssetManager.harvey);
         harv.favourites.add(new Fish(FishType.SARDINE));
         harv.favourites.add(new Fish(FishType.SHAD));
         harv.favourites.add(new Fish(FishType.SQUID));
@@ -59,7 +60,7 @@ public class DefaultNPCs {
         list.put(harv.getName(), harv);
 
         // Leah
-        NPC lea = new NPC("Leah", "Artist", gameMap.getTile(new Position(27, 27)));
+        NPC lea = new NPC("Leah", "Artist", gameMap.getTile(new Position(27, 27)),GameAssetManager.leah);
         lea.favourites.add(new Fish(FishType.LIONFISH));
         lea.favourites.add(new Fish(FishType.GHOST_FISH));
         lea.favourites.add(new Fish(FishType.HERRING));
@@ -69,7 +70,7 @@ public class DefaultNPCs {
         list.put(lea.getName(), lea);
 
         // Robin
-        NPC rob = new NPC("Robin", "Carpenter", gameMap.getTile(new Position(23, 27)));
+        NPC rob = new NPC("Robin", "Carpenter", gameMap.getTile(new Position(23, 27)),GameAssetManager.robin);
         rob.favourites.add(new Fish(FishType.TILAPIA));
         rob.favourites.add(new Fish(FishType.SUNFISH));
         rob.favourites.add(new Fish(FishType.DORADO));
