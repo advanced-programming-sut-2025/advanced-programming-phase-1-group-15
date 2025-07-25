@@ -1,167 +1,197 @@
 package com.example.models.farming;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.time.Season;
 
+import com.example.views.GameAssetManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public enum TreeType {
     APRICOT_TREE(
-            SeedType.APRICOT_SAPLING,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.APRICOT,
-            1,
-            59,
-            true,
-            38,
-            new ArrayList<>(List.of(Season.SPRING))
+        SeedType.APRICOT_SAPLING,
+        new ArrayList<>(Arrays.asList(GameAssetManager.apricot_tree_1, GameAssetManager.apricot_tree_2,
+            GameAssetManager.apricot_tree_3, GameAssetManager.apricot_tree_4, GameAssetManager.apricot_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.APRICOT,
+        1,
+        59,
+        true,
+        38,
+        new ArrayList<>(List.of(Season.SPRING))
 
     ),
     CHERRY_TREE(
-            SeedType.CHERRY_SAPLING,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-                    28,
-            FruitType.CHERRY,
-            1,
-                    80,
-                    true,
-                    38,
-            new ArrayList<>(List.of(Season.SPRING))
-            ),
+        SeedType.CHERRY_SAPLING,
+        new ArrayList<>(Arrays.asList(GameAssetManager.cherry_tree_1, GameAssetManager.cherry_tree_2,
+            GameAssetManager.cherry_tree_3, GameAssetManager.cherry_tree_4, GameAssetManager.cherry_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.CHERRY,
+        1,
+        80,
+        true,
+        38,
+        new ArrayList<>(List.of(Season.SPRING))
+    ),
     BANANA_TREE(
-            SeedType.BANANA_SAPLING,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.BANANA,
-            1,
-            150,
-            true,
-            75,
-            new ArrayList<>(List.of(Season.SUMMER))
-            ),
+        SeedType.BANANA_SAPLING,
+        new ArrayList<>(Arrays.asList(GameAssetManager.banana_tree_1, GameAssetManager.banana_tree_2,
+            GameAssetManager.banana_tree_3, GameAssetManager.banana_tree_4, GameAssetManager.banana_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.BANANA,
+        1,
+        150,
+        true,
+        75,
+        new ArrayList<>(List.of(Season.SUMMER))
+    ),
     MANGO_TREE(
-            SeedType.MANGO_SAPLING,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.MANGO,
-            1,
-            130,
-            true,
-            100,
-            new ArrayList<>(List.of(Season.SUMMER))
+        SeedType.MANGO_SAPLING,
+        new ArrayList<>(Arrays.asList(GameAssetManager.mango_tree_1, GameAssetManager.mango_tree_2,
+            GameAssetManager.mango_tree_3, GameAssetManager.mango_tree_4, GameAssetManager.mango_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.MANGO,
+        1,
+        130,
+        true,
+        100,
+        new ArrayList<>(List.of(Season.SUMMER))
     ),
     ORANGE_TREE(
-            SeedType.ORANGE_SAPLING,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.ORANGE,
-            1,
-            100,
-            true,
-            38,
-            new ArrayList<>(List.of(Season.SUMMER))
+        SeedType.ORANGE_SAPLING,
+        new ArrayList<>(Arrays.asList(GameAssetManager.orange_tree_1, GameAssetManager.orange_tree_2,
+            GameAssetManager.orange_tree_3, GameAssetManager.orange_tree_4, GameAssetManager.orange_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.ORANGE,
+        1,
+        100,
+        true,
+        38,
+        new ArrayList<>(List.of(Season.SUMMER))
     ),
     PEACH_TREE(
-            SeedType.PEACH_SAPLING,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.MANGO,
-            1,
-            140,
-            true,
-            38,
-            new ArrayList<>(List.of(Season.SUMMER))
+        SeedType.PEACH_SAPLING,
+        new ArrayList<>(Arrays.asList(GameAssetManager.peach_tree_1, GameAssetManager.peach_tree_2,
+            GameAssetManager.peach_tree_3, GameAssetManager.peach_tree_4, GameAssetManager.peach_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.PEACH, // Corrected from MANGO
+        1,
+        140,
+        true,
+        38,
+        new ArrayList<>(List.of(Season.SUMMER))
     ),
     APPLE_TREE(
-            SeedType.APPLE_SAPLING,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.MANGO,
-            1,
-            100,
-            true,
-            38,
-            new ArrayList<>(List.of(Season.AUTUMN))
+        SeedType.APPLE_SAPLING,
+        new ArrayList<>(Arrays.asList(GameAssetManager.apple_tree_1, GameAssetManager.apple_tree_2,
+            GameAssetManager.apple_tree_3, GameAssetManager.apple_tree_4, GameAssetManager.apple_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.APPLE, // Corrected from MANGO
+        1,
+        100,
+        true,
+        38,
+        new ArrayList<>(List.of(Season.AUTUMN))
     ),
     POMEGRANATE_TREE(
-            SeedType.POMEGRANATE_SAPLING,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.POMEGRANATE,
-            1,
-            140,
-            true,
-            38,
-            new ArrayList<>(List.of(Season.AUTUMN))
+        SeedType.POMEGRANATE_SAPLING,
+        new ArrayList<>(Arrays.asList(GameAssetManager.pomegranate_tree_1, GameAssetManager.pomegranate_tree_2,
+            GameAssetManager.pomegranate_tree_3, GameAssetManager.pomegranate_tree_4, GameAssetManager.pomegranate_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.POMEGRANATE,
+        1,
+        140,
+        true,
+        38,
+        new ArrayList<>(List.of(Season.AUTUMN))
     ),
     OAK_TREE(
-            SeedType.ACORNS,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.OAK_RESIN,
-            7,
-            150,
-            false,
-            0,
-            new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
+        SeedType.ACORNS,
+        new ArrayList<>(Arrays.asList(GameAssetManager.oak_tree_1, GameAssetManager.oak_tree_2,
+            GameAssetManager.oak_tree_3, GameAssetManager.oak_tree_4, GameAssetManager.oak_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.OAK_RESIN,
+        7,
+        150,
+        false,
+        0,
+        new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
     ),
     MAPLE_TREE(
-            SeedType.MAPLE_SEEDS,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.MAPLE_SYRUP,
-            9,
-            200,
-            false,
-            0,
-            new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
+        SeedType.MAPLE_SEEDS,
+        new ArrayList<>(Arrays.asList(GameAssetManager.maple_tree_1, GameAssetManager.maple_tree_2,
+            GameAssetManager.maple_tree_3, GameAssetManager.maple_tree_4, GameAssetManager.maple_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.MAPLE_SYRUP,
+        9,
+        200,
+        false,
+        0,
+        new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
     ),
     PINE_TREE(
-            SeedType.PINE_CONES,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.PINE_TAR,
-            5,
-            100,
-            false,
-            0,
-            new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
+        SeedType.PINE_CONES,
+        new ArrayList<>(Arrays.asList(GameAssetManager.pine_tree_1, GameAssetManager.pine_tree_2,
+            GameAssetManager.pine_tree_3, GameAssetManager.pine_tree_4, GameAssetManager.pine_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.PINE_TAR,
+        5,
+        100,
+        false,
+        0,
+        new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
     ),
     MAHOGANY_TREE(
-            SeedType.MAHOGANY_SEEDS,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.SAP,
-            1,
-            2,
-            true,
-            -2,
-            new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
+        SeedType.MAHOGANY_SEEDS,
+        new ArrayList<>(Arrays.asList(GameAssetManager.mahogany_tree_1, GameAssetManager.mahogany_tree_2,
+            GameAssetManager.mahogany_tree_3, GameAssetManager.mahogany_tree_4, GameAssetManager.mahogany_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.SAP,
+        1,
+        2,
+        true,
+        -2,
+        new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
     ),
     MUSHROOM_TREE(
-            SeedType.MUSHROOM_TREE_SEEDS,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.COMMON_MUSHROOM,
-            1,
-            40,
-            true,
-            38,
-            new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
+        SeedType.MUSHROOM_TREE_SEEDS,
+        new ArrayList<>(Arrays.asList(GameAssetManager.mushroom_tree_1, GameAssetManager.mushroom_tree_2,
+            GameAssetManager.mushroom_tree_3, GameAssetManager.mushroom_tree_4, GameAssetManager.mushroom_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.COMMON_MUSHROOM,
+        1,
+        40,
+        true,
+        38,
+        new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
     ),
     MYSTIC_TREE(
-            SeedType.MYSTIC_TREE_SEEDS,
-            new ArrayList<>(Arrays.asList(7,7,7,7)),
-            28,
-            FruitType.MYSTIC_SYRUP,
-            7,
-                    1000,
-                    true,
-                    500,
-                    new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
-            );
+        SeedType.MYSTIC_TREE_SEEDS,
+        new ArrayList<>(Arrays.asList(GameAssetManager.mystic_tree_1, GameAssetManager.mystic_tree_2,
+            GameAssetManager.mystic_tree_3, GameAssetManager.mystic_tree_4, GameAssetManager.mystic_tree_5)),
+        new ArrayList<>(Arrays.asList(7,7,7,7)),
+        28,
+        FruitType.MYSTIC_SYRUP,
+        7,
+        1000,
+        true,
+        500,
+        new ArrayList<>(Arrays.asList(Season.SPRING , Season.SUMMER ,Season.AUTUMN , Season.WINTER))
+    );
 
     public final SeedType seedType;
     public final ArrayList<Integer> stages;
@@ -172,9 +202,11 @@ public enum TreeType {
     public final boolean edible;
     public final int energy;
     public final ArrayList<Season> season;
+    private final ArrayList<Sprite> sprites;
 
     TreeType(
             SeedType seedType,
+            ArrayList<Sprite> sprites,
             ArrayList<Integer> stages,
             int totalHarvestTime,
             FruitType fruitType,
@@ -185,6 +217,7 @@ public enum TreeType {
             ArrayList<Season> season
     ) {
         this.seedType = seedType;
+        this.sprites = sprites;
         this.stages = stages;
         this.totalHarvestTime = totalHarvestTime;
         this.fruitType = fruitType;
@@ -259,5 +292,8 @@ public enum TreeType {
         return null;
     }
 
+    public ArrayList<Sprite> getSprites() {
+        return sprites;
+    }
 }
 
