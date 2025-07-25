@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
@@ -21,6 +22,7 @@ import com.example.models.Game;
 import com.example.models.animals.AnimalProduct;
 import com.example.models.animals.AnimalProductType;
 import com.example.models.cooking.Food;
+import com.example.models.cooking.FoodType;
 import com.example.models.crafting.CraftItem;
 import com.example.models.farming.Crop;
 import com.example.models.farming.Crops;
@@ -43,6 +45,8 @@ public class CookingMenu {
     private final Label tooltipLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     public CookingMenu(Main main, Game game, Runnable onHideCallback) {
+        game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
+        game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.BACKED_FISH));
         this.main = main;
         this.game = game;
         this.onHideCallback = onHideCallback;
@@ -109,14 +113,6 @@ public class CookingMenu {
         stage.draw();
     }
     private Table createCookingContent() {
-        ArrayList<Food> availableFoods = game.getCurrentPlayer().getAvailableFoods();
-        Array<String> itemName = new Array<>();
-        for (Food availableFood : availableFoods) {
-           itemName.add(availableFood.getName());
-        }
-        List<String> itemList = new List<>(skin);
-        itemList.setItems(itemName);
-        ScrollPane scrollPane = new ScrollPane(itemList,skin);
         Label titleLabel = new Label("Recipe: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Desc: ", skin);
         Image foodIcon = new Image();
@@ -145,38 +141,40 @@ public class CookingMenu {
                 }
             }
         });
+        Table itemTable = new Table(skin);
+        for (Food food : game.getCurrentPlayer().getAvailableFoods()) {
+            Label label = new Label(food.getName(), skin);
+            if (!food.isAvailable()) {
+                label.setColor(Color.LIGHT_GRAY);
+            }
+            else {
+                label.setColor(Color.BROWN);
+            }
+            label.addListener(new InputListener() {
+                @Override
+                public boolean mouseMoved(InputEvent event, float x, float y) {
+                    current[0] = food;
+                    if (!food.isAvailable()) {
+                        cookButton.setVisible(false);
+                    } else {
+                        cookButton.setVisible(true);
+                    }
+                    descriptionLabel.setText("Desc: " + food.getRecipe());
+                    Sprite sprite = food.getSprite();
+                    sprite.setSize(48, 48);
+                    foodIcon.setDrawable(new TextureRegionDrawable(sprite));
+                    foodIcon.setVisible(true);
+                    return true;
+                }
+            });
+
+            itemTable.add(label).left().pad(5).row();
+        }
+        ScrollPane scrollPane = new ScrollPane(itemTable, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
         errorLabel.setVisible(false);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
-        itemList.addListener(new InputListener() {
-            public boolean mouseMoved(InputEvent event, float x, float y) {
-                int index = itemList.getSelectedIndex();
-                if (index >= 0) {
-                    String item = itemList.getItems().get(index);
-                    if (item != null && !item.isEmpty()) {
-                        String itemName = item.split(" x")[0];
-                        current[0] = null;
-                        for (Food food : game.getCurrentPlayer().getAvailableFoods()) {
-                            if (food.getName().equals(itemName)) {
-                                current[0] = food;
-                            }
-                        }
-                        if (current[0] != null) {
-                            descriptionLabel.setText("Desc: " + current[0].getRecipe());
-                            Sprite sprite = current[0].getSprite();
-                            sprite.setSize(48, 48);
-                            foodIcon.setDrawable(new TextureRegionDrawable(sprite));
-                            foodIcon.setVisible(true);
-                            return true;
-                        }
-                        else {
-                            descriptionLabel.setText("Desc: ");
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-        });
         Table table = new Table(skin);
         Table bottomRow = new Table();
         bottomRow.top().right();

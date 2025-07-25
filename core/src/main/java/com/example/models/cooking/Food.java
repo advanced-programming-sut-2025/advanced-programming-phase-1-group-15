@@ -6,6 +6,7 @@ import com.example.models.tools.BackPackable;
 public class Food implements BackPackable {
     private final FoodType foodType;
     private final Sprite sprite;
+    private boolean available = false;
     public Food(FoodType foodType) {
         this.foodType = foodType;
         this.sprite = new Sprite(foodType.texture);
@@ -41,5 +42,13 @@ public class Food implements BackPackable {
     @Override
     public Sprite getSprite() {
         return sprite;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

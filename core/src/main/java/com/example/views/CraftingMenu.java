@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.models.Game;
+import com.example.models.cooking.Food;
 import com.example.models.crafting.CraftItem;
 import com.example.models.crafting.CraftItemType;
 import com.example.models.tools.BackPackable;
@@ -31,6 +32,8 @@ public class CraftingMenu {
     private final Game game;
     private final Runnable onHideCallback;
     public CraftingMenu(Main main, Game game, Runnable onHideCallback) {
+        game.getCurrentPlayer().addToAvailableCrafts(new CraftItem(CraftItemType.BEE_HOUSE));
+        game.getCurrentPlayer().addToAvailableCrafts(new CraftItem(CraftItemType.DEHYDRATOR));
         this.main = main;
         this.game = game;
         this.onHideCallback = onHideCallback;
@@ -61,18 +64,6 @@ public class CraftingMenu {
     }
     private Table createCraftingContent(TextButton craftButton , Label errorLabel) {
         Table table = new Table(skin);
-        game.getCurrentPlayer().getAvailableCrafts().add(new CraftItem(CraftItemType.BEE_HOUSE));
-        game.getCurrentPlayer().getAvailableCrafts().add(new CraftItem(CraftItemType.DEHYDRATOR));
-        ArrayList<CraftItem> craftItems = game.getCurrentPlayer().getAvailableCrafts();
-        Array<String> itemName = new Array<>();
-        for (CraftItem availableCraft : game.getCurrentPlayer().getAvailableCrafts()) {
-            itemName.add(availableCraft.getName());
-        }
-        List<String> itemList = new List<>(skin);
-        itemList.setItems(itemName);
-        ScrollPane scrollPane = new ScrollPane(itemList,skin);
-        scrollPane.setFadeScrollBars(false);
-        scrollPane.setScrollingDisabled(true, false);
         Label titleLabel = new Label("Crafting Item:", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Desc: ", skin);
         Image craftIcon = new Image();
@@ -99,39 +90,40 @@ public class CraftingMenu {
                 }
             }
         });
+        Table itemTable = new Table(skin);
+        for (CraftItem craft : game.getCurrentPlayer().getAvailableCrafts()) {
+            Label label = new Label(craft.getName(), skin);
+            if (!craft.isAvailable()) {
+                label.setColor(Color.LIGHT_GRAY);
+            }
+            else {
+                label.setColor(Color.BROWN);
+            }
+            label.addListener(new InputListener() {
+                @Override
+                public boolean mouseMoved(InputEvent event, float x, float y) {
+                    current[0] = craft;
+                    if (!craft.isAvailable()) {
+                        craftButton.setVisible(false);
+                    } else {
+                        craftButton.setVisible(true);
+                    }
+                    descriptionLabel.setText("Desc: " + craft.getCraftItemType().getRecipe());
+                    Sprite sprite = craft.getSprite();
+                    sprite.setSize(48, 48);
+                    craftIcon.setDrawable(new TextureRegionDrawable(sprite));
+                    craftIcon.setVisible(true);
+                    return true;
+                }
+            });
+
+            itemTable.add(label).left().pad(5).row();
+        }
+        ScrollPane scrollPane = new ScrollPane(itemTable, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
         errorLabel.setVisible(false);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
-        itemList.addListener(new InputListener() {
-            public boolean mouseMoved(InputEvent event, float x, float y) {
-                int index = itemList.getSelectedIndex();
-                if (index >= 0) {
-                    String item = itemList.getItems().get(index);
-                    if (item != null && !item.isEmpty()) {
-                        String itemName = item.split(" x")[0];
-                        current[0] = null;
-                        for (CraftItem craftItem : craftItems) {
-                            if(craftItem.getName().equals(itemName)) {
-                                current[0] = craftItem;
-                                break;
-                            }
-                        }
-                        if (current[0] != null) {
-                            descriptionLabel.setText("Desc: " + current[0].getCraftItemType().getRecipe());
-                            Sprite sprite = current[0].getSprite();
-                            sprite.setSize(48, 48);
-                            craftIcon.setDrawable(new TextureRegionDrawable(sprite));
-                            craftIcon.setVisible(true);
-                            return true;
-                        }
-                        else {
-                            descriptionLabel.setText("Desc: ");
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-        });
         Table bottomRow = new Table();
         bottomRow.top().right();
         bottomRow.add(craftIcon).size(60, 60).left();

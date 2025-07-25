@@ -7,6 +7,7 @@ import com.example.models.tools.BackPackable;
 public class CraftItem implements Tilable, BackPackable {
     private final CraftItemType craftItemType;
     private final Sprite sprite;
+    private boolean available = false;
     public CraftItem(CraftItemType craftItemType) {
         this.craftItemType = craftItemType;
         this.sprite = new Sprite(craftItemType.texture);
@@ -34,5 +35,13 @@ public class CraftItem implements Tilable, BackPackable {
     @Override
     public Sprite getSprite() {
         return sprite;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

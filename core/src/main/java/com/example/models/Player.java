@@ -67,8 +67,7 @@ public class Player extends User implements TimeObserver {
     private DateAndTime lastUpdate = new DateAndTime();
 
     private ArrayList<CraftItem> availableCrafts = new ArrayList<>();
-    private ArrayList<Food> availableFoods = new ArrayList<>(Arrays.asList(new Food(FoodType.FRIED_EGG),
-            new Food(FoodType.BACKED_FISH), new Food(FoodType.SALAD)));
+    private ArrayList<Food> availableFoods = new ArrayList<>();
 
     private ArrayList<TradeWhitMoney> tradesWhitMoney = new ArrayList<>();
     private ArrayList<TradeWithItem> tradesWithItem = new ArrayList<>();
@@ -106,9 +105,22 @@ public class Player extends User implements TimeObserver {
             walkLeftAnimation = GameAssetManager.boy_walking_left;
             walkRightAnimation = GameAssetManager.boy_walking_right;
             currentFrame = walkDownAnimation.getKeyFrame(0);
+            creatCraftList();
+            creatCookList();
         }
     }
-
+    public void creatCraftList(){
+        ArrayList<CraftItemType> allTypes = new ArrayList<>(Arrays.asList(CraftItemType.values()));
+        for (CraftItemType Type : allTypes) {
+            availableCrafts.add(new CraftItem(Type));
+        }
+    }
+    public void creatCookList(){
+        ArrayList<FoodType> allTypes = new ArrayList<>(Arrays.asList(FoodType.values()));
+        for (FoodType Type : allTypes) {
+            availableFoods.add(new Food(Type));
+        }
+    }
     public ArrayList<ArtisanItem> getArtisanItems() {
         return artisanItems;
     }
@@ -319,15 +331,25 @@ public class Player extends User implements TimeObserver {
     }
 
     public void addToAvailableCrafts(CraftItem craft) {
-        availableCrafts.add(craft);
+        for (CraftItem crafts : availableCrafts) {
+            if (crafts.getName().equals(craft.getName())) {
+                crafts.setAvailable(true);
+            }
+        }
     }
     public ArrayList<CraftItem> getAvailableCrafts() {
+        availableCrafts.sort(Comparator.comparing(CraftItem::isAvailable).reversed());
         return availableCrafts;
     }
     public void addToAvailableFoods(Food food) {
-        availableFoods.add(food);
+        for (Food foods : availableFoods) {
+            if (foods.getName().equals(food.getName())) {
+                foods.setAvailable(true);
+            }
+        }
     }
     public ArrayList<Food> getAvailableFoods() {
+        availableFoods.sort(Comparator.comparing(Food::isAvailable).reversed());
         return availableFoods;
     }
 
