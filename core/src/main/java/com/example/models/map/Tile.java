@@ -263,7 +263,7 @@ public class Tile {
         if(area instanceof Map) {
             return GameAssetManager.getLandSprite(randomizer);
         }
-        else if(area instanceof Farm) {
+        else if(area instanceof Farm || area instanceof House) {
             return GameAssetManager.getGrassSprite(randomizer);
         }
         else if(area instanceof Quarry) {

@@ -3,7 +3,6 @@ package com.example.models.map;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
 import com.example.models.Player;
-import com.example.models.stores.*;
 import com.example.models.time.DateAndTime;
 
 import java.util.*;

@@ -57,6 +57,8 @@ public class GameView implements Screen {
     private final Stage uiStage;
     private final Skin skin;
     private final ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private final Color eveningTint = new Color(0f, 0f, 0.3f, 0.4f);
+    private final ShapeRenderer overlayRenderer = new ShapeRenderer();
 
     // UI
     private Table hudTable;
@@ -195,6 +197,10 @@ public class GameView implements Screen {
         SpriteBatch batch = main.getBatch();
 
         renderMap(batch);
+        int currentHour = game.getDateAndTime().getHour();
+        if (currentHour >= 18) {
+            drawEveningTintOverlay();
+        }
         renderHeldItemCursor(batch);
 
         renderHUD(batch, delta);
@@ -353,8 +359,8 @@ public class GameView implements Screen {
         com.example.models.map.Map currentMap = game.getMap();
 
         // prints the background
-        for(int row = 0; row < currentMap.ROWS; row++){
-            for(int col = 0; col < currentMap.COLS; col++){
+        for(int row = 0; row < Map.ROWS; row++){
+            for(int col = 0; col < Map.COLS; col++){
                 Tile toBePrinted = App.currentGame.getMap().getTile(row, col);
                 printTileBackground(toBePrinted,
                     (col) * tileSideLength,
@@ -363,9 +369,20 @@ public class GameView implements Screen {
             }
         }
 
+        // prints the area
+        for(int row = 0; row < Map.ROWS; row++){
+            for(int col = 0; col < Map.COLS; col++){
+                Tile toBePrinted = App.currentGame.getMap().getTile(row, col);
+                printTileArea(toBePrinted,
+                    (col) * tileSideLength,
+                    (row) * tileSideLength,
+                    batch);
+            }
+        }
+
         // prints other objects
-        for(int row = 0; row < currentMap.ROWS; row++){
-            for(int col = 0; col < currentMap.COLS; col++){
+        for(int row = 0; row < Map.ROWS; row++){
+            for(int col = 0; col < Map.COLS; col++){
                 Tile toBePrinted = App.currentGame.getMap().getTile(row, col);
                 printTileObject(toBePrinted,
                     (col) * tileSideLength,
@@ -379,25 +396,23 @@ public class GameView implements Screen {
         if(tile.getAreaSprite() != null) {
             batch.draw(tile.getAreaSprite(), x, y, tileSideLength, tileSideLength);
         }
-        else {
-            printArea(tile, batch);
-        }
     }
-    public void printTileObject(Tile tile, int x, int y, Batch batch) {
-        if(tile.getObjectSprite() != null) {
-            batch.draw(tile.getObjectSprite(), x, y);
-        }
-    }
-
-    public void printArea(Tile tile, Batch batch) {
+    public void printTileArea(Tile tile, int x, int y, Batch batch){
         com.example.models.map.Area area = tile.getArea();
         Position bottomLeft = area.getBottomLeftCorner();
         int drawX = bottomLeft.x * tileSideLength;
         int drawY = bottomLeft.y * tileSideLength;
         int realWidth = tileSideLength * area.getWidth();
         int realHeight = tileSideLength * area.getHeight();
-        if(area.getTexture() != null)  {
-            batch.draw(area.getTexture(), drawX, drawY, realWidth, realHeight);
+        if(drawX == x && drawY == y) {
+            if(area.getTexture() != null)  {
+                batch.draw(area.getTexture(), drawX, drawY, realWidth, realHeight);
+            }
+        }
+    }
+    public void printTileObject(Tile tile, int x, int y, Batch batch) {
+        if(tile.getObjectSprite() != null) {
+            batch.draw(tile.getObjectSprite(), x, y);
         }
     }
 
@@ -661,4 +676,15 @@ public class GameView implements Screen {
 
         return Math.abs(mouseTileX - playerPos.getX()) <= 1 && Math.abs(mouseTileY - playerPos.getY()) <= 1;
     }
+
+    private void drawEveningTintOverlay() {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        overlayRenderer.setProjectionMatrix(mapCamera.getCamera().combined);
+        overlayRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        overlayRenderer.setColor(eveningTint);
+        overlayRenderer.rect(0, 0, Map.COLS * tileSideLength, Map.ROWS * tileSideLength);
+        overlayRenderer.end();
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+    }
+
 }

@@ -1,10 +1,8 @@
 package com.example.models.map;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.Player;
 import com.example.models.time.TimeObserver;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 

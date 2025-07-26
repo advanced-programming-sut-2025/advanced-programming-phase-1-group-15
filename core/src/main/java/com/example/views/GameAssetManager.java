@@ -14,17 +14,21 @@ public class GameAssetManager {
     public static TextureRegion boy_default_avatar, sam_avatar, sebastian_avatar;
     public static TextureRegion girl_default_avatar, abigail_avatar, marnie_avatar;
 
+    // Weather & Time
     public static TextureRegion clock;
     public static TextureRegion spring, summer, autumn, winter;
     public static TextureRegion rainy, stormy, snowy, sunny;
 
+    // Sprites and Items
     public static Sprite grass0, grass1, grass2, plowed_tile;
     public static Sprite land0, land1, land2, land3;
     public static Sprite quarry0, quarry1;
     public static Sprite stone, wood;
 
+    // Area Textures
     public static TextureRegion house, lake, broken_greenhouse, greenhouse;
 
+    // Player Sprites
     public static TextureRegion boy_face, boy_fainted;
     public static Animation<TextureRegion> boy_walking_up, boy_walking_down, boy_walking_right, boy_walking_left;
 
@@ -37,6 +41,17 @@ public class GameAssetManager {
     public static Sprite scythe, gold_scythe, iridium_scythe;
     public static Sprite training_rod, bamboo_rod, fiberglass_rod, iridium_rod;
     public static Sprite milk_pail, shear, shipping_bin;
+
+    // Animals
+    public static Animation<TextureRegion> chicken_walking_up, chicken_walking_down, chicken_walking_right, chicken_walking_left, chicken_eating;
+    public static Animation<TextureRegion> duck_walking_up, duck_walking_down, duck_walking_right, duck_walking_left, duck_eating;
+    public static Animation<TextureRegion> dinosaur_walking_up, dinosaur_walking_down, dinosaur_walking_right, dinosaur_walking_left, dinosaur_eating;
+    public static Animation<TextureRegion> rabbit_walking_up, rabbit_walking_down, rabbit_walking_right, rabbit_walking_left, rabbit_eating;
+
+    public static Animation<TextureRegion> cow_walking_up, cow_walking_down, cow_walking_right, cow_walking_left, cow_eating;
+    public static Animation<TextureRegion>  goat_walking_up, goat_walking_down, goat_walking_right, goat_walking_left, goat_eating;
+    public static Animation<TextureRegion>  pig_walking_up, pig_walking_down, pig_walking_right, pig_walking_left, pig_eating;
+    public static Animation<TextureRegion>  sheep_walking_up, sheep_walking_down, sheep_walking_right, sheep_walking_left, sheep_eating;
 
     //NPCs
     public static Sprite abigail,harvey,leah,robin,sebastian;
@@ -195,6 +210,62 @@ public class GameAssetManager {
         milk_pail = new Sprite(new Texture("Sprites/Tools/Milk_Pail.png"));
         shear = new Sprite(new Texture("Sprites/Tools/Shears.png"));
         shipping_bin = new Sprite(new Texture("Sprites/Tools/Shipping_Bin.png"));
+
+        // Chicken
+        chicken_walking_up = createAnimation("Sprites/Animals/Chicken/", 8, 11); chicken_walking_up.setPlayMode(Animation.PlayMode.LOOP);
+        chicken_walking_down = createAnimation("Sprites/Animals/Chicken/", 0, 3); chicken_walking_down.setPlayMode(Animation.PlayMode.LOOP);
+        chicken_walking_right = createAnimation("Sprites/Animals/Chicken/", 4, 7); chicken_walking_right.setPlayMode(Animation.PlayMode.LOOP);
+        chicken_walking_left = createAnimation("Sprites/Animals/Chicken/", 12, 15); chicken_walking_left.setPlayMode(Animation.PlayMode.LOOP);
+        chicken_eating = createAnimation("Sprites/Animals/Chicken/", 16, 19); chicken_eating.setPlayMode(Animation.PlayMode.LOOP);
+
+        // Duck
+        duck_walking_up = createAnimation("Sprites/Animals/Duck/", 8, 11); duck_walking_up.setPlayMode(Animation.PlayMode.LOOP);
+        duck_walking_down = createAnimation("Sprites/Animals/Duck/", 0, 3); duck_walking_down.setPlayMode(Animation.PlayMode.LOOP);
+        duck_walking_right = createAnimation("Sprites/Animals/Duck/", 4, 7); duck_walking_right.setPlayMode(Animation.PlayMode.LOOP);
+        duck_walking_left = createAnimation("Sprites/Animals/Duck/", 12, 15); duck_walking_left.setPlayMode(Animation.PlayMode.LOOP);
+        duck_eating = createAnimation("Sprites/Animals/Duck/", 16, 19); duck_eating.setPlayMode(Animation.PlayMode.LOOP);
+
+        // Dinosaur
+        dinosaur_walking_up = createAnimation("Sprites/Animals/Dinosaur/", 8, 11); dinosaur_walking_up.setPlayMode(Animation.PlayMode.LOOP);
+        dinosaur_walking_down = createAnimation("Sprites/Animals/Dinosaur/", 0, 3); dinosaur_walking_down.setPlayMode(Animation.PlayMode.LOOP);
+        dinosaur_walking_right = createAnimation("Sprites/Animals/Dinosaur/", 4, 7); dinosaur_walking_right.setPlayMode(Animation.PlayMode.LOOP);
+        dinosaur_walking_left = createAnimation("Sprites/Animals/Dinosaur/", 12, 15); dinosaur_walking_left.setPlayMode(Animation.PlayMode.LOOP);
+        dinosaur_eating = createAnimation("Sprites/Animals/Dinosaur/", 16, 19); dinosaur_eating.setPlayMode(Animation.PlayMode.LOOP);
+
+        // Rabbit
+        rabbit_walking_up = createAnimation("Sprites/Animals/Rabbit/", 8, 11); rabbit_walking_up.setPlayMode(Animation.PlayMode.LOOP);
+        rabbit_walking_down = createAnimation("Sprites/Animals/Rabbit/", 0, 3); rabbit_walking_down.setPlayMode(Animation.PlayMode.LOOP);
+        rabbit_walking_right = createAnimation("Sprites/Animals/Rabbit/", 4, 7); rabbit_walking_right.setPlayMode(Animation.PlayMode.LOOP);
+        rabbit_walking_left = createAnimation("Sprites/Animals/Rabbit/", 12, 15); rabbit_walking_left.setPlayMode(Animation.PlayMode.LOOP);
+        rabbit_eating = createAnimation("Sprites/Animals/Rabbit/", 16, 19); rabbit_eating.setPlayMode(Animation.PlayMode.LOOP);
+
+        // Cow
+        cow_walking_up = createAnimation("Sprites/Animals/Cow/", 8, 11); cow_walking_up.setPlayMode(Animation.PlayMode.LOOP);
+        cow_walking_down = createAnimation("Sprites/Animals/Cow/", 0, 3); cow_walking_down.setPlayMode(Animation.PlayMode.LOOP);
+        cow_walking_right = createAnimation("Sprites/Animals/Cow/", 4, 7); cow_walking_right.setPlayMode(Animation.PlayMode.LOOP);
+        cow_walking_left = createAnimation("Sprites/Animals/Cow/", 12, 15); cow_walking_left.setPlayMode(Animation.PlayMode.LOOP);
+        cow_eating = createAnimation("Sprites/Animals/Cow/", 16, 19); cow_eating.setPlayMode(Animation.PlayMode.LOOP);
+
+        // Goat
+        goat_walking_up = createAnimation("Sprites/Animals/Goat/", 8, 11); goat_walking_up.setPlayMode(Animation.PlayMode.LOOP);
+        goat_walking_down = createAnimation("Sprites/Animals/Goat/", 0, 3); goat_walking_down.setPlayMode(Animation.PlayMode.LOOP);
+        goat_walking_right = createAnimation("Sprites/Animals/Goat/", 4, 7); goat_walking_right.setPlayMode(Animation.PlayMode.LOOP);
+        goat_walking_left = createAnimation("Sprites/Animals/Goat/", 12, 15); goat_walking_left.setPlayMode(Animation.PlayMode.LOOP);
+        goat_eating = createAnimation("Sprites/Animals/Goat/", 16, 19); goat_eating.setPlayMode(Animation.PlayMode.LOOP);
+
+        // Pig
+        pig_walking_up = createAnimation("Sprites/Animals/Pig/", 8, 11); pig_walking_up.setPlayMode(Animation.PlayMode.LOOP);
+        pig_walking_down = createAnimation("Sprites/Animals/Pig/", 0, 3); pig_walking_down.setPlayMode(Animation.PlayMode.LOOP);
+        pig_walking_right = createAnimation("Sprites/Animals/Pig/", 4, 7); pig_walking_right.setPlayMode(Animation.PlayMode.LOOP);
+        pig_walking_left = createAnimation("Sprites/Animals/Pig/", 12, 15); pig_walking_left.setPlayMode(Animation.PlayMode.LOOP);
+        pig_eating = createAnimation("Sprites/Animals/Pig/", 16, 19); pig_eating.setPlayMode(Animation.PlayMode.LOOP);
+
+        // Sheep
+        sheep_walking_up = createAnimation("Sprites/Animals/Sheep/", 8, 11); sheep_walking_up.setPlayMode(Animation.PlayMode.LOOP);
+        sheep_walking_down = createAnimation("Sprites/Animals/Sheep/", 0, 3); sheep_walking_down.setPlayMode(Animation.PlayMode.LOOP);
+        sheep_walking_right = createAnimation("Sprites/Animals/Sheep/", 4, 7); sheep_walking_right.setPlayMode(Animation.PlayMode.LOOP);
+        sheep_walking_left = createAnimation("Sprites/Animals/Sheep/", 12, 15); sheep_walking_left.setPlayMode(Animation.PlayMode.LOOP);
+        sheep_eating = createAnimation("Sprites/Animals/Sheep/", 16, 19); sheep_eating.setPlayMode(Animation.PlayMode.LOOP);
 
         abigail = new Sprite(new Texture("Sprites/NPCs/Abigail.png"));
         harvey = new Sprite(new Texture("Sprites/NPCs/Harvey.png"));
