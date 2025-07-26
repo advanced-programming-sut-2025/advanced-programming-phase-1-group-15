@@ -11,6 +11,7 @@ import com.example.models.time.DateAndTime;
 public class NPCFriendShip {
     NPC npc;
     Player player;
+    private boolean receivedDailyGift = false;
 
     private DateAndTime levelOneReachedDate = null;
 
@@ -29,8 +30,8 @@ public class NPCFriendShip {
     private boolean talkedToday = false;
     private boolean giftedToday = false;
 
-    static final int MAX_POINTS = 799;
-    static final int POINTS_PER_LEVEL = 200;
+    public static final int MAX_POINTS = 799;
+    public static final int POINTS_PER_LEVEL = 200;
 
     private HashMap<Quest,Boolean> playerQuests = new HashMap<>();
 
@@ -54,11 +55,11 @@ public class NPCFriendShip {
         return points / POINTS_PER_LEVEL;
     }
 
-    boolean hasTalkedToday() {
+    public boolean hasTalkedToday() {
         return talkedToday;
     }
 
-    boolean hasGiftedToday() {
+    public boolean hasGiftedToday() {
         return giftedToday;
     }
 
@@ -73,6 +74,7 @@ public class NPCFriendShip {
     void resetDaily() {
         talkedToday = false;
         giftedToday = false;
+        receivedDailyGift = false;
     }
 
     void activateQuests() {
@@ -144,6 +146,14 @@ public class NPCFriendShip {
                         found.getRewardAmount() * ((getLevel() + 1) / 2));
 
         return new Result(true, "well done! quest completed!");
+    }
+
+    public boolean hasReceivedDailyGift() {
+        return receivedDailyGift;
+    }
+
+    public void markDailyGiftReceived() {
+        receivedDailyGift = true;
     }
 
 

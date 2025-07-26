@@ -24,8 +24,8 @@ public abstract class PopUpMenu {
 
     public PopUpMenu(Skin skin, String title, float width, float height, Runnable onHideCallback) {
         this.skin = skin;
-        this.onHideCallback = onHideCallback;
 
+        this.onHideCallback = onHideCallback;
         window = new Window(title, skin);
         window.setSize(width, height);
         window.setModal(true);
@@ -80,6 +80,8 @@ public abstract class PopUpMenu {
         });
     }
 
+
+
     private void centerWindow() {
         float screenWidth = Gdx.graphics.getWidth();
         float screenHeight = Gdx.graphics.getHeight();
@@ -87,12 +89,14 @@ public abstract class PopUpMenu {
             (screenWidth - window.getWidth()) / 2,
             (screenHeight - window.getHeight()) / 2
         );
+
     }
+
+
 
     public void show() {
         if (isVisible) return;
 
-        // this may cause us some problems!
         populate(window);
 
         isVisible = true;
@@ -102,7 +106,10 @@ public abstract class PopUpMenu {
         window.setVisible(true);
         window.getColor().a = 0f;
         window.addAction(Actions.fadeIn(0.3f));
+
     }
+
+
 
     public void hide() {
         if (!isVisible) return;

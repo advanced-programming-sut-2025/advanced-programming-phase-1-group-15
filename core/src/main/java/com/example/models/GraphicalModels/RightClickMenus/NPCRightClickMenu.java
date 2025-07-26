@@ -1,19 +1,25 @@
 package com.example.models.GraphicalModels.RightClickMenus;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.example.models.npcs.NPC;
 import com.example.models.App;
+import com.example.models.GraphicalModels.PopUpMenus.FriendshipStatusMenu;
+import com.example.models.GraphicalModels.PopUpMenus.GiftSelectionMenu;
+import com.example.models.GraphicalModels.PopUpMenus.QuestDisplayMenu;
 import com.example.models.Player;
+import com.example.models.npcs.NPC;
 
 public class NPCRightClickMenu extends RightClickMenu {
     private final NPC targetNPC;
+    private final Player currentPlayer;
 
     public NPCRightClickMenu(Skin skin, NPC targetNPC, Runnable onHideCallback) {
         super(skin, onHideCallback);
         this.targetNPC = targetNPC;
+        this.currentPlayer = App.currentGame.getCurrentPlayer();
     }
 
     @Override
@@ -33,6 +39,12 @@ public class NPCRightClickMenu extends RightClickMenu {
             public void changed(ChangeEvent event, Actor actor) {
                 Player currentPlayer = App.currentGame.getCurrentPlayer();
                 String message = targetNPC.meet(currentPlayer);
+
+                Dialog talkDialog = new Dialog("Conversation with " + targetNPC.getName(), skin);
+                talkDialog.text(message);
+                talkDialog.button("OK");
+                talkDialog.show(stage);
+
                 hide();
             }
         });
@@ -40,33 +52,45 @@ public class NPCRightClickMenu extends RightClickMenu {
         giftButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // TODO: Open gift selection menu
                 hide();
+
+                GiftSelectionMenu giftMenu = new GiftSelectionMenu(
+                    skin,
+                    "Give Gift to " + targetNPC.getName(),
+                    () -> {},
+                    targetNPC
+                );
+                giftMenu.show();
             }
         });
 
-        // Quests button
         questsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Player currentPlayer = App.currentGame.getCurrentPlayer();
                 hide();
+
+                QuestDisplayMenu questMenu = new QuestDisplayMenu(
+                    skin,
+                    "Quests from " + targetNPC.getName(),
+                    () -> {},
+                    targetNPC
+                );
+                questMenu.show();
             }
         });
 
         friendshipButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Player currentPlayer = App.currentGame.getCurrentPlayer();
-                if (targetNPC.getFriendships().containsKey(currentPlayer)) {
-                    int friendshipLevel = targetNPC.getFriendships().get(currentPlayer).getLevel();
-                    int friendshipPoints = targetNPC.getFriendships().get(currentPlayer).getPoints();
-                    System.out.println("Friendship with " + targetNPC.getName() +
-                            " - Level: " + friendshipLevel + ", Points: " + friendshipPoints);
-                } else {
-                    System.out.println("No friendship established with " + targetNPC.getName());
-                }
                 hide();
+
+                FriendshipStatusMenu friendshipMenu = new FriendshipStatusMenu(
+                    skin,
+                    "Friendship Status with " + targetNPC.getName(),
+                    () -> {},
+                    targetNPC
+                );
+                friendshipMenu.show();
             }
         });
     }

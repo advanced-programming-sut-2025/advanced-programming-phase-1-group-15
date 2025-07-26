@@ -19,6 +19,7 @@ import com.example.controllers.GameController;
 import com.example.models.App;
 import com.example.models.Game;
 import com.example.models.GraphicalModels.MapCamera;
+import com.example.models.GraphicalModels.NPCUIHelper;
 import com.example.models.GraphicalModels.NotificationLabel;
 import com.example.models.GraphicalModels.PopUpMenus.*;
 import com.example.models.GraphicalModels.RightClickMenus.NPCRightClickMenu;
@@ -55,8 +56,8 @@ public class GameView implements Screen {
     private final Stage uiStage;
     private final Skin skin;
     private final ShapeRenderer shapeRenderer = new ShapeRenderer();
-    private final Color eveningTint = new Color(0f, 0f, 0.3f, 0.4f);
     private final ShapeRenderer overlayRenderer = new ShapeRenderer();
+    private final Color eveningTint = new Color(0.2f, 0.2f, 0.4f, 0.3f);
 
     // UI
     private Table hudTable;
@@ -207,6 +208,10 @@ public class GameView implements Screen {
         uiStage.act(delta);
         uiStage.draw();
 
+        if (rightClickMenu != null && rightClickMenu.isVisible()) {
+            rightClickMenu.render(delta);
+        }
+
         if (popUpMenu != null) {
             popUpMenu.render(delta);
         }
@@ -307,6 +312,10 @@ public class GameView implements Screen {
         mapCamera.resize(width, height);
         uiStage.getViewport().update(width, height, true);
 
+        if (rightClickMenu != null) {
+            rightClickMenu.resize(width, height);
+        }
+
         if (popUpMenu != null) {
             popUpMenu.resize(width, height);
         }
@@ -330,12 +339,17 @@ public class GameView implements Screen {
         commandExecutor.shutdownNow();
         shapeRenderer.dispose();
         uiStage.dispose();
+
+        if (rightClickMenu != null) {
+            rightClickMenu.dispose();
+        }
         if (popUpMenu != null) {
             popUpMenu.dispose();
         }
         if (skin != null) {
             skin.dispose();
         }
+        overlayRenderer.dispose();
         pauseMenuOverlay.dispose();
         craftingMenu.dispose();
         cookingMenu.dispose();
@@ -419,15 +433,6 @@ public class GameView implements Screen {
         int drawX = pos.x * tileSideLength;
         int drawY = pos.y * tileSideLength;
         batch.draw(game.getCurrentPlayer().getCurrentFrame(), drawX, drawY);
-    }
-
-    private void drawNPCs(SpriteBatch batch) {
-        for(NPC npc : DefaultNPCs.getInstance().defaultOnes.values()){
-            Position pos = npc.getHomeLocation().getPosition();
-            int drawX = pos.x * tileSideLength;
-            int drawY = pos.y * tileSideLength;
-            batch.draw(npc.getSprite(), drawX, drawY);
-        }
     }
 
     private Tile surroundTile(int x, int y){
@@ -547,25 +552,23 @@ public class GameView implements Screen {
                 Tile clickedTile = App.currentGame.getTile(tileX, tileY);
 
                 if (button == Input.Buttons.RIGHT) {
-                    for(NPC npc : DefaultNPCs.getInstance().defaultOnes.values()) {
-                        if(npc.getHomeLocation().getPosition().x == x/tileSideLength){
-                            if(npc.getHomeLocation().getPosition().y == y/tileSideLength){
-                                if(rightClickMenu != null){
-                                    rightClickMenu.dispose();
-                                }
-                                rightClickMenu = new NPCRightClickMenu(skin,npc,GameView.this::restoreGameInput);
-                                rightClickMenu.show(x,y);
-                                Gdx.input.setInputProcessor(rightClickMenu.getStage());
-                                return true;
-                            }
+                    NPC clickedNPC = getNPCAtPosition(tileX, tileY);
+                    if (clickedNPC != null) {
+                        if(rightClickMenu != null){
+                            rightClickMenu.dispose();
                         }
+                        rightClickMenu = new NPCRightClickMenu(skin, clickedNPC, GameView.this::restoreGameInput);
+                        rightClickMenu.show(x, y);
+                        Gdx.input.setInputProcessor(rightClickMenu.getStage());
+                        return true;
                     }
 
+                    // Check for Player right-click
                     for(Player player: App.currentGame.getPlayers()) {
                         if(player.equals(App.currentGame.getCurrentPlayer())){
                             continue;
                         }
-                        if(player.getPosition().x == x/tileSideLength && player.getPosition().y == y/tileSideLength){
+                        if(player.getPosition().x == tileX && player.getPosition().y == tileY){
                             if(rightClickMenu!=null){
                                 rightClickMenu.dispose();
                             }
@@ -577,8 +580,30 @@ public class GameView implements Screen {
                     }
                 }
 
-                // Left-click handling (your existing code)
                 if (button == Input.Buttons.LEFT) {
+                    NPC clickedNPC = getNPCAtPosition(tileX, tileY);
+                    if (clickedNPC != null && clickedNPC.hasMessageForToday(App.currentGame.getCurrentPlayer())) {
+                        // Show the NPC's message
+                        String message = clickedNPC.meet(App.currentGame.getCurrentPlayer());
+
+                        // Create and show message dialog
+                        Dialog messageDialog = new Dialog("Message from " + clickedNPC.getName(), skin) {
+                            @Override
+                            protected void result(Object object) {
+                                // Restore game input when dialog is closed
+                                restoreGameInput();
+                            }
+                        };
+                        messageDialog.text(message);
+                        messageDialog.button("OK");
+                        messageDialog.show(uiStage);
+
+                        // Set input processor to the dialog's stage
+                        Gdx.input.setInputProcessor(messageDialog.getStage());
+                        return true;
+                    }
+
+                    // Regular left-click handling for adjacent tiles
                     if(checkCursorInAdjacent()) {
                         if(clickedTile.getArea() instanceof GreenHouse greenHouse && !greenHouse.isBuilt()){
                             popUpMenu = new GreenHouseMenu(skin, "Repair GREENHOUSE", this::restoreGameInput, greenHouse);
@@ -602,6 +627,19 @@ public class GameView implements Screen {
                             notificationLabel.showMessage(result.message(), result.success() ? Color.BLACK : Color.RED);
                         }
                     }
+                    return true;
+                }
+                NPC clickedNPC = getNPCAtPosition(tileX, tileY);
+                if (clickedNPC != null && clickedNPC.hasMessageForToday(App.currentGame.getCurrentPlayer())) {
+                    // Show the NPC's message
+                    String message = clickedNPC.meet(App.currentGame.getCurrentPlayer());
+
+                    // You can show this in a dialog or notification
+                    Dialog messageDialog = new Dialog("Message from " + clickedNPC.getName(), skin);
+                    messageDialog.text(message);
+                    messageDialog.button("OK");
+                    messageDialog.show(uiStage); // You'll need access to the stage here
+
                     return true;
                 }
             }
@@ -690,5 +728,55 @@ public class GameView implements Screen {
         overlayRenderer.end();
         Gdx.gl.glDisable(GL20.GL_BLEND);
     }
+
+
+    private void drawNPCs(SpriteBatch batch) {
+        Player currentPlayer = App.currentGame.getCurrentPlayer();
+        NPCUIHelper uiHelper = NPCUIHelper.getInstance();
+
+        for(NPC npc : DefaultNPCs.getInstance().defaultOnes.values()){
+            Position pos = npc.getHomeLocation().getPosition();
+            int drawX = pos.x * tileSideLength;
+            int drawY = pos.y * tileSideLength;
+
+            // Draw the NPC sprite
+            batch.draw(npc.getSprite(), drawX, drawY, tileSideLength, tileSideLength);
+
+            // Draw message indicator if NPC has a message for today
+            if (npc.hasMessageForToday(currentPlayer)) {
+                int indicatorX = drawX + tileSideLength - 18;
+                int indicatorY = drawY + tileSideLength - 18;
+                uiHelper.drawMessageIndicator(batch, indicatorX, indicatorY, 16);
+            }
+        }
+    }
+
+    private void drawMessageIndicator(SpriteBatch batch, int npcX, int npcY) {
+        // You'll need to create or load a message indicator texture
+        // For now, this assumes you have a messageIndicatorTexture
+        // TextureRegion messageIcon = messageIndicatorTexture;
+
+        int indicatorX = npcX + tileSideLength - 16; // Top-right corner
+        int indicatorY = npcY + tileSideLength - 16;
+
+        // If you don't have a texture yet, you can draw a simple colored rectangle
+        // batch.draw(messageIcon, indicatorX, indicatorY, 16, 16);
+
+        // Alternative: Draw a simple colored square (you'd need to create a 1x1 white pixel texture)
+        // batch.setColor(Color.YELLOW);
+        // batch.draw(whitePixelTexture, indicatorX, indicatorY, 16, 16);
+        // batch.setColor(Color.WHITE); // Reset color
+    }
+
+    private NPC getNPCAtPosition(int tileX, int tileY) {
+        for(NPC npc : DefaultNPCs.getInstance().defaultOnes.values()) {
+            Position npcPos = npc.getHomeLocation().getPosition();
+            if(npcPos.x == tileX && npcPos.y == tileY) {
+                return npc;
+            }
+        }
+        return null;
+    }
+
 
 }

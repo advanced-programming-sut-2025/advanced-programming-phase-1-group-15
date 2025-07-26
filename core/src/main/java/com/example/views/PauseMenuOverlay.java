@@ -51,7 +51,7 @@ public class PauseMenuOverlay {
     private final Label tooltipLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
 
-    private final Runnable onHideCallback; // field for callback
+    private final Runnable onHideCallback;
 
     public PauseMenuOverlay(Main main, Game game, Runnable onHideCallback) {
         this.main = main;

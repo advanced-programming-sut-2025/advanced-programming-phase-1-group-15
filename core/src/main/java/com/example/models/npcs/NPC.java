@@ -141,10 +141,17 @@ public class NPC implements TimeObserver {
     public void update(DateAndTime dateAndTime) {
         if(lastDayUpdate != dateAndTime.getDay()){
             lastDayUpdate = dateAndTime.getDay();
+
+            // Reset daily flags for all friendships
             for(NPCFriendShip fs : friendships.values()){
-                if(fs.getLevel()>=3){
+                fs.resetDaily();
+
+                // Give daily gifts to high-level friends
+                if(fs.getLevel() >= 3){
                     if(RandomGenerator.getInstance().randomInt(0,21) % 2 == 0){
-                        fs.player.getInventory().addToBackPack(favourites.get(RandomGenerator.getInstance().randomInt(0,favourites.size()-1)),1);
+                        BackPackable gift = favourites.get(RandomGenerator.getInstance().randomInt(0,favourites.size()-1));
+                        fs.player.getInventory().addToBackPack(gift, 1);
+                        fs.markDailyGiftReceived();
                     }
                 }
             }
@@ -153,5 +160,64 @@ public class NPC implements TimeObserver {
 
     public TextureRegion getSprite() {
         return sprite;
+    }
+
+
+    public boolean hasDailyGiftAvailable(Player player) {
+        NPCFriendShip friendship = friendships.get(player);
+        if (friendship == null || friendship.getLevel() < 3) {
+            return false;
+        }
+
+        // Check if it's a new day and they haven't received their random gift yet
+        int currentDay = App.currentGame.getDateAndTime().getDay();
+        return lastDayUpdate == currentDay && !friendship.hasReceivedDailyGift();
+    }
+
+    public boolean hasMessageForToday(Player player) {
+        NPCFriendShip friendship = friendships.get(player);
+        if (friendship == null) {
+            return true; // First time meeting, always has a message
+        }
+
+        // NPC has a message if:
+        // 1. Player hasn't talked today
+        // 2. There are new/active quests available
+        // 3. They have a daily gift available
+        boolean hasntTalkedToday = !friendship.hasTalkedToday();
+        boolean hasActiveQuests = friendship.getPlayerQuests().values().contains(true);
+        boolean hasDailyGift = hasDailyGiftAvailable(player);
+
+        return hasntTalkedToday || hasActiveQuests || hasDailyGift;
+    }
+
+    public String getInteractionSummary(Player player) {
+        StringBuilder summary = new StringBuilder();
+        NPCFriendShip friendship = friendships.get(player);
+
+        if (friendship == null) {
+            summary.append("• Talk to start friendship\n");
+            return summary.toString();
+        }
+
+        if (!friendship.hasTalkedToday()) {
+            summary.append("• Talk for friendship points\n");
+        }
+
+        if (!friendship.hasGiftedToday()) {
+            summary.append("• Give a gift for extra points\n");
+        }
+
+        long activeQuests = friendship.getPlayerQuests().values().stream()
+            .filter(active -> active).count();
+        if (activeQuests > 0) {
+            summary.append("• ").append(activeQuests).append(" quest(s) available\n");
+        }
+
+        if (hasDailyGiftAvailable(player)) {
+            summary.append("• Daily gift available!\n");
+        }
+
+        return summary.toString();
     }
 }
