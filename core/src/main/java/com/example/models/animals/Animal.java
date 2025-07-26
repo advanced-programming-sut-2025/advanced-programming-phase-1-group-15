@@ -1,7 +1,10 @@
 package com.example.models.animals;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
+import com.example.models.enums.Direction;
 import com.example.models.map.AreaType;
 import com.example.models.map.Position;
 import com.example.models.map.Tilable;
@@ -16,6 +19,15 @@ public class Animal implements Tilable, TimeObserver {
 
     private final ArrayList<AnimalProductType> animalProductTypes = new ArrayList<>();
     private AnimalProduct currentProduct;
+
+    Animation<TextureRegion> walkUpAnimation;
+    Animation<TextureRegion> walkDownAnimation;
+    Animation<TextureRegion> walkLeftAnimation;
+    Animation<TextureRegion> walkRightAnimation;
+    TextureRegion currentFrame;
+    Direction direction = Direction.DOWN;
+    boolean isWalking = false;
+    float stateTime = 0f;
 
     private int friendship = 0;
     private boolean petted = false;
@@ -181,9 +193,44 @@ public class Animal implements Tilable, TimeObserver {
         }
     }
 
+    public void setDirection(Direction direction){
+        this.direction = direction;
+    }
+
+    public void setWalking(boolean walking) {
+        isWalking = walking;
+    }
+
+    public void updateAnimation(float delta) {
+        if(isWalking) {
+            stateTime += delta;
+            switch (direction) {
+                case UP:
+                    currentFrame = walkUpAnimation.getKeyFrame(stateTime); break;
+                case DOWN:
+                    currentFrame = walkDownAnimation.getKeyFrame(stateTime); break;
+                case LEFT:
+                    currentFrame = walkLeftAnimation.getKeyFrame(stateTime); break;
+                case RIGHT:
+                    currentFrame = walkRightAnimation.getKeyFrame(stateTime); break;
+            }
+        }
+        else {
+            switch (direction) {
+                case UP:
+                    currentFrame = walkUpAnimation.getKeyFrame(0); break;
+                case DOWN:
+                    currentFrame = walkDownAnimation.getKeyFrame(0); break;
+                case LEFT:
+                    currentFrame = walkLeftAnimation.getKeyFrame(0); break;
+                case RIGHT:
+                    currentFrame = walkRightAnimation.getKeyFrame(0); break;
+            }
+        }
+    }
+
     @Override
     public Sprite getSprite() {
-        return null;
-        // TODO
+        return new Sprite(currentFrame);
     }
 }

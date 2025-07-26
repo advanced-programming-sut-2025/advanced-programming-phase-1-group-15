@@ -20,10 +20,7 @@ import com.example.models.App;
 import com.example.models.Game;
 import com.example.models.GraphicalModels.MapCamera;
 import com.example.models.GraphicalModels.NotificationLabel;
-import com.example.models.GraphicalModels.PopUpMenus.FriendsMenu;
-import com.example.models.GraphicalModels.PopUpMenus.GreenHouseMenu;
-import com.example.models.GraphicalModels.PopUpMenus.PopUpMenu;
-import com.example.models.GraphicalModels.PopUpMenus.ToolsMenu;
+import com.example.models.GraphicalModels.PopUpMenus.*;
 import com.example.models.GraphicalModels.RightClickMenus.NPCRightClickMenu;
 import com.example.models.GraphicalModels.RightClickMenus.PlayerRightClickMenu;
 import com.example.models.GraphicalModels.RightClickMenus.RightClickMenu;
@@ -36,6 +33,7 @@ import com.example.models.map.Position;
 import com.example.models.map.Tile;
 import com.example.models.npcs.DefaultNPCs;
 import com.example.models.npcs.NPC;
+import com.example.models.stores.MarnieRanch;
 import com.example.models.stores.Store;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.Season;
@@ -588,9 +586,15 @@ public class GameView implements Screen {
                             Gdx.input.setInputProcessor(popUpMenu.getStage());
                         }
 
-                        else if (clickedTile.getArea() instanceof Store) {
-                            Store store = (Store) clickedTile.getArea();
-                            // TODO: show Store menu
+                        else if (clickedTile.getArea() instanceof Store store) {
+                            if(store instanceof MarnieRanch) {
+                                popUpMenu = new MarnieRanchMenu(skin, "Marnie's Ranch", this::restoreGameInput);
+                                popUpMenu.show();
+                                Gdx.input.setInputProcessor(popUpMenu.getStage());
+                            }
+                            else {
+
+                            }
                         }
 
                         else {

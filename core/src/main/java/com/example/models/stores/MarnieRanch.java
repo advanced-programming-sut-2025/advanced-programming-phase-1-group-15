@@ -5,23 +5,24 @@ import com.example.models.Player;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
 import com.example.models.tools.Tool;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MarnieRanch extends Store {
-    public static int[] coordinates = {46, 50, 21, 25};
+    public static int[] coordinates = {110, 128, 60, 70};
 
     private GeneralItem hay = new GeneralItem(GeneralItemsType.HAY);
     private HashMap<MarnieRanchItems, Integer> sold = new HashMap<>();
 
     public MarnieRanch(ArrayList<ArrayList<Tile>> storeTiles) {
+        super(storeTiles);
+        this.areaType = AreaType.STORE;
+
         runner = Runner.MARNIE;
         opensAt = 9;
         closesAt = 16;
-
-        this.areaType = AreaType.STORE;
-        this.tiles = storeTiles;
 
         for(ArrayList<Tile> row : storeTiles) {
             for(Tile tile : row) {
@@ -41,7 +42,7 @@ public class MarnieRanch extends Store {
 
     @Override
     public TextureRegion getTexture() {
-        return null;
+        return GameAssetManager.marnie_ranch;
     }
 
     @Override

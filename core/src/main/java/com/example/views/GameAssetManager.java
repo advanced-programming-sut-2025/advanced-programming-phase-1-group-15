@@ -26,7 +26,7 @@ public class GameAssetManager {
     public static Sprite stone, wood;
 
     // Area Textures
-    public static TextureRegion house, lake, broken_greenhouse, greenhouse;
+    public static TextureRegion house, lake, broken_greenhouse, greenhouse, carpenter_shop, marnie_ranch;
 
     // Player Sprites
     public static TextureRegion boy_face, boy_fainted;
@@ -156,6 +156,8 @@ public class GameAssetManager {
         lake = new TextureRegion(new Texture("Sprites/Map/lake.png"));
         broken_greenhouse = new TextureRegion(new Texture("Sprites/Map/broken_greenhouse.png"));
         greenhouse = new TextureRegion(new Texture("Sprites/Map/greenhouse.png"));
+        carpenter_shop = new TextureRegion(new Texture("Sprites/Map/carpenter_shop.png"));
+        marnie_ranch = new TextureRegion(new Texture("Sprites/Map/marnies_ranch.png"));
 
         boy_face = new TextureRegion(new Texture("Sprites/Characters/b_face.png"));
         boy_fainted = new TextureRegion(new Texture("Sprites/Characters/b_fainted.png"));

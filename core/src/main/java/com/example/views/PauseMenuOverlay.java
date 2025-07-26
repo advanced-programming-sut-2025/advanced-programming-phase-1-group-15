@@ -505,9 +505,9 @@ public class PauseMenuOverlay {
 
                         if (tile.getAreaSprite() != null) {
                             batch.draw(tile.getAreaSprite(), x, y, size, size);
-                        } else {
-                            drawArea(batch, tile);
                         }
+
+                        drawArea(batch, tile);
 
                         if (tile.getObjectSprite() != null) {
                             batch.draw(tile.getObjectSprite(), x, y, size, size);

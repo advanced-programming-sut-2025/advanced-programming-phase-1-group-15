@@ -260,7 +260,7 @@ public class Tile {
     }
 
     public Sprite getAreaSprite() {
-        if(area instanceof Map) {
+        if(area instanceof Map || area instanceof Store) {
             return GameAssetManager.getLandSprite(randomizer);
         }
         else if(area instanceof Farm || area instanceof House) {

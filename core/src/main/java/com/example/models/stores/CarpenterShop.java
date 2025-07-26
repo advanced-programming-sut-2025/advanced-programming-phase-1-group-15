@@ -7,19 +7,20 @@ import com.example.models.foraging.Stone;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
 import com.example.models.tools.ShippingBin;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 
 public class CarpenterShop extends Store {
-    public static int[] coordinates = {51, 55, 6, 9};
+    public static int[] coordinates = {50, 68, 120, 135};
 
     public CarpenterShop(ArrayList<ArrayList<Tile>> storeTiles) {
+        super(storeTiles);
+        this.areaType = AreaType.STORE;
+
         runner = Runner.ROBIN;
         opensAt = 9;
         closesAt = 20;
-
-        this.areaType = AreaType.STORE;
-        this.tiles = storeTiles;
 
         for(ArrayList<Tile> row : storeTiles) {
             for(Tile tile : row) {
@@ -35,7 +36,7 @@ public class CarpenterShop extends Store {
 
     @Override
     public TextureRegion getTexture() {
-        return null;
+        return GameAssetManager.carpenter_shop;
     }
 
     @Override
