@@ -45,7 +45,6 @@ public class Tile {
 
     public static ArrayList<ArrayList<Tile>> buildMapTiles() {
         ArrayList<ArrayList<Tile>> mapTiles = new ArrayList<>();
-
         for (int row = 0; row < Map.ROWS; row++) {
             mapTiles.add(new ArrayList<>());
             for (int col = 0; col < Map.COLS; col++) {

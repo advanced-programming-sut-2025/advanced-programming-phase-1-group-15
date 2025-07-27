@@ -92,7 +92,7 @@ public class FishShop extends Store {
             }
 
             sold[0] += 1;
-            buyer.addToAvailableCrafts(new CraftItem(CraftItemType.FISH_SMOKER));
+            buyer.addToAvailableCraftsRecipe(new CraftItem(CraftItemType.FISH_SMOKER));
             return new Result(true,  "you've bought fish smoker recipe with price 10000");
         }
         else if(productName.equalsIgnoreCase("Trout Soup")) {

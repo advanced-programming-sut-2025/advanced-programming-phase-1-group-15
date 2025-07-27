@@ -1,6 +1,7 @@
 
 package com.example.controllers;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.App;
 import com.example.models.Game;
 import com.example.models.Player;
@@ -52,6 +53,13 @@ public class GameController {
                     tile.setObjectInTile(player.getCurrentItem());
                     player.getInventory().removeCountFromBackPack(player.getCurrentItem(), 1);
                     if (player.getInventory().getItemCount(player.getCurrentItem().getName()) == 0) {
+                        float spriteX = tile.getPosition().x * 16;
+                        float spriteY = tile.getPosition().y * 16;
+                        Sprite sprite = player.getCurrentItem().getSprite();
+                        sprite.setPosition(spriteX, spriteY);
+                        sprite.setBounds(spriteX, spriteY, sprite.getWidth(), sprite.getHeight());
+                        if (player.getCurrentItem() instanceof CraftItem)
+                            player.getBuildedCrafts().add((CraftItem) player.getCurrentItem());
                         player.setCurrentItem(null);
                     }
                     return new Result(true, "Item placed successfully.");
@@ -986,7 +994,7 @@ public class GameController {
         }
         for (CraftItemType craftItem : CraftItemType.values()) {
             if (craftItem.getName().equals(recipeName)){
-                player.getAvailableCrafts().add(new CraftItem(craftItem));
+                player.getAvailableCraftsRecipe().add(new CraftItem(craftItem));
                 System.out.println("recipe add to inventory:" + craftItem.getName());
                 return;
             }
@@ -1071,7 +1079,7 @@ public class GameController {
     }
     public static void ShowRecipe() {
         Player player = getCurrentPlayer();
-        for (CraftItem availableCraft : player.getAvailableCrafts()) {
+        for (CraftItem availableCraft : player.getAvailableCraftsRecipe()) {
             System.out.println(availableCraft.getCraftItemType().recipe);
         }
     }
@@ -1082,7 +1090,7 @@ public class GameController {
             return new Result(false , "your inventory is full!");
         }
         CraftItem temp = null;
-        for (CraftItem availableCraft : player.getAvailableCrafts()) {
+        for (CraftItem availableCraft : player.getAvailableCraftsRecipe()) {
             if(availableCraft.getName().equals(craftingName)){
                 temp = availableCraft;
             }

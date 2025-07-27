@@ -11,16 +11,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.models.Game;
-import com.example.models.cooking.Food;
 import com.example.models.crafting.CraftItem;
 import com.example.models.crafting.CraftItemType;
 import com.example.models.tools.BackPackable;
-import java.util.ArrayList;
 
 public class CraftingMenu {
     private final Stage stage;
@@ -32,8 +29,8 @@ public class CraftingMenu {
     private final Game game;
     private final Runnable onHideCallback;
     public CraftingMenu(Main main, Game game, Runnable onHideCallback) {
-        game.getCurrentPlayer().addToAvailableCrafts(new CraftItem(CraftItemType.BEE_HOUSE));
-        game.getCurrentPlayer().addToAvailableCrafts(new CraftItem(CraftItemType.DEHYDRATOR));
+        game.getCurrentPlayer().addToAvailableCraftsRecipe(new CraftItem(CraftItemType.BEE_HOUSE));
+        game.getCurrentPlayer().addToAvailableCraftsRecipe(new CraftItem(CraftItemType.DEHYDRATOR));
         this.main = main;
         this.game = game;
         this.onHideCallback = onHideCallback;
@@ -91,7 +88,7 @@ public class CraftingMenu {
             }
         });
         Table itemTable = new Table(skin);
-        for (CraftItem craft : game.getCurrentPlayer().getAvailableCrafts()) {
+        for (CraftItem craft : game.getCurrentPlayer().getAvailableCraftsRecipe()) {
             Label label = new Label(craft.getName(), skin);
             if (!craft.isAvailable()) {
                 label.setColor(Color.LIGHT_GRAY);

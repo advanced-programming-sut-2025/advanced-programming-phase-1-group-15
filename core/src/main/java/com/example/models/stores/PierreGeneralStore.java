@@ -115,10 +115,10 @@ public class PierreGeneralStore extends Store {
 
                 buyer.subtractGold(amount * item.price);
                 if(item.equals(GeneralItemsType.DEHYDRATOR_RECIPE)) {
-                    buyer.addToAvailableCrafts(new CraftItem(CraftItemType.DEHYDRATOR));
+                    buyer.addToAvailableCraftsRecipe(new CraftItem(CraftItemType.DEHYDRATOR));
                 }
                 else if(item.equals(GeneralItemsType.GRASS_STARTER_RECIPE)) {
-                    buyer.addToAvailableCrafts(new CraftItem(CraftItemType.GRASS_STARTER));
+                    buyer.addToAvailableCraftsRecipe(new CraftItem(CraftItemType.GRASS_STARTER));
                 }
                 else {
                     buyer.addToBackPack(new GeneralItem(item), amount);

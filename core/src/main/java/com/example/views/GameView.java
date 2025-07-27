@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -27,6 +28,7 @@ import com.example.models.GraphicalModels.RightClickMenus.PlayerRightClickMenu;
 import com.example.models.GraphicalModels.RightClickMenus.RightClickMenu;
 import com.example.models.Player;
 import com.example.models.Result;
+import com.example.models.crafting.CraftItem;
 import com.example.models.enums.Direction;
 import com.example.models.map.GreenHouse;
 import com.example.models.map.Map;
@@ -582,6 +584,9 @@ public class GameView implements Screen {
                 }
 
                 if (button == Input.Buttons.LEFT) {
+                    if (checkCraftItem()!=null){
+                        //TODO
+                    }
                     NPC clickedNPC = getNPCAtPosition(tileX, tileY);
                     if (clickedNPC != null && clickedNPC.hasMessageForToday(App.currentGame.getCurrentPlayer())) {
                         // Show the NPC's message
@@ -716,7 +721,19 @@ public class GameView implements Screen {
             }
         }
     }
+    private CraftItem checkCraftItem() {
+        Vector3 mouseWorld = mapCamera.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 
+        for (CraftItem item : game.getCurrentPlayer().getBuildedCrafts()) {
+            Sprite sprite = item.getSprite();
+            sprite.setBounds(sprite.getX(), sprite.getY(), sprite.getWidth(), sprite.getHeight());
+
+            if (sprite.getBoundingRectangle().contains(mouseWorld.x, mouseWorld.y)) {
+                return item;
+            }
+        }
+        return null;
+    }
     private boolean checkCursorInAdjacent() {
         Vector3 mouseWorld = mapCamera.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         int mouseTileX = (int) (mouseWorld.x / tileSideLength);
