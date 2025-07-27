@@ -23,6 +23,7 @@ public class BackPack extends Tool {
         items.put(new WateringCan(), 1);
         items.put(new Scythe(), 1);
         items.put(new FishingPole(), 1);
+        items.put(new Stone(), 1000);
     }
 
     public int getCapacity() {

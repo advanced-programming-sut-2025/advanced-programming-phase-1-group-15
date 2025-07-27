@@ -6,7 +6,8 @@ import com.example.models.time.TimeObserver;
 
 import java.util.ArrayList;
 
-public abstract class Area implements TimeObserver {
+public abstract class
+Area implements TimeObserver {
     protected AreaType areaType;
 
     private int firstCol;
@@ -74,4 +75,16 @@ public abstract class Area implements TimeObserver {
     public abstract void build();
 
     abstract public TextureRegion getTexture();
+
+    public Tile getTile(int row, int col) {
+        return tiles.get(row).get(col);
+    }
+
+    public Tile getTile(Position pos) {
+        return tiles.get(pos.getY()).get(pos.getX());
+    }
+
+    public ArrayList<Area> getInnerAreas() {
+        return innerAreas;
+    }
 }

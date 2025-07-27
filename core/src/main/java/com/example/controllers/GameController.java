@@ -212,33 +212,19 @@ public class GameController {
         return new Result(true, "You ate " + food.getName() + ". " + food.getEnergy() + " energy added.");
     }
 
-    public static Result buildBarn(int type, int x, int y) {
-        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
-        if(!(playerTile.getArea() instanceof CarpenterShop)) {
-            return new Result(false, "you should be inside carpenter shop to run this command.");
-        }
-
+    public static Result buildBarn(int x, int y, Farm farm) {
         boolean buildable = true;
-        int requiredGold; int requiredWood; int requiredStone;
-        int y_scale = 2, x_scale = 2;
-        switch (type) {
-            case 1 -> {
-                requiredGold = 12000; requiredWood = 450; requiredStone = 200;
-                x_scale = 4;
-            }
-            case 2 -> {
-                requiredGold = 25000; requiredWood = 550; requiredStone = 300;
-                y_scale = 3;
-                x_scale = 4;
-            }
-            default -> {
-                requiredGold = 6000; requiredWood = 350; requiredStone = 150;
-            }
-        }
-        for(int row = y; row < y + y_scale; row++) {
-            for(int col = x; col < x + x_scale; col++) {
-                Tile tile = App.currentGame.getTile(col, row);
-                if(!tile.isBuildable()) {
+        int requiredGold = 6000, requiredWood = 350, requiredStone = 150;
+
+        for(int row = y; row < y + Barn.ROWS; row++) {
+            for(int col = x; col < x + Barn.COLS; col++) {
+                if (0 <= row && row < Farm.ROWS && 0 <= col && col < Farm.COLS) {
+                    Tile tile = farm.getTile(row, col);
+                    if(!tile.isBuildable()) {
+                        buildable = false;
+                    }
+                }
+                else {
                     buildable = false;
                 }
             }
@@ -248,57 +234,29 @@ public class GameController {
             return new Result(false, "You can't build a barn in this Area.");
         }
         else if(getCurrentPlayer().getGold() < requiredGold) {
-            return new Result(false, "not enough gold to build.");
+            return new Result(false, "you at least need to have 6000 gold to build barn!");
         }
         else if(getCurrentPlayer().getWood() < requiredWood) {
-            return new Result(false, "not enough wood to build.");
+            return new Result(false, "you at least need to have 350 wood to build barn!");
         }
         else if(getCurrentPlayer().getStone() < requiredStone) {
-            return new Result(false, "not enough stone to build.");
+            return new Result(false, "you at least need to have 150 stone to build barn!");
         }
         else {
-            Barn barn = new Barn();
-            switch (type) {
-                case 1 -> barn.setBig();
-                case 2 -> barn.setDeluxe();
-            }
-            for(int row = y; row < y + y_scale; row++) {
-                for(int col = x; col < x + x_scale; col++) {
-                    Tile tile = App.currentGame.getTile(col, row);
-                    tile.setArea(barn);
-                }
-            }
+            farm.getInnerAreas().add(new Barn(farm.getSubArea(farm.getTiles(), x, x + Barn.COLS,
+                y, y + Barn.ROWS)));
             getCurrentPlayer().subtractGold(requiredGold); getCurrentPlayer().subtractWood(requiredWood);
             getCurrentPlayer().subtractStone(requiredStone);
             return new Result(true, "barn built successfully.");
         }
     }
-    public static Result buildCoop(int type, int x, int y) {
-        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
-        if(!(playerTile.getArea() instanceof CarpenterShop)) {
-            return new Result(false, "you should be inside carpenter shop to run this command.");
-        }
-
+    public static Result buildCoop(int x, int y, Farm farm) {
         boolean buildable = true;
-        int requiredGold; int requiredWood; int requiredStone;
-        int y_scale = 2, x_scale = 2;
-        switch (type) {
-            case 1 -> {
-                requiredGold = 10000; requiredWood = 400; requiredStone = 150;
-                x_scale = 4;
-            }
-            case 2 -> {
-                requiredGold = 20000; requiredWood = 500; requiredStone = 200;
-                y_scale = 3;
-                x_scale = 4;
-            }
-            default -> {
-                requiredGold = 4000; requiredWood = 300; requiredStone = 100;
-            }
-        }
-        for(int row = y; row < y + y_scale; row++) {
-            for(int col = x; col < x + x_scale; col++) {
-                Tile tile = App.currentGame.getTile(col, row);
+        int requiredGold = 4000, requiredWood = 300, requiredStone = 100;
+
+        for(int row = y; row < y + Coop.ROWS; row++) {
+            for(int col = x; col < x + Coop.COLS; col++) {
+                Tile tile = farm.getTile(row, col);
                 if(!tile.isBuildable()) {
                     buildable = false;
                 }
@@ -309,26 +267,17 @@ public class GameController {
             return new Result(false, "You can't build a coop in this Area.");
         }
         else if(getCurrentPlayer().getGold() < requiredGold) {
-            return new Result(false, "not enough gold to build.");
+            return new Result(false, "you at least need to have 4000 gold to build coop!");
         }
         else if(getCurrentPlayer().getWood() < requiredWood) {
-            return new Result(false, "not enough wood to build.");
+            return new Result(false, "you at least need to have 300 wood to build coop!");
         }
         else if(getCurrentPlayer().getStone() < requiredStone) {
-            return new Result(false, "not enough stone to build.");
+            return new Result(false, "you at least need to have 100 stone to build coop!");
         }
         else {
-            Coop coop = new Coop();
-            switch (type) {
-                case 1 -> coop.setBig();
-                case 2 -> coop.setDeluxe();
-            }
-            for(int row = y; row < y + y_scale; row++) {
-                for(int col = x; col < x + x_scale; col++) {
-                    Tile tile = App.currentGame.getTile(col, row);
-                    tile.setArea(coop);
-                }
-            }
+            farm.getInnerAreas().add(new Coop(farm.getSubArea(farm.getTiles(), x, x + Coop.COLS,
+                y, y + Coop.ROWS)));
             getCurrentPlayer().subtractGold(requiredGold); getCurrentPlayer().subtractWood(requiredWood);
             getCurrentPlayer().subtractStone(requiredStone);
             return new Result(true, "coop built successfully.");

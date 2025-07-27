@@ -3,6 +3,8 @@ package com.example.models.map;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.models.App;
 import com.example.models.animals.Animal;
+import com.example.models.animals.Barn;
+import com.example.models.animals.Coop;
 import com.example.models.animals.Fish;
 import com.example.models.crafting.CraftItem;
 import com.example.models.farming.GeneralPlants.*;
@@ -262,7 +264,7 @@ public class Tile {
         if(area instanceof Map || area instanceof Store) {
             return GameAssetManager.getLandSprite(randomizer);
         }
-        else if(area instanceof Farm || area instanceof House) {
+        else if(area instanceof Farm || area instanceof House || area instanceof Barn || area instanceof Coop) {
             return GameAssetManager.getGrassSprite(randomizer);
         }
         else if(area instanceof Quarry) {

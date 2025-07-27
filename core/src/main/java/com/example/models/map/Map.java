@@ -27,14 +27,6 @@ public class Map extends Area {
     public static int ROWS = 270;
     public static int COLS = 270;
 
-    public Tile getTile(int row, int col) {
-        return tiles.get(row).get(col);
-    }
-
-    public Tile getTile(Position pos) {
-        return tiles.get(pos.getY()).get(pos.getX());
-    }
-
     public Map(ArrayList<ArrayList<Tile>> mapTiles) {
         this.areaType = AreaType.MAP;
         this.tiles = mapTiles;

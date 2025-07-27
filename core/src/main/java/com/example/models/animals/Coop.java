@@ -3,16 +3,30 @@ package com.example.models.animals;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.map.Area;
 import com.example.models.map.AreaType;
+import com.example.models.map.Tile;
 import com.example.models.time.DateAndTime;
+import com.example.views.GameAssetManager;
+
+import java.util.ArrayList;
 
 public class Coop extends Area {
+    public static int ROWS = 10;
+    public static int COLS = 16;
+
     private int animalCount = 0;
     private int capacity = 4;
     private boolean Big = false;
     private boolean Deluxe = false;
 
-    public Coop() {
+    public Coop(ArrayList<ArrayList<Tile>> coopTiles) {
+        super(coopTiles);
         this.areaType = AreaType.COOP;
+
+        for(ArrayList<Tile> row : coopTiles) {
+            for(Tile tile : row) {
+                tile.setArea(this);
+            }
+        }
     }
 
     public int getCapacity() {
@@ -44,7 +58,7 @@ public class Coop extends Area {
 
     @Override
     public TextureRegion getTexture() {
-        return null;
+        return GameAssetManager.coop;
     }
 
     @Override

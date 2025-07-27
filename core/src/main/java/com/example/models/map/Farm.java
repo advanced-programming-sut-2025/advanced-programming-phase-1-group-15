@@ -19,6 +19,9 @@ import com.example.models.time.Season;
 import java.util.ArrayList;
 
 public class Farm extends Area {
+    public static int ROWS = 90;
+    public static int COLS = 90;
+
     public static int[][] coordinates = {
             {0, 90, 0, 90},   //MAP 1
             {180, 270, 0, 90}, //MAP 2

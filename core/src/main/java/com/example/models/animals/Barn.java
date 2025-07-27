@@ -3,16 +3,30 @@ package com.example.models.animals;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.map.Area;
 import com.example.models.map.AreaType;
+import com.example.models.map.Tile;
 import com.example.models.time.DateAndTime;
+import com.example.views.GameAssetManager;
+
+import java.util.ArrayList;
 
 public class Barn extends Area {
+    public static int ROWS = 10;
+    public static int COLS = 12;
+
     private int animalCount = 0;
     private int capacity = 4;
     private boolean Big = false;
     private boolean Deluxe = false;
 
-    public Barn() {
+    public Barn(ArrayList<ArrayList<Tile>> barnTiles) {
+        super(barnTiles);
         this.areaType = AreaType.BARN;
+
+        for(ArrayList<Tile> row : barnTiles) {
+            for(Tile tile : row) {
+                tile.setArea(this);
+            }
+        }
     }
 
     public int getCapacity() {
@@ -45,7 +59,7 @@ public class Barn extends Area {
 
     @Override
     public TextureRegion getTexture() {
-        return null;
+        return GameAssetManager.barn;
     }
 
     @Override
