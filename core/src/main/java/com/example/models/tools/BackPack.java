@@ -78,6 +78,9 @@ public class BackPack extends Tool {
     }
 
     public boolean removeCountFromBackPack(BackPackable item, int amount) {
+        if(items.get(item) == null) {
+            return false;
+        }
         if(amount == items.get(item)) {
             removeFromBackPack(item);
             return true;

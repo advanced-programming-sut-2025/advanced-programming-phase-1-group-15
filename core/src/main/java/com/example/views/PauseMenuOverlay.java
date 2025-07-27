@@ -22,8 +22,13 @@ import com.example.Main;
 import com.example.models.App;
 import com.example.models.Game;
 import com.example.models.Player;
+import com.example.models.cooking.Food;
 import com.example.models.crafting.CraftItem;
 import com.example.models.crafting.CraftItemType;
+import com.example.models.farming.Crop;
+import com.example.models.farming.Fruit;
+import com.example.models.farming.FruitType;
+import com.example.models.foraging.ForagingCrop;
 import com.example.models.map.Map;
 import com.example.models.map.Tile;
 import com.example.models.relation.PlayerFriendship;
@@ -417,7 +422,6 @@ public class PauseMenuOverlay {
     private Table createInventoryContent() {
         Table table = new Table(skin);
         BackPack inventory = game.getCurrentPlayer().getInventory();
-
         List<String> itemList = new List<>(skin);
         String[] items = inventory.getItems().entrySet().stream()
             .map(entry -> entry.getKey().getName() + " x" + entry.getValue())
@@ -435,7 +439,7 @@ public class PauseMenuOverlay {
         Sprite trashSprite = trashCan.getSprite();
         trashSprite.setSize(48, 48);
         Image trashIcon = new Image(new TextureRegionDrawable(trashSprite));
-
+        TextButton addToFridgeButton = new TextButton("move to fridge", skin);
         trashIcon.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -462,6 +466,13 @@ public class PauseMenuOverlay {
                         if (hoveredItem != null) {
                             descriptionLabel.setText("Desc: " + hoveredItem.getDescription());
                             game.getCurrentPlayer().setCurrentItem(hoveredItem);
+                            if (hoveredItem instanceof Food || hoveredItem instanceof Crop
+                            || hoveredItem instanceof Fruit || hoveredItem instanceof ForagingCrop) {
+                                addToFridgeButton.setVisible(true);
+                            }
+                            else {
+                                addToFridgeButton.setVisible(false);
+                            }
                             return true;
                         }
                     }
@@ -469,15 +480,26 @@ public class PauseMenuOverlay {
                 return false;
             }
         });
-
+        addToFridgeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String item = itemList.getSelected();
+                if (item != null && !item.isEmpty()) {
+                    String itemName = item.split(" x")[0];
+                    BackPackable itemInInventory = inventory.getItemByName(itemName);
+                    game.getCurrentPlayer().getInventory().removeCountFromBackPack(itemInInventory , 1);
+                    game.getCurrentPlayer().getFridge().addToFridge(itemInInventory , 1);
+                    refresh();
+                }
+            }
+        });
         Table bottomRow = new Table();
         bottomRow.add(trashIcon).size(48, 48).left();
-        bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
-
+        bottomRow.add(descriptionLabel).right().padLeft(10).width(700).row();
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
-        table.add(bottomRow).bottom();
-
+        table.add(bottomRow).bottom().row();
+        table.add(addToFridgeButton).right().pad(10);
         return table;
     }
     private Table createMapContent() {
