@@ -42,6 +42,7 @@ public class CraftingMenu {
         rootTable.setVisible(false);
         rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
         TextButton craftButton = new TextButton("Craft", skin);
+        craftButton.setVisible(false);
         final Label errorLabel = new Label("", skin);
         this.table = createCraftingContent(craftButton , errorLabel);
         rootTable.add(table).expand().fill().pad(20).row();

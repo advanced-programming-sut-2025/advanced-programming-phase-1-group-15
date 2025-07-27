@@ -43,6 +43,7 @@ import com.example.models.time.DateAndTime;
 import com.example.models.time.Season;
 import com.example.models.weather.WeatherOption;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -84,6 +85,8 @@ public class GameView implements Screen {
     private final PauseMenuOverlay pauseMenuOverlay;
     private final CraftingMenu craftingMenu;
     private final CookingMenu cookingMenu;
+    private ArrayList<ArtisanMenu> artisans = new ArrayList<>();
+
     public GameView(Game game, Main main) {
         this.game = game;
         this.main = main;
@@ -222,6 +225,9 @@ public class GameView implements Screen {
         pauseMenuOverlay.draw(delta);
         craftingMenu.draw(delta);
         cookingMenu.draw(delta);
+        for (ArtisanMenu artisan : artisans) {
+            artisan.draw(delta);
+        }
     }
 
     private void renderMap(SpriteBatch batch) {
@@ -356,6 +362,9 @@ public class GameView implements Screen {
         pauseMenuOverlay.dispose();
         craftingMenu.dispose();
         cookingMenu.dispose();
+        for (ArtisanMenu artisan : artisans) {
+            artisan.dispose();
+        }
     }
 
     private void readTerminalInput() {
@@ -584,8 +593,34 @@ public class GameView implements Screen {
                 }
 
                 if (button == Input.Buttons.LEFT) {
-                    if (checkCraftItem()!=null){
-                        //TODO
+                    CraftItem current = checkCraftItem();
+                    if (current!=null){
+                        boolean find = false;
+                        for (ArtisanMenu artisan : artisans) {
+                            if(artisan.getCraftItem() == current){
+                                find = true;
+                                if (artisan.isVisible()){
+                                    artisan.setVisible(false);
+                                    restoreGameInput();
+                                }
+                                else {
+                                    artisan.setVisible(true);
+                                    Gdx.input.setInputProcessor(artisan.getStage());
+                                }
+                            }
+                        }
+                        if (!find){
+                            ArtisanMenu artisan = new ArtisanMenu(main, game, this::restoreGameInput , current);
+                            artisans.add(artisan);
+                            if (artisan.isVisible()){
+                                artisan.setVisible(false);
+                                restoreGameInput();
+                            }
+                            else {
+                                artisan.setVisible(true);
+                                Gdx.input.setInputProcessor(artisan.getStage());
+                            }
+                        }
                     }
                     NPC clickedNPC = getNPCAtPosition(tileX, tileY);
                     if (clickedNPC != null && clickedNPC.hasMessageForToday(App.currentGame.getCurrentPlayer())) {

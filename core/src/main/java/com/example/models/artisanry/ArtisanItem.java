@@ -7,8 +7,10 @@ public class ArtisanItem implements BackPackable {
     private ArtisanItemType artisanItemType;
     private int hour;
     private int day;
+    private Sprite sprite;
     public ArtisanItem(ArtisanItemType artisanItemType) {
         this.artisanItemType = artisanItemType;
+        this.sprite = new Sprite(artisanItemType.getTexture());
     }
     @Override
     public String getName() {
@@ -44,6 +46,6 @@ public class ArtisanItem implements BackPackable {
     }
 
     public Sprite getSprite() {
-        return null;
+        return sprite;
     }
 }
