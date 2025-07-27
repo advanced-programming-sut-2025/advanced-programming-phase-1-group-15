@@ -35,8 +35,8 @@ public class ToolsMenu extends PopUpMenu {
 
         for(Tool tool : tools) {
             Sprite toolSprite = tool.getSprite();
-            toolSprite.setSize(48, 48);
             Image toolIcon = new Image(new TextureRegionDrawable(toolSprite));
+            toolIcon.setSize(48, 48);
             sprites.add(toolIcon);
 
             Label nameLabel = new Label(tool.getName(), skin);
@@ -78,7 +78,7 @@ public class ToolsMenu extends PopUpMenu {
 
         ScrollPane scrollPane = new ScrollPane(contentTable, skin);
         scrollPane.setFadeScrollBars(false);
-        scrollPane.setScrollingDisabled(false, true);
+        scrollPane.setScrollingDisabled(true, false);
 
         w.add(scrollPane).expand().fill().row();
 

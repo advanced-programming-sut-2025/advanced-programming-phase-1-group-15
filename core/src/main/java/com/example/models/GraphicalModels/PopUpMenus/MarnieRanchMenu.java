@@ -10,38 +10,37 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.example.models.App;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.animals.AnimalType;
+import com.example.models.stores.MarnieRanch;
 import com.example.models.stores.MarnieRanchItems;
-import com.example.models.tools.MilkPail;
-import com.example.models.tools.Shear;
-import com.example.models.tools.ToolType;
 import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 
 public class MarnieRanchMenu extends PopUpMenu {
-    private static final float WIDTH = 600f;
+    private static final float WIDTH = 700f;
     private static final float HEIGHT = 800f;
     private static final float PADDING = 10f;
 
+    private final MarnieRanch store;
     private final ArrayList<Image> sprites = new ArrayList<>();
     private final ArrayList<Label> nameLabels = new ArrayList<>();
     private final ArrayList<Label> priceLabels = new ArrayList<>();
     private final ArrayList<TextButton> buyButtons = new ArrayList<>();
     private Label messageLabel;
 
-    public MarnieRanchMenu(Skin skin, String title, Runnable onHideCallback) {
+    public MarnieRanchMenu(Skin skin, String title, Runnable onHideCallback, MarnieRanch store) {
         super(skin, title, WIDTH, HEIGHT, onHideCallback);
-
-        Player currentPlayer = App.currentGame.getCurrentPlayer();
+        this.store = store;
 
         for(MarnieRanchItems item : MarnieRanchItems.values()) {
             Sprite toolSprite = switch (item.toolType) {
                 case SHEAR -> GameAssetManager.shear;
                 default -> GameAssetManager.milk_pail;
             };
-            toolSprite.setSize(48, 48);
             Image toolIcon = new Image(new TextureRegionDrawable(toolSprite));
+            toolIcon.setSize(48, 48);
             sprites.add(toolIcon);
 
             Label nameLabel = new Label(item.toolType.name().toLowerCase(), skin);
@@ -52,12 +51,6 @@ public class MarnieRanchMenu extends PopUpMenu {
             priceLabels.add(priceLabel);
 
             TextButton buyButton = new TextButton("BUY", skin);
-            if(item.price <= currentPlayer.getGold()) {
-                buyButton.setColor(Color.GREEN);
-            }
-            else {
-                buyButton.setColor(Color.RED);
-            }
             buyButtons.add(buyButton);
         }
 
@@ -72,10 +65,8 @@ public class MarnieRanchMenu extends PopUpMenu {
                 case RABBIT -> GameAssetManager.rabbit_walking_down.getKeyFrame(0);
                 case DINOSAUR -> GameAssetManager.dinosaur_walking_down.getKeyFrame(0);
             };
-
-            animalTexture.setRegionWidth(48);
-            animalTexture.setRegionHeight(48);
             Image animalIcon = new Image(new TextureRegionDrawable(animalTexture));
+            animalIcon.setSize(48, 48);
             sprites.add(animalIcon);
 
             Label nameLabel = new Label(animalType.name().toLowerCase(), skin);
@@ -86,12 +77,6 @@ public class MarnieRanchMenu extends PopUpMenu {
             priceLabels.add(priceLabel);
 
             TextButton buyButton = new TextButton("BUY", skin);
-            if(animalType.price <= currentPlayer.getGold()) {
-                buyButton.setColor(Color.GREEN);
-            }
-            else {
-                buyButton.setColor(Color.RED);
-            }
             buyButtons.add(buyButton);
         }
     }
@@ -117,21 +102,14 @@ public class MarnieRanchMenu extends PopUpMenu {
             buyButtons.get(i).addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    if(item.price <= currentPlayer.getGold()) {
+                    Result res = store.sell(currentPlayer, item.getName(), 1);
+                    if(res.success()) {
                         messageLabel.setColor(Color.GREEN);
-                        messageLabel.setText("you've bought 1 " + item.getName() + " with price " + item.price + ".");
-
-                        if(item.toolType == ToolType.MILK_PAIL) {
-                            currentPlayer.getInventory().addToBackPack(new MilkPail(), 1);
-                        }
-                        else {
-                            currentPlayer.getInventory().addToBackPack(new Shear(), 1);
-                        }
                     }
                     else {
                         messageLabel.setColor(Color.RED);
-                        messageLabel.setText("not enough gold to buy 1 " + item.getName());
                     }
+                    messageLabel.setText(res.message());
                 }
             });
 
@@ -160,7 +138,7 @@ public class MarnieRanchMenu extends PopUpMenu {
                     }
                     else {
                         messageLabel.setColor(Color.RED);
-                        messageLabel.setText("not enough gold to buy 1 " + animalType.name().toLowerCase());
+                        messageLabel.setText("not enough gold to buy a " + animalType.name().toLowerCase());
                     }
                 }
             });
@@ -173,7 +151,7 @@ public class MarnieRanchMenu extends PopUpMenu {
 
         ScrollPane scrollPane = new ScrollPane(contentTable, skin);
         scrollPane.setFadeScrollBars(false);
-        scrollPane.setScrollingDisabled(false, true);
+        scrollPane.setScrollingDisabled(true, false);
 
         w.add(scrollPane).expand().fill().row();
 

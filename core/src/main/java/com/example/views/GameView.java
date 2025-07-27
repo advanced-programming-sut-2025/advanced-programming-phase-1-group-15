@@ -34,6 +34,7 @@ import com.example.models.map.Position;
 import com.example.models.map.Tile;
 import com.example.models.npcs.DefaultNPCs;
 import com.example.models.npcs.NPC;
+import com.example.models.stores.CarpenterShop;
 import com.example.models.stores.MarnieRanch;
 import com.example.models.stores.Store;
 import com.example.models.time.DateAndTime;
@@ -612,13 +613,20 @@ public class GameView implements Screen {
                         }
 
                         else if (clickedTile.getArea() instanceof Store store) {
-                            if(store instanceof MarnieRanch) {
-                                popUpMenu = new MarnieRanchMenu(skin, "Marnie's Ranch", this::restoreGameInput);
-                                popUpMenu.show();
-                                Gdx.input.setInputProcessor(popUpMenu.getStage());
+                            if(store.isOpen(game.getDateAndTime().getHour())) {
+                                if(store instanceof MarnieRanch marnieRanch) {
+                                    popUpMenu = new MarnieRanchMenu(skin, "Marnie's Ranch", this::restoreGameInput, marnieRanch);
+                                    popUpMenu.show();
+                                    Gdx.input.setInputProcessor(popUpMenu.getStage());
+                                }
+                                else if(store instanceof CarpenterShop carpenterShop) {
+                                    popUpMenu = new CarpenterShopMenu(skin, "Carpenter Shop:", this::restoreGameInput, carpenterShop);
+                                    popUpMenu.show();
+                                    Gdx.input.setInputProcessor(popUpMenu.getStage());
+                                }
                             }
                             else {
-
+                                notificationLabel.showMessage("store is closed now!", Color.RED);
                             }
                         }
 

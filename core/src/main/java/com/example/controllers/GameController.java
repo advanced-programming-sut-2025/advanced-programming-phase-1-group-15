@@ -531,27 +531,7 @@ public class GameController {
 
         return new Result(true, "All Available Items Fot You: \n" + store.displayAvailableItems());
     }
-    public static Result purchaseProduct(String productName, int count) {
-        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
 
-        if(!playerTile.getAreaType().equals(AreaType.STORE)) {
-            return new Result(false, "You need to be in a store to run this command.");
-        }
-
-        Store store = (Store) playerTile.getArea();
-        if(!store.isOpen(App.currentGame.getDateAndTime().getHour())) {
-            return new Result(false, "store is closed now!");
-        }
-
-        if(!store.checkAvailable(productName)) {
-            return new Result(false, "product is not available!");
-        }
-        else if(!store.checkAmount(productName, count)) {
-            return new Result(false, "daily limit exceeded!");
-        }
-
-        return new Result(true, store.sell(getCurrentPlayer(), productName, count));
-    }
     public static Result sellProduct(String productName, int count) {
         ShippingBin sb = null;
         for(int row = getCurrentPlayer().getPosition().y - 1; row <= getCurrentPlayer().getPosition().y + 1; row++) {

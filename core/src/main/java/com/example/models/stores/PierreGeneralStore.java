@@ -3,6 +3,7 @@ package com.example.models.stores;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.crafting.CraftItem;
 import com.example.models.crafting.CraftItemType;
 import com.example.models.farming.Seed;
@@ -105,11 +106,11 @@ public class PierreGeneralStore extends Store {
     }
 
     @Override
-    public String sell(Player buyer, String productName, int amount) {
+    public Result sell(Player buyer, String productName, int amount) {
         for(GeneralItemsType item : sold1.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 if(amount * item.price > buyer.getGold()) {
-                    return "not enough gold to buy " + amount + " " + item.getName();
+                    return new Result(false, "not enough gold to buy " + amount + " " + item.getName());
                 }
 
                 buyer.subtractGold(amount * item.price);
@@ -123,35 +124,35 @@ public class PierreGeneralStore extends Store {
                     buyer.addToBackPack(new GeneralItem(item), amount);
                 }
                 sold1.put(item, sold1.get(item) + amount);
-                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+                return new Result(true,"you've bought " + amount + " " + item.getName() + " with price " + amount * item.price);
             }
         }
         for(SeedType item : sold2.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 if(amount * item.price > buyer.getGold()) {
-                    return "not enough gold to buy " + amount + " " + item.getName();
+                    return new Result(false,"not enough gold to buy " + amount + " " + item.getName());
                 }
 
                 buyer.subtractGold(amount * item.price);
                 buyer.addToBackPack(new Seed(item), amount);
                 sold2.put(item, sold2.get(item) + amount);
-                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+                return new Result(true,"you've bought " + amount + " " + item.getName() + " with price " + amount * item.price);
             }
         }
         for(PierreGeneralStoreItems item : sold3.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 if(amount * item.price > buyer.getGold()) {
-                    return "not enough gold to buy " + amount + " " + item.getName();
+                    return new Result(false,"not enough gold to buy " + amount + " " + item.getName());
                 }
 
                 buyer.subtractGold(amount * item.price);
                 buyer.addToBackPack(new ForagingSeeds((ForagingSeedsType) item.item), amount);
                 sold3.put(item, sold3.get(item) + amount);
-                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+                return new Result(true,"you've bought " + amount + " " + item.getName() + " with price " + amount * item.price);
             }
         }
 
-        return "";
+        return new Result(false,"");
     }
 
     @Override

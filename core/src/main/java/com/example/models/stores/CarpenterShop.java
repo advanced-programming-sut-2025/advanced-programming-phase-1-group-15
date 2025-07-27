@@ -3,6 +3,7 @@ package com.example.models.stores;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.foraging.Stone;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
@@ -55,31 +56,31 @@ public class CarpenterShop extends Store {
     }
 
     @Override
-    public String sell(Player buyer, String productName, int amount) {
+    public Result sell(Player buyer, String productName, int amount) {
         if(productName.equalsIgnoreCase("wood")) {
             if(amount * 10 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " wood";
+                return new Result(false, "not enough gold to buy " + amount + " wood");
             }
 
             buyer.subtractGold(amount * 10);
             buyer.addToBackPack(new GeneralItem(GeneralItemsType.WOOD), amount);
-            return "you've bought " + amount + " wood with price " + amount * 10;
+            return new Result(true,  "you've bought " + amount + " wood with price " + amount * 10);
         }
         else if(productName.equalsIgnoreCase("stone")) {
             if(amount * 20 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " stone";
+                new Result(false, "not enough gold to buy " + amount + " stone");
             }
 
             buyer.subtractGold(amount * 20);
             buyer.addToBackPack(new Stone(), amount);
-            return "you've bought " + amount + " stone with price " + amount * 20;
+            new Result(true, "you've bought " + amount + " stone with price " + amount * 20);
         }
         else if(productName.equalsIgnoreCase("shipping bin")) {
             if(amount * 250 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " shipping bin";
+                return new Result(false,  "not enough gold to buy " + amount + " shipping bin");
             }
             if(amount * 150 > buyer.getWood()) {
-                return "not enough wood to buy " + amount + " shipping bin";
+                return new Result(false,  "not enough wood to buy " + amount + " shipping bin");
             }
 
             buyer.subtractGold(amount * 250);
@@ -87,10 +88,10 @@ public class CarpenterShop extends Store {
             ShippingBin shippingBin = new ShippingBin(buyer);
             App.currentGame.getDateAndTime().addObserver(shippingBin);
             buyer.getFarm().place(shippingBin);
-            return "you've bought " + amount + " shipping bin with price " + amount * 250;
+            return new Result(true, "you've bought " + amount + " shipping bin with price " + amount * 250);
         }
 
-        return "";
+        return new Result(false, "");
     }
 
     @Override

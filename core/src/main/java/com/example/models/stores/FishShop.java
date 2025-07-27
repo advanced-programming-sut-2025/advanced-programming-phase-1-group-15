@@ -2,6 +2,7 @@ package com.example.models.stores;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.cooking.Food;
 import com.example.models.cooking.FoodType;
 import com.example.models.crafting.CraftItem;
@@ -84,69 +85,69 @@ public class FishShop extends Store {
     }
 
     @Override
-    public String sell(Player buyer, String productName, int amount) {
+    public Result sell(Player buyer, String productName, int amount) {
         if(productName.equalsIgnoreCase("Fish Smoker")) {
             if(amount * 10000 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " fish smoker recipe";
+                return new Result(false, "not enough gold to buy " + amount + " fish smoker recipe");
             }
 
             sold[0] += 1;
             buyer.addToAvailableCrafts(new CraftItem(CraftItemType.FISH_SMOKER));
-            return "you've bought fish smoker recipe with price 10000";
+            return new Result(true,  "you've bought fish smoker recipe with price 10000");
         }
         else if(productName.equalsIgnoreCase("Trout Soup")) {
             if(amount * 250 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " trout soup";
+                return new Result(false,  "not enough gold to buy " + amount + " trout soup");
             }
 
             sold[1] += 1;
             buyer.addToBackPack(new Food(FoodType.BACKED_FISH), amount);
-            return "you've bought trout soup with price 250";
+            return new Result(true,  "you've bought trout soup with price 250");
         }
         else if(productName.equalsIgnoreCase("Bamboo Pole")) {
             if(amount * 500 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " bamboo pole";
+                return new Result(false,  "not enough gold to buy " + amount + " bamboo pole");
             }
 
             sold[2] += 1;
             buyer.addToBackPack(new FishingPole(ToolLevel.BAMBOO), amount);
-            return "you've bought bamboo pole with price 500";
+            return new Result(true,  "you've bought bamboo pole with price 500");
         }
         else if(productName.equalsIgnoreCase("Training Rod")) {
             if(amount * 25 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " training rod";
+                return new Result(false, "not enough gold to buy " + amount + " training rod");
             }
 
             sold[3] += 1;
             buyer.addToBackPack(new FishingPole(), amount);
-            return "you've bought training rod with price 25";
+            return new Result(true,"you've bought training rod with price 25");
         }
         else if(productName.equalsIgnoreCase("Fiberglass Rod")) {
             if(amount * 1800 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " fiberglass rod";
+                return new Result(false,"not enough gold to buy " + amount + " fiberglass rod");
             }
             if(buyer.getFishingLevel() < 2) {
-                return "at least 2 levels of fishing skill required to buy fiberglass rod";
+                return new Result(false,"at least 2 levels of fishing skill required to buy fiberglass rod");
             }
 
             sold[4] += 1;
             buyer.addToBackPack(new FishingPole(ToolLevel.FIBERGLASS), amount);
-            return "you've fiberglass rod pole with price 1800";
+            return new Result(true,"you've fiberglass rod pole with price 1800");
         }
         else if(productName.equalsIgnoreCase("Iridium Rod")) {
             if(amount * 7500 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " iridium rod";
+                return new Result(false, "not enough gold to buy " + amount + " iridium rod");
             }
             else if(buyer.getFishingLevel() < 4) {
-                return "at least 4 levels of fishing skill required to buy iridium rod";
+                return new Result(false,"at least 4 levels of fishing skill required to buy iridium rod");
             }
 
             sold[5] += 1;
             buyer.addToBackPack(new FishingPole(ToolLevel.IRIDIUM), amount);
-            return "you've bought iridium rod with price 7500";
+            return new Result(true,"you've bought iridium rod with price 7500");
         }
 
-        return "";
+        return new Result(false, "");
     }
 
     @Override

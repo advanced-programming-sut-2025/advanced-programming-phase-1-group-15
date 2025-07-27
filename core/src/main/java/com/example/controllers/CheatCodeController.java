@@ -93,6 +93,13 @@ public class CheatCodeController {
                 new Position(Integer.parseInt(matcher.group("x"))
                     , Integer.parseInt(matcher.group("y"))));
         }
+        else if(CheatCodeCommands.TELEPORT_CHEAT.matches(command)) {
+            Matcher matcher = CheatCodeCommands.TELEPORT_CHEAT.matcher(command);
+            matcher.matches();
+            return CheatCodeController.cheatTeleport(
+                new Position(Integer.parseInt(matcher.group("x"))
+                    , Integer.parseInt(matcher.group("y"))));
+        }
         else {
             return new Result(false, "Invalid command!");
         }
@@ -178,6 +185,10 @@ public class CheatCodeController {
             return new Result(true,"thor done on this position(;");
         }
         return new Result(false,"here is not a ploughed place");
+    }
+    public static Result cheatTeleport(Position position) {
+        App.currentGame.getCurrentPlayer().setPosition(position);
+        return new Result(true, "teleported to " + position + " successfully!");
     }
 
     public static Result cheatAddItem(Position position) {

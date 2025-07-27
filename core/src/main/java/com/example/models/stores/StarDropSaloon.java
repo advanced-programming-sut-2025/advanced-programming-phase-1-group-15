@@ -2,6 +2,7 @@ package com.example.models.stores;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.artisanry.ArtisanItem;
 import com.example.models.artisanry.ArtisanItemType;
 import com.example.models.cooking.Food;
@@ -78,29 +79,29 @@ public class StarDropSaloon extends Store {
     }
 
     @Override
-    public String sell(Player buyer, String productName, int amount) {
+    public Result sell(Player buyer, String productName, int amount) {
         if(productName.equalsIgnoreCase("beer")) {
             if(amount * 400 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " beer";
+                return new Result(false,"not enough gold to buy " + amount + " beer");
             }
 
             buyer.subtractGold(amount * 400);
             buyer.addToBackPack(new ArtisanItem(ArtisanItemType.BEER), amount);
-            return "you've bought " + amount + " beer with price " + amount * 400;
+            return new Result(true,"you've bought " + amount + " beer with price " + amount * 400);
         }
         if(productName.equalsIgnoreCase("coffee")) {
             if(amount * 300 > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " coffee";
+                return new Result(false,"not enough gold to buy " + amount + " coffee");
             }
 
             buyer.subtractGold(amount * 300);
             buyer.addToBackPack(new ArtisanItem(ArtisanItemType.COFFEE), amount);
-            return "you've bought " + amount + " coffee with price " + amount * 300;
+            return new Result(true, "you've bought " + amount + " coffee with price " + amount * 300);
         }
         for(StarDropSaloonItems item : sold.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 if(amount * item.price > buyer.getGold()) {
-                    return "not enough gold to buy " + amount + " " + item.getName();
+                    return new Result(false,"not enough gold to buy " + amount + " " + item.getName());
                 }
 
                 buyer.subtractGold(amount * item.price);
@@ -111,11 +112,11 @@ public class StarDropSaloon extends Store {
                     buyer.addToBackPack(new Food((FoodType) item.itemType), amount);
                 }
                 sold.put(item, sold.get(item) + amount);
-                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+                return new Result(true,"you've bought " + amount + " " + item.getName() + " with price " + amount * item.price);
             }
         }
 
-        return "";
+        return new Result(false,"");
     }
 
     @Override

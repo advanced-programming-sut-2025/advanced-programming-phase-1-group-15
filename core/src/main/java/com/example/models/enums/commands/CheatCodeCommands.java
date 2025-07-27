@@ -12,7 +12,8 @@ public enum CheatCodeCommands implements Commands {
     CHANGE_USERNAME_REGEX("change username -u <username>"),
     ADD_RECIPE("^add\\s+recipe\\s+(?<name>\\S+)$"),
     ADD_ITEMS("^add\\s+item\\s+(?<name>\\S+)\\s+(?<count>\\d+)$"),
-    CHEAT_THOR("\\s*cheat\\s+[tT]hor\\s+-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$");
+    CHEAT_THOR("\\s*cheat\\s+[tT]hor\\s+-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$"),
+    TELEPORT_CHEAT("\\s*teleport\\s+-l\\s+(?<x>\\d+)\\s+(?<y>\\d+)\\s*$");
 
     private final String regex;
     CheatCodeCommands(String regex) { this.regex = regex; }

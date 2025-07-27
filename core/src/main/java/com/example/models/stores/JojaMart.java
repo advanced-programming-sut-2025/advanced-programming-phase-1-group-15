@@ -3,6 +3,7 @@ package com.example.models.stores;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.foraging.ForagingSeeds;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
@@ -88,33 +89,33 @@ public class JojaMart extends Store {
     }
 
     @Override
-    public String sell(Player buyer, String productName, int amount) {
+    public Result sell(Player buyer, String productName, int amount) {
         for(GeneralItemsType item : sold1.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 if(amount * item.price > buyer.getGold()) {
-                    return "not enough gold to buy " + amount + " " + item.getName();
+                    return new Result(false,"not enough gold to buy " + amount + " " + item.getName());
                 }
 
                 buyer.subtractGold(amount * item.price);
                 buyer.addToBackPack(new GeneralItem(item), amount);
                 sold1.put(item, sold1.get(item) + amount);
-                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+                return new Result(true,"you've bought " + amount + " " + item.getName() + " with price " + amount * item.price);
             }
         }
         for(JojaMartItems item : sold2.keySet()) {
             if(item.getName().equalsIgnoreCase(productName)) {
                 if(amount * item.price > buyer.getGold()) {
-                    return "not enough gold to buy " + amount + " " + item.getName();
+                    return new Result(false,"not enough gold to buy " + amount + " " + item.getName());
                 }
 
                 buyer.subtractGold(amount * item.price);
                 buyer.addToBackPack(new ForagingSeeds(item.foragingSeedsType), amount);
                 sold2.put(item, sold2.get(item) + amount);
-                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+                return new Result(true,"you've bought " + amount + " " + item.getName() + " with price " + amount * item.price);
             }
         }
 
-        return "";
+        return new Result(false,"");
     }
 
     @Override

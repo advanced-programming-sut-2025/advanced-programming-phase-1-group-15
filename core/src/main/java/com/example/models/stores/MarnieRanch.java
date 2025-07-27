@@ -2,6 +2,7 @@ package com.example.models.stores;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
 import com.example.models.tools.Tool;
@@ -77,30 +78,35 @@ public class MarnieRanch extends Store {
     }
 
     @Override
-    public String sell(Player buyer, String productName, int amount) {
-        if(productName.equalsIgnoreCase("hay")) {
-            if(amount * hay.getPrice() > buyer.getGold()) {
-                return "not enough gold to buy " + amount + " " + hay.getName();
-            }
-
-            buyer.subtractGold(amount * hay.getPrice());
-            buyer.addToBackPack(new GeneralItem(GeneralItemsType.HAY), amount);
-            return "you've bought " + amount + " " + hay.getName() + " with price " + amount * hay.getPrice();
-        }
-        for(MarnieRanchItems item : sold.keySet()) {
-            if(item.getName().equalsIgnoreCase(productName)) {
-                if(amount * item.price > buyer.getGold()) {
-                    return "not enough gold to buy " + amount + " " + item.getName();
+    public Result sell(Player buyer, String productName, int amount) {
+        if(checkAmount(productName, amount)) {
+            if(productName.equalsIgnoreCase("hay")) {
+                if(amount * hay.getPrice() > buyer.getGold()) {
+                    return new Result(false, "not enough gold to buy " + amount + " " + hay.getName());
                 }
 
-                buyer.subtractGold(amount * item.price);
-                buyer.addToBackPack(Tool.toolFactory(item.toolType), amount);
-                sold.put(item, sold.get(item) + amount);
-                return "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price;
+                buyer.subtractGold(amount * hay.getPrice());
+                buyer.addToBackPack(new GeneralItem(GeneralItemsType.HAY), amount);
+                return new Result(true, "you've bought " + amount + " " + hay.getName() + " with price " + amount * hay.getPrice());
+            }
+            for(MarnieRanchItems item : sold.keySet()) {
+                if(item.getName().equalsIgnoreCase(productName)) {
+                    if(amount * item.price > buyer.getGold()) {
+                        return new Result(false, "not enough gold to buy " + amount + " " + item.getName());
+                    }
+
+                    buyer.subtractGold(amount * item.price);
+                    buyer.addToBackPack(Tool.toolFactory(item.toolType), amount);
+                    sold.put(item, sold.get(item) + amount);
+                    return new Result(true, "you've bought " + amount + " " + item.getName() + " with price " + amount * item.price);
+                }
             }
         }
+        else {
+            return new Result(false, "daily limit exceeded!");
+        }
 
-        return "";
+        return new Result(false, "");
     }
 
     @Override
