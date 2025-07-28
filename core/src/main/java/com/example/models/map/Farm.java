@@ -143,65 +143,21 @@ public class Farm extends Area {
 
     public boolean place(Animal animal) {
         if(animal.getMaintenance().equals(Maintenance.BARN)) {
-            for(ArrayList<Tile> row : tiles) {
-                for(Tile tile : row) {
-                    if((tile.getArea() instanceof Barn barn) && tile.isEmpty()) {
-                        switch(animal.getAnimalType()) {
-                            case COW -> {
-                                animal.setPosition(tile.getPosition());
-                                tile.put(animal);
-                                return true;
-                            }
-                            case GOAT -> {
-                                if(barn.isBig() || barn.isDeluxe()) {
-                                    animal.setPosition(tile.getPosition());
-                                    tile.put(animal);
-                                    return true;
-                                }
-                            }
-                            case SHEEP, PIG -> {
-                                if(barn.isDeluxe()) {
-                                    animal.setPosition(tile.getPosition());
-                                    tile.put(animal);
-                                    return true;
-                                }
-                            }
-                        }
-                    }
+            for(Area innerArea : innerAreas){
+                if(innerArea instanceof Barn barn) {
+                    return barn.place(animal);
                 }
             }
+            return false;
         }
         else {
-            for(ArrayList<Tile> row : tiles) {
-                for(Tile tile : row) {
-                    if((tile.getArea() instanceof Coop coop) && tile.isEmpty()) {
-                        switch(animal.getAnimalType()) {
-                            case CHICKEN -> {
-                                animal.setPosition(tile.getPosition());
-                                tile.put(animal);
-                                return true;
-                            }
-                            case DUCK, DINOSAUR -> {
-                                if(coop.isBig() || coop.isDeluxe()) {
-                                    animal.setPosition(tile.getPosition());
-                                    tile.put(animal);
-                                    return true;
-                                }
-                            }
-                            case RABBIT -> {
-                                if(coop.isDeluxe()) {
-                                    animal.setPosition(tile.getPosition());
-                                    tile.put(animal);
-                                    return true;
-                                }
-                            }
-                        }
-                    }
+            for(Area innerArea : innerAreas){
+                if(innerArea instanceof Coop coop) {
+                    return coop.place(animal);
                 }
             }
+            return false;
         }
-
-        return false;
     }
 
     public boolean place(Tilable tilable) {

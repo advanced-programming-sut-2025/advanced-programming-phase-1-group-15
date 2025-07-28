@@ -283,34 +283,22 @@ public class GameController {
             return new Result(true, "coop built successfully.");
         }
     }
-    public static Result buyAnimal(String animalType, String name) {
-        Tile playerTile = App.currentGame.getTile(getCurrentPlayer().getPosition());
-        if(!(playerTile.getArea() instanceof MarnieRanch)) {
-            return new Result(false, "you have to be inside marnie's ranch to run this command.");
+    public static Result buyAnimal(Player buyer, AnimalType animalType, String name) {
+        if(animalType.price > buyer.getGold()) {
+            return new Result(false, "not enough gold to buy a " + animalType.name().toLowerCase() + "!");
         }
 
-        Animal animal = Animal.animalFactory(animalType, name);
-        if(animal == null) {
-            return new Result(false, "invalid animal type!");
-        }
-
-        for(Animal playerAnimal : getCurrentPlayer().getAnimals()) {
-            if(animal.getName().equals(playerAnimal.getName())) {
-                return new Result(false, "each animal must have a unique name.");
-            }
-        }
-
-        boolean placed = getCurrentPlayer().getFarm().place(animal);
-
+        Animal animal = new Animal(animalType, name);
+        boolean placed = buyer.getFarm().place(animal);
         if(placed) {
             App.currentGame.getDateAndTime().addObserver(animal);
-            getCurrentPlayer().getAnimals().add(animal);
-            getCurrentPlayer().subtractGold(animal.getBasePrice());
+            buyer.getAnimals().add(animal);
+            buyer.subtractGold(animalType.price);
 
-            return new Result(true, "a new " + animal.getAnimalTypeName() + " named " + animal.getName() + " has been bought.");
+            return new Result(true, "a new " + animal.getAnimalTypeName() + " has been bought.");
         }
         else {
-            return new Result(false, "not enough/not the required level " + animal.getMaintenance() + " space to buy this animal.");
+            return new Result(false, "not enough " + animal.getMaintenance() + " space to buy this animal.");
         }
     }
     public static Result petAnimal(String name) {

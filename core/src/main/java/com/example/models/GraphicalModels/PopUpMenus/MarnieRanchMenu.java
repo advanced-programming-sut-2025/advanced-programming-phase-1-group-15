@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.example.controllers.GameController;
 import com.example.models.App;
 import com.example.models.Player;
 import com.example.models.Result;
@@ -132,14 +133,14 @@ public class MarnieRanchMenu extends PopUpMenu {
             buyButtons.get(i).addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    if(animalType.price <= currentPlayer.getGold()) {
-                        messageLabel.setColor(Color.GREEN);
-                        messageLabel.setText("you've bought 1 " + animalType.name().toLowerCase() + " with price " + animalType.price + ".");
-                    }
-                    else {
-                        messageLabel.setColor(Color.RED);
-                        messageLabel.setText("not enough gold to buy a " + animalType.name().toLowerCase());
-                    }
+                Result res = GameController.buyAnimal(currentPlayer, animalType, animalType.name().toLowerCase());
+                if(res.success()) {
+                    messageLabel.setColor(Color.GREEN);
+                }
+                else {
+                    messageLabel.setColor(Color.RED);
+                }
+                messageLabel.setText(res.message());
                 }
             });
 

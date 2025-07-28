@@ -1,6 +1,9 @@
 package com.example.models.animals;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.example.models.RandomGenerator;
+import com.example.models.foraging.ForagingMineral;
+import com.example.models.foraging.ForagingMineralType;
 import com.example.models.map.Area;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
@@ -65,5 +68,19 @@ public class Barn extends Area {
     @Override
     public void update(DateAndTime dateAndTime) {
 
+    }
+
+    public boolean place(Animal animal) {
+        while (true) {
+            int randomRow = RandomGenerator.getInstance().randomInt(0, tiles.size() - 1);
+            int randomCol = RandomGenerator.getInstance().randomInt(0, tiles.get(randomRow).size() - 1);
+            Tile randomTile = tiles.get(randomRow).get(randomCol);
+
+            if (randomTile.isEmpty()) {
+                randomTile.put(animal);
+                animal.setPosition(randomTile.getPosition());
+                return true;
+            }
+        }
     }
 }

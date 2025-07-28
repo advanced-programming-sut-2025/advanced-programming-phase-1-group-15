@@ -24,6 +24,7 @@ public class Animal implements Tilable, TimeObserver {
     Animation<TextureRegion> walkDownAnimation;
     Animation<TextureRegion> walkLeftAnimation;
     Animation<TextureRegion> walkRightAnimation;
+    Animation<TextureRegion> eatingAnimation;
     TextureRegion currentFrame;
     Direction direction = Direction.DOWN;
     boolean isWalking = false;
@@ -63,6 +64,13 @@ public class Animal implements Tilable, TimeObserver {
             case PIG -> this.animalProductTypes.add(AnimalProductType.TRUFFLE);
         }
         this.name = name;
+
+        walkDownAnimation = animalType.walking_down;
+        walkLeftAnimation = animalType.walking_left;
+        walkRightAnimation = animalType.walking_right;
+        walkUpAnimation = animalType.walking_up;
+        eatingAnimation = animalType.eating;
+        currentFrame = walkDownAnimation.getKeyFrame(0);
     }
 
     public AnimalType getAnimalType() {
@@ -81,9 +89,6 @@ public class Animal implements Tilable, TimeObserver {
 
     public Maintenance getMaintenance() {
         return animalType.maintenance;
-    }
-    public int getBasePrice() {
-        return animalType.price;
     }
     public int getPrice() {
         return (int) (animalType.price * (((double) friendship /1000) + 0.3));
@@ -117,15 +122,6 @@ public class Animal implements Tilable, TimeObserver {
     }
     public boolean isFed() {
         return fed;
-    }
-
-    public static Animal animalFactory(String animalType, String name) {
-        for(AnimalType at: AnimalType.values()) {
-            if(at.name().toLowerCase().equals(animalType)) {
-                return new Animal(at, name);
-            }
-        }
-        return null;
     }
 
     public ProductQuality calculateQuality() {
