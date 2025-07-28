@@ -621,6 +621,7 @@ public class GameView implements Screen {
                                 Gdx.input.setInputProcessor(artisan.getStage());
                             }
                         }
+                        return true;
                     }
                     NPC clickedNPC = getNPCAtPosition(tileX, tileY);
                     if (clickedNPC != null && clickedNPC.hasMessageForToday(App.currentGame.getCurrentPlayer())) {

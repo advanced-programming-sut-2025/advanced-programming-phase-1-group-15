@@ -14,9 +14,18 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.models.Game;
+import com.example.models.Player;
+import com.example.models.Result;
 import com.example.models.artisanry.ArtisanItem;
 import com.example.models.artisanry.ArtisanItemType;
 import com.example.models.crafting.CraftItem;
+import com.example.models.farming.Crop;
+import com.example.models.farming.Fruit;
+import com.example.models.farming.FruitType;
+import com.example.models.foraging.ForagingCrop;
+import com.example.models.foraging.ForagingCropsType;
+import com.example.models.tools.BackPackable;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -31,6 +40,7 @@ public class ArtisanMenu {
     private final Runnable onHideCallback;
     private final CraftItem craftItem;
     private boolean empty = true;
+    private ArtisanItem currentArtisanItem = null;
     public ArtisanMenu(Main main, Game game, Runnable onHideCallback , CraftItem craftItem) {
         this.main = main;
         this.game = game;
@@ -56,6 +66,7 @@ public class ArtisanMenu {
         rootTable.add(table).expand().fill().pad(20).row();
         rootTable.add(exitButton).right().pad(10);
         stage.addActor(rootTable);
+        game.getCurrentPlayer().getInventory().addToBackPack(new ForagingCrop(ForagingCropsType.RED_MUSHROOM), 10);
     }
     private Table creatArtisanTable() {
         Label titleLabel = new Label("Artisan Items:", skin); titleLabel.setColor(Color.FIREBRICK);
@@ -64,7 +75,10 @@ public class ArtisanMenu {
         artisanIcon.setSize(48, 48);
         artisanIcon.setVisible(false);
         TextButton artisanButton = new TextButton("Build", skin);
+        TextButton getArtisanButton = new TextButton("Get Item", skin);
         final Label errorLabel = new Label("", skin);
+        final Label madeLabel = new Label("", skin);
+        madeLabel.setVisible(false);
         final ArtisanItem[] current = new ArtisanItem[1];
         artisanButton.addListener(new ClickListener() {
             @Override
@@ -72,9 +86,10 @@ public class ArtisanMenu {
                 if (current[0] != null) {
                     if (!empty){
                         showError("You must wait to progress finish" , errorLabel);
+                        errorLabel.setColor(Color.RED);
                     }
                     else if (isAvailable(current[0])) {
-                        showError("You make it successfully" , errorLabel);
+                        showError("You going to make it" , errorLabel);
                         errorLabel.setColor(Color.GREEN);
                     } else {
                         if (game.getCurrentPlayer().getInventory().checkFilled()){
@@ -85,6 +100,13 @@ public class ArtisanMenu {
                             showError("You don't have enough material" , errorLabel);
                             errorLabel.setColor(Color.RED);
                         }
+                    }
+                    refresh(madeLabel);
+                    if (madeLabel.isVisible()){
+                        getArtisanButton.setVisible(true);
+                    }
+                    else {
+                        getArtisanButton.setVisible(false);
                     }
                 }
             }
@@ -100,11 +122,23 @@ public class ArtisanMenu {
                 if (index >= 0) {
                     String item = itemList.getItems().get(index);
                     if (item != null && !item.isEmpty()) {
+                        refresh(madeLabel);
+                        if (madeLabel.isVisible()){
+                            getArtisanButton.setVisible(true);
+                        }
+                        else {
+                            getArtisanButton.setVisible(false);
+                        }
                         String itemName = item.split(" x")[0];
                         current[0] = getArtisanItem(itemName);
                         if (current[0] != null) {
-                            descriptionLabel.setText("Desc: " + current[0].getArtisanItemType().getIngredients().getName());
-                            return true;
+                            if (current[0].getArtisanItemType().getIngredients() != null) {
+                                descriptionLabel.setText("Desc: " + current[0].getArtisanItemType().getIngredients().getName()
+                                + "  x" + current[0].getArtisanItemType().getNumber());
+                                artisanIcon.setDrawable(new TextureRegionDrawable(current[0].getSprite()));
+                                artisanIcon.setVisible(true);
+                                return true;
+                            }
                         }
                         else {
                             descriptionLabel.setText("Desc: ");
@@ -129,7 +163,9 @@ public class ArtisanMenu {
         table.add(scrollPane).expand().fill().pad(10).row();
         table.add(bottomRow).bottom().row();
         table.add(errorLabel).width(700).row();
+        table.add(madeLabel).width(700).row();
         table.add(artisanButton).right().row();
+        table.add(getArtisanButton).right().row();
         return table;
     }
     public void dispose() {
@@ -158,6 +194,7 @@ public class ArtisanMenu {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+        rootTable.setVisible(visible);
     }
 
     public boolean isEmpty() {
@@ -176,7 +213,63 @@ public class ArtisanMenu {
         return stage;
     }
     public boolean isAvailable(ArtisanItem artisanItem) {
-        return true;
+        BackPackable item = artisanItem.getArtisanItemType().getIngredients();
+        Player player = game.getCurrentPlayer();
+        if (item == null){
+            artisanItem.setHour(game.getDateAndTime().getHour());
+            artisanItem.setDay(game.getDateAndTime().getDay());
+            player.getArtisanItems().add(artisanItem);
+            currentArtisanItem = artisanItem;
+            return true;
+        }
+        int number = artisanItem.getArtisanItemType().getNumber();
+        if (player.getInventory().checkFilled()){
+            return false;
+        }
+        if (player.getInventory().getItemByName(item.getName()) != null) {
+            if (player.getInventory().getItemCount(item.getName())<number) {
+                return false;
+            }
+            artisanItem.setHour(game.getDateAndTime().getHour());
+            artisanItem.setDay(game.getDateAndTime().getDay());
+            player.getArtisanItems().add(artisanItem);
+            empty = false;
+            currentArtisanItem = artisanItem;
+            return true;
+        }
+        if (player.getFridge().getItemByName(item.getName()) != null) {
+            if (player.getFridge().getItemCount(item.getName())<number) {
+                return false;
+            }
+            artisanItem.setHour(game.getDateAndTime().getHour());
+            artisanItem.setDay(game.getDateAndTime().getDay());
+            empty = false;
+            currentArtisanItem = artisanItem;
+            return true;
+        }
+        return false;
+    }
+    public boolean isReady(){
+        Player player = game.getCurrentPlayer();
+        if (currentArtisanItem.getArtisanItemType().productionTimeInHours==0){
+            if (currentArtisanItem.getDay()<game.getDateAndTime().getDay()) {
+                player.getInventory().addToBackPack(currentArtisanItem ,1);
+                currentArtisanItem = null;
+                empty = true;
+                return true;
+            }
+            return false;
+        }
+        int hour = 0;
+        hour += (game.getDateAndTime().getHour()-currentArtisanItem.getHour());
+        hour += (game.getDateAndTime().getDay()-currentArtisanItem.getDay())*24;
+        if(currentArtisanItem.getArtisanItemType().productionTimeInHours>hour) {
+            return false;
+        }
+        player.getInventory().addToBackPack(currentArtisanItem ,1);
+        currentArtisanItem = null;
+        empty = true;
+        return false;
     }
     public ArrayList<ArtisanItem> availableItems() {
         ArrayList<ArtisanItemType> allTypes = new ArrayList<>(Arrays.asList(ArtisanItemType.values()));
@@ -196,5 +289,16 @@ public class ArtisanMenu {
             }
         }
         return null;
+    }
+    private void refresh(Label label) {
+        if (!empty){
+            label.setText("You going to made "+currentArtisanItem.getName());
+            label.setVisible(true);
+            label.setColor(Color.GREEN);
+        }
+        else {
+            label.setVisible(false);
+            label.setText("");
+        }
     }
 }

@@ -243,10 +243,12 @@ public enum ArtisanItemType {
     public BackPackable getIngredients() {
         return ingredients;
     }
+    public int getNumber() {
+        return number;
+    }
     public CraftItemType getCraftItemType() {
         return craftItemType;
     }
-
     public Texture getTexture() {
         return texture;
     }

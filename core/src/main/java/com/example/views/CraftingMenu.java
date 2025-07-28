@@ -172,7 +172,7 @@ public class CraftingMenu {
             int num = craftItem.getCraftItemType().getIngredients().get(item.getName());
             game.getCurrentPlayer().getInventory().removeCountFromBackPack(item , num);
         }
-        game.getCurrentPlayer().getInventory().addToBackPack(craftItem , 1);
+        game.getCurrentPlayer().getInventory().addToBackPack(new CraftItem(craftItem.getCraftItemType()) , 1);
         return true;
     }
     private void showError(String message, Label errorLabel) {

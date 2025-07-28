@@ -55,11 +55,13 @@ public class GameController {
                     if (player.getInventory().getItemCount(player.getCurrentItem().getName()) == 0) {
                         float spriteX = tile.getPosition().x * 16;
                         float spriteY = tile.getPosition().y * 16;
-                        Sprite sprite = player.getCurrentItem().getSprite();
-                        sprite.setPosition(spriteX, spriteY);
-                        sprite.setBounds(spriteX, spriteY, sprite.getWidth(), sprite.getHeight());
-                        if (player.getCurrentItem() instanceof CraftItem)
-                            player.getBuildedCrafts().add((CraftItem) player.getCurrentItem());
+                        if (player.getCurrentItem() instanceof CraftItem){
+                            CraftItem craftItem = new CraftItem(((CraftItem) player.getCurrentItem()).getCraftItemType());
+                            Sprite sprite = craftItem.getSprite();
+                            sprite.setPosition(spriteX, spriteY);
+                            sprite.setBounds(spriteX, spriteY, sprite.getWidth(), sprite.getHeight());
+                            player.getBuildedCrafts().add(craftItem);
+                        }
                         player.setCurrentItem(null);
                     }
                     return new Result(true, "Item placed successfully.");
