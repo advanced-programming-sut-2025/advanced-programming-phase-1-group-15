@@ -45,29 +45,19 @@ public class ArtisanMenu {
     private final Label madeLabel = new Label("", skin);
     private TextButton madeFast = new TextButton("Ready Fast", skin);
     Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-    Label progressLabel = new Label("", skin);
-    Container<Label> progressContainer = new Container<>(progressLabel);
-    Stack progressStack = new Stack();
-    Image fillImage = new Image(skin.newDrawable("white", Color.LIME));
-    Image backgroundBar = new Image(skin.newDrawable("white", Color.DARK_GRAY));
+    private Stack progressStack = new Stack();
+    Image background = new Image(skin.newDrawable("white", Color.DARK_GRAY));
+    Image fill = new Image(skin.newDrawable("white", Color.LIME));
     public ArtisanMenu(Main main, Game game, Runnable onHideCallback , CraftItem craftItem) {
-        game.getCurrentPlayer().getInventory().addToBackPack(new CraftItem(CraftItemType.CHARCOAL_KLIN) , 1);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
         skin.add("white", new Texture(pixmap));
-        progressLabel.setAlignment(Align.center);
-        progressContainer.setBackground(skin.newDrawable("white", Color.DARK_GRAY));
-        fillImage.setColor(Color.LIME);
-        progressStack.clear();
-        progressStack.add(backgroundBar);
-        progressStack.add(fillImage);
-        progressStack.add(progressLabel);
+
         progressStack.setSize(200, 20);
-        fillImage.setSize(0, 20);
-        fillImage.setWidth(200);
-        progressLabel.setSize(200, 20);
-        progressLabel.setAlignment(Align.center);
-        progressContainer.setSize(200, 30);
+        fill.setSize(0, 20);
+
+        progressStack.add(background);
+        progressStack.add(fill);
         this.main = main;
         this.game = game;
         this.onHideCallback = onHideCallback;
@@ -193,7 +183,7 @@ public class ArtisanMenu {
         table.add(errorLabel).width(700).row();
         table.add(madeLabel).width(700).row();
         table.add(artisanButton).right().row();
-        table.add(progressStack).pad(10).row();
+        table.add(progressStack).width(200).height(20).pad(10).row();
         table.add(madeFast).right().row();
         table.add(getArtisanButton).right().row();
         return table;
@@ -328,6 +318,7 @@ public class ArtisanMenu {
             label.setColor(Color.GREEN);
             getArtisanButton.setVisible(true);
             madeFast.setVisible(false);
+            progressStack.setVisible(false);
             return;
         }
         if (!empty){
@@ -345,17 +336,21 @@ public class ArtisanMenu {
         }
     }
     private void refreshProgress(){
+        if (ready){
+            progressStack.setVisible(false);
+        }
         if (currentArtisanItem != null) {
-            float elapsed = (game.getDateAndTime().getDay()-currentArtisanItem.getDay())*24 + game.getDateAndTime().getHour()-currentArtisanItem.getHour() ;
+            float elapsed = (game.getDateAndTime().getDay() - currentArtisanItem.getDay()) * 24
+                + game.getDateAndTime().getHour() - currentArtisanItem.getHour();
+
             float total = currentArtisanItem.getArtisanItemType().productionTimeInHours;
             float progress = Math.min(elapsed / total, 1f);
-            fillImage.setWidth(progress * progressStack.getWidth());
-            progressLabel.setVisible(true);
-            fillImage.setVisible(true);
+            fill.setWidth(progress * progressStack.getWidth());
+            fill.setHeight(progressStack.getHeight());
+            progressStack.setVisible(true);
         }
         else {
-            progressLabel.setVisible(false);
-            fillImage.setVisible(false);
+            progressStack.setVisible(false);
         }
     }
 }
