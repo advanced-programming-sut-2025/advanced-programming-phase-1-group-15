@@ -4,14 +4,17 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.models.App;
+import com.example.models.RandomGenerator;
 import com.example.models.enums.Direction;
 import com.example.models.map.AreaType;
 import com.example.models.map.Position;
 import com.example.models.map.Tilable;
+import com.example.models.map.Tile;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.TimeObserver;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Animal implements Tilable, TimeObserver {
     private final AnimalType animalType;
@@ -29,12 +32,14 @@ public class Animal implements Tilable, TimeObserver {
     Direction direction = Direction.DOWN;
     boolean isWalking = false;
     float stateTime = 0f;
+    static float walkingTime = 1f;
+    int steps = 0;
 
     private int friendship = 0;
     private boolean petted = false;
     private boolean fed = false;
 
-    private Position position;
+    private Tile tile;
 
     public Animal(AnimalType animalType, String name) {
         this.animalType = animalType;
@@ -94,11 +99,19 @@ public class Animal implements Tilable, TimeObserver {
         return (int) (animalType.price * (((double) friendship /1000) + 0.3));
     }
 
-    public Position getPosition() {
-        return position;
+    public Tile getTile() {
+        return tile;
     }
-    public void setPosition(Position position) {
-        this.position = position;
+    public void setTile(Tile newTile) {
+        if(tile != null && tile.getAreaType() != newTile.getAreaType()) {
+            return;
+        }
+        if(tile != null) {
+            tile.empty();
+        }
+
+        tile = newTile;
+        tile.put(this);
     }
 
     public int getFriendship() {
@@ -173,8 +186,8 @@ public class Animal implements Tilable, TimeObserver {
             if(!petted) {
                 friendship += (friendship/200) - 10;
             }
-            if(!App.currentGame.getTile(position).getAreaType().equals(AreaType.COOP) &&
-                    !App.currentGame.getTile(position).getAreaType().equals(AreaType.BARN)) {
+            if(!tile.getAreaType().equals(AreaType.COOP) &&
+                    !tile.getAreaType().equals(AreaType.BARN)) {
                 friendship -= 20;
             }
 
@@ -187,17 +200,35 @@ public class Animal implements Tilable, TimeObserver {
             petted = false;
             fed = false;
         }
+
+        if(RandomGenerator.getInstance().randomBoolean()) {
+            startRandomWalking();
+        }
     }
 
-    public void setDirection(Direction direction){
-        this.direction = direction;
+    public void startRandomWalking() {
+        isWalking = true;
+        int dir = RandomGenerator.getInstance().randomInt(0, Direction.values().length - 1);
+        direction = Direction.values()[dir];
+        steps = RandomGenerator.getInstance().randomInt(1, 3);
     }
-
-    public void setWalking(boolean walking) {
-        isWalking = walking;
+    public void moveOneTile() {
+        switch (direction) {
+            case UP:
+                setTile(App.currentGame.getTile(tile.getPosition().x, tile.getPosition().y + 1));
+                break;
+            case DOWN:
+                setTile(App.currentGame.getTile(tile.getPosition().x, tile.getPosition().y - 1));
+                break;
+            case LEFT:
+                setTile(App.currentGame.getTile(tile.getPosition().x - 1, tile.getPosition().y));
+                break;
+            case RIGHT:
+                setTile(App.currentGame.getTile(tile.getPosition().x + 1, tile.getPosition().y));
+                break;
+        }
     }
-
-    public void updateAnimation(float delta) {
+    public void updateWalking(float delta) {
         if(isWalking) {
             stateTime += delta;
             switch (direction) {
@@ -212,6 +243,7 @@ public class Animal implements Tilable, TimeObserver {
             }
         }
         else {
+            stateTime = 0;
             switch (direction) {
                 case UP:
                     currentFrame = walkUpAnimation.getKeyFrame(0); break;
@@ -222,6 +254,15 @@ public class Animal implements Tilable, TimeObserver {
                 case RIGHT:
                     currentFrame = walkRightAnimation.getKeyFrame(0); break;
             }
+        }
+
+        if(stateTime > walkingTime) {
+            moveOneTile();
+            steps--;
+            stateTime = 0;
+        }
+        if(steps == 0) {
+            isWalking = false;
         }
     }
 

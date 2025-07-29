@@ -670,7 +670,7 @@ public class GameAssetManager {
         for (int i = startIdx; i <= endIdx; i++) {
             frames[i - startIdx] = new TextureRegion(new Texture(basePath + i + ".png"));
         }
-        return new Animation<>(0.01f, frames);
+        return new Animation<>(0.1f, frames);
     }
 
     public static Sprite getGrassSprite(int randomizer) {

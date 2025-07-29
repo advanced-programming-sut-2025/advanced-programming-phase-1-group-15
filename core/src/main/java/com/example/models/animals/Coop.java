@@ -74,8 +74,7 @@ public class Coop extends Area {
             Tile randomTile = tiles.get(randomRow).get(randomCol);
 
             if (randomTile.isEmpty()) {
-                randomTile.put(animal);
-                animal.setPosition(randomTile.getPosition());
+                animal.setTile(randomTile);
                 return true;
             }
         }

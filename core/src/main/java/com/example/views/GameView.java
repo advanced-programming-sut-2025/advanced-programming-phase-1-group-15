@@ -28,6 +28,7 @@ import com.example.models.GraphicalModels.RightClickMenus.PlayerRightClickMenu;
 import com.example.models.GraphicalModels.RightClickMenus.RightClickMenu;
 import com.example.models.Player;
 import com.example.models.Result;
+import com.example.models.animals.Animal;
 import com.example.models.crafting.CraftItem;
 import com.example.models.enums.Direction;
 import com.example.models.map.GreenHouse;
@@ -589,6 +590,13 @@ public class GameView implements Screen {
                             Gdx.input.setInputProcessor(rightClickMenu.getStage());
                             return true;
                         }
+                    }
+
+                    if(clickedTile.getObjectInTile() instanceof Animal animal) {
+                        popUpMenu = new AnimalMenu(skin, animal.getName(), this::restoreGameInput, animal);
+                        popUpMenu.show();
+                        Gdx.input.setInputProcessor(popUpMenu.getStage());
+                        return true;
                     }
                 }
 

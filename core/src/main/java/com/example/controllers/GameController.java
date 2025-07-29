@@ -309,9 +309,6 @@ public class GameController {
         if(animal == null) {
             return new Result(false, "animal name is not correct.");
         }
-        else if(!getCurrentPlayer().getPosition().isAdjacent(animal.getPosition())) {
-            return new Result(false, "your position is not adjacent!");
-        }
 
         animal.pet();
         return new Result(true, "you pet " + animal.getName() + ".");
@@ -349,11 +346,11 @@ public class GameController {
             }
         }
 
-        Tile initialTile = App.currentGame.getTile(animal.getPosition());
-        animal.setPosition(tile.getPosition());
-
-        tile.put(animal);
-        initialTile.empty();
+//        Tile initialTile = App.currentGame.getTile(animal.getPosition());
+//        animal.setPosition(tile.getPosition());
+//
+//        tile.put(animal);
+//        initialTile.empty();
 
         animal.feed();
         return new Result(true, "shepherd " + animal.getName() + " successfully.");
@@ -362,9 +359,6 @@ public class GameController {
         Animal animal = getCurrentPlayer().getAnimalByName(name);
         if(animal == null) {
             return new Result(false, "animal name is not correct.");
-        }
-        else if(!getCurrentPlayer().getPosition().isAdjacent(animal.getPosition())) {
-            return new Result(false, "your position is not adjacent!");
         }
         GeneralItem Hay = (GeneralItem) getCurrentPlayer().getInventory().getItemByName("hay");
         if(Hay == null) {
@@ -393,9 +387,6 @@ public class GameController {
         if(animal == null) {
             return new Result(false, "animal name is not correct.");
         }
-        else if(!getCurrentPlayer().getPosition().isAdjacent(animal.getPosition())) {
-            return new Result(false, "your position is not adjacent!");
-        }
 
         else if(animal.getCurrentProduct() == null) {
             return new Result(false, "no product is available for this animal!");
@@ -416,7 +407,7 @@ public class GameController {
         if(animal == null) {
             return new Result(false, "animal name is not correct.");
         }
-        Tile animalTile = App.currentGame.getTile(animal.getPosition());
+        Tile animalTile = animal.getTile();
 
         App.currentGame.getDateAndTime().removeObserver(animal);
         getCurrentPlayer().getAnimals().remove(animal);

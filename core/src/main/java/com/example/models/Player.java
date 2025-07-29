@@ -562,6 +562,10 @@ public class Player extends User implements TimeObserver {
                     currentFrame = walkRightAnimation.getKeyFrame(0); break;
             }
         }
+
+        for(Animal animal : animals){
+            animal.updateWalking(delta);
+        }
     }
 
     public TextureRegion getFace() {
