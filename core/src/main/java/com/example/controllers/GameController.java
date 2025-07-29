@@ -303,11 +303,9 @@ public class GameController {
             return new Result(false, "not enough " + animal.getMaintenance() + " space to buy this animal.");
         }
     }
-    public static Result petAnimal(String name) {
-        Animal animal = getCurrentPlayer().getAnimalByName(name);
-
-        if(animal == null) {
-            return new Result(false, "animal name is not correct.");
+    public static Result petAnimal(Animal animal) {
+        if(animal.isPetted()) {
+            return new Result(false, "you can pet an animal only once in a day.");
         }
 
         animal.pet();
@@ -355,11 +353,11 @@ public class GameController {
         animal.feed();
         return new Result(true, "shepherd " + animal.getName() + " successfully.");
     }
-    public static Result feedHayAnimal(String name) {
-        Animal animal = getCurrentPlayer().getAnimalByName(name);
-        if(animal == null) {
-            return new Result(false, "animal name is not correct.");
+    public static Result feedHayAnimal(Animal animal) {
+        if(animal.isFed()) {
+            return new Result(false, "you can feed an animal only once in a day.");
         }
+
         GeneralItem Hay = (GeneralItem) getCurrentPlayer().getInventory().getItemByName("hay");
         if(Hay == null) {
             return new Result(false, "you don't have any hay.");
@@ -402,11 +400,7 @@ public class GameController {
 
         return new Result(true, "product added to the inventory.");
     }
-    public static Result sellAnimal(String name) {
-        Animal animal = getCurrentPlayer().getAnimalByName(name);
-        if(animal == null) {
-            return new Result(false, "animal name is not correct.");
-        }
+        public static Result sellAnimal(Animal animal) {
         Tile animalTile = animal.getTile();
 
         App.currentGame.getDateAndTime().removeObserver(animal);
@@ -414,7 +408,7 @@ public class GameController {
         getCurrentPlayer().addGold(animal.getPrice());
         animalTile.empty();
 
-        return new Result(true,  animal.getName() + " has been sold with price " + animal.getPrice());
+        return new Result(true,  animal.getName() + " has been sold with price " + animal.getPrice() + "G.");
     }
     public static Result fishing(String material) {
         Lake lake = null;

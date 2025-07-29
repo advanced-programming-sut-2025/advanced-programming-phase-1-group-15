@@ -564,7 +564,7 @@ public class Player extends User implements TimeObserver {
         }
 
         for(Animal animal : animals){
-            animal.updateWalking(delta);
+            animal.updateAnimation(delta);
         }
     }
 

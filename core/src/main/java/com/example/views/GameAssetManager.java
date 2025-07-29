@@ -54,6 +54,7 @@ public class GameAssetManager {
     public static Animation<TextureRegion>  goat_walking_up, goat_walking_down, goat_walking_right, goat_walking_left, goat_eating;
     public static Animation<TextureRegion>  pig_walking_up, pig_walking_down, pig_walking_right, pig_walking_left, pig_eating;
     public static Animation<TextureRegion>  sheep_walking_up, sheep_walking_down, sheep_walking_right, sheep_walking_left, sheep_eating;
+    public static Sprite heart;
 
     //NPCs
     public static Sprite abigail,harvey,leah,robin,sebastian;
@@ -274,6 +275,8 @@ public class GameAssetManager {
         sheep_walking_right = createAnimation("Sprites/Animals/Sheep/", 4, 7); sheep_walking_right.setPlayMode(Animation.PlayMode.LOOP);
         sheep_walking_left = createAnimation("Sprites/Animals/Sheep/", 12, 15); sheep_walking_left.setPlayMode(Animation.PlayMode.LOOP);
         sheep_eating = createAnimation("Sprites/Animals/Sheep/", 16, 19); sheep_eating.setPlayMode(Animation.PlayMode.LOOP);
+
+        heart = new Sprite(new Texture("Sprites/heart.png"));
 
         abigail = new Sprite(new Texture("Sprites/NPCs/Abigail.png"));
         harvey = new Sprite(new Texture("Sprites/NPCs/Harvey.png"));

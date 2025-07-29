@@ -7,14 +7,12 @@ import com.example.models.App;
 import com.example.models.RandomGenerator;
 import com.example.models.enums.Direction;
 import com.example.models.map.AreaType;
-import com.example.models.map.Position;
 import com.example.models.map.Tilable;
 import com.example.models.map.Tile;
 import com.example.models.time.DateAndTime;
 import com.example.models.time.TimeObserver;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Animal implements Tilable, TimeObserver {
     private final AnimalType animalType;
@@ -31,8 +29,10 @@ public class Animal implements Tilable, TimeObserver {
     TextureRegion currentFrame;
     Direction direction = Direction.DOWN;
     boolean isWalking = false;
+    boolean isEating = false;
     float stateTime = 0f;
     static float walkingTime = 1f;
+    static float eatingTime = 3f;
     int steps = 0;
 
     private int friendship = 0;
@@ -122,16 +122,21 @@ public class Animal implements Tilable, TimeObserver {
     }
 
     public void pet() {
-        petted = true;
-        friendship += 15;
+        if(!petted) {
+            petted = true;
+            friendship += 15;
+        }
     }
     public boolean isPetted() {
         return petted;
     }
 
     public void feed() {
-        fed = true;
-        friendship += 8;
+        if(!fed) {
+            isEating = true;
+            fed = true;
+            friendship += 8;
+        }
     }
     public boolean isFed() {
         return fed;
@@ -228,41 +233,45 @@ public class Animal implements Tilable, TimeObserver {
                 break;
         }
     }
-    public void updateWalking(float delta) {
-        if(isWalking) {
+    public void updateAnimation(float delta) {
+        if (isEating) {
+            isWalking = false;
             stateTime += delta;
-            switch (direction) {
-                case UP:
-                    currentFrame = walkUpAnimation.getKeyFrame(stateTime); break;
-                case DOWN:
-                    currentFrame = walkDownAnimation.getKeyFrame(stateTime); break;
-                case LEFT:
-                    currentFrame = walkLeftAnimation.getKeyFrame(stateTime); break;
-                case RIGHT:
-                    currentFrame = walkRightAnimation.getKeyFrame(stateTime); break;
+            currentFrame = eatingAnimation.getKeyFrame(stateTime, true);
+
+            if (stateTime > eatingTime) {
+                isEating = false;
+                stateTime = 0;
             }
-        }
-        else {
-            stateTime = 0;
-            switch (direction) {
-                case UP:
-                    currentFrame = walkUpAnimation.getKeyFrame(0); break;
-                case DOWN:
-                    currentFrame = walkDownAnimation.getKeyFrame(0); break;
-                case LEFT:
-                    currentFrame = walkLeftAnimation.getKeyFrame(0); break;
-                case RIGHT:
-                    currentFrame = walkRightAnimation.getKeyFrame(0); break;
-            }
+            return;
         }
 
-        if(stateTime > walkingTime) {
-            moveOneTile();
-            steps--;
+        if (isWalking) {
+            stateTime += delta;
+            switch (direction) {
+                case UP: currentFrame = walkUpAnimation.getKeyFrame(stateTime, true); break;
+                case DOWN: currentFrame = walkDownAnimation.getKeyFrame(stateTime, true); break;
+                case LEFT: currentFrame = walkLeftAnimation.getKeyFrame(stateTime, true); break;
+                case RIGHT: currentFrame = walkRightAnimation.getKeyFrame(stateTime, true); break;
+            }
+
+            if (stateTime > walkingTime) {
+                moveOneTile();
+                steps--;
+                stateTime = 0;
+
+                if (steps == 0) {
+                    isWalking = false;
+                }
+            }
+        } else {
             stateTime = 0;
-        }
-        if(steps == 0) {
-            isWalking = false;
+            switch (direction) {
+                case UP: currentFrame = walkUpAnimation.getKeyFrame(0); break;
+                case DOWN: currentFrame = walkDownAnimation.getKeyFrame(0); break;
+                case LEFT: currentFrame = walkLeftAnimation.getKeyFrame(0); break;
+                case RIGHT: currentFrame = walkRightAnimation.getKeyFrame(0); break;
+            }
         }
     }
 
