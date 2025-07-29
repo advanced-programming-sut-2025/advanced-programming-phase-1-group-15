@@ -2,6 +2,7 @@ package com.example.views;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,18 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.Main;
 import com.example.models.Game;
 import com.example.models.Player;
-import com.example.models.Result;
 import com.example.models.artisanry.ArtisanItem;
 import com.example.models.artisanry.ArtisanItemType;
 import com.example.models.crafting.CraftItem;
-import com.example.models.farming.Crop;
-import com.example.models.farming.Fruit;
-import com.example.models.farming.FruitType;
+import com.example.models.crafting.CraftItemType;
 import com.example.models.foraging.ForagingCrop;
 import com.example.models.foraging.ForagingCropsType;
 import com.example.models.tools.BackPackable;
@@ -40,8 +39,35 @@ public class ArtisanMenu {
     private final Runnable onHideCallback;
     private final CraftItem craftItem;
     private boolean empty = true;
+    private boolean ready = false;
     private ArtisanItem currentArtisanItem = null;
+    private TextButton getArtisanButton = new TextButton("Get Item", skin);
+    private final Label madeLabel = new Label("", skin);
+    private TextButton madeFast = new TextButton("Ready Fast", skin);
+    Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+    Label progressLabel = new Label("", skin);
+    Container<Label> progressContainer = new Container<>(progressLabel);
+    Stack progressStack = new Stack();
+    Image fillImage = new Image(skin.newDrawable("white", Color.LIME));
+    Image backgroundBar = new Image(skin.newDrawable("white", Color.DARK_GRAY));
     public ArtisanMenu(Main main, Game game, Runnable onHideCallback , CraftItem craftItem) {
+        game.getCurrentPlayer().getInventory().addToBackPack(new CraftItem(CraftItemType.CHARCOAL_KLIN) , 1);
+        pixmap.setColor(Color.WHITE);
+        pixmap.fill();
+        skin.add("white", new Texture(pixmap));
+        progressLabel.setAlignment(Align.center);
+        progressContainer.setBackground(skin.newDrawable("white", Color.DARK_GRAY));
+        fillImage.setColor(Color.LIME);
+        progressStack.clear();
+        progressStack.add(backgroundBar);
+        progressStack.add(fillImage);
+        progressStack.add(progressLabel);
+        progressStack.setSize(200, 20);
+        fillImage.setSize(0, 20);
+        fillImage.setWidth(200);
+        progressLabel.setSize(200, 20);
+        progressLabel.setAlignment(Align.center);
+        progressContainer.setSize(200, 30);
         this.main = main;
         this.game = game;
         this.onHideCallback = onHideCallback;
@@ -75,9 +101,13 @@ public class ArtisanMenu {
         artisanIcon.setSize(48, 48);
         artisanIcon.setVisible(false);
         TextButton artisanButton = new TextButton("Build", skin);
-        TextButton getArtisanButton = new TextButton("Get Item", skin);
+        madeFast.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                ready = true;
+                refresh(madeLabel);
+            }
+        });
         final Label errorLabel = new Label("", skin);
-        final Label madeLabel = new Label("", skin);
         madeLabel.setVisible(false);
         final ArtisanItem[] current = new ArtisanItem[1];
         artisanButton.addListener(new ClickListener() {
@@ -102,12 +132,6 @@ public class ArtisanMenu {
                         }
                     }
                     refresh(madeLabel);
-                    if (madeLabel.isVisible()){
-                        getArtisanButton.setVisible(true);
-                    }
-                    else {
-                        getArtisanButton.setVisible(false);
-                    }
                 }
             }
         });
@@ -123,12 +147,6 @@ public class ArtisanMenu {
                     String item = itemList.getItems().get(index);
                     if (item != null && !item.isEmpty()) {
                         refresh(madeLabel);
-                        if (madeLabel.isVisible()){
-                            getArtisanButton.setVisible(true);
-                        }
-                        else {
-                            getArtisanButton.setVisible(false);
-                        }
                         String itemName = item.split(" x")[0];
                         current[0] = getArtisanItem(itemName);
                         if (current[0] != null) {
@@ -149,6 +167,16 @@ public class ArtisanMenu {
                 return false;
             }
         });
+        getArtisanButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.getCurrentPlayer().getInventory().addToBackPack(currentArtisanItem ,1);
+                currentArtisanItem = null;
+                empty = true;
+                ready = false;
+                refresh(madeLabel);
+            }
+        });
         ScrollPane scrollPane = new ScrollPane(itemList, skin);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(true, false);
@@ -165,6 +193,8 @@ public class ArtisanMenu {
         table.add(errorLabel).width(700).row();
         table.add(madeLabel).width(700).row();
         table.add(artisanButton).right().row();
+        table.add(progressStack).pad(10).row();
+        table.add(madeFast).right().row();
         table.add(getArtisanButton).right().row();
         return table;
     }
@@ -174,6 +204,8 @@ public class ArtisanMenu {
     }
     public void draw(float delta) {
         if (!visible) return;
+        refreshProgress();
+        refresh(madeLabel);
         stage.act(delta);
         stage.draw();
     }
@@ -220,6 +252,7 @@ public class ArtisanMenu {
             artisanItem.setDay(game.getDateAndTime().getDay());
             player.getArtisanItems().add(artisanItem);
             currentArtisanItem = artisanItem;
+            empty = false;
             return true;
         }
         int number = artisanItem.getArtisanItemType().getNumber();
@@ -250,12 +283,11 @@ public class ArtisanMenu {
         return false;
     }
     public boolean isReady(){
+        if (currentArtisanItem == null) return false;
         Player player = game.getCurrentPlayer();
         if (currentArtisanItem.getArtisanItemType().productionTimeInHours==0){
             if (currentArtisanItem.getDay()<game.getDateAndTime().getDay()) {
-                player.getInventory().addToBackPack(currentArtisanItem ,1);
-                currentArtisanItem = null;
-                empty = true;
+                ready = true;
                 return true;
             }
             return false;
@@ -266,10 +298,8 @@ public class ArtisanMenu {
         if(currentArtisanItem.getArtisanItemType().productionTimeInHours>hour) {
             return false;
         }
-        player.getInventory().addToBackPack(currentArtisanItem ,1);
-        currentArtisanItem = null;
-        empty = true;
-        return false;
+        ready = true;
+        return true;
     }
     public ArrayList<ArtisanItem> availableItems() {
         ArrayList<ArtisanItemType> allTypes = new ArrayList<>(Arrays.asList(ArtisanItemType.values()));
@@ -291,14 +321,41 @@ public class ArtisanMenu {
         return null;
     }
     private void refresh(Label label) {
+        isReady();
+        if (ready){
+            label.setText("Take your item");
+            label.setVisible(true);
+            label.setColor(Color.GREEN);
+            getArtisanButton.setVisible(true);
+            madeFast.setVisible(false);
+            return;
+        }
         if (!empty){
             label.setText("You going to made "+currentArtisanItem.getName());
+            getArtisanButton.setVisible(false);
+            madeFast.setVisible(true);
             label.setVisible(true);
             label.setColor(Color.GREEN);
         }
         else {
             label.setVisible(false);
+            getArtisanButton.setVisible(false);
+            madeFast.setVisible(false);
             label.setText("");
+        }
+    }
+    private void refreshProgress(){
+        if (currentArtisanItem != null) {
+            float elapsed = (game.getDateAndTime().getDay()-currentArtisanItem.getDay())*24 + game.getDateAndTime().getHour()-currentArtisanItem.getHour() ;
+            float total = currentArtisanItem.getArtisanItemType().productionTimeInHours;
+            float progress = Math.min(elapsed / total, 1f);
+            fillImage.setWidth(progress * progressStack.getWidth());
+            progressLabel.setVisible(true);
+            fillImage.setVisible(true);
+        }
+        else {
+            progressLabel.setVisible(false);
+            fillImage.setVisible(false);
         }
     }
 }
