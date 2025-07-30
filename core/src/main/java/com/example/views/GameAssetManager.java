@@ -56,6 +56,10 @@ public class GameAssetManager {
     public static Animation<TextureRegion>  sheep_walking_up, sheep_walking_down, sheep_walking_right, sheep_walking_left, sheep_eating;
     public static Sprite heart;
 
+    // Animal Products
+    public static Sprite egg, large_egg, duck_egg, duck_feather, wool, rabbit_leg, dinosaur_egg, cow_milk, cow_large_milk,
+        goat_milk, goat_large_milk, truffle;
+
     //NPCs
     public static Sprite abigail,harvey,leah,robin,sebastian;
 
@@ -277,6 +281,20 @@ public class GameAssetManager {
         sheep_eating = createAnimation("Sprites/Animals/Sheep/", 16, 19); sheep_eating.setPlayMode(Animation.PlayMode.LOOP);
 
         heart = new Sprite(new Texture("Sprites/heart.png"));
+
+        // Animal Products
+        egg = new Sprite(new Texture("Sprites/AnimalProduct/egg.png"));
+        large_egg = new Sprite(new Texture("Sprites/AnimalProduct/large_egg.png"));
+        duck_egg = new Sprite(new Texture("Sprites/AnimalProduct/duck_egg.png"));
+        duck_feather = new Sprite(new Texture("Sprites/AnimalProduct/duck_feather.png"));
+        wool = new Sprite(new Texture("Sprites/AnimalProduct/wool.png"));
+        rabbit_leg = new Sprite(new Texture("Sprites/AnimalProduct/rabbit_leg.png"));
+        dinosaur_egg = new Sprite(new Texture("Sprites/AnimalProduct/dinosaur_egg.png"));
+        cow_milk = new Sprite(new Texture("Sprites/AnimalProduct/cow_milk.png"));
+        cow_large_milk = new Sprite(new Texture("Sprites/AnimalProduct/cow_large_milk.png"));
+        goat_milk = new Sprite(new Texture("Sprites/AnimalProduct/goat_milk.png"));
+        goat_large_milk = new Sprite(new Texture("Sprites/AnimalProduct/goat_large_milk.png"));
+        truffle = new Sprite(new Texture("Sprites/AnimalProduct/truffle.png"));
 
         abigail = new Sprite(new Texture("Sprites/NPCs/Abigail.png"));
         harvey = new Sprite(new Texture("Sprites/NPCs/Harvey.png"));

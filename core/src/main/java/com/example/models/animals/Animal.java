@@ -103,9 +103,6 @@ public class Animal implements Tilable, TimeObserver {
         return tile;
     }
     public void setTile(Tile newTile) {
-        if(tile != null && tile.getAreaType() != newTile.getAreaType()) {
-            return;
-        }
         if(tile != null) {
             tile.empty();
         }

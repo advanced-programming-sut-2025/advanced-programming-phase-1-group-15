@@ -47,6 +47,6 @@ public class AnimalProduct  implements BackPackable {
 
     @Override
     public Sprite getSprite() {
-        return null;
+        return animalProductType.sprite;
     }
 }

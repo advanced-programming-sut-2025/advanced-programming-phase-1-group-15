@@ -161,10 +161,9 @@ public class CarpenterShopMenu extends PopUpMenu {
 
         if (res.success()) {
             messageLabel.setColor(Color.GREEN);
-            messageLabel.setText(res.message());
         } else {
             messageLabel.setColor(Color.RED);
-            messageLabel.setText(res.message());
         }
+        messageLabel.setText(res.message());
     }
 }

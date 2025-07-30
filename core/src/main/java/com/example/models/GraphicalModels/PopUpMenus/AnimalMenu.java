@@ -5,13 +5,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.example.controllers.GameController;
 import com.example.models.Result;
 import com.example.models.animals.Animal;
 import com.example.views.GameAssetManager;
-import org.w3c.dom.Text;
 
 public class AnimalMenu extends PopUpMenu {
     private static final float WIDTH = 600f;
@@ -19,6 +17,7 @@ public class AnimalMenu extends PopUpMenu {
     private static final float PADDING = 10f;
 
     private final Animal animal;
+    private Table contentTable;
     private Label messageLabel;
 
     public AnimalMenu(Skin skin, String title, Runnable onHideCallback, Animal animal) {
@@ -28,16 +27,29 @@ public class AnimalMenu extends PopUpMenu {
 
     @Override
     protected void populate(Window w) {
+        contentTable = new Table();
+        contentTable.pad(PADDING);
+        contentTable.top();
+
+        createInitialMenu();
+        w.add(contentTable).row();
+
+        messageLabel = new Label("", skin);
+        w.add(messageLabel).colspan(3).padTop(PADDING).row();
+    }
+
+    public void createInitialMenu() {
+        contentTable.clear();
         Image animalImage = new Image(animal.getSprite());
         animalImage.setSize(64, 64);
-        w.add(animalImage).size(64, 64).colspan(3).padBottom(PADDING).row();
+        contentTable.add(animalImage).size(64, 64).colspan(3).padBottom(PADDING).row();
 
-        w.add(new Label("Name:", skin));
+        contentTable.add(new Label("Name:", skin));
         TextField nameField = new TextField(animal.getName(), skin);
-        w.add(nameField);
+        contentTable.add(nameField);
 
         TextButton editButton = new TextButton("Edit", skin);
-        w.add(editButton).padBottom(PADDING).row();
+        contentTable.add(editButton).padBottom(PADDING).row();
         editButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -55,7 +67,7 @@ public class AnimalMenu extends PopUpMenu {
         heartIcon.setSize(32, 32);
         heartIcon.setOrigin(Align.center);
         friendshipTable.add(heartIcon);
-        w.add(friendshipTable).colspan(3).padBottom(PADDING).row();
+        contentTable.add(friendshipTable).colspan(3).padBottom(PADDING).row();
 
         TextButton petButton = new TextButton("Pet", skin);
         petButton.addListener(new ChangeListener() {
@@ -98,13 +110,18 @@ public class AnimalMenu extends PopUpMenu {
 
         TextButton shepherdButton = new TextButton("Shepherd", skin);
 
-        w.add(petButton).width(150);
-        w.add(feedButton).width(150);
-        w.add(shepherdButton).width(150).padBottom(PADDING).row();
+        contentTable.add(petButton).width(150);
+        contentTable.add(feedButton).width(150);
+        contentTable.add(shepherdButton).width(150).padBottom(PADDING).row();
 
         Table bottomButtons = new Table();
         TextButton productsButton = new TextButton("Products", skin);
-
+        productsButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                createProductContent();
+            }
+        });
 
         TextButton sellButton = new TextButton("Sell", skin);
         sellButton.addListener(new ChangeListener() {
@@ -114,6 +131,7 @@ public class AnimalMenu extends PopUpMenu {
 
                 if (res.success()) {
                     messageLabel.setColor(Color.GREEN);
+                    sellButton.setDisabled(true);
                 } else {
                     messageLabel.setColor(Color.RED);
                 }
@@ -123,9 +141,62 @@ public class AnimalMenu extends PopUpMenu {
 
         bottomButtons.add(productsButton).width(150);
         bottomButtons.add(sellButton).width(150).row();
-        w.add(bottomButtons).colspan(3).padBottom(PADDING).row();
+        contentTable.add(bottomButtons).colspan(3).padBottom(PADDING).row();
+    }
 
-        messageLabel = new Label("", skin);
-        w.add(messageLabel).colspan(3).padTop(PADDING).row();
+    public void createProductContent() {
+        contentTable.clear();
+        Image animalImage = new Image(animal.getSprite());
+        animalImage.setSize(64, 64);
+        contentTable.add(animalImage).size(64, 64).padBottom(PADDING).row();
+
+        contentTable.add(new Label("Today Products:", skin)).padBottom(PADDING).row();
+        if(animal.getCurrentProduct() == null) {
+            contentTable.add(new Label("There is nothing to collect for now!", skin)).padBottom(PADDING).row();
+        }
+        else {
+            Table productTable = new Table();
+
+            Image productIcon = new Image(animal.getCurrentProduct().getSprite());
+            productIcon.setSize(32, 32);
+            productTable.add(productIcon).size(32, 32).padRight(PADDING);
+
+            productTable.add(new Label("1 " + animal.getCurrentProduct().getName(), skin)).padRight(PADDING);
+            Label qualityLabel = new Label("Quality: " + animal.getCurrentProduct().getProductQuality(), skin);
+            switch (animal.getCurrentProduct().getProductQuality()) {
+                case NORMAL -> qualityLabel.setColor(Color.BLACK);
+                case SILVER -> qualityLabel.setColor(Color.DARK_GRAY);
+                case GOLD -> qualityLabel.setColor(Color.GOLD);
+                case IRIDIUM -> qualityLabel.setColor(Color.MAGENTA);
+            }
+            productTable.add(qualityLabel);
+
+            contentTable.add(productTable).padBottom(PADDING).row();
+
+            TextButton collectButton = new TextButton("Collect", skin);
+            collectButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    Result res = GameController.collectProduce(animal);
+                    if (res.success()) {
+                        messageLabel.setColor(Color.GREEN);
+                    } else {
+                        messageLabel.setColor(Color.RED);
+                    }
+                    messageLabel.setText(res.getMessage());
+                }
+            });
+            contentTable.add(collectButton).padTop(PADDING).row();
+        }
+
+        TextButton backButton = new TextButton("Back", skin);
+        backButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                createInitialMenu();
+            }
+        });
+
+        contentTable.add(backButton).padTop(PADDING).row();
     }
 }
