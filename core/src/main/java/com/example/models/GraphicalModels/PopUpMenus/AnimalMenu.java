@@ -11,9 +11,11 @@ import com.example.models.Result;
 import com.example.models.animals.Animal;
 import com.example.views.GameAssetManager;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 public class AnimalMenu extends PopUpMenu {
     private static final float WIDTH = 600f;
-    private static final float HEIGHT = 600f;
+    private static final float HEIGHT = 450f;
     private static final float PADDING = 10f;
 
     private final Animal animal;
@@ -32,10 +34,10 @@ public class AnimalMenu extends PopUpMenu {
         contentTable.top();
 
         createInitialMenu();
-        w.add(contentTable).row();
+        w.add(contentTable).expand().fill().row();
 
         messageLabel = new Label("", skin);
-        w.add(messageLabel).colspan(3).padTop(PADDING).row();
+        w.add(messageLabel).colspan(3).padBottom(PADDING).row();
     }
 
     public void createInitialMenu() {
@@ -108,7 +110,39 @@ public class AnimalMenu extends PopUpMenu {
             }
         });
 
-        TextButton shepherdButton = new TextButton("Shepherd", skin);
+        TextButton shepherdButton;
+        if(!animal.getShepherdMode()) {
+            shepherdButton = new TextButton("Shepherd", skin);
+            shepherdButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    Result res = GameController.shepherdAnimal(animal);
+                    if (res.success()) {
+                        hide();
+                    }
+                    else {
+                        messageLabel.setColor(Color.RED);
+                    }
+                    messageLabel.setText(res.getMessage());
+
+                    shepherdButton.setDisabled(true);
+                }
+            });
+        }
+        else {
+            shepherdButton = new TextButton("PutBack", skin);
+            shepherdButton.addListener(new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    animal.getBuilding().place(animal);
+                    animal.setShepherdMode(false);
+                    messageLabel.setColor(Color.GREEN);
+                    messageLabel.setText(animal.getName() + " is back in the " + animal.getMaintenance() + " and safe!");
+
+                    shepherdButton.setDisabled(true);
+                }
+            });
+        }
 
         contentTable.add(petButton).width(150);
         contentTable.add(feedButton).width(150);

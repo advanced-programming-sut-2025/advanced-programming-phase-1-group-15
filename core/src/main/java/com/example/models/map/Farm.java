@@ -7,7 +7,6 @@ import com.example.models.RandomGenerator;
 import com.example.models.animals.Animal;
 import com.example.models.animals.Barn;
 import com.example.models.animals.Coop;
-import com.example.models.animals.Maintenance;
 import com.example.models.farming.Tree;
 import com.example.models.farming.TreeType;
 import com.example.models.foraging.Stone;
@@ -142,10 +141,12 @@ public class Farm extends Area {
     }
 
     public boolean place(Animal animal) {
-        if(animal.getMaintenance().equals(Maintenance.BARN)) {
+        if(animal.getMaintenance().equals(AreaType.BARN)) {
             for(Area innerArea : innerAreas){
                 if(innerArea instanceof Barn barn) {
-                    return barn.place(animal);
+                    if(barn.place(animal)) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -153,7 +154,9 @@ public class Farm extends Area {
         else {
             for(Area innerArea : innerAreas){
                 if(innerArea instanceof Coop coop) {
-                    return coop.place(animal);
+                    if(coop.place(animal)) {
+                        return true;
+                    }
                 }
             }
             return false;

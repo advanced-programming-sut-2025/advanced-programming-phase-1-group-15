@@ -39,7 +39,7 @@ public class Lake extends Area {
         }
     }
     private void randomFishGenerator(Season season) {
-        int fishesCount = RandomGenerator.getInstance().randomInt(1,2);
+        int fishesCount = RandomGenerator.getInstance().randomInt(1, 4);
 
         ArrayList<FishType> validFishTypes = new ArrayList<>();
         for (FishType fishType : FishType.values()) {

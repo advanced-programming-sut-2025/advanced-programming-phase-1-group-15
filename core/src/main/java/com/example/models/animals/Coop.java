@@ -10,7 +10,7 @@ import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 
-public class Coop extends Area {
+public class Coop extends Area implements Building {
     public static int ROWS = 10;
     public static int COLS = 16;
 
@@ -68,6 +68,19 @@ public class Coop extends Area {
     }
 
     public boolean place(Animal animal) {
+        boolean filled = true;
+        for(ArrayList<Tile> row : tiles) {
+            for(Tile tile : row) {
+                if(tile.isEmpty()) {
+                    filled = false;
+                    break;
+                }
+            }
+        }
+        if(filled) {
+            return false;
+        }
+
         while (true) {
             int randomRow = RandomGenerator.getInstance().randomInt(0, tiles.size() - 1);
             int randomCol = RandomGenerator.getInstance().randomInt(0, tiles.get(randomRow).size() - 1);
@@ -75,6 +88,7 @@ public class Coop extends Area {
 
             if (randomTile.isEmpty()) {
                 animal.setTile(randomTile);
+                animal.setBuilding(this);
                 return true;
             }
         }

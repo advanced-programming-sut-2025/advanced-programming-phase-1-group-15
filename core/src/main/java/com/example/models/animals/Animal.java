@@ -7,6 +7,7 @@ import com.example.models.App;
 import com.example.models.RandomGenerator;
 import com.example.models.enums.Direction;
 import com.example.models.map.AreaType;
+import com.example.models.map.Map;
 import com.example.models.map.Tilable;
 import com.example.models.map.Tile;
 import com.example.models.time.DateAndTime;
@@ -30,6 +31,7 @@ public class Animal implements Tilable, TimeObserver {
     Direction direction = Direction.DOWN;
     boolean isWalking = false;
     boolean isEating = false;
+    boolean shepherdMode = false;
     float stateTime = 0f;
     static float walkingTime = 1f;
     static float eatingTime = 3f;
@@ -40,6 +42,7 @@ public class Animal implements Tilable, TimeObserver {
     private boolean fed = false;
 
     private Tile tile;
+    private Building building;
 
     public Animal(AnimalType animalType, String name) {
         this.animalType = animalType;
@@ -92,7 +95,7 @@ public class Animal implements Tilable, TimeObserver {
         this.name = name;
     }
 
-    public Maintenance getMaintenance() {
+    public AreaType getMaintenance() {
         return animalType.maintenance;
     }
     public int getPrice() {
@@ -137,6 +140,20 @@ public class Animal implements Tilable, TimeObserver {
     }
     public boolean isFed() {
         return fed;
+    }
+
+    public void setShepherdMode(boolean shepherdMode) {
+        this.shepherdMode = shepherdMode;
+    }
+    public boolean getShepherdMode() {
+        return shepherdMode;
+    }
+
+    public void setBuilding(Building building) {
+        this.building = building;
+    }
+    public Building getBuilding() {
+        return building;
     }
 
     public ProductQuality calculateQuality() {
@@ -214,22 +231,40 @@ public class Animal implements Tilable, TimeObserver {
         direction = Direction.values()[dir];
         steps = RandomGenerator.getInstance().randomInt(1, 3);
     }
-    public void moveOneTile() {
-        switch (direction) {
-            case UP:
-                setTile(App.currentGame.getTile(tile.getPosition().x, tile.getPosition().y + 1));
-                break;
-            case DOWN:
-                setTile(App.currentGame.getTile(tile.getPosition().x, tile.getPosition().y - 1));
-                break;
-            case LEFT:
-                setTile(App.currentGame.getTile(tile.getPosition().x - 1, tile.getPosition().y));
-                break;
-            case RIGHT:
-                setTile(App.currentGame.getTile(tile.getPosition().x + 1, tile.getPosition().y));
-                break;
+
+    public void shepherd() {
+        shepherdMode = true;
+        isWalking = true;
+        int dir = RandomGenerator.getInstance().randomInt(0, Direction.values().length - 1);
+        direction = Direction.values()[dir];
+        steps = 16;
+
+        if(!fed) {
+            fed = true;
+            friendship += 8;
         }
     }
+
+    public void moveOneTile() {
+        int x = tile.getPosition().x; int y = tile.getPosition().y;
+        if (0 >= x || 0 >= y || x >= Map.COLS || y >= Map.ROWS) {
+            return;
+        }
+
+        Tile nextTile = switch (direction) {
+            case UP -> App.currentGame.getTile(x, y + 1);
+            case DOWN -> App.currentGame.getTile(x, y - 1);
+            case LEFT -> App.currentGame.getTile(x - 1, y);
+            case RIGHT -> App.currentGame.getTile(x + 1, y);
+        };
+
+        if(nextTile.isEmpty()) {
+            if((shepherdMode && nextTile.getAreaType() == AreaType.FARM) || nextTile.getAreaType() == animalType.maintenance) {
+                setTile(nextTile);
+            }
+        }
+    }
+
     public void updateAnimation(float delta) {
         if (isEating) {
             isWalking = false;

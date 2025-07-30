@@ -256,11 +256,16 @@ public class GameController {
         boolean buildable = true;
         int requiredGold = 4000, requiredWood = 300, requiredStone = 100;
 
-        for(int row = y; row < y + Coop.ROWS; row++) {
-            for(int col = x; col < x + Coop.COLS; col++) {
-                Tile tile = farm.getTile(row, col);
-                if(!tile.isBuildable()) {
-                    buildable = false;
+        if(x < 0 || y < 0 || x + Coop.COLS >= Farm.COLS || y + Coop.ROWS >= Farm.ROWS) {
+            buildable = false;
+        }
+        else {
+            for(int row = y; row < y + Coop.ROWS; row++) {
+                for(int col = x; col < x + Coop.COLS; col++) {
+                    Tile tile = farm.getTile(row, col);
+                    if(!tile.isBuildable()) {
+                        buildable = false;
+                    }
                 }
             }
         }
@@ -311,44 +316,15 @@ public class GameController {
         animal.pet();
         return new Result(true, "you pet " + animal.getName() + ".");
     }
-//    public static Result shepherdAnimal(Animal animal) {
-//
-//        if(x >= Map.COLS || y >= Map.ROWS || x < 0 || y < 0) {
-//            return new Result(false, "invalid x or y!");
-//        }
-//
-//        Tile tile = App.currentGame.getTile(x, y);
-//        if(!App.currentGame.getWeather().couldShepherdAnimals()) {
-//            return new Result(false, "you cannot shepherd animals in this weather!");
-//        }
-//        else if(!tile.isEmpty()) {
-//            return new Result(false, "animal can't stand on a tile which is not empty.");
-//        }
-//        else if(tile.getAreaType().equals(AreaType.LAKE) && !animal.getAnimalType().equals(AnimalType.DUCK)) {
-//            return new Result(false, "only ducks can swim.");
-//        }
-//        else if(tile.getAreaType().equals(AreaType.BARN) && !animal.getMaintenance().equals(Maintenance.BARN)) {
-//            return new Result(false, "you can't put a " + animal.getAnimalType() + " in a barn.");
-//        }
-//        else if(tile.getAreaType().equals(AreaType.COOP) && !animal.getMaintenance().equals(Maintenance.COOP)) {
-//            return new Result(false, "you can't put a " + animal.getAnimalType() + " in a coop.");
-//        }
-//        else if(tile.getAreaType().equals(AreaType.FARM)) {
-//            Farm farm = (Farm) tile.getArea();
-//            if(!getCurrentPlayer().checkTerritory(farm)) {
-//                return new Result(false, "your animals cannot enter other players' territory.");
-//            }
-//        }
-//
-//        Tile initialTile = App.currentGame.getTile(animal.getPosition());
-//        animal.setPosition(tile.getPosition());
-//
-//        tile.put(animal);
-//        initialTile.empty();
-//
-//        animal.feed();
-//        return new Result(true, "shepherd " + animal.getName() + " successfully.");
-//    }
+    public static Result shepherdAnimal(Animal animal) {
+        if(!App.currentGame.getWeather().couldShepherdAnimals()) {
+            return new Result(false, "you cannot shepherd animals in this weather!");
+        }
+
+        animal.shepherd();
+        return new Result(true, "shepherd " + animal.getName() + " successfully.");
+    }
+
     public static Result feedHayAnimal(Animal animal) {
         if(animal.isFed()) {
             return new Result(false, "you can feed an animal only once in a day.");
