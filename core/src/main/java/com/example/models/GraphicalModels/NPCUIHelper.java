@@ -24,27 +24,22 @@ public class NPCUIHelper {
     }
 
     private void createMessageIndicator() {
-        // Create a simple message indicator (yellow circle with exclamation mark)
         Pixmap pixmap = new Pixmap(16, 16, Pixmap.Format.RGBA8888);
 
-        // Fill with yellow background
         pixmap.setColor(Color.YELLOW);
         pixmap.fillCircle(8, 8, 7);
 
-        // Add black border
         pixmap.setColor(Color.BLACK);
         pixmap.drawCircle(8, 8, 7);
 
-        // Add exclamation mark (simplified)
         pixmap.setColor(Color.BLACK);
-        pixmap.drawLine(8, 4, 8, 10); // Vertical line
-        pixmap.drawPixel(8, 12); // Dot
+        pixmap.drawLine(8, 4, 8, 10);
+        pixmap.drawPixel(8, 12);
 
         Texture texture = new Texture(pixmap);
         messageIndicator = new TextureRegion(texture);
         pixmap.dispose();
 
-        // Create white pixel for other UI purposes
         Pixmap whitePixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         whitePixmap.setColor(Color.WHITE);
         whitePixmap.fill();

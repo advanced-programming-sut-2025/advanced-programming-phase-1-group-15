@@ -34,7 +34,15 @@ public class App {
         return null;
     }
 
+    public static GameView getCurrentGameMenu() {
+        return currentGameMenu;
+    }
+
     public static boolean checkIsInAnotherGame(User user) {
         return false;
+    }
+
+    public static void setCurrentGameMenu(GameView currentGameMenu) {
+        App.currentGameMenu = currentGameMenu;
     }
 }

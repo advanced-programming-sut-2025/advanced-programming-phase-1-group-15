@@ -1,5 +1,6 @@
 package com.example.models;
 
+import com.example.models.GraphicalModels.PopUpMenus.PopUpMenu;
 import com.example.models.map.Map;
 import com.example.models.map.Position;
 import com.example.models.map.Tile;
@@ -128,5 +129,9 @@ public class Game implements TimeObserver {
     @Override
     public void update(DateAndTime dateAndTime) {
 
+    }
+
+    public void setPopUpMenu(PopUpMenu popupMenu) {
+        view.setPopUpMenu(popupMenu);
     }
 }

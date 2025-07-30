@@ -107,6 +107,8 @@ public class GameView implements Screen {
         this.pauseMenuOverlay = new PauseMenuOverlay(main, game, this::restoreGameInput);
         this.craftingMenu = new CraftingMenu(main, game, this::restoreGameInput);
         this.cookingMenu = new CookingMenu(main, game, this::restoreGameInput);
+
+        App.setCurrentGameMenu(this);
     }
 
     @Override
@@ -815,26 +817,21 @@ public class GameView implements Screen {
             if (npc.hasMessageForToday(currentPlayer)) {
                 int indicatorX = drawX + tileSideLength - 18;
                 int indicatorY = drawY + tileSideLength - 18;
-                uiHelper.drawMessageIndicator(batch, indicatorX, indicatorY, 16);
+                uiHelper.drawMessageIndicator(batch, indicatorX, indicatorY, 6);
             }
         }
     }
 
     private void drawMessageIndicator(SpriteBatch batch, int npcX, int npcY) {
-        // You'll need to create or load a message indicator texture
-        // For now, this assumes you have a messageIndicatorTexture
-        // TextureRegion messageIcon = messageIndicatorTexture;
 
         int indicatorX = npcX + tileSideLength - 16; // Top-right corner
         int indicatorY = npcY + tileSideLength - 16;
 
-        // If you don't have a texture yet, you can draw a simple colored rectangle
         // batch.draw(messageIcon, indicatorX, indicatorY, 16, 16);
 
-        // Alternative: Draw a simple colored square (you'd need to create a 1x1 white pixel texture)
         // batch.setColor(Color.YELLOW);
         // batch.draw(whitePixelTexture, indicatorX, indicatorY, 16, 16);
-        // batch.setColor(Color.WHITE); // Reset color
+        // batch.setColor(Color.WHITE);
     }
 
     private NPC getNPCAtPosition(int tileX, int tileY) {
@@ -847,5 +844,7 @@ public class GameView implements Screen {
         return null;
     }
 
-
+    public void setPopUpMenu(PopUpMenu popUpMenu) {
+        this.popUpMenu = popUpMenu;
+    }
 }

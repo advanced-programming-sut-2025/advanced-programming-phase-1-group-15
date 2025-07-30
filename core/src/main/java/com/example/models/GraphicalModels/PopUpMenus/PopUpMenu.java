@@ -1,6 +1,7 @@
 package com.example.models.GraphicalModels.PopUpMenus;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -19,6 +20,7 @@ public abstract class PopUpMenu {
     protected Skin skin;
     private Actor backgroundDim;
     private boolean isVisible = false;
+    private InputProcessor previousInputProcessor;
 
     private final Runnable onHideCallback;
 
@@ -101,6 +103,9 @@ public abstract class PopUpMenu {
 
         isVisible = true;
 
+        previousInputProcessor = Gdx.input.getInputProcessor();
+        Gdx.input.setInputProcessor(stage);
+
         backgroundDim.setVisible(true);
 
         window.setVisible(true);
@@ -118,6 +123,11 @@ public abstract class PopUpMenu {
 
         window.setVisible(false);
         backgroundDim.setVisible(false);
+
+        if (previousInputProcessor != null) {
+            Gdx.input.setInputProcessor(previousInputProcessor);
+            previousInputProcessor = null;
+        }
 
         if (onHideCallback != null) {
             onHideCallback.run();

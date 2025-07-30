@@ -176,19 +176,15 @@ public class NPC implements TimeObserver {
 
     public boolean hasMessageForToday(Player player) {
         NPCFriendShip friendship = friendships.get(player);
-        if (friendship == null) {
-            return true; // First time meeting, always has a message
-        }
+//        if (friendship == null) {
+//            return true; // First time meeting, always has a message
+//        }
 
-        // NPC has a message if:
-        // 1. Player hasn't talked today
-        // 2. There are new/active quests available
-        // 3. They have a daily gift available
         boolean hasntTalkedToday = !friendship.hasTalkedToday();
         boolean hasActiveQuests = friendship.getPlayerQuests().values().contains(true);
         boolean hasDailyGift = hasDailyGiftAvailable(player);
 
-        return hasntTalkedToday || hasActiveQuests || hasDailyGift;
+        return hasntTalkedToday;
     }
 
     public String getInteractionSummary(Player player) {
@@ -219,5 +215,9 @@ public class NPC implements TimeObserver {
         }
 
         return summary.toString();
+    }
+
+    public ArrayList<BackPackable> getFavourites() {
+        return favourites;
     }
 }
