@@ -18,7 +18,7 @@ public class Lake extends Area {
             {5, 25, 10, 25}   //MAP 4
     };
 
-    FishType todaysFishType;
+    ArrayList<FishType> todayFishTypes = new ArrayList<>();
 
     public Lake(ArrayList<ArrayList<Tile>> lakeTiles) {
         super(lakeTiles);
@@ -37,6 +37,7 @@ public class Lake extends Area {
                 tile.empty();
             }
         }
+        todayFishTypes.clear();
     }
     private void randomFishGenerator(Season season) {
         int fishesCount = RandomGenerator.getInstance().randomInt(1, 4);
@@ -48,11 +49,12 @@ public class Lake extends Area {
             }
         }
 
-        FishType randomFishType = validFishTypes.get(RandomGenerator.getInstance().randomInt(0,validFishTypes.size()-1));
-        todaysFishType = randomFishType;
         for (int i = 0; i < fishesCount; i++) {
-            int randomRow = RandomGenerator.getInstance().randomInt(0,tiles.size()-1);
-            int randomCol = RandomGenerator.getInstance().randomInt(0,tiles.get(randomRow).size()-1);
+            FishType randomFishType = validFishTypes.get(RandomGenerator.getInstance().randomInt(0, validFishTypes.size() - 1));
+            todayFishTypes.add(randomFishType);
+
+            int randomRow = RandomGenerator.getInstance().randomInt(1, tiles.size() - 2);
+            int randomCol = RandomGenerator.getInstance().randomInt(1, tiles.get(randomRow).size() - 2);
             Tile randomTile = tiles.get(randomRow).get(randomCol);
 
             randomTile.put(new Fish(randomFishType));
@@ -60,7 +62,7 @@ public class Lake extends Area {
     }
 
     public FishType getTodaysFishType() {
-        return todaysFishType;
+        return todayFishTypes.get(RandomGenerator.getInstance().randomInt(0, todayFishTypes.size() - 1));
     }
 
     public void build() {

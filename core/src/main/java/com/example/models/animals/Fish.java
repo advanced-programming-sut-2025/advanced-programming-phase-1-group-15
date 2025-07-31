@@ -41,6 +41,6 @@ public class Fish implements BackPackable, Tilable {
     }
 
     public Sprite getSprite(){
-        return null;
+        return fishType.sprite;
     }
 }
