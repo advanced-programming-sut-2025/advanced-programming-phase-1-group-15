@@ -13,6 +13,7 @@ import com.example.models.foraging.ForagingSeedsType;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
 import com.example.models.time.Season;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class PierreGeneralStore extends Store {
     private HashMap<PierreGeneralStoreItems, Integer> sold3 = new HashMap<>();
 
     public PierreGeneralStore(ArrayList<ArrayList<Tile>> storeTiles) {
+        super(storeTiles);
         runner = Runner.PIERRE;
         opensAt = 9;
         closesAt = 17;
@@ -56,7 +58,7 @@ public class PierreGeneralStore extends Store {
 
     @Override
     public TextureRegion getTexture() {
-        return null;
+        return GameAssetManager.PierreGeneralStore;
     }
 
     @Override

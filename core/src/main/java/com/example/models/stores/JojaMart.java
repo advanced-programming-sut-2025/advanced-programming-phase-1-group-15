@@ -8,6 +8,7 @@ import com.example.models.foraging.ForagingSeeds;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
 import com.example.models.time.Season;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class JojaMart extends Store {
     private HashMap<JojaMartItems, Integer> sold2 = new HashMap<>();
 
     public JojaMart(ArrayList<ArrayList<Tile>> storeTiles) {
+        super(storeTiles);
         runner = Runner.MORRIS;
         opensAt = 9;
         closesAt = 23;
@@ -47,7 +49,7 @@ public class JojaMart extends Store {
 
     @Override
     public TextureRegion getTexture() {
-        return null;
+        return GameAssetManager.JojaMart;
     }
 
     @Override

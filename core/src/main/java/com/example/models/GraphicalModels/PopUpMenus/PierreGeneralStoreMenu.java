@@ -5,31 +5,38 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.example.controllers.GameController;
 import com.example.models.App;
 import com.example.models.Player;
 import com.example.models.Result;
-import com.example.models.map.*;
-import com.example.models.stores.CarpenterShop;
+import com.example.models.map.AreaType;
+import com.example.models.map.Farm;
+import com.example.models.map.Tile;
+import com.example.models.stores.PierreGeneralStore;
 
-public class CarpenterShopMenu extends PopUpMenu {
+import java.awt.*;
+
+public class PierreGeneralStoreMenu extends PopUpMenu {
     private static final float WIDTH = 800f;
     private static final float HEIGHT = 800f;
     private static final float PADDING = 10f;
 
-    private final CarpenterShop store;
+    private final PierreGeneralStore store;
     private Table dynamicContentTable;
-    private Label messageLabel;
+    private com.badlogic.gdx.scenes.scene2d.ui.Label messageLabel;
 
-    public CarpenterShopMenu(Skin skin, String title, Runnable onHideCallback, CarpenterShop store) {
+    public PierreGeneralStoreMenu(Skin skin, String title, Runnable onHideCallback, PierreGeneralStore store) {
         super(skin, title, WIDTH, HEIGHT, onHideCallback);
         this.store = store;
     }
 
     @Override
-    protected void populate(Window w) {
+    protected void populate(com.badlogic.gdx.scenes.scene2d.ui.Window w) {
         dynamicContentTable = new Table();
         dynamicContentTable.pad(PADDING);
         dynamicContentTable.top();
@@ -38,7 +45,7 @@ public class CarpenterShopMenu extends PopUpMenu {
 
         w.add(dynamicContentTable).expand().fill().row();
 
-        messageLabel = new Label("", skin);
+        messageLabel = new com.badlogic.gdx.scenes.scene2d.ui.Label("", skin);
         w.add(messageLabel).padTop(PADDING).row();
     }
 
@@ -69,7 +76,7 @@ public class CarpenterShopMenu extends PopUpMenu {
     private void showPlacementMap(AreaType buildingType) {
         dynamicContentTable.clear();
 
-        Label instructionLabel = new Label("Click a tile to place the " + buildingType.name().toLowerCase(), skin);
+        com.badlogic.gdx.scenes.scene2d.ui.Label instructionLabel = new Label("Click a tile to place the " + buildingType.name().toLowerCase(), skin);
         dynamicContentTable.add(instructionLabel).padBottom(PADDING).row();
 
         Actor mapActor = new MapClickActor(buildingType);
@@ -159,7 +166,7 @@ public class CarpenterShopMenu extends PopUpMenu {
         }
 
         if (res.success()) {
-            messageLabel.setColor(Color.GREEN);
+            messageLabel.setColor(com.badlogic.gdx.graphics.Color.GREEN);
         } else {
             messageLabel.setColor(Color.RED);
         }

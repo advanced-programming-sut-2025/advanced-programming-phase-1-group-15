@@ -9,6 +9,7 @@ import com.example.models.cooking.Food;
 import com.example.models.cooking.FoodType;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public class StarDropSaloon extends Store {
     private HashMap<StarDropSaloonItems, Integer> sold = new HashMap<>();
 
     public StarDropSaloon(ArrayList<ArrayList<Tile>> storeTiles) {
+        super(storeTiles);
         runner = Runner.GUS;
         opensAt = 12;
         closesAt = 24;
@@ -44,7 +46,7 @@ public class StarDropSaloon extends Store {
 
     @Override
     public TextureRegion getTexture() {
-        return null;
+        return GameAssetManager.StarDropSaloon;
     }
 
     @Override

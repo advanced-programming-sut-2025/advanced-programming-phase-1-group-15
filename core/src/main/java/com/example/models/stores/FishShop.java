@@ -11,6 +11,7 @@ import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
 import com.example.models.tools.FishingPole;
 import com.example.models.tools.ToolLevel;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,7 @@ public class FishShop extends Store {
     int[] sold = new int[6];
 
     public FishShop(ArrayList<ArrayList<Tile>> storeTiles) {
+        super(storeTiles);
         runner = Runner.WILLIE;
         opensAt = 9;
         closesAt = 17;
@@ -41,7 +43,7 @@ public class FishShop extends Store {
 
     @Override
     public TextureRegion getTexture() {
-        return null;
+        return GameAssetManager.FishShop;
     }
 
     @Override

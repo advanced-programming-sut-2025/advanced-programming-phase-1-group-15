@@ -29,7 +29,7 @@ public class GameAssetManager {
     public static TextureRegion house, lake, broken_greenhouse, greenhouse;
     public static TextureRegion barn, coop;
     public static TextureRegion carpenter_shop, marnie_ranch;
-
+    public static TextureRegion BlackSmith , FishShop , JojaMart , MarnieRanch , PierreGeneralStore , StarDropSaloon;
     // Player Sprites
     public static TextureRegion boy_face, boy_fainted;
     public static Animation<TextureRegion> boy_walking_up, boy_walking_down, boy_walking_right, boy_walking_left;
@@ -121,10 +121,8 @@ public class GameAssetManager {
     public static Sprite mushroom_tree_1,mushroom_tree_2,mushroom_tree_3,mushroom_tree_4,mushroom_tree_5;
     public static Sprite mystic_tree_1,mystic_tree_2,mystic_tree_3,mystic_tree_4,mystic_tree_5;
 
-
     public static void load() {
         font = new BitmapFont(Gdx.files.internal("UI/font.fnt"));
-
         boy_default_avatar = new TextureRegion(new Texture(Gdx.files.internal("Sprites/Characters/boy_default_avatar.png")));
         sam_avatar = new TextureRegion(new Texture(Gdx.files.internal("Sprites/Characters/sam_avatar.png")));
         sebastian_avatar = new TextureRegion(new Texture(Gdx.files.internal("Sprites/Characters/sebastian_avatar.png")));
@@ -169,6 +167,11 @@ public class GameAssetManager {
 
         carpenter_shop = new TextureRegion(new Texture("Sprites/Map/carpenter_shop.png"));
         marnie_ranch = new TextureRegion(new Texture("Sprites/Map/marnies_ranch.png"));
+        BlackSmith = new TextureRegion(new Texture("Sprites/stores/Blacksmith.png"));
+        FishShop = new TextureRegion(new Texture("Sprites/stores/Fish_Shop.png"));
+        JojaMart = new TextureRegion(new Texture("Sprites/stores/Jojamart.png"));
+        PierreGeneralStore = new TextureRegion(new Texture("Sprites/stores/Pierres_shop.png"));
+        StarDropSaloon = new TextureRegion(new Texture("Sprites/stores/Saloon.png"));
 
         boy_face = new TextureRegion(new Texture("Sprites/Characters/b_face.png"));
         boy_fainted = new TextureRegion(new Texture("Sprites/Characters/b_fainted.png"));

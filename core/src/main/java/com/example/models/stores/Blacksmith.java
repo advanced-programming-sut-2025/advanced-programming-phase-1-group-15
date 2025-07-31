@@ -1,22 +1,25 @@
 package com.example.models.stores;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.example.models.Player;
 import com.example.models.Result;
 import com.example.models.foraging.ForagingMineral;
 import com.example.models.map.AreaType;
 import com.example.models.map.Tile;
 import com.example.models.tools.Tool;
+import com.example.views.GameAssetManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Blacksmith extends Store {
     public static int[] coordinates = {47, 51, 40, 43};
-
     private HashMap<BlackSmithItems, Integer> sold = new HashMap<>();
 
     public Blacksmith(ArrayList<ArrayList<Tile>> storeTiles) {
+        super(storeTiles);
         runner = Runner.CLINT;
         opensAt = 9;
         closesAt = 16;
@@ -42,7 +45,7 @@ public class Blacksmith extends Store {
 
     @Override
     public TextureRegion getTexture() {
-        return null;
+        return GameAssetManager.BlackSmith;
     }
 
     @Override
