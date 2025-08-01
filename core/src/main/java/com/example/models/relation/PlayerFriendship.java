@@ -42,7 +42,7 @@ public class PlayerFriendship implements TimeObserver {
 
     boolean talkToday;
     boolean tradeToday;
-    boolean giftToday;
+    public boolean giftToday;
     boolean hugToday;
 
     private final ArrayList<Message> messages = new ArrayList<>();
@@ -183,5 +183,9 @@ public class PlayerFriendship implements TimeObserver {
 
     public boolean isMarry(){
         return marry;
+    }
+
+    public boolean giftToday() {
+        return giftToday;
     }
 }
