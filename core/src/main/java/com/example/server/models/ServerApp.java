@@ -34,4 +34,13 @@ public class ServerApp {
     public static User getUserByAddress(String address) {
         return users.get(address);
     }
+
+    public static Lobby getLobbyById(String lobbyId) {
+        for (Lobby lobby : lobbies) {
+            if (lobby.getId().equals(lobbyId)) {
+                return lobby;
+            }
+        }
+        return null;
+    }
 }

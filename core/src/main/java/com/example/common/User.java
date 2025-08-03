@@ -1,8 +1,6 @@
 package com.example.common;
 
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.common.enums.Gender;
-import com.example.client.views.GameAssetManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -25,6 +23,7 @@ public class User {
     private String avatarKey;
     protected int maxEarnedGold = 0;
     protected int gameCount = 0;
+    protected String lobbyId = null;
 
     public String getUsername() {
         return username;
@@ -87,6 +86,13 @@ public class User {
     }
     public void setGameCount(int gameCount) {
         this.gameCount = gameCount;
+    }
+
+    public String getLobbyId() {
+        return lobbyId;
+    }
+    public void setLobbyId(String lobbyId) {
+        this.lobbyId = lobbyId;
     }
 
     public User() {

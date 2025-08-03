@@ -18,6 +18,18 @@ public class ClientApp {
     public static Game currentGame;
     public static GameView currentGameView;
 
+    public static Lobby getUserLobby() {
+        if (user.getLobbyId() == null) {
+            return null;
+        }
+        for (Lobby lobby : lobbies) {
+            if (lobby.getId().equals(user.getLobbyId())) {
+                return lobby;
+            }
+        }
+        return null;
+    }
+
     public static GameView getCurrentGameMenu() {
         return currentGameView;
     }

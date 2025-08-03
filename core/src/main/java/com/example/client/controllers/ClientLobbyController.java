@@ -38,4 +38,23 @@ public class ClientLobbyController {
             e.printStackTrace();
         }
     }
+
+    public static void sendJoinLobbyMessage(String lobbyId, String username, String password) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "join_lobby");
+        cmdBody.put("lobby_id", lobbyId);
+        cmdBody.put("username", username);
+        cmdBody.put("password", password);
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendLeaveLobbyMessage(String lobbyId, String username) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "leave_lobby");
+        cmdBody.put("lobby_id", lobbyId);
+        cmdBody.put("username", username);
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
 }

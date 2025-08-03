@@ -36,6 +36,17 @@ public class Lobby {
         return users;
     }
 
+    public String getUsersString() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < users.size(); i++) {
+            builder.append(users.get(i).getUsername());
+            if (i != users.size() - 1) {
+                builder.append(", ");
+            }
+        }
+        return builder.toString();
+    }
+
     public boolean isPublic() {
         return isPublic;
     }
@@ -50,6 +61,10 @@ public class Lobby {
 
     public int getUsersCount() {
         return users.size();
+    }
+
+    public boolean checkIfUserIsInLobby(User user) {
+        return users.contains(user);
     }
 
     public void addUser(User user) {
