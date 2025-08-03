@@ -583,7 +583,6 @@ public class PauseMenuOverlay {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(game.getCurrentPlayer().equals(game.getMainPlayer())) {
-                    ClientApp.recentGames.remove(game);
                     ClientApp.currentGame = null;
                     main.setScreen(new MainMenuView(main));
                 }

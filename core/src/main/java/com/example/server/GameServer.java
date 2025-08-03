@@ -82,6 +82,8 @@ public class GameServer {
                         case "change_nickname" -> handleChangeNickname(msg, respBody);
                         case "change_email" -> handleChangeEmail(msg, respBody);
                         case "change_avatar_key" -> handleChangeAvatarKey(msg, respBody);
+                        case "create_lobby" -> handleCreateLobby(msg, respBody);
+                        case "get_lobbies" -> getLobbies(msg, respBody);
                         default -> {
                             respBody.put("success", false);
                             respBody.put("message", "Unknown action: " + action);

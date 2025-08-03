@@ -1,7 +1,9 @@
 package com.example.server.controllers;
 
+import com.example.common.Lobby;
 import com.example.common.Message;
 import com.example.common.Result;
+import com.example.common.User;
 import com.example.common.enums.Gender;
 import com.example.server.models.ServerApp;
 
@@ -96,5 +98,21 @@ public class ServerController {
 
         respBody.put("success", r.success());
         respBody.put("message", r.message());
+    }
+
+    public static void handleCreateLobby(Message req, Map<String,Object> respBody) {
+        String adminUsername = req.getFromBody("admin_username");
+        String name = req.getFromBody("name");
+        boolean isPublic = req.getFromBody("is_public");
+        String password = req.getFromBody("password");
+        boolean isVisible = req.getFromBody("is_visible");
+        Result r = ServerLobbyController.createLobby(name, adminUsername, isPublic, password, isVisible);
+
+        respBody.put("success", r.success());
+        respBody.put("message", r.message());
+    }
+
+    public static void getLobbies(Message req, Map<String,Object> respBody) {
+        respBody.put("lobbies", ServerApp.lobbies);
     }
 }

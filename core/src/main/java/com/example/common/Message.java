@@ -37,7 +37,7 @@ public class Message {
         }
         return type.cast(raw);
     }
-    @SuppressWarnings("unchecked")
+
     public <T> T getObjectFromBody(String key, Class<T> clazz) {
         Object raw = body.get(key);
         if (raw == null) return null;
@@ -51,6 +51,13 @@ public class Message {
         String json = gson.toJson(raw);
         // ...then parse it into your desired class
         return gson.fromJson(json, clazz);
+    }
+
+    public <T> T getObjectFromBody(String key, java.lang.reflect.Type targetType) {
+        Object raw = body.get(key);
+        if (raw == null) return null;
+        String json = gson.toJson(raw);
+        return gson.fromJson(json, targetType);
     }
 
     public void addToBody(String key, Object value) {
