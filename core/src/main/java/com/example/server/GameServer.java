@@ -2,10 +2,6 @@ package com.example.server;
 
 import com.example.common.JSONUtils;
 import com.example.common.Message;
-import com.example.server.controllers.ServerLoginController;
-import com.example.common.Result;
-import com.example.common.enums.Gender;
-import com.example.server.models.ServerApp;
 
 import java.io.*;
 import java.net.*;
@@ -14,6 +10,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.example.server.controllers.ServerController.*;
 
 public class GameServer {
     private static final int PORT = 54555;
@@ -74,12 +72,16 @@ public class GameServer {
                     }
 
                     switch (action) {
-                        case "signup" -> handleSignup(msg, respBody);
-                        case "login"  -> handleLogin(msg, respBody);
+                        case "signup" -> handleSignup(msg, respBody, IP, port);
+                        case "login"  -> handleLogin(msg, respBody, IP, port);
                         case "get_user" -> getUser(msg, respBody);
                         case "security_question" -> handleSecurityQuestion(msg, respBody);
                         case "get_user_by_username" -> getUserByUsername(msg, respBody);
                         case "change_password" -> handleChangePassword(msg, respBody);
+                        case "change_username" -> handleChangeUsername(msg, respBody);
+                        case "change_nickname" -> handleChangeNickname(msg, respBody);
+                        case "change_email" -> handleChangeEmail(msg, respBody);
+                        case "change_avatar_key" -> handleChangeAvatarKey(msg, respBody);
                         default -> {
                             respBody.put("success", false);
                             respBody.put("message", "Unknown action: " + action);
@@ -102,60 +104,6 @@ public class GameServer {
             } finally {
                 disconnect();
             }
-        }
-
-        private void handleSignup(Message req, Map<String,Object> respBody) {
-            String username = req.getFromBody("username");
-            String pass = req.getFromBody("password");
-            String passC = req.getFromBody("passwordConfirm");
-            String nick = req.getFromBody("nickname");
-            String email = req.getFromBody("email");
-            Gender gender = req.getFromBody("gender", Gender.class);
-
-            Result r = ServerLoginController.registerUser(IP + ":" + port, username, pass, passC, nick, email, gender);
-            respBody.put("success", r.success());
-            respBody.put("message", r.message());
-        }
-
-        private void handleLogin(Message req, Map<String,Object> respBody) {
-            String username = req.getFromBody("username");
-            String pass = req.getFromBody("password");
-            Result r = ServerLoginController.loginUser(IP + ":" + port, username, pass, false);
-
-            respBody.put("success", r.success());
-            respBody.put("message", r.message());
-        }
-
-        private void getUser(Message req, Map<String,Object> respBody) {
-            String IP = req.getFromBody("ip");
-            int port = req.getIntFromBody("port");
-
-            respBody.put("user", ServerApp.getUserByAddress(IP + ":" + port));
-        }
-
-        private void handleSecurityQuestion(Message req, Map<String,Object> respBody) {
-            String username = req.getFromBody("username");
-            String question = req.getFromBody("question");
-            String answer = req.getFromBody("answer");
-            Result r = ServerLoginController.pickQuestion(username, question, answer);
-
-            respBody.put("success", r.success());
-            respBody.put("message", r.message());
-        }
-
-        private void getUserByUsername(Message req, Map<String,Object> respBody) {
-            String username = req.getFromBody("username");
-
-            respBody.put("user", ServerApp.getUserByUsername(username));
-        }
-
-        private void handleChangePassword(Message req, Map<String,Object> respBody) {
-            String username = req.getFromBody("username");
-            String newPassword = req.getFromBody("new_password");
-            Result r = ServerLoginController.forgetPassword(username, newPassword);
-
-            respBody.put("success", r.success());
-            respBody.put("message", r.message());
         }
 
         public void sendMessage(Message message) {

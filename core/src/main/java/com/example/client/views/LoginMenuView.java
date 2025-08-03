@@ -53,10 +53,10 @@ public class LoginMenuView implements Screen {
         mainTable.setFillParent(true);
         mainTable.center();
 
-
         createLoginPanel();
         createRegisterPanel();
         createSecurityQuestionPanel();
+        createForgotPasswordUI();
 
         mainTable.add(loginPanel).expand().fill();
         stage.addActor(mainTable);
@@ -302,7 +302,6 @@ public class LoginMenuView implements Screen {
         changePasswordButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                User user = ClientLoginController.getUserByUsername(usernameField.getText());
                 String newPassword = newPasswordField.getText();
                 String confirmNewPassword = confirmNewPasswordField.getText();
 
@@ -418,41 +417,45 @@ public class LoginMenuView implements Screen {
     private void onNetMessage(Message msg) {
         String action = msg.getFromBody("action");
 
-        if (action.equals("login")) {
-            boolean success = msg.getFromBody("success");
-            String text = msg.getFromBody("message");
-            messageLabelLogin.setText(text);
-            messageLabelLogin.setColor(success ? Color.GREEN : Color.RED);
-            loginButton.setDisabled(false);
-            if (success) {
+        switch (action) {
+            case "login" -> {
+                boolean success = msg.getFromBody("success");
+                String text = msg.getFromBody("message");
+                messageLabelLogin.setText(text);
+                messageLabelLogin.setColor(success ? Color.GREEN : Color.RED);
+                loginButton.setDisabled(false);
+                if (success) {
+                    ClientLoginController.updateUser();
+                    game.setScreen(new MainMenuView(game));
+                }
+            }
+            case "signup" -> {
+                boolean success = msg.getFromBody("success");
+                String text = msg.getFromBody("message");
+                messageLabelRegister.setText(text);
+                messageLabelRegister.setColor(success ? Color.GREEN : Color.RED);
+                registerButton.setDisabled(false);
+                if (success) {
+                    ClientLoginController.updateUser();
+                    showSecurityQuestionUI();
+                }
+            }
+            case "security_question" -> {
                 ClientLoginController.updateUser();
                 game.setScreen(new MainMenuView(game));
             }
-        }
-        else if (action.equals("signup")) {
-            boolean success = msg.getFromBody("success");
-            String text = msg.getFromBody("message");
-            messageLabelRegister.setText(text);
-            messageLabelRegister.setColor(success ? Color.GREEN : Color.RED);
-            registerButton.setDisabled(false);
-            if (success) {
-                ClientLoginController.updateUser();
-                showSecurityQuestionUI();
-            }
-        }
-        else if (action.equals("security_question")) {
-            ClientLoginController.updateUser();
-            game.setScreen(new MainMenuView(game));
-        }
-        else if(action.equals("change_password")) {
-            boolean success = msg.getFromBody("success");
-            String text = msg.getFromBody("message");
+            case "change_password" -> {
+                boolean success = msg.getFromBody("success");
+                String text = msg.getFromBody("message");
 
-            messageLabelForget.setText(text);
+                messageLabelForget.setText(text);
 
-            if(success) {
-                newPasswordField.setDisabled(true); confirmNewPasswordField.setDisabled(true); changePasswordButton.setDisabled(true);
-                messageLabelForget.setColor(Color.BLUE);
+                if (success) {
+                    newPasswordField.setDisabled(true);
+                    confirmNewPasswordField.setDisabled(true);
+                    changePasswordButton.setDisabled(true);
+                    messageLabelForget.setColor(Color.BLUE);
+                }
             }
         }
     }
