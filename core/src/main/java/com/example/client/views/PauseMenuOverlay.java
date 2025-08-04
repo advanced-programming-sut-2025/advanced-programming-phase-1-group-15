@@ -582,7 +582,7 @@ public class PauseMenuOverlay {
         terminateGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(game.getCurrentPlayer().equals(game.getMainPlayer())) {
+                if(game.getCurrentPlayer().equals(game.getAdminPlayer())) {
                     ClientApp.currentGame = null;
                     main.setScreen(new MainMenuView(main));
                 }

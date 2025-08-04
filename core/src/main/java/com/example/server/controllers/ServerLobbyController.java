@@ -106,6 +106,17 @@ public class ServerLobbyController {
         informOtherLobbyUsers(respBody, lobby);
     }
 
+    public static void handleStartGame(Message req, Map<String,Object> respBody) {
+        String lobbyId = req.getFromBody("lobby_id");
+        Lobby lobby = ServerApp.getLobbyById(lobbyId);
+
+        respBody.put("success", true);
+        respBody.put("message", "Game started successfully!");
+        respBody.put("lobby_id", lobbyId);
+
+        informOtherLobbyUsers(respBody, lobby);
+    }
+
     public static void informOtherLobbyUsers(Map<String,Object> respBody, Lobby lobby) {
         HashMap<String,Object> respBodyHashMap = new HashMap<>(respBody);
         Message resp = new Message(respBodyHashMap, Message.Type.RESPONSE);

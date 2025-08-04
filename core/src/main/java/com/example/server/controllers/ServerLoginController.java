@@ -34,8 +34,6 @@ public class ServerLoginController {
         }
 
         User user = new User(username, password, nickname, email, gender);
-        user.hashPassword(password);
-        user.saveUserToFile();
         ServerApp.users.put(address, user);
 
         return new Result(true, "User registered successfully!");

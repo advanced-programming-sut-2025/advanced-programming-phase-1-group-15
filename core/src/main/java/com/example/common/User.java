@@ -2,13 +2,6 @@ package com.example.common;
 
 import com.example.common.enums.Gender;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 public class User {
     protected String username;
     protected transient String password;
@@ -102,7 +95,6 @@ public class User {
     public User(String username, String password, String nickname, String email, Gender gender) {
         this.username = username;
         this.password = password;
-        this.hashedPassword = hashPassword(password);
         this.nickname = nickname;
         this.email = email;
         this.gender = gender;
@@ -113,46 +105,6 @@ public class User {
         else {
             avatarKey = "girl_default";
         }
-    }
-
-    public String hashPassword(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(password.getBytes());
-            StringBuilder hexString = new StringBuilder();
-
-            for (byte b : hash) {
-                hexString.append(String.format("%02x", b));
-            }
-
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-256 algorithm not found!", e);
-        }
-    }
-    public boolean checkPassword(String password) {
-        return this.hashedPassword.equals(hashPassword(password));
-    }
-    public void saveUserToFile() {
-        try (FileWriter writer = new FileWriter("users.txt", true)) {
-            writer.write(username + "," + hashedPassword + "," + nickname + "," + email + "," + gender +"\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static User loadUserFromFile(String username) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                if (data[0].equals(username)) {
-                    return new User(data[0], data[1], data[2] , data[3] , Gender.valueOf(data[4]));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public String getAvatarKey() {

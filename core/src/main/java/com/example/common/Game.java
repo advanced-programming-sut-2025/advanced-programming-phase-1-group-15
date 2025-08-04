@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class Game implements TimeObserver {
     private ArrayList<Player> players = new ArrayList<>();
-    private Player mainPlayer;
+    private Player adminPlayer;
     private Player currentPlayer;
 
     private DateAndTime dateAndTime;
@@ -27,13 +27,20 @@ public class Game implements TimeObserver {
 
     private boolean finished = false;
 
-    public Game(ArrayList<Player> players) {
-        this.players = players;
-        for (Player player : players) {
-            // player.setCurrentGame(this);
+    public Game(Lobby lobby, User currentUser) {
+        ArrayList<Player> players = new ArrayList<>();
+        for(User user : lobby.getUsers()) {
+            Player player = new Player(user);
+            player.setMapNumber(lobby.getMapNumber(user.getUsername()));
+            players.add(player);
+
+            if(currentUser.getUsername().equals(user.getUsername())) {
+                this.currentPlayer = player;
+            }
         }
-        this.mainPlayer = players.get(0);
-        this.currentPlayer = players.get(0);
+
+        this.players = players;
+        this.adminPlayer = players.get(0);
     }
 
     public void build() {
@@ -67,8 +74,8 @@ public class Game implements TimeObserver {
     public ArrayList<Player> getPlayers() {
         return players;
     }
-    public Player getMainPlayer() {
-        return mainPlayer;
+    public Player getAdminPlayer() {
+        return adminPlayer;
     }
     public Player getCurrentPlayer() {
         return currentPlayer;
@@ -82,8 +89,8 @@ public class Game implements TimeObserver {
         return null;
     }
 
-    public void setMainPlayer(Player mainPlayer) {
-        this.mainPlayer = mainPlayer;
+    public void setAdminPlayer(Player adminPlayer) {
+        this.adminPlayer = adminPlayer;
     }
 
     public DateAndTime getDateAndTime() {

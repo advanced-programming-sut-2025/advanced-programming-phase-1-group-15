@@ -14,6 +14,7 @@ import com.example.client.NetworkClient;
 import com.example.client.controllers.ClientLobbyController;
 import com.example.client.controllers.ClientLoginController;
 import com.example.client.models.ClientApp;
+import com.example.common.Game;
 import com.example.common.Lobby;
 import com.example.common.Message;
 import com.example.common.User;
@@ -21,7 +22,7 @@ import com.example.common.User;
 import java.util.ArrayList;
 
 public class LobbyMenuView implements Screen {
-    private final Main game;
+    private final Main main;
     private Stage stage;
     private Skin skin;
     private Texture background;
@@ -36,8 +37,8 @@ public class LobbyMenuView implements Screen {
     private Table lobbyListTable;
     private Label lobbiesMessageLabel, createNewLobbyMessageLabel, lobbyMessageLabel;
 
-    public LobbyMenuView(Main game) {
-        this.game = game;
+    public LobbyMenuView(Main main) {
+        this.main = main;
     }
 
     @Override
@@ -118,7 +119,7 @@ public class LobbyMenuView implements Screen {
         });
         backButton.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainMenuView(game));
+                main.setScreen(new MainMenuView(main));
             }
         });
     }
@@ -252,7 +253,7 @@ public class LobbyMenuView implements Screen {
 
         backButton.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new MainMenuView(game));
+                main.setScreen(new MainMenuView(main));
             }
         });
 
@@ -380,9 +381,9 @@ public class LobbyMenuView implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.1f, 0.1f, 0.1f, 1);
-        game.getBatch().begin();
-        game.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        game.getBatch().end();
+        main.getBatch().begin();
+        main.getBatch().draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        main.getBatch().end();
 
         stage.act(delta);
         stage.draw();
@@ -455,6 +456,13 @@ public class LobbyMenuView implements Screen {
             case "set_map_number" -> {
                 ClientLobbyController.updateLobbies();
                 showLobbyUI(ClientApp.getUserLobby());
+            }
+            case "start_game" -> {
+                ClientLobbyController.updateLobbies();
+
+                Game game = new Game(ClientApp.getUserLobby(), ClientApp.user);
+                ClientApp.currentGame = game;
+                main.setScreen(new GameView(game, main));
             }
         }
     }
