@@ -16,6 +16,7 @@ import com.example.client.controllers.ClientLoginController;
 import com.example.client.models.ClientApp;
 import com.example.common.Lobby;
 import com.example.common.Message;
+import com.example.common.User;
 
 import java.util.ArrayList;
 
@@ -227,6 +228,22 @@ public class LobbyMenuView implements Screen {
         backButton = new TextButton("Back", skin);
         lobbyMessageLabel = new Label("", skin); lobbyMessageLabel.setColor(Color.RED);
 
+        startGameButton.addListener(new ChangeListener() {
+            @Override public void changed(ChangeEvent event, Actor actor) {
+                if(!ClientApp.user.getUsername().equals(lobby.getAdmin().getUsername())) {
+                    lobbyMessageLabel.setText("You have to be Admin to start the game.");
+                }
+                else {
+                    if(lobby.getUsersCount() == 1) {
+                        lobbyMessageLabel.setText("There has to be at least two users in the lobby to start the game.");
+                    }
+                    else {
+                        ClientLobbyController.sendStartGameMessage(lobby.getId());
+                    }
+                }
+            }
+        });
+
        leaveLobbyButton.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
                 ClientLobbyController.sendLeaveLobbyMessage(lobby.getId(), ClientApp.user.getUsername());
@@ -239,18 +256,46 @@ public class LobbyMenuView implements Screen {
             }
         });
 
-        lobbyPanel.add(titleLabel).pad(10).row();
-        lobbyPanel.add(idLabel).pad(10).row();
-        lobbyPanel.add(typeLabel).pad(10).row();
-        lobbyPanel.add(visibilityLabel).pad(10).row();
-        lobbyPanel.add(countLabel).pad(10).row();
-        lobbyPanel.add(adminLabel).pad(10).row();
-        lobbyPanel.add(usersLabel).pad(10).row();
+        lobbyPanel.add(titleLabel).pad(10).colspan(2).row();
+        lobbyPanel.add(idLabel).pad(10).colspan(2).row();
+        lobbyPanel.add(typeLabel).pad(10).colspan(2).row();
+        lobbyPanel.add(visibilityLabel).pad(10).colspan(2).row();
+        lobbyPanel.add(countLabel).pad(10).colspan(2).row();
+        lobbyPanel.add(adminLabel).pad(10).colspan(2).row();
+        lobbyPanel.add(usersLabel).pad(10).colspan(2).row();
+        lobbyPanel.add(new Label("Choose your Maps:", skin)).colspan(2).pad(10).row();
+        for (int i = 0; i < lobby.getUsersCount(); i++) {
+            User user = lobby.getUsers().get(i);
+            lobbyPanel.add(new Label(user.getUsername(), skin)).width(200).pad(5);
+
+            SelectBox<Integer> mapBox = new SelectBox<>(skin);
+            mapBox.setItems(1, 2, 3, 4);
+            mapBox.setSelected(lobby.getMapNumber(user.getUsername()));
+            if(ClientApp.user.getUsername().equals(user.getUsername())) {
+                mapBox.addListener(new ChangeListener() {
+                    @Override public void changed(ChangeEvent event, Actor actor) {
+                        int mapNumber = mapBox.getSelected();
+                        if(lobby.getMapNumbers().contains(mapNumber)) {
+                            mapBox.setSelected(lobby.getMapNumber(user.getUsername()));
+                            lobbyMessageLabel.setText("You can't select a map which has already been chosen!");
+                        }
+                        else {
+                            ClientLobbyController.sendSetMapNumberMessage(lobby.getId(), ClientApp.user.getUsername(), mapNumber);
+                        }
+                    }
+                });
+            }
+            else {
+                mapBox.setDisabled(true);
+            }
+
+            lobbyPanel.add(mapBox).width(100).pad(5).row();
+        }
         Table buttonsTable = new Table(skin);
         buttonsTable.add(startGameButton).pad(10); buttonsTable.add(leaveLobbyButton).pad(10);
-        lobbyPanel.add(buttonsTable).pad(10).row();
-        lobbyPanel.add(backButton).pad(10).row();
-        lobbyPanel.add(lobbyMessageLabel).pad(10).row();
+        lobbyPanel.add(buttonsTable).pad(10).colspan(2).row();
+        lobbyPanel.add(backButton).padTop(20).colspan(2).row();
+        lobbyPanel.add(lobbyMessageLabel).padTop(10).colspan(2).row();
     }
 
     private void showLobbiesUI() {
@@ -371,40 +416,43 @@ public class LobbyMenuView implements Screen {
     private void onNetMessage(Message msg) {
         String action = msg.getFromBody("action");
 
-        if(action.equals("create_lobby")) {
-            ClientLobbyController.updateLobbies();
-            ClientLoginController.updateUser();
-            showLobbyUI(ClientApp.getUserLobby());
-        }
-        else if(action.equals("join_lobby")) {
-            boolean success = msg.getFromBody("success");
-            String text = msg.getFromBody("message");
-
-            if(success) {
-                String username = msg.getFromBody("username");
-                if(username.equals(ClientApp.user.getUsername())) {
-                    ClientLobbyController.updateLobbies();
-                    ClientLoginController.updateUser();
-                    showLobbyUI(ClientApp.getUserLobby());
-                }
-                else {
-                    ClientLobbyController.updateLobbies();
-                    showLobbyUI(ClientApp.getUserLobby());
-                }
-            }
-            else {
-                lobbiesMessageLabel.setText(text);
-            }
-        }
-        else if(action.equals("leave_lobby")) {
-            String username = msg.getFromBody("username");
-
-            if(username.equals(ClientApp.user.getUsername())) {
+        switch (action) {
+            case "create_lobby" -> {
                 ClientLobbyController.updateLobbies();
                 ClientLoginController.updateUser();
-                showLobbiesUI();
+                showLobbyUI(ClientApp.getUserLobby());
             }
-            else {
+            case "join_lobby" -> {
+                boolean success = msg.getFromBody("success");
+                String text = msg.getFromBody("message");
+
+                if (success) {
+                    String username = msg.getFromBody("username");
+                    if (username.equals(ClientApp.user.getUsername())) {
+                        ClientLobbyController.updateLobbies();
+                        ClientLoginController.updateUser();
+                        showLobbyUI(ClientApp.getUserLobby());
+                    } else {
+                        ClientLobbyController.updateLobbies();
+                        showLobbyUI(ClientApp.getUserLobby());
+                    }
+                } else {
+                    lobbiesMessageLabel.setText(text);
+                }
+            }
+            case "leave_lobby" -> {
+                String username = msg.getFromBody("username");
+
+                if (username.equals(ClientApp.user.getUsername())) {
+                    ClientLobbyController.updateLobbies();
+                    ClientLoginController.updateUser();
+                    showLobbiesUI();
+                } else {
+                    ClientLobbyController.updateLobbies();
+                    showLobbyUI(ClientApp.getUserLobby());
+                }
+            }
+            case "set_map_number" -> {
                 ClientLobbyController.updateLobbies();
                 showLobbyUI(ClientApp.getUserLobby());
             }

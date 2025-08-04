@@ -1,6 +1,5 @@
 package com.example.common;
 
-import com.example.client.models.GraphicalModels.PopUpMenus.PopUpMenu;
 import com.example.common.map.Map;
 import com.example.common.map.Position;
 import com.example.common.map.Tile;
@@ -10,7 +9,6 @@ import com.example.common.relation.PlayerFriendship;
 import com.example.common.time.DateAndTime;
 import com.example.common.time.TimeObserver;
 import com.example.common.weather.WeatherManagement;
-import com.example.client.views.GameView;
 
 import java.util.ArrayList;
 

@@ -89,6 +89,7 @@ public class GameServer {
                         case "get_lobbies" -> getLobbies(msg, respBody);
                         case "join_lobby" -> ServerLobbyController.handleJoinLobby(msg, respBody);
                         case "leave_lobby" -> ServerLobbyController.handleLeaveLobby(msg, respBody);
+                        case "set_map_number" -> ServerLobbyController.handleSetMapNumber(msg, respBody);
                         default -> {
                             respBody.put("success", false);
                             respBody.put("message", "Unknown action: " + action);

@@ -91,6 +91,21 @@ public class ServerLobbyController {
         informOtherLobbyUsers(respBody, lobby);
     }
 
+    public static void handleSetMapNumber(Message req, Map<String,Object> respBody) {
+        String lobbyId = req.getFromBody("lobby_id");
+        Lobby lobby = ServerApp.getLobbyById(lobbyId);
+        String username = req.getFromBody("username");
+        User user = ServerApp.getUserByUsername(username);
+        int mapNumber = req.getIntFromBody("map_number");
+
+        lobby.setMapNumber(user.getUsername(), mapNumber);
+        respBody.put("success", true);
+        respBody.put("message", "Map number set successfully!");
+        respBody.put("username", username);
+
+        informOtherLobbyUsers(respBody, lobby);
+    }
+
     public static void informOtherLobbyUsers(Map<String,Object> respBody, Lobby lobby) {
         HashMap<String,Object> respBodyHashMap = new HashMap<>(respBody);
         Message resp = new Message(respBodyHashMap, Message.Type.RESPONSE);

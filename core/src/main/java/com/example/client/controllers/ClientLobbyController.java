@@ -57,4 +57,22 @@ public class ClientLobbyController {
 
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }
+
+    public static void sendSetMapNumberMessage(String lobbyId, String username, int mapNumber) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "set_map_number");
+        cmdBody.put("lobby_id", lobbyId);
+        cmdBody.put("username", username);
+        cmdBody.put("map_number", mapNumber);
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendStartGameMessage(String lobbyId) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "start_game");
+        cmdBody.put("lobby_id", lobbyId);
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
 }
