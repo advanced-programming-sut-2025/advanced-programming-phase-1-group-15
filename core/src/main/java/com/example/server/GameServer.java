@@ -6,7 +6,9 @@ import com.example.server.controllers.ServerLobbyController;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -31,7 +33,7 @@ public class GameServer {
         }
     }
 
-    private static class ClientHandler implements Runnable {
+    public static class ClientHandler implements Runnable {
         private final Socket socket;
         private final String IP;
         private final int port;
@@ -121,6 +123,10 @@ public class GameServer {
             }
         }
 
+        public String getAddress() {
+            return IP + ":" + port;
+        }
+
         private void disconnect() {
             end.set(true);
             if (clientId != null) {
@@ -128,5 +134,9 @@ public class GameServer {
             }
             try { socket.close(); } catch (IOException ignored) {}
         }
+    }
+
+    public static List<ClientHandler> getClientHandlers() {
+        return new ArrayList<>(clients.values());
     }
 }

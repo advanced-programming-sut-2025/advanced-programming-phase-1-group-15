@@ -4,8 +4,10 @@ import com.example.common.Lobby;
 import com.example.common.Message;
 import com.example.common.Result;
 import com.example.common.User;
+import com.example.server.GameServer;
 import com.example.server.models.ServerApp;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,6 +34,16 @@ public class ServerLobbyController {
         User user = ServerApp.getUserByUsername(username);
         String password = req.getFromBody("password");
 
+        if(lobby == null) {
+            respBody.put("success", false);
+            respBody.put("message", "Refresh the Page. Lobby doesn't exist!");
+            return;
+        }
+        if(lobby.getUsersCount() == 4) {
+            respBody.put("success", false);
+            respBody.put("message", "Refresh the Page. Lobby has reached the maximum number of users!");
+            return;
+        }
         if(lobby.isPublic()) {
             lobby.addUser(user);
             user.setLobbyId(lobbyId);
@@ -39,6 +51,8 @@ public class ServerLobbyController {
             respBody.put("success", true);
             respBody.put("message", "User joined lobby successfully!");
             respBody.put("username", username);
+
+            informOtherLobbyUsers(respBody, lobby);
         }
         else {
            if(lobby.getPassword().equals(password)) {
@@ -48,6 +62,8 @@ public class ServerLobbyController {
                respBody.put("success", true);
                respBody.put("message", "User joined lobby successfully!");
                respBody.put("username", username);
+
+               informOtherLobbyUsers(respBody, lobby);
            }
            else {
                respBody.put("success", false);
@@ -71,5 +87,18 @@ public class ServerLobbyController {
         respBody.put("success", true);
         respBody.put("message", "User leaved lobby successfully!");
         respBody.put("username", username);
+
+        informOtherLobbyUsers(respBody, lobby);
+    }
+
+    public static void informOtherLobbyUsers(Map<String,Object> respBody, Lobby lobby) {
+        HashMap<String,Object> respBodyHashMap = new HashMap<>(respBody);
+        Message resp = new Message(respBodyHashMap, Message.Type.RESPONSE);
+
+        for (GameServer.ClientHandler clientHandler : GameServer.getClientHandlers()) {
+            if(lobby.checkIfUserIsInLobby(ServerApp.getUserByAddress(clientHandler.getAddress()))) {
+                clientHandler.sendMessage(resp);
+            }
+        }
     }
 }

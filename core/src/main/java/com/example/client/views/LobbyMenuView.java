@@ -33,7 +33,7 @@ public class LobbyMenuView implements Screen {
     private TextButton searchButton, refreshButton, createButton, backButton;
     private ScrollPane lobbyScroll;
     private Table lobbyListTable;
-    private Label messageLabel;
+    private Label lobbiesMessageLabel, createNewLobbyMessageLabel, lobbyMessageLabel;
 
     public LobbyMenuView(Main game) {
         this.game = game;
@@ -77,7 +77,7 @@ public class LobbyMenuView implements Screen {
         createButton = new TextButton("Create a Lobby", skin);
         backButton = new TextButton("Back", skin);
 
-        messageLabel = new Label("", skin); messageLabel.setColor(Color.RED);
+        lobbiesMessageLabel = new Label("", skin); lobbiesMessageLabel.setColor(Color.RED);
 
         Table topBar = new Table(skin);
         topBar.add(searchField).width(200).padRight(5);
@@ -86,6 +86,7 @@ public class LobbyMenuView implements Screen {
         topBar.add(createButton);
         lobbiesPanel.add(titleLabel).padTop(50).row();
         lobbiesPanel.add(topBar).expandX().fillX().row();
+        lobbiesPanel.add(lobbiesMessageLabel).padTop(10).row();
 
         lobbyListTable = new Table(skin);
         lobbyListTable.defaults().pad(5);
@@ -94,9 +95,8 @@ public class LobbyMenuView implements Screen {
 
         lobbyScroll = new ScrollPane(lobbyListTable, skin);
         lobbyScroll.setFadeScrollBars(false);
-        lobbiesPanel.add(lobbyScroll).expand().fill().padTop(20).row();
+        lobbiesPanel.add(lobbyScroll).expand().fill().padTop(10).row();
         lobbiesPanel.add(backButton).padTop(10).row();
-        lobbiesPanel.add(messageLabel).padTop(10).row();
 
         refreshButton.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
@@ -150,6 +150,8 @@ public class LobbyMenuView implements Screen {
         TextButton createLobbyButton = new TextButton("Create LOBBY", skin);
         backButton = new TextButton("Back", skin);
 
+        createNewLobbyMessageLabel = new Label("", skin); createNewLobbyMessageLabel.setColor(Color.RED);
+
         createNewLobbyPanel.add(titleLabel).padBottom(10).row();
         nameTable.add(nameLabel).pad(10);
         nameTable.add(nameField).pad(10);
@@ -164,6 +166,7 @@ public class LobbyMenuView implements Screen {
         createNewLobbyPanel.add(visibilityTable).pad(10).row();
         createNewLobbyPanel.add(createLobbyButton).padTop(10).row();
         createNewLobbyPanel.add(backButton).padTop(10).row();
+        createNewLobbyPanel.add(createNewLobbyMessageLabel).padTop(10).row();
 
         typeBox.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
@@ -180,11 +183,21 @@ public class LobbyMenuView implements Screen {
         createLobbyButton.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
                 String name = nameField.getText();
+                if(name.isEmpty()) {
+                    createNewLobbyMessageLabel.setText("name field cannot be empty.");
+                    return;
+                }
+
                 boolean isPublic = typeBox.getSelected().equals("Public");
                 String password = null;
-                if (isPublic) {
+                if (!isPublic) {
                     password = passwordField.getText();
+                    if(password.isEmpty()) {
+                        createNewLobbyMessageLabel.setText("password field cannot be empty.");
+                        return;
+                    }
                 }
+
                 boolean isVisible = visibilityBox.getSelected().equals("YES");
 
                 ClientLobbyController.sendCreateLobbyMessage(ClientApp.user.getUsername(), name, isPublic, password, isVisible);
@@ -211,11 +224,18 @@ public class LobbyMenuView implements Screen {
         Label usersLabel = new Label("users: " + lobby.getUsersString(), skin);
         TextButton startGameButton = new TextButton("Start Game", skin);
         TextButton leaveLobbyButton = new TextButton("Leave Lobby", skin);
-        messageLabel = new Label("", skin); messageLabel.setColor(Color.RED);
+        backButton = new TextButton("Back", skin);
+        lobbyMessageLabel = new Label("", skin); lobbyMessageLabel.setColor(Color.RED);
 
        leaveLobbyButton.addListener(new ChangeListener() {
             @Override public void changed(ChangeEvent event, Actor actor) {
                 ClientLobbyController.sendLeaveLobbyMessage(lobby.getId(), ClientApp.user.getUsername());
+            }
+        });
+
+        backButton.addListener(new ChangeListener() {
+            @Override public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new MainMenuView(game));
             }
         });
 
@@ -229,7 +249,8 @@ public class LobbyMenuView implements Screen {
         Table buttonsTable = new Table(skin);
         buttonsTable.add(startGameButton).pad(10); buttonsTable.add(leaveLobbyButton).pad(10);
         lobbyPanel.add(buttonsTable).pad(10).row();
-        lobbyPanel.add(messageLabel).pad(10).row();
+        lobbyPanel.add(backButton).pad(10).row();
+        lobbyPanel.add(lobbyMessageLabel).pad(10).row();
     }
 
     private void showLobbiesUI() {
@@ -358,23 +379,21 @@ public class LobbyMenuView implements Screen {
         else if(action.equals("join_lobby")) {
             boolean success = msg.getFromBody("success");
             String text = msg.getFromBody("message");
-            String username = msg.getFromBody("username");
 
-            if(username.equals(ClientApp.user.getUsername())) {
-                if(success) {
+            if(success) {
+                String username = msg.getFromBody("username");
+                if(username.equals(ClientApp.user.getUsername())) {
                     ClientLobbyController.updateLobbies();
                     ClientLoginController.updateUser();
                     showLobbyUI(ClientApp.getUserLobby());
                 }
                 else {
-                    messageLabel.setText(text);
-                }
-            }
-            else {
-                if(success) {
                     ClientLobbyController.updateLobbies();
                     showLobbyUI(ClientApp.getUserLobby());
                 }
+            }
+            else {
+                lobbiesMessageLabel.setText(text);
             }
         }
         else if(action.equals("leave_lobby")) {
