@@ -9,17 +9,16 @@ import com.example.common.map.Tile;
 import com.example.common.tools.Tool;
 import com.example.client.views.GameAssetManager;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Blacksmith extends Store {
     public static int[] coordinates = {130, 151, 130, 145};
     private HashMap<BlackSmithItems, Integer> sold = new HashMap<>();
-
     public Blacksmith(ArrayList<ArrayList<Tile>> storeTiles) {
         super(storeTiles);
         this.areaType = AreaType.STORE;
-
         runner = Runner.CLINT;
         opensAt = 9;
         closesAt = 16;

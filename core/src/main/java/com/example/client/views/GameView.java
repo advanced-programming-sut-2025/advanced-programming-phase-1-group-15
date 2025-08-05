@@ -84,6 +84,11 @@ public class GameView implements Screen {
     private final PauseMenuOverlay pauseMenuOverlay;
     private final CraftingMenu craftingMenu;
     private final CookingMenu cookingMenu;
+    private final BlackSmithMenu blackSmithMenu;
+    private final FishShopMenu fishShopMenu;
+    private final JojaMartMenu jojaMartMenu;
+    private final PierreGeneralStoreMenu pierreGeneralStoreMenu;
+    private final StarDropSaloonMenu starDropSaloonMenu;
     private ArrayList<ArtisanMenu> artisans = new ArrayList<>();
 
     public GameView(Game game, Main main) {
@@ -105,7 +110,11 @@ public class GameView implements Screen {
         this.pauseMenuOverlay = new PauseMenuOverlay(main, game, this::restoreGameInput);
         this.craftingMenu = new CraftingMenu(main, game, this::restoreGameInput);
         this.cookingMenu = new CookingMenu(main, game, this::restoreGameInput);
-
+        this.blackSmithMenu = new BlackSmithMenu(main, game, this::restoreGameInput);
+        this.jojaMartMenu = new JojaMartMenu(main,game,this::restoreGameInput);
+        this.fishShopMenu = new FishShopMenu(main,game,this::restoreGameInput);
+        this.pierreGeneralStoreMenu = new PierreGeneralStoreMenu(main , game , this::restoreGameInput);
+        this.starDropSaloonMenu = new StarDropSaloonMenu(main, game, this::restoreGameInput);
         ClientApp.setCurrentGameView(this);
     }
 
@@ -658,7 +667,6 @@ public class GameView implements Screen {
                         Gdx.input.setInputProcessor(messageDialog.getStage());
                         return true;
                     }
-
                     // Regular left-click handling for adjacent tiles
                     if(checkCursorInAdjacent()) {
                         if(clickedTile.getArea() instanceof GreenHouse greenHouse && !greenHouse.isBuilt()){
@@ -666,7 +674,6 @@ public class GameView implements Screen {
                             popUpMenu.show();
                             Gdx.input.setInputProcessor(popUpMenu.getStage());
                         }
-
                         else if (clickedTile.getArea() instanceof Store store) {
                             if(store.isOpen(game.getDateAndTime().getHour())) {
                                 if(store instanceof MarnieRanch marnieRanch) {
@@ -679,29 +686,24 @@ public class GameView implements Screen {
                                     popUpMenu.show();
                                     Gdx.input.setInputProcessor(popUpMenu.getStage());
                                 }
-                                else if (store instanceof Blacksmith blacksmith){
-                                    popUpMenu = new BlackSmithMenu(skin , "Blacksmith Shop:", this::restoreGameInput, blacksmith);
-                                    popUpMenu.show();
+                                else if (store instanceof Blacksmith){
+                                    blackSmithMenu.setVisible(true , 1);
                                     Gdx.input.setInputProcessor(popUpMenu.getStage());
                                 }
-                                else if (store instanceof FishShop fishShop){
-                                    popUpMenu = new FishShopMenu(skin , "Fish Shop:", this::restoreGameInput, fishShop);
-                                    popUpMenu.show();
+                                else if (store instanceof FishShop){
+                                    fishShopMenu.setVisible(true , 1);
                                     Gdx.input.setInputProcessor(popUpMenu.getStage());
                                 }
-                                else if (store instanceof JojaMart jojaMart) {
-                                    popUpMenu = new JojaMartMenu(skin , "JojaMart Shop:", this::restoreGameInput, jojaMart);
-                                    popUpMenu.show();
+                                else if (store instanceof JojaMart) {
+                                    jojaMartMenu.setVisible(true , 1);
                                     Gdx.input.setInputProcessor(popUpMenu.getStage());
                                 }
-                                else if (store instanceof PierreGeneralStore pierreGeneralStore) {
-                                    popUpMenu = new PierreGeneralStoreMenu(skin , "Blacksmith Shop:", this::restoreGameInput, pierreGeneralStore);
-                                    popUpMenu.show();
+                                else if (store instanceof PierreGeneralStore) {
+                                    pierreGeneralStoreMenu.setVisible(true , 1);
                                     Gdx.input.setInputProcessor(popUpMenu.getStage());
                                 }
-                                else if (store instanceof StarDropSaloon starDropSaloon) {
-                                    popUpMenu = new StarDropSaloonMenu(skin , "Blacksmith Shop:", this::restoreGameInput, starDropSaloon);
-                                    popUpMenu.show();
+                                else if (store instanceof StarDropSaloon) {
+                                    starDropSaloonMenu.setVisible(true , 1);
                                     Gdx.input.setInputProcessor(popUpMenu.getStage());
                                 }
                             }
