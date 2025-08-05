@@ -2,6 +2,7 @@ package com.example.server;
 
 import com.example.common.JSONUtils;
 import com.example.common.Message;
+import com.example.server.controllers.ServerGameController;
 import com.example.server.controllers.ServerLobbyController;
 
 import java.io.*;
@@ -92,8 +93,7 @@ public class GameServer {
                         case "set_map_number" -> ServerLobbyController.handleSetMapNumber(msg, respBody);
                         case "start_game" -> ServerLobbyController.handleStartGame(msg, respBody);
                         default -> {
-                            respBody.put("success", false);
-                            respBody.put("message", "Unknown action: " + action);
+                            ServerGameController.handleCommand(msg, respBody);
                         }
                     }
 

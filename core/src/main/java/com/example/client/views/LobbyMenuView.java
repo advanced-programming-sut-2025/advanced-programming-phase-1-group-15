@@ -239,7 +239,7 @@ public class LobbyMenuView implements Screen {
                         lobbyMessageLabel.setText("There has to be at least two users in the lobby to start the game.");
                     }
                     else {
-                        ClientLobbyController.sendStartGameMessage(lobby.getId());
+                        ClientLobbyController.sendStartGameMessage(lobby.getId(), ClientApp.user.getUsername());
                     }
                 }
             }
@@ -461,7 +461,7 @@ public class LobbyMenuView implements Screen {
                 ClientLobbyController.updateLobbies();
 
                 Game game = new Game(ClientApp.getUserLobby(), ClientApp.user);
-                ClientApp.currentGame = game;
+                ClientApp.setupGame(game);
                 main.setScreen(new GameView(game, main));
             }
         }

@@ -2,8 +2,10 @@
 package com.example.client.controllers;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.example.client.NetworkClient;
 import com.example.client.models.ClientApp;
 import com.example.common.Game;
+import com.example.common.Message;
 import com.example.common.Player;
 import com.example.common.Result;
 import com.example.common.animals.*;
@@ -33,10 +35,11 @@ import com.example.common.relation.TradeWhitMoney;
 import com.example.common.relation.TradeWithItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class GameController {
-    public static Player getCurrentPlayer() {
+public class ClientGameController {
+    private static Player getCurrentPlayer() {
         return ClientApp.currentGame.getCurrentPlayer();
     }
 
@@ -1376,5 +1379,15 @@ public class GameController {
                 }
             }
         }
+    }
+
+    public static void sendPlayerMovementMessage(int x, int y) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "player_movement");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("x", x);
+        cmdBody.put("y", y);
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }
 }

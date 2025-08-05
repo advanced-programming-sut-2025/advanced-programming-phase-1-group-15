@@ -68,10 +68,11 @@ public class ClientLobbyController {
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }
 
-    public static void sendStartGameMessage(String lobbyId) {
+    public static void sendStartGameMessage(String lobbyId, String username) {
         HashMap<String,Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "start_game");
         cmdBody.put("lobby_id", lobbyId);
+        cmdBody.put("username", username);
 
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }

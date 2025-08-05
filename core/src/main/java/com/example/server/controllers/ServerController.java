@@ -5,8 +5,10 @@ import com.example.common.Message;
 import com.example.common.Result;
 import com.example.common.User;
 import com.example.common.enums.Gender;
+import com.example.server.GameServer;
 import com.example.server.models.ServerApp;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class ServerController {
@@ -114,5 +116,17 @@ public class ServerController {
 
     public static void getLobbies(Message req, Map<String,Object> respBody) {
         respBody.put("lobbies", ServerApp.lobbies);
+    }
+
+    public static void informOtherLobbyUsers(Map<String,Object> respBody, Lobby lobby, String senderUsername) {
+        HashMap<String,Object> respBodyHashMap = new HashMap<>(respBody);
+        Message resp = new Message(respBodyHashMap, Message.Type.RESPONSE);
+
+        for (GameServer.ClientHandler clientHandler : GameServer.getClientHandlers()) {
+            if(!clientHandler.getAddress().equals(ServerApp.getAddressByUser(senderUsername)) &&
+                lobby.checkIfUserIsInLobby(ServerApp.getUserByAddress(clientHandler.getAddress()))) {
+                clientHandler.sendMessage(resp);
+            }
+        }
     }
 }

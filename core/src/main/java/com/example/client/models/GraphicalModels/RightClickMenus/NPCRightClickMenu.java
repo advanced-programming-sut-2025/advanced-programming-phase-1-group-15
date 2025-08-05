@@ -162,7 +162,7 @@ public class NPCRightClickMenu extends RightClickMenu {
 
     private void registerPopupMenu(PopUpMenu popupMenu) {
         if (ClientApp.currentGame != null) {
-            ClientApp.getCurrentGameMenu().setPopUpMenu(popupMenu);
+            ClientApp.getCurrentGameView().setPopUpMenu(popupMenu);
         }
     }
 }

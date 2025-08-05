@@ -75,6 +75,15 @@ public class Lobby {
         return getUsers().contains(user);
     }
 
+    public boolean checkIfUserIsInLobby(String username) {
+        for(User user : getUsers()) {
+            if(user.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void assignMapNumber(String username) {
         ArrayList<Integer> usedNumbers = getMapNumbers();
         for (int candidate = 1; candidate <= 4; candidate++) {

@@ -18,7 +18,7 @@ import com.example.client.models.GraphicalModels.PopUpMenus.*;
 import com.example.common.map.Area;
 import com.example.common.stores.*;
 import com.example.client.controllers.CheatCodeController;
-import com.example.client.controllers.GameController;
+import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.Game;
 import com.example.client.models.GraphicalModels.MapCamera;
@@ -106,7 +106,7 @@ public class GameView implements Screen {
         this.craftingMenu = new CraftingMenu(main, game, this::restoreGameInput);
         this.cookingMenu = new CookingMenu(main, game, this::restoreGameInput);
 
-        ClientApp.setCurrentGameMenu(this);
+        ClientApp.setCurrentGameView(this);
     }
 
     @Override
@@ -239,7 +239,7 @@ public class GameView implements Screen {
 
         showMap(batch);
         drawNPCs(batch);
-        drawPlayer(batch);
+        drawPlayers(batch);
 
         batch.end();
     }
@@ -441,11 +441,13 @@ public class GameView implements Screen {
         }
     }
 
-    private void drawPlayer(SpriteBatch batch) {
-        Position pos = game.getCurrentPlayer().getPosition();
-        int drawX = pos.x * tileSideLength;
-        int drawY = pos.y * tileSideLength;
-        batch.draw(game.getCurrentPlayer().getCurrentFrame(), drawX, drawY);
+    private void drawPlayers(SpriteBatch batch) {
+        for(Player player : game.getPlayers()) {
+            Position pos = player.getPosition();
+            int drawX = pos.x * tileSideLength;
+            int drawY = pos.y * tileSideLength;
+            batch.draw(player.getCurrentFrame(), drawX, drawY);
+        }
     }
 
     private Tile surroundTile(int x, int y){
@@ -470,18 +472,22 @@ public class GameView implements Screen {
 
             switch (keycode) {
                 case Input.Keys.W:
+                    ClientGameController.sendPlayerMovementMessage(x, y + 1);
                     player.setDirection(Direction.UP);
                     player.walk(x, y + 1);
                     return true;
                 case Input.Keys.S:
+                    ClientGameController.sendPlayerMovementMessage(x, y - 1);
                     player.setDirection(Direction.DOWN);
                     player.walk(x, y - 1);
                     return true;
                 case Input.Keys.A:
+                    ClientGameController.sendPlayerMovementMessage(x - 1, y);
                     player.setDirection(Direction.LEFT);
                     player.walk(x - 1, y);
                     return true;
                 case Input.Keys.D:
+                    ClientGameController.sendPlayerMovementMessage(x + 1, y);
                     player.setDirection(Direction.RIGHT);
                     player.walk(x + 1, y);
                     return true;
@@ -705,7 +711,7 @@ public class GameView implements Screen {
                         }
 
                         else {
-                            Result result = GameController.useToolOrPlaceItem(game.getCurrentPlayer(), clickedTile);
+                            Result result = ClientGameController.useToolOrPlaceItem(game.getCurrentPlayer(), clickedTile);
                             notificationLabel.showMessage(result.message(), result.success() ? Color.BLACK : Color.RED);
                         }
                     }

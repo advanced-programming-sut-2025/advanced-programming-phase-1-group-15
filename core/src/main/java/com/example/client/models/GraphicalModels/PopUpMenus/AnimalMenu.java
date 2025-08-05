@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
-import com.example.client.controllers.GameController;
+import com.example.client.controllers.ClientGameController;
 import com.example.common.Result;
 import com.example.common.animals.Animal;
 import com.example.client.views.GameAssetManager;
@@ -73,7 +73,7 @@ public class AnimalMenu extends PopUpMenu {
         petButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Result res = GameController.petAnimal(animal);
+                Result res = ClientGameController.petAnimal(animal);
                 if (res.success()) {
                     friendshipLabel.setText("" + animal.getFriendship());
                     messageLabel.setColor(Color.GREEN);
@@ -97,7 +97,7 @@ public class AnimalMenu extends PopUpMenu {
         feedButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Result res = GameController.feedHayAnimal(animal);
+                Result res = ClientGameController.feedHayAnimal(animal);
 
                 if (res.success()) {
                     hide();
@@ -114,7 +114,7 @@ public class AnimalMenu extends PopUpMenu {
             shepherdButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    Result res = GameController.shepherdAnimal(animal);
+                    Result res = ClientGameController.shepherdAnimal(animal);
                     if (res.success()) {
                         hide();
                     }
@@ -159,7 +159,7 @@ public class AnimalMenu extends PopUpMenu {
         sellButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Result res = GameController.sellAnimal(animal);
+                Result res = ClientGameController.sellAnimal(animal);
 
                 if (res.success()) {
                     messageLabel.setColor(Color.GREEN);
@@ -209,7 +209,7 @@ public class AnimalMenu extends PopUpMenu {
             collectButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    Result res = GameController.collectProduce(animal);
+                    Result res = ClientGameController.collectProduce(animal);
                     if (res.success()) {
                         messageLabel.setColor(Color.GREEN);
                     } else {

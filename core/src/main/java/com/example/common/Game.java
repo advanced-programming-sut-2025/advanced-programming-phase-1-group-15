@@ -34,7 +34,7 @@ public class Game implements TimeObserver {
             player.setMapNumber(lobby.getMapNumber(user.getUsername()));
             players.add(player);
 
-            if(currentUser.getUsername().equals(user.getUsername())) {
+            if(user.getUsername().equals(currentUser.getUsername())) {
                 this.currentPlayer = player;
             }
         }

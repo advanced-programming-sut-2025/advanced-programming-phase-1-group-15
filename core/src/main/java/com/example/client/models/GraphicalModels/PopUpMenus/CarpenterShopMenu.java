@@ -11,7 +11,7 @@ import com.example.common.map.Area;
 import com.example.common.map.AreaType;
 import com.example.common.map.Farm;
 import com.example.common.map.Tile;
-import com.example.client.controllers.GameController;
+import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.Player;
 import com.example.common.Result;
@@ -155,10 +155,10 @@ public class CarpenterShopMenu extends PopUpMenu {
     private void handleMessage(int x, int y, AreaType type, Farm farm) {
         Result res;
         if(type.equals(AreaType.BARN)) {
-            res = GameController.buildBarn(x, y, farm);
+            res = ClientGameController.buildBarn(x, y, farm);
         }
         else {
-            res = GameController.buildCoop(x, y, farm);
+            res = ClientGameController.buildCoop(x, y, farm);
         }
 
         if (res.success()) {

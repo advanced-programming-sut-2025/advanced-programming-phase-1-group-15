@@ -2,16 +2,15 @@ package com.example.server.models;
 
 import com.example.common.Game;
 import com.example.common.Lobby;
-import com.example.common.Player;
 import com.example.common.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ServerApp {
     public static HashMap<String, User> users = new HashMap<>();
     public static ArrayList<Lobby> lobbies = new ArrayList<>();
-    public static ArrayList<Game> allGames = new ArrayList<>();
 
     public static boolean checkUsernameExists(String username) {
         for (User user : users.values()) {
@@ -35,9 +34,27 @@ public class ServerApp {
         return users.get(address);
     }
 
+    public static String getAddressByUser(String username) {
+        for (Map.Entry<String, User> entry : users.entrySet()) {
+            if (entry.getValue().getUsername().equals(username)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     public static Lobby getLobbyById(String lobbyId) {
         for (Lobby lobby : lobbies) {
             if (lobby.getId().equals(lobbyId)) {
+                return lobby;
+            }
+        }
+        return null;
+    }
+
+    public static Lobby getLobbyByUser(String username) {
+        for (Lobby lobby : lobbies) {
+            if (lobby.checkIfUserIsInLobby(username)) {
                 return lobby;
             }
         }

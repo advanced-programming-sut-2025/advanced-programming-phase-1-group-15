@@ -1,8 +1,11 @@
 package com.example.client.models;
 
+import com.example.client.controllers.ClientGameController;
+import com.example.client.controllers.ClientGameListener;
 import com.example.client.views.GameView;
 import com.example.common.Game;
 import com.example.common.Lobby;
+import com.example.common.Player;
 import com.example.common.User;
 
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ public class ClientApp {
 
     public static Game currentGame;
     public static GameView currentGameView;
+    public static ClientGameListener clientGameListener;
 
     public static Lobby getUserLobby() {
         if (user.getLobbyId() == null) {
@@ -30,11 +34,16 @@ public class ClientApp {
         return null;
     }
 
-    public static GameView getCurrentGameMenu() {
+    public static GameView getCurrentGameView() {
         return currentGameView;
     }
 
-    public static void setCurrentGameMenu(GameView currentGameMenu) {
-        ClientApp.currentGameView = currentGameMenu;
+    public static void setCurrentGameView(GameView currentGameView) {
+        ClientApp.currentGameView = currentGameView;
+    }
+
+    public static void setupGame(Game game) {
+        currentGame = game;
+        clientGameListener = new ClientGameListener(game);
     }
 }

@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.example.common.map.Area;
-import com.example.client.controllers.GameController;
+import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.Player;
 import com.example.common.Result;
@@ -158,10 +158,10 @@ public class FishShopMenu extends PopUpMenu {
     private void handleMessage(int x, int y, AreaType type, Farm farm) {
         Result res;
         if(type.equals(AreaType.BARN)) {
-            res = GameController.buildBarn(x, y, farm);
+            res = ClientGameController.buildBarn(x, y, farm);
         }
         else {
-            res = GameController.buildCoop(x, y, farm);
+            res = ClientGameController.buildCoop(x, y, farm);
         }
 
         if (res.success()) {

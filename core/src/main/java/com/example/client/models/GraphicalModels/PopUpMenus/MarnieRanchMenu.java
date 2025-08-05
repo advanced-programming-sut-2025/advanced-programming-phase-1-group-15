@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.example.client.controllers.GameController;
+import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.Player;
 import com.example.common.Result;
@@ -133,7 +133,7 @@ public class MarnieRanchMenu extends PopUpMenu {
             buyButtons.get(i).addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                Result res = GameController.buyAnimal(currentPlayer, animalType, animalType.name().toLowerCase());
+                Result res = ClientGameController.buyAnimal(currentPlayer, animalType, animalType.name().toLowerCase());
                 if(res.success()) {
                     messageLabel.setColor(Color.GREEN);
                 }
