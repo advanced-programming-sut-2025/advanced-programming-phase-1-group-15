@@ -4,9 +4,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.common.Player;
 import com.example.client.views.GameAssetManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class TrashCan extends Tool {
     double returnPercentage;
-
+    HashMap<BackPackable , Integer> trashes = new HashMap<>();
     public TrashCan() {
         this.toolType = ToolType.TRASH_CAN;
         this.toolLevel = ToolLevel.NORMAL;
@@ -78,8 +81,8 @@ public class TrashCan extends Tool {
     }
 
     public void use(BackPackable item, int amount, Player player) {
-        int returnAmount = (int) (returnPercentage * amount * item.getPrice());
-        player.addGold(returnAmount);
+        int existing = trashes.getOrDefault(item, 0);
+        trashes.put(item, existing + amount);
         player.getInventory().removeCountFromBackPack(item, amount);
     }
 
@@ -102,5 +105,34 @@ public class TrashCan extends Tool {
                 return GameAssetManager.trash_can;
             }
         }
+    }
+    public BackPackable getItemByName(String name) {
+        for (BackPackable item : trashes.keySet()) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+    public boolean removeCountFromTrashCan(BackPackable item, int amount) {
+        if(trashes.get(item) == null) {
+            return false;
+        }
+        if(amount == trashes.get(item)) {
+            removeFromBackPack(item);
+            return true;
+        }
+        if(amount > trashes.get(item)) {
+            return false;
+        }
+        trashes.put(item, trashes.get(item) - amount);
+        return true;
+    }
+    public void removeFromBackPack(BackPackable item) {
+        trashes.remove(item);
+    }
+
+    public HashMap<BackPackable, Integer> getTrashes() {
+        return trashes;
     }
 }

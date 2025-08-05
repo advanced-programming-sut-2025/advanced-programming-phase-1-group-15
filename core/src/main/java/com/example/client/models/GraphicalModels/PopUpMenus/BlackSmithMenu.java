@@ -3,8 +3,6 @@ package com.example.client.models.GraphicalModels.PopUpMenus;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -24,37 +22,32 @@ import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
 import com.example.common.farming.Crop;
 import com.example.common.farming.Crops;
-import com.example.common.farming.Fruit;
-import com.example.common.foraging.ForagingCrop;
 import com.example.common.foraging.ForagingMineral;
-import com.example.common.map.Area;
-import com.example.client.controllers.ClientGameController;
-import com.example.client.models.ClientApp;
 import com.example.common.Player;
-import com.example.common.Result;
-import com.example.common.map.AreaType;
-import com.example.common.map.Farm;
-import com.example.common.map.Tile;
 import com.example.common.stores.BlackSmithItems;
-import com.example.common.stores.Blacksmith;
 import com.example.common.tools.BackPackable;
 import com.example.common.tools.Fridge;
+import com.example.common.tools.TrashCan;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class BlackSmithMenu{
     private final Stage stage;
     private final Skin skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
     private boolean visible ;
     private final Table rootTable;
-    private final Table recipe;
-    private final Table fridge;
+    private final Table buy;
+    private final Table sell;
     private final Main main;
     private final Game game;
     private final Runnable onHideCallback;
     private final Label tooltipLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
+    private final TextButton add = new TextButton("+", skin);
+    private final TextButton remove = new TextButton("-", skin);
     public BlackSmithMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.BACKED_FISH));
@@ -69,17 +62,17 @@ public class BlackSmithMenu{
         rootTable.setVisible(false);
         rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
         Table tabBar = new Table(skin);
-        TextButton recipeTab = new TextButton("Recipe", skin);
-        TextButton fridgeTab = new TextButton("Fridge", skin);
-        tabBar.add(recipeTab).pad(5);
-        tabBar.add(fridgeTab).pad(5);
+        TextButton buyTab = new TextButton("buy", skin);
+        TextButton sellTab = new TextButton("sell", skin);
+        tabBar.add(buyTab).pad(5);
+        tabBar.add(sellTab).pad(5);
         rootTable.add(tabBar).expandX().top().padTop(10).row();
-        recipe = createCookingContent();
-        fridge = createFridgeContent();
+        buy = createBuyContent();
+        sell = createSellContent();
         Stack stack = new Stack();
-        stack.add(recipe);
-        stack.add(fridge);
-        changeTab(recipe);
+        stack.add(buy);
+        stack.add(sell);
+        changeTab(buy);
         rootTable.add(stack).expand().fill().row();
         TextButton closeButton = new TextButton("X Close", skin);
         closeButton.addListener(new ChangeListener() {
@@ -98,17 +91,17 @@ public class BlackSmithMenu{
         tooltipContainer.setVisible(false);
         stage.addActor(rootTable);
         stage.addActor(tooltipContainer);
-        recipeTab.addListener(new ChangeListener() {
+        buyTab.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 refresh();
-                changeTab(recipe);
+                changeTab(buy);
             }
         });
-        fridgeTab.addListener(new ChangeListener() {
+        sellTab.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 refresh();
-                changeTab(fridge);
+                changeTab(sell);
             }
         });
     }
@@ -123,58 +116,89 @@ public class BlackSmithMenu{
 
         stage.draw();
     }
-    private Table createCookingContent() {
-        Label titleLabel = new Label("Recipe: ", skin); titleLabel.setColor(Color.FIREBRICK);
-        Label descriptionLabel = new Label("Desc: ", skin);
-        Image foodIcon = new Image();
-        foodIcon.setSize(48, 48);
-        foodIcon.setVisible(false);
-        final Food[] current = new Food[1];
-        TextButton cookButton = new TextButton("Cook", skin);
+    private Table createBuyContent() {
+        Label titleLabel = new Label("Black Smith Store: ", skin); titleLabel.setColor(Color.FIREBRICK);
+        Label descriptionLabel = new Label("Price: ", skin);
+        Label Final = new Label("", skin);
+        Final.setColor(Color.BROWN);
+        Final.setVisible(false);
+        final BlackSmithItems[] temp = new BlackSmithItems[1];
+        final int[] num = {1};
+        final ForagingMineral[] current = new ForagingMineral[1];
+        TextButton buy = new TextButton("Buy", skin);
         Label errorLabel = new Label("", skin);
-        cookButton.addListener(new ClickListener() {
+        buy.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (current[0] != null) {
-                    if (isAvailable(current[0])) {
-                        showError("You make it successfully" , errorLabel);
+                    if (isAvailable(current[0] , num[0])) {
+                        showError("You buy it successfully" , errorLabel);
+                        Final.setVisible(false);
+                        num[0] = 1;
+                        temp[0] = null;
+                        current[0] = null;
+                        descriptionLabel.setVisible(false);
                         errorLabel.setColor(Color.GREEN);
                     } else {
                         if (game.getCurrentPlayer().getInventory().checkFilled()){
                             showError("You don't have enough capacity" , errorLabel);
+                            Final.setVisible(false);
+                            num[0] = 1;
+                            temp[0] = null;
+                            current[0] = null;
+                            descriptionLabel.setVisible(false);
                             errorLabel.setColor(Color.RED);
                         }
                         else{
-                            showError("You don't have enough material" , errorLabel);
+                            showError("You don't have enough gold" , errorLabel);
+                            Final.setVisible(false);
+                            num[0] = 1;
+                            temp[0] = null;
+                            current[0] = null;
+                            descriptionLabel.setVisible(false);
                             errorLabel.setColor(Color.RED);
                         }
                     }
                 }
             }
         });
+        add.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (temp[0]!=null){
+                    num[0]++;
+                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*temp[0].price);
+                    Final.setVisible(true);
+                }
+            }
+        });
+        remove.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (temp[0]!=null){
+                    num[0] = Math.max(1, num[0]-1);
+                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*temp[0].price);
+                }
+            }
+        });
         Table itemTable = new Table(skin);
-        for (Food food : game.getCurrentPlayer().getAvailableFoods()) {
-            Label label = new Label(food.getName(), skin);
-            if (!food.isAvailable()) {
-                label.setColor(Color.LIGHT_GRAY);
-            }
-            else {
-                label.setColor(Color.BROWN);
-            }
+        ArrayList<BlackSmithItems> foragingMinerals = new ArrayList<>(Arrays.asList(BlackSmithItems.values()));
+        for (BlackSmithItems item : foragingMinerals) {
+            Label label = new Label(item.getName(), skin);
+            label.setColor(Color.BROWN);
             label.addListener(new InputListener() {
                 @Override
                 public boolean mouseMoved(InputEvent event, float x, float y) {
-                    current[0] = food;
-                    if (!food.isAvailable()) {
-                        cookButton.setVisible(false);
-                    } else {
-                        cookButton.setVisible(true);
+                    if (current[0] != null) {
+                        if (!current[0].getName().equals(item.getName())) {
+                            num[0] = 1;
+                        }
                     }
-                    descriptionLabel.setText("Desc: " + food.getRecipe());
-                    Sprite sprite = food.getSprite();
-                    sprite.setSize(48, 48);
-                    foodIcon.setDrawable(new TextureRegionDrawable(sprite));
-                    foodIcon.setVisible(true);
+                    current[0] = new ForagingMineral(item.foragingMineralType);
+                    temp[0]= item;
+                    descriptionLabel.setText("Price :" + item.price);
+                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*temp[0].price);
+                    Final.setVisible(true);
                     return true;
                 }
             });
@@ -189,30 +213,45 @@ public class BlackSmithMenu{
         Table table = new Table(skin);
         Table bottomRow = new Table();
         bottomRow.top().right();
-        bottomRow.add(foodIcon).size(60, 60).left();
         bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
         table.add(bottomRow).bottom().row();
         table.add(errorLabel).width(700).row();
-        table.add(cookButton).right().row();
+        Table quantityRow = new Table();
+        quantityRow.add(remove).padRight(5);
+        quantityRow.add(add).padLeft(5);
+        table.add(quantityRow).padBottom(5).row();
+        table.add(Final);
+        table.add(buy).right().row();
         return table;
     }
-    private Table createFridgeContent() {
-        Fridge fridge = game.getCurrentPlayer().getFridge();
-        fridge.addToFridge(new Crop(Crops.TOMATO) , 3);
-        fridge.addToFridge(new Crop(Crops.CARROT) , 4);
-        fridge.addToFridge(new AnimalProduct(AnimalProductType.EGG) , 1);
+    private Table createSellContent() {
+        if (game.getCurrentPlayer().getTrashCan().getTrashes().isEmpty()){
+            Label label = new Label("No item to sell", skin);
+            label.setColor(Color.RED);
+            Table tab = new Table(skin);
+            tab.add(label);
+            return tab;
+        }
+        final int[] num = {1};
+        final BackPackable[] current = new BackPackable[1];
+        TextButton sell = new TextButton("Sell", skin);
+        Label errorLabel = new Label("", skin);
+        Label Final = new Label("", skin);
+        Final.setColor(Color.BROWN);
+        Final.setVisible(false);
+        Label descriptionLabel = new Label("", skin);
+        TrashCan trashCan = game.getCurrentPlayer().getTrashCan();
         List<String> itemList = new List<>(skin);
-        String[] items = fridge.getItems().entrySet().stream()
+        String[] items = trashCan.getTrashes().entrySet().stream()
             .map(entry -> entry.getKey().getName() + "  x" + entry.getValue())
             .toArray(String[]::new);
-        itemList.setItems(items);
         itemList.setItems(items);
         ScrollPane scrollPane = new ScrollPane(itemList, skin);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(true, false);
-        Label titleLabel = new Label("Fridge Items:", skin); titleLabel.setColor(Color.FIREBRICK);
+        Label titleLabel = new Label("Trash Can Items:", skin); titleLabel.setColor(Color.FIREBRICK);
         itemList.addListener(new InputListener() {
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
@@ -220,9 +259,15 @@ public class BlackSmithMenu{
                 if (index >= 0) {
                     String item = itemList.getItems().get(index);
                     if (item != null && !item.isEmpty()) {
-                        String itemName = item.split(" x")[0];
-                        BackPackable hoveredItem = fridge.getItemByName(itemName);
-                        if (hoveredItem != null) {
+                        String itemName = item.split(" x")[0].trim();
+                        System.out.println(itemName);
+                        current[0] = trashCan.getItemByName(itemName);
+                        if (current[0] != null) {
+                            descriptionLabel.setText("Price :" + current[0].getPrice());
+                            descriptionLabel.setVisible(true);
+                            descriptionLabel.setColor(Color.BROWN);
+                            Final.setText("Total number: "+num[0] +"    Total Price = " + num[0]*current[0].getPrice());
+                            Final.setVisible(true);
                             return true;
                         }
                     }
@@ -230,11 +275,54 @@ public class BlackSmithMenu{
                 return false;
             }
         });
+        sell.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if (current[0] == null) {
+                    return;
+                }
+                game.getCurrentPlayer().getTrashCan().removeCountFromTrashCan(current[0],num[0]);
+                game.getCurrentPlayer().setGold(game.getCurrentPlayer().getGold()+ current[0].getPrice()*num[0]);
+                refresh();
+                Final.setVisible(false);
+                current[0] = null;
+                num[0] = 1;
+                showError("You sell item successfully" , errorLabel);
+                errorLabel.setVisible(true);
+                errorLabel.setColor(Color.GREEN);
+            }
+        });
+        add.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (current[0]!=null){
+                    num[0] = Math.min(num[0]+1 , game.getCurrentPlayer().getTrashCan().getTrashes().get(current[0]));
+                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*current[0].getPrice());
+                    Final.setVisible(true);
+                }
+            }
+        });
+        remove.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (current[0]!=null){
+                    num[0] = Math.max(1, num[0]-1);
+                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*current[0].getPrice());
+                    Final.setVisible(true);
+                }
+            }
+        });
         Table table = new Table(skin);
         Table bottomRow = new Table();
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
         table.add(bottomRow).bottom();
+        Table quantityRow = new Table();
+        quantityRow.add(remove).padRight(5);
+        quantityRow.add(add).padLeft(5);
+        table.add(quantityRow).padBottom(5).row();
+        table.add(errorLabel).width(700).row();
+        table.add(Final);
+        table.add(sell).right().row();
         return table;
     }
     public boolean isVisible() {
@@ -248,10 +336,10 @@ public class BlackSmithMenu{
             refresh();
             switch (tabNumber) {
                 case 1:
-                    changeTab(recipe);
+                    changeTab(buy);
                     break;
                 case 2:
-                    changeTab(fridge);
+                    changeTab(sell);
                     break;
                 default:
                     break;
@@ -267,54 +355,22 @@ public class BlackSmithMenu{
         skin.dispose();
     }
     private void refresh() {
-        recipe.clear(); fridge.clear();
-        recipe.add(createCookingContent()).expand().fill();
-        fridge.add(createFridgeContent()).expand().fill();
+        buy.clear(); sell.clear();
+        buy.add(createBuyContent()).expand().fill();
+        sell.add(createSellContent()).expand().fill();
     }
     private void changeTab(Table content) {
-        recipe.setVisible(false);
-        fridge.setVisible(false);
+        buy.setVisible(false);
+        sell.setVisible(false);
         content.setVisible(true);
     }
-    public boolean isAvailable(Food food) {
-        if (game.getCurrentPlayer().getInventory().checkFilled()) {
+    public boolean isAvailable(ForagingMineral foragingMineral  , int num) {
+        Player player = game.getCurrentPlayer();
+        if(player.getGold()<(foragingMineral.getPrice()*num)) {
             return false;
         }
-        for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
-            boolean found = false;
-            int num  = food.getFoodType().getIngredients().get(item);
-            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
-                found = true;
-                int total = game.getCurrentPlayer().getInventory().getItemCount(item.getName());
-                if (total < num) {
-                    return false;
-                }
-            }
-            if (!found) {
-                if (game.getCurrentPlayer().getFridge().getItemByName(item.getName()) != null) {
-                    found = true;
-                    int total = game.getCurrentPlayer().getFridge().getItemCount(item.getName());
-                    if (total < num) {
-                        return false;
-                    }
-                }
-            }
-            if (!found) {
-                return false;
-            }
-        }
-        for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
-            boolean found = false;
-            int num  = food.getFoodType().getIngredients().get(item);
-            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
-                found = true;
-                game.getCurrentPlayer().getInventory().removeCountFromBackPack(item , num);
-            }
-            if (!found) {
-                game.getCurrentPlayer().getFridge().removeCountFromFridge(item , num);
-            }
-        }
-        game.getCurrentPlayer().getInventory().addToBackPack(food,1);
+        player.setGold(player.getGold()-num*foragingMineral.getPrice());
+        player.getInventory().addToBackPack(foragingMineral , num);
         return true;
     }
     private void showError(String message, Label errorLabel) {

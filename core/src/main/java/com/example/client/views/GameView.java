@@ -237,6 +237,11 @@ public class GameView implements Screen {
         pauseMenuOverlay.draw(delta);
         craftingMenu.draw(delta);
         cookingMenu.draw(delta);
+        blackSmithMenu.draw(delta);
+        jojaMartMenu.draw(delta);
+        fishShopMenu.draw(delta);
+        pierreGeneralStoreMenu.draw(delta);
+        starDropSaloonMenu.draw(delta);
         for (ArtisanMenu artisan : artisans) {
             artisan.draw(delta);
         }
@@ -374,6 +379,11 @@ public class GameView implements Screen {
         pauseMenuOverlay.dispose();
         craftingMenu.dispose();
         cookingMenu.dispose();
+        blackSmithMenu.dispose();
+        fishShopMenu.dispose();
+        jojaMartMenu.dispose();
+        pierreGeneralStoreMenu.dispose();
+        starDropSaloonMenu.dispose();
         for (ArtisanMenu artisan : artisans) {
             artisan.dispose();
         }
@@ -528,6 +538,14 @@ public class GameView implements Screen {
                     }
                     return true;
                 case Input.Keys.C:
+//                    if (blackSmithMenu.isVisible()){
+//                        blackSmithMenu.setVisible(false,0);
+//                        restoreGameInput();
+//                    }
+//                    else {
+//                        blackSmithMenu.setVisible(true, 1);
+//                        Gdx.input.setInputProcessor(blackSmithMenu.getStage());
+//                    }
                     if (cookingMenu.isVisible()){
                         cookingMenu.setVisible(false , 0);
                         restoreGameInput();

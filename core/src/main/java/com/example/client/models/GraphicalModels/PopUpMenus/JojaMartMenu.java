@@ -39,6 +39,7 @@ import com.example.common.stores.BlackSmithItems;
 import com.example.common.stores.Blacksmith;
 import com.example.common.tools.BackPackable;
 import com.example.common.tools.Fridge;
+import com.example.common.tools.TrashCan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,12 +49,14 @@ public class JojaMartMenu{
     private final Skin skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
     private boolean visible ;
     private final Table rootTable;
-    private final Table recipe;
-    private final Table fridge;
+    private final Table buy;
+    private final Table sell;
     private final Main main;
     private final Game game;
     private final Runnable onHideCallback;
     private final Label tooltipLabel = new Label("", skin);
+    private final TextButton add = new TextButton("+", skin);
+    private final TextButton remove = new TextButton("-", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     public JojaMartMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
@@ -74,12 +77,12 @@ public class JojaMartMenu{
         tabBar.add(recipeTab).pad(5);
         tabBar.add(fridgeTab).pad(5);
         rootTable.add(tabBar).expandX().top().padTop(10).row();
-        recipe = createCookingContent();
-        fridge = createFridgeContent();
+        buy = createBuyContent();
+        sell = createSellContent();
         Stack stack = new Stack();
-        stack.add(recipe);
-        stack.add(fridge);
-        changeTab(recipe);
+        stack.add(buy);
+        stack.add(sell);
+        changeTab(buy);
         rootTable.add(stack).expand().fill().row();
         TextButton closeButton = new TextButton("X Close", skin);
         closeButton.addListener(new ChangeListener() {
@@ -102,13 +105,13 @@ public class JojaMartMenu{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 refresh();
-                changeTab(recipe);
+                changeTab(buy);
             }
         });
         fridgeTab.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 refresh();
-                changeTab(fridge);
+                changeTab(sell);
             }
         });
     }
@@ -123,7 +126,7 @@ public class JojaMartMenu{
 
         stage.draw();
     }
-    private Table createCookingContent() {
+    private Table createBuyContent() {
         Label titleLabel = new Label("Recipe: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Desc: ", skin);
         Image foodIcon = new Image();
@@ -198,21 +201,32 @@ public class JojaMartMenu{
         table.add(cookButton).right().row();
         return table;
     }
-    private Table createFridgeContent() {
-        Fridge fridge = game.getCurrentPlayer().getFridge();
-        fridge.addToFridge(new Crop(Crops.TOMATO) , 3);
-        fridge.addToFridge(new Crop(Crops.CARROT) , 4);
-        fridge.addToFridge(new AnimalProduct(AnimalProductType.EGG) , 1);
+    private Table createSellContent() {
+        if (game.getCurrentPlayer().getTrashCan().getTrashes().isEmpty()){
+            Label label = new Label("No item to sell", skin);
+            label.setColor(Color.RED);
+            Table tab = new Table(skin);
+            tab.add(label);
+            return tab;
+        }
+        final int[] num = {1};
+        final BackPackable[] current = new BackPackable[1];
+        TextButton sell = new TextButton("Sell", skin);
+        Label errorLabel = new Label("", skin);
+        Label Final = new Label("", skin);
+        Final.setColor(Color.BROWN);
+        Final.setVisible(false);
+        Label descriptionLabel = new Label("", skin);
+        TrashCan trashCan = game.getCurrentPlayer().getTrashCan();
         List<String> itemList = new List<>(skin);
-        String[] items = fridge.getItems().entrySet().stream()
+        String[] items = trashCan.getTrashes().entrySet().stream()
             .map(entry -> entry.getKey().getName() + "  x" + entry.getValue())
             .toArray(String[]::new);
-        itemList.setItems(items);
         itemList.setItems(items);
         ScrollPane scrollPane = new ScrollPane(itemList, skin);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(true, false);
-        Label titleLabel = new Label("Fridge Items:", skin); titleLabel.setColor(Color.FIREBRICK);
+        Label titleLabel = new Label("Trash Can Items:", skin); titleLabel.setColor(Color.FIREBRICK);
         itemList.addListener(new InputListener() {
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
@@ -220,9 +234,15 @@ public class JojaMartMenu{
                 if (index >= 0) {
                     String item = itemList.getItems().get(index);
                     if (item != null && !item.isEmpty()) {
-                        String itemName = item.split(" x")[0];
-                        BackPackable hoveredItem = fridge.getItemByName(itemName);
-                        if (hoveredItem != null) {
+                        String itemName = item.split(" x")[0].trim();
+                        System.out.println(itemName);
+                        current[0] = trashCan.getItemByName(itemName);
+                        if (current[0] != null) {
+                            descriptionLabel.setText("Price :" + current[0].getPrice());
+                            descriptionLabel.setVisible(true);
+                            descriptionLabel.setColor(Color.BROWN);
+                            Final.setText("Total number: "+num[0] +"    Total Price = " + num[0]*current[0].getPrice());
+                            Final.setVisible(true);
                             return true;
                         }
                     }
@@ -230,11 +250,54 @@ public class JojaMartMenu{
                 return false;
             }
         });
+        sell.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if (current[0] == null) {
+                    return;
+                }
+                game.getCurrentPlayer().getTrashCan().removeCountFromTrashCan(current[0],num[0]);
+                game.getCurrentPlayer().setGold(game.getCurrentPlayer().getGold()+ current[0].getPrice()*num[0]);
+                refresh();
+                Final.setVisible(false);
+                current[0] = null;
+                num[0] = 1;
+                showError("You sell item successfully" , errorLabel);
+                errorLabel.setVisible(true);
+                errorLabel.setColor(Color.GREEN);
+            }
+        });
+        add.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (current[0]!=null){
+                    num[0] = Math.min(num[0]+1 , game.getCurrentPlayer().getTrashCan().getTrashes().get(current[0]));
+                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*current[0].getPrice());
+                    Final.setVisible(true);
+                }
+            }
+        });
+        remove.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (current[0]!=null){
+                    num[0] = Math.max(1, num[0]-1);
+                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*current[0].getPrice());
+                    Final.setVisible(true);
+                }
+            }
+        });
         Table table = new Table(skin);
         Table bottomRow = new Table();
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
         table.add(bottomRow).bottom();
+        Table quantityRow = new Table();
+        quantityRow.add(remove).padRight(5);
+        quantityRow.add(add).padLeft(5);
+        table.add(quantityRow).padBottom(5).row();
+        table.add(errorLabel).width(700).row();
+        table.add(Final);
+        table.add(sell).right().row();
         return table;
     }
     public boolean isVisible() {
@@ -248,10 +311,10 @@ public class JojaMartMenu{
             refresh();
             switch (tabNumber) {
                 case 1:
-                    changeTab(recipe);
+                    changeTab(buy);
                     break;
                 case 2:
-                    changeTab(fridge);
+                    changeTab(sell);
                     break;
                 default:
                     break;
@@ -267,13 +330,13 @@ public class JojaMartMenu{
         skin.dispose();
     }
     private void refresh() {
-        recipe.clear(); fridge.clear();
-        recipe.add(createCookingContent()).expand().fill();
-        fridge.add(createFridgeContent()).expand().fill();
+        buy.clear(); sell.clear();
+        buy.add(createBuyContent()).expand().fill();
+        sell.add(createSellContent()).expand().fill();
     }
     private void changeTab(Table content) {
-        recipe.setVisible(false);
-        fridge.setVisible(false);
+        buy.setVisible(false);
+        sell.setVisible(false);
         content.setVisible(true);
     }
     public boolean isAvailable(Food food) {

@@ -183,9 +183,13 @@ public class CookingMenu {
     }
     private Table createFridgeContent() {
         Fridge fridge = game.getCurrentPlayer().getFridge();
-        fridge.addToFridge(new Crop(Crops.TOMATO) , 3);
-        fridge.addToFridge(new Crop(Crops.CARROT) , 4);
-        fridge.addToFridge(new AnimalProduct(AnimalProductType.EGG) , 1);
+        if (fridge.getItems().isEmpty()) {
+            Label label = new Label("No item available in fridge", skin);
+            label.setColor(Color.RED);
+            Table tab = new Table(skin);
+            tab.add(label);
+            return tab;
+        }
         List<String> itemList = new List<>(skin);
         String[] items = fridge.getItems().entrySet().stream()
                 .map(entry -> entry.getKey().getName() + "  x" + entry.getValue())
