@@ -235,7 +235,7 @@ public class LobbyMenuView implements Screen {
                     lobbyMessageLabel.setText("You have to be Admin to start the game.");
                 }
                 else {
-                    if(lobby.getUsersCount() == 1) {
+                    if(lobby.getUsersCount() == 0) {
                         lobbyMessageLabel.setText("There has to be at least two users in the lobby to start the game.");
                     }
                     else {

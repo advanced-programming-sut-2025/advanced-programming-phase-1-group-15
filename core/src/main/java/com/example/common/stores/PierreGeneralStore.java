@@ -27,12 +27,11 @@ public class PierreGeneralStore extends Store {
 
     public PierreGeneralStore(ArrayList<ArrayList<Tile>> storeTiles) {
         super(storeTiles);
+        this.areaType = AreaType.STORE;
+
         runner = Runner.PIERRE;
         opensAt = 9;
         closesAt = 17;
-
-        this.areaType = AreaType.STORE;
-        this.tiles = storeTiles;
 
         for(ArrayList<Tile> row : storeTiles) {
             for(Tile tile : row) {

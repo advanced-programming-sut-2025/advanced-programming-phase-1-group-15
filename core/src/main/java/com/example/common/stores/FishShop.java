@@ -22,12 +22,11 @@ public class FishShop extends Store {
 
     public FishShop(ArrayList<ArrayList<Tile>> storeTiles) {
         super(storeTiles);
+        this.areaType = AreaType.STORE;
+
         runner = Runner.WILLIE;
         opensAt = 9;
         closesAt = 17;
-
-        this.areaType = AreaType.STORE;
-        this.tiles = storeTiles;
 
         for(ArrayList<Tile> row : storeTiles) {
             for(Tile tile : row) {

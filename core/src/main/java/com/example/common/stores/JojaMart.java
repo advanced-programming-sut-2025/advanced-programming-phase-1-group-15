@@ -21,12 +21,11 @@ public class JojaMart extends Store {
 
     public JojaMart(ArrayList<ArrayList<Tile>> storeTiles) {
         super(storeTiles);
+        this.areaType = AreaType.STORE;
+
         runner = Runner.MORRIS;
         opensAt = 9;
         closesAt = 23;
-
-        this.areaType = AreaType.STORE;
-        this.tiles = storeTiles;
 
         for(ArrayList<Tile> row : storeTiles) {
             for(Tile tile : row) {

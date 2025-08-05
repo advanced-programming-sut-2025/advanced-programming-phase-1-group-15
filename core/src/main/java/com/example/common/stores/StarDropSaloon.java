@@ -21,12 +21,11 @@ public class StarDropSaloon extends Store {
 
     public StarDropSaloon(ArrayList<ArrayList<Tile>> storeTiles) {
         super(storeTiles);
+        this.areaType = AreaType.STORE;
+
         runner = Runner.GUS;
         opensAt = 12;
         closesAt = 24;
-
-        this.areaType = AreaType.STORE;
-        this.tiles = storeTiles;
 
         for(ArrayList<Tile> row : storeTiles) {
             for(Tile tile : row) {
