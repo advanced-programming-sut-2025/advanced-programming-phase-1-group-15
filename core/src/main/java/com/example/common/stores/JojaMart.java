@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class JojaMart extends Store {
-    public static int[] coordinates = {54, 57, 16, 19};
+    public static int[] coordinates = {200, 220, 130, 150};
 
     private HashMap<GeneralItemsType, Integer> sold1 = new HashMap<>();
     private HashMap<JojaMartItems, Integer> sold2 = new HashMap<>();

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PierreGeneralStore extends Store {
-    public static int[] coordinates = {49, 53, 27, 30};
+    public static int[] coordinates = {120, 140, 200, 220};
 
     private HashMap<GeneralItemsType, Integer> sold1 = new HashMap<>();
     private HashMap<SeedType, Integer> sold2 = new HashMap<>();

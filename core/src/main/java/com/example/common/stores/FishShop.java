@@ -16,7 +16,7 @@ import com.example.client.views.GameAssetManager;
 import java.util.ArrayList;
 
 public class FishShop extends Store {
-    public static int[] coordinates = {48, 51, 12, 15};
+    public static int[] coordinates = {140, 160, 60, 75};
 
     int[] sold = new int[6];
 

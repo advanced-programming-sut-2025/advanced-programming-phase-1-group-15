@@ -338,10 +338,17 @@ public class ArtisanMenu {
             progressStack.setVisible(false);
         }
         if (currentArtisanItem != null) {
-            float elapsed = (game.getDateAndTime().getDay() - currentArtisanItem.getDay()) * 24
-                + game.getDateAndTime().getHour() - currentArtisanItem.getHour();
-
-            float total = currentArtisanItem.getArtisanItemType().productionTimeInHours;
+            float elapsed ;
+            float total ;
+            if (currentArtisanItem.getArtisanItemType().productionTimeInHours==0){
+                elapsed = 22 - game.getDateAndTime().getHour();
+                total = 22 - currentArtisanItem.getHour();
+            }
+            else {
+                elapsed = (game.getDateAndTime().getDay() - currentArtisanItem.getDay()) * 24
+                    + game.getDateAndTime().getHour() - currentArtisanItem.getHour();
+                total = currentArtisanItem.getArtisanItemType().productionTimeInHours;
+            }
             float progress = Math.min(elapsed / total, 1f);
             fill.setWidth(progress * progressStack.getWidth());
             fill.setHeight(progressStack.getHeight());

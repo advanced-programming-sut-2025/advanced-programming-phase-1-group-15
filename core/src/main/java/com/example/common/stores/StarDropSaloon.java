@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class StarDropSaloon extends Store {
-    public static int[] coordinates = {51, 54, 33, 36};
+    public static int[] coordinates = {120, 140, 10, 30};
 
     private HashMap<StarDropSaloonItems, Integer> sold = new HashMap<>();
 
