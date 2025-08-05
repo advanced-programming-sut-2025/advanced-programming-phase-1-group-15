@@ -206,7 +206,9 @@ public class GameView implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        game.getCurrentPlayer().updateAnimation(delta);
+        for(Player player : game.getPlayers()) {
+            player.updateAnimation(delta);
+        }
         game.getDateAndTime().updateDateAndTime(delta);
 
         SpriteBatch batch = main.getBatch();
@@ -481,24 +483,20 @@ public class GameView implements Screen {
 
             switch (keycode) {
                 case Input.Keys.W:
-                    ClientGameController.sendPlayerMovementMessage(x, y + 1);
-                    player.setDirection(Direction.UP);
-                    player.walk(x, y + 1);
+                    ClientGameController.sendPlayerMovementMessage(0, +1);
+                    player.walk(0, +1);
                     return true;
                 case Input.Keys.S:
-                    ClientGameController.sendPlayerMovementMessage(x, y - 1);
-                    player.setDirection(Direction.DOWN);
-                    player.walk(x, y - 1);
+                    ClientGameController.sendPlayerMovementMessage(0, -1);
+                    player.walk(0, -1);
                     return true;
                 case Input.Keys.A:
-                    ClientGameController.sendPlayerMovementMessage(x - 1, y);
-                    player.setDirection(Direction.LEFT);
-                    player.walk(x - 1, y);
+                    ClientGameController.sendPlayerMovementMessage(-1, 0);
+                    player.walk(-1, 0);
                     return true;
                 case Input.Keys.D:
-                    ClientGameController.sendPlayerMovementMessage(x + 1, y);
-                    player.setDirection(Direction.RIGHT);
-                    player.walk(x + 1, y);
+                    ClientGameController.sendPlayerMovementMessage(+1, 0);
+                    player.walk(+1, 0);
                     return true;
                 case Input.Keys.ESCAPE:
                     if (pauseMenuOverlay.isVisible()) {

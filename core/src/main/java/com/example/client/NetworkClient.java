@@ -6,6 +6,7 @@ import com.example.common.Message;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -56,11 +57,13 @@ public class NetworkClient {
     public void sendMessage(Message message) {
         message.addToBody("ip", IP);
         message.addToBody("port", port);
-
         String JSONString = JSONUtils.toJson(message);
+        byte[] data = JSONString.getBytes(StandardCharsets.UTF_8);
 
         try {
-            out.writeUTF(JSONString);
+            out.writeInt(data.length);
+            out.write(data);
+            out.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,7 +97,10 @@ public class NetworkClient {
         readerThread = new Thread(() -> {
             try {
                 while (!Thread.currentThread().isInterrupted() && !end.get()) {
-                    String receivedStr = in.readUTF();
+                    int len = in.readInt();
+                    byte[] buf = new byte[len];
+                    in.readFully(buf);
+                    String receivedStr = new String(buf, StandardCharsets.UTF_8);
                     Message msg = JSONUtils.fromJson(receivedStr);
 
                     String respId = msg.getFromBody("requestId");

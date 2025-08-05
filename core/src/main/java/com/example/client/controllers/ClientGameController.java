@@ -1381,12 +1381,26 @@ public class ClientGameController {
         }
     }
 
-    public static void sendPlayerMovementMessage(int x, int y) {
+    public static void sendSetRandomizersMessage() {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "set_randomizers");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+
+        for (int i = 0; i < Map.ROWS; i++) {
+            for (int j = 0; j < Map.COLS; j++) {
+                cmdBody.put("(" + i + "," + j + ")", ClientApp.currentGame.getTile(i, j).getRandomizer());
+            }
+        }
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendPlayerMovementMessage(int deltaX, int deltaY) {
         HashMap<String,Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "player_movement");
         cmdBody.put("username", getCurrentPlayer().getUsername());
-        cmdBody.put("x", x);
-        cmdBody.put("y", y);
+        cmdBody.put("delta_x", deltaX);
+        cmdBody.put("delta_y", deltaY);
 
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }

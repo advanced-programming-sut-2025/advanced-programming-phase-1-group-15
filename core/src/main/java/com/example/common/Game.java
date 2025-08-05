@@ -1,5 +1,7 @@
 package com.example.common;
 
+import com.example.client.controllers.ClientGameController;
+import com.example.client.models.ClientApp;
 import com.example.common.map.Map;
 import com.example.common.map.Position;
 import com.example.common.map.Tile;
@@ -16,6 +18,7 @@ public class Game implements TimeObserver {
     private ArrayList<Player> players = new ArrayList<>();
     private Player adminPlayer;
     private Player currentPlayer;
+    private boolean isAdmin;
 
     private DateAndTime dateAndTime;
     private WeatherManagement weather;
@@ -41,6 +44,9 @@ public class Game implements TimeObserver {
 
         this.players = players;
         this.adminPlayer = players.get(0);
+        if(adminPlayer.equals(currentPlayer)) {
+            isAdmin = true;
+        }
     }
 
     public void build() {
@@ -61,6 +67,9 @@ public class Game implements TimeObserver {
         }
 
         mapTiles = Tile.buildMapTiles();
+        if(isAdmin) {
+            ClientGameController.sendSetRandomizersMessage();
+        }
         map = new Map(mapTiles);
         map.build();
         dateAndTime.addObserver(map);
@@ -91,6 +100,9 @@ public class Game implements TimeObserver {
 
     public void setAdminPlayer(Player adminPlayer) {
         this.adminPlayer = adminPlayer;
+    }
+    public boolean isAdmin() {
+        return isAdmin;
     }
 
     public DateAndTime getDateAndTime() {

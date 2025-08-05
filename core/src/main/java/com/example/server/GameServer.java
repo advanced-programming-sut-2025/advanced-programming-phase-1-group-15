@@ -7,6 +7,7 @@ import com.example.server.controllers.ServerLobbyController;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,8 +59,10 @@ public class GameServer {
             try {
                 while (!end.get()) {
                     // parse incoming JSON
-                    String receivedStr = in.readUTF();
-
+                    int len = in.readInt();
+                    byte[] buf = new byte[len];
+                    in.readFully(buf);
+                    String receivedStr = new String(buf, StandardCharsets.UTF_8);
                     Message msg = JSONUtils.fromJson(receivedStr);
 
                     System.out.println("Received message from " + msg.getFromBody("ip") + ":" + msg.getIntFromBody("port"));
@@ -117,9 +120,12 @@ public class GameServer {
 
         public void sendMessage(Message message) {
             String JSONString = JSONUtils.toJson(message);
+            byte[] data = JSONString.getBytes(StandardCharsets.UTF_8);
 
             try {
-                out.writeUTF(JSONString);
+                out.writeInt(data.length);
+                out.write(data);
+                out.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }

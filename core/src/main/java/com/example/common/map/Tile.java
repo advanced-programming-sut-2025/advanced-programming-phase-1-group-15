@@ -2,6 +2,8 @@ package com.example.common.map;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.client.models.ClientApp;
+import com.example.common.Game;
+import com.example.common.RandomGenerator;
 import com.example.common.animals.Animal;
 import com.example.common.animals.Barn;
 import com.example.common.animals.Coop;
@@ -28,8 +30,7 @@ public class Tile {
 
     private Tilable objectInTile;
     private Area area;
-    private final int randomizer;
-    private static final Random rand = new Random();
+    private int randomizer;
 
     public void setWatered(boolean watered) {
         this.watered = watered;
@@ -42,7 +43,9 @@ public class Tile {
         this.position = new Position(x, y);
         this.objectInTile = null;
         this.area = null;
-        randomizer = rand.nextInt(100);
+        if(ClientApp.currentGame.isAdmin()) {
+            randomizer = RandomGenerator.getInstance().randomInt(0, 99);
+        }
     }
 
     public static ArrayList<ArrayList<Tile>> buildMapTiles() {
@@ -283,6 +286,10 @@ public class Tile {
         return null;
     }
 
+
+    public void setRandomizer(int randomizer) {
+        this.randomizer = randomizer;
+    }
     public int getRandomizer() {
         return randomizer;
     }

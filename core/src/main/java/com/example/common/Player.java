@@ -149,7 +149,10 @@ public class Player extends User implements TimeObserver {
         this.direction = Direction.DOWN;
     }
 
-    public void walk(int x, int y) {
+    public void walk(int deltaX, int deltaY) {
+        int x = position.x + deltaX;
+        int y = position.y + deltaY;
+
         if(fainted) {
             return;
         }
@@ -174,6 +177,20 @@ public class Player extends User implements TimeObserver {
         isWalking = true;
         subtractEnergy(0.1);
         setPosition(new Position(x, y));
+        if(deltaY == 1) {
+            direction = Direction.UP;
+        }
+        else if(deltaY == -1) {
+            direction = Direction.DOWN;
+        }
+        else {
+            if(deltaX == 1) {
+                direction = Direction.RIGHT;
+            }
+            else if(deltaX == -1) {
+                direction = Direction.LEFT;
+            }
+        }
     }
 
     public Farm getFarm() {

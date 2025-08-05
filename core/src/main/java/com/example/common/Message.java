@@ -25,6 +25,9 @@ public class Message {
         return type;
     }
 
+    public HashMap<String, Object> getBody() {
+        return body;
+    }
     @SuppressWarnings("unchecked")
     public <T> T getFromBody(String fieldName) {
         return (T) body.get(fieldName);

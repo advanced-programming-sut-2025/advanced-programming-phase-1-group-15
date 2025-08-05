@@ -1,11 +1,10 @@
 package com.example.client.controllers;
 
 import com.example.client.NetworkClient;
-import com.example.client.models.ClientApp;
-import com.example.client.views.GameView;
 import com.example.common.Game;
 import com.example.common.Message;
 import com.example.common.Player;
+import com.example.common.map.Map;
 
 public class ClientGameListener {
     private final Game game;
@@ -25,12 +24,29 @@ public class ClientGameListener {
         }
 
         switch (action) {
+            case "set_randomizers" -> {
+                handleSetRandomizers(msg);
+            }
             case "player_movement" -> {
-                int x = msg.getIntFromBody("x");
-                int y = msg.getIntFromBody("y");
-                game.getPlayerByUsername(senderUsername).walk(x, y);
+                handlePlayerMovement(msg, senderUsername);
             }
         }
+    }
+
+    private void handleSetRandomizers(Message msg) {
+        for(int i = 0; i < Map.ROWS; i++) {
+            for(int j = 0; j < Map.COLS; j++) {
+                String key = "(" + i + "," + j + ")";
+                int randomizer = msg.getIntFromBody(key);
+                game.getTile(i, j).setRandomizer(randomizer);
+            }
+        }
+    }
+
+    private void handlePlayerMovement(Message msg, String senderUsername) {
+        int deltaX = msg.getIntFromBody("delta_x");
+        int deltaY = msg.getIntFromBody("delta_y");
+        game.getPlayerByUsername(senderUsername).walk(deltaX, deltaY);
     }
 
     public void disconnect() {
