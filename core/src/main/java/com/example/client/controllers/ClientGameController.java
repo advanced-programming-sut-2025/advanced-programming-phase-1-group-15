@@ -9,6 +9,7 @@ import com.example.common.Message;
 import com.example.common.Player;
 import com.example.common.Result;
 import com.example.common.animals.*;
+import com.example.common.enums.Direction;
 import com.example.common.farming.*;
 import com.example.common.map.*;
 import com.example.common.stores.Blacksmith;
@@ -1395,12 +1396,47 @@ public class ClientGameController {
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }
 
-    public static void sendPlayerMovementMessage(int deltaX, int deltaY) {
+    public static void sendPlayerMovementMessage(int x, int y, double energy, Direction direction) {
         HashMap<String,Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "player_movement");
         cmdBody.put("username", getCurrentPlayer().getUsername());
-        cmdBody.put("delta_x", deltaX);
-        cmdBody.put("delta_y", deltaY);
+        cmdBody.put("walking", true);
+        cmdBody.put("energy", energy);
+        cmdBody.put("x", x);
+        cmdBody.put("y", y);
+        cmdBody.put("direction", direction);
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendPlayerStopMessage() {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "player_stop");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("walking", false);
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendGenerateTreesMessage(HashMap<String,Object> cmdBody) {
+        cmdBody.put("action", "generate_trees");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendGenerateStonesMessage(HashMap<String,Object> cmdBody) {
+        cmdBody.put("action", "generate_stones");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendPredictWeatherMessage() {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "predict_weather");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("tomorrow_weather", ClientApp.currentGame.getWeather().getTomorrowWeather());
 
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }

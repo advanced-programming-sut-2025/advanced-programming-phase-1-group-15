@@ -1,5 +1,7 @@
 package com.example.common.weather;
 
+import com.example.client.controllers.ClientGameController;
+import com.example.client.models.ClientApp;
 import com.example.common.RandomGenerator;
 import com.example.common.map.Position;
 import com.example.common.time.DateAndTime;
@@ -31,7 +33,10 @@ public class WeatherManagement implements TimeObserver {
     public void update(DateAndTime dateAndTime) {
         if(dateAndTime.getHour() == 9) {
             currentWeather = tomorrowWeather;
-            predictWeather(dateAndTime);
+            if(ClientApp.currentGame.isAdmin()) {
+                predictWeather(dateAndTime);
+                ClientGameController.sendPredictWeatherMessage();
+            }
             notifyObservers();
         }
     }
@@ -70,6 +75,9 @@ public class WeatherManagement implements TimeObserver {
 
     public WeatherOption getCurrentWeather() {
         return currentWeather;
+    }
+    public WeatherOption getTomorrowWeather() {
+        return tomorrowWeather;
     }
     public String displayWeather() {
         return currentWeather.displayWeather();

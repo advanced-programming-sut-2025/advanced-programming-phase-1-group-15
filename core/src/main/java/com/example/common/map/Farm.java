@@ -1,6 +1,7 @@
 package com.example.common.map;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.Player;
 import com.example.common.RandomGenerator;
@@ -16,6 +17,7 @@ import com.example.common.time.DateAndTime;
 import com.example.common.time.Season;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Farm extends Area {
     public static int ROWS = 90;
@@ -65,7 +67,9 @@ public class Farm extends Area {
     }
 
     private void randomTreeGenerator(Season season) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
         int treesCount = RandomGenerator.getInstance().randomInt(50, 75);
+        cmdBody.put("trees_count", treesCount);
 
         ArrayList<TreeType> validTreeTypes = new ArrayList<>();
         for (TreeType treeType : TreeType.values()) {
@@ -84,14 +88,20 @@ public class Farm extends Area {
                     TreeType randomTreeType = validTreeTypes.get(RandomGenerator.getInstance().randomInt(0, validTreeTypes.size() - 1));
 
                     randomTile.put(new Tree(randomTreeType));
+
+                    cmdBody.put("(" + randomTile.getPosition().x + "," + randomTile.getPosition().y + ")", randomTreeType.ordinal());
                     break;
                 }
             }
         }
+
+        ClientGameController.sendGenerateTreesMessage(cmdBody);
     }
 
     private void randomStoneAndWoodGenerator() {
+        HashMap<String,Object> cmdBody = new HashMap<>();
         int totalCount = RandomGenerator.getInstance().randomInt(50, 75);
+        cmdBody.put("total_count", totalCount);
 
         for (int i = 0; i < totalCount; i++) {
             while (true) {
@@ -102,14 +112,18 @@ public class Farm extends Area {
                 if (randomTile.getArea().areaType.equals(AreaType.FARM) && randomTile.isEmpty()) {
                     if(RandomGenerator.getInstance().randomBoolean()) {
                         randomTile.put(new Stone());
+                        cmdBody.put("(" + randomTile.getPosition().x + "," + randomTile.getPosition().y + ")", 0);
                     }
                     else {
                         randomTile.put(new GeneralItem(GeneralItemsType.WOOD));
+                        cmdBody.put("(" + randomTile.getPosition().x + "," + randomTile.getPosition().y + ")", 1);
                     }
                     break;
                 }
             }
         }
+
+        ClientGameController.sendGenerateStonesMessage(cmdBody);
     }
 
     public void build() {
@@ -131,8 +145,10 @@ public class Farm extends Area {
             innerArea.build();
         }
 
-        randomTreeGenerator(Season.SPRING);
-        randomStoneAndWoodGenerator();
+        if(ClientApp.currentGame.isAdmin()) {
+            randomTreeGenerator(Season.SPRING);
+            randomStoneAndWoodGenerator();
+        }
     }
 
     @Override
@@ -179,8 +195,10 @@ public class Farm extends Area {
     @Override
     public void update(DateAndTime dateAndTime) {
         if((dateAndTime.getDay() % 7 == 1) && dateAndTime.getHour() == 9) {
-            randomTreeGenerator(dateAndTime.getSeason());
-            randomStoneAndWoodGenerator();
+            if(ClientApp.currentGame.isAdmin()) {
+                randomTreeGenerator(dateAndTime.getSeason());
+                randomStoneAndWoodGenerator();
+            }
         }
 
         for(Area innerArea : innerAreas) {

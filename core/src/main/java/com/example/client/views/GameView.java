@@ -510,19 +510,15 @@ public class GameView implements Screen {
 
             switch (keycode) {
                 case Input.Keys.W:
-                    ClientGameController.sendPlayerMovementMessage(0, +1);
                     player.walk(0, +1);
                     return true;
                 case Input.Keys.S:
-                    ClientGameController.sendPlayerMovementMessage(0, -1);
                     player.walk(0, -1);
                     return true;
                 case Input.Keys.A:
-                    ClientGameController.sendPlayerMovementMessage(-1, 0);
                     player.walk(-1, 0);
                     return true;
                 case Input.Keys.D:
-                    ClientGameController.sendPlayerMovementMessage(+1, 0);
                     player.walk(+1, 0);
                     return true;
                 case Input.Keys.TAB:
@@ -588,6 +584,7 @@ public class GameView implements Screen {
 
             return switch (keycode) {
                 case Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D -> {
+                    ClientGameController.sendPlayerStopMessage();
                     player.setWalking(false);
                     yield true;
                 }

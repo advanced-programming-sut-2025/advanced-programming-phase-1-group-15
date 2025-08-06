@@ -2,6 +2,7 @@ package com.example.common;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.animals.Animal;
 import com.example.common.artisanry.ArtisanItem;
@@ -49,6 +50,7 @@ public class Player extends User implements TimeObserver {
     Direction direction = Direction.DOWN;
     boolean isWalking = false;
     float stateTime = 0f;
+    public final static double walkingEnergyConsume = 0.1;
 
     private int gold = 1000;
     private double energy = 200;
@@ -141,6 +143,9 @@ public class Player extends User implements TimeObserver {
     public void setPosition(Position position) {
         this.position = position;
     }
+    public void setPosition(int x, int y) {
+        this.position = new Position(x, y);
+    }
 
     public void setHome(Position homePosition) {
         this.homePosition = homePosition;
@@ -177,7 +182,7 @@ public class Player extends User implements TimeObserver {
         }
 
         isWalking = true;
-        subtractEnergy(0.1);
+        subtractEnergy(walkingEnergyConsume);
         setPosition(new Position(x, y));
         if(deltaY == 1) {
             direction = Direction.UP;
@@ -193,6 +198,8 @@ public class Player extends User implements TimeObserver {
                 direction = Direction.LEFT;
             }
         }
+
+        ClientGameController.sendPlayerMovementMessage(position.x, position.y, energy, direction);
     }
 
     public Farm getFarm() {
