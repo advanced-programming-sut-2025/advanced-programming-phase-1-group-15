@@ -545,31 +545,35 @@ public class GameView implements Screen {
                     return true;
                 case Input.Keys.B:
                     if (craftingMenu.isVisible()) {
+                        craftingMenu.refresh();
                         craftingMenu.setVisible(false);
                         restoreGameInput();
                     }
                     else {
+                        craftingMenu.refresh();
                         craftingMenu.setVisible(true);
                         Gdx.input.setInputProcessor(craftingMenu.getStage());
                     }
                     return true;
                 case Input.Keys.C:
-//                    if (jojaMartMenu.isVisible()){
-//                        jojaMartMenu.setVisible(false,0);
-//                        restoreGameInput();
-//                    }
-//                    else {
-//                        jojaMartMenu.setVisible(true, 1);
-//                        Gdx.input.setInputProcessor(jojaMartMenu.getStage());
-//                    }
-                    if (cookingMenu.isVisible()){
-                        cookingMenu.setVisible(false , 0);
+                    if (pierreGeneralStoreMenu.isVisible()){
+                        pierreGeneralStoreMenu.setVisible(false,0);
                         restoreGameInput();
                     }
                     else {
-                        cookingMenu.setVisible(true, 1);
-                        Gdx.input.setInputProcessor(cookingMenu.getStage());
+                        pierreGeneralStoreMenu.setVisible(true, 1);
+                        Gdx.input.setInputProcessor(pierreGeneralStoreMenu.getStage());
                     }
+//                    if (cookingMenu.isVisible()){
+//                        craftingMenu.refresh();
+//                        cookingMenu.setVisible(false , 0);
+//                        restoreGameInput();
+//                    }
+//                    else {
+//                        craftingMenu.refresh();
+//                        cookingMenu.setVisible(true, 1);
+//                        Gdx.input.setInputProcessor(cookingMenu.getStage());
+//                    }
             }
             return false;
         }

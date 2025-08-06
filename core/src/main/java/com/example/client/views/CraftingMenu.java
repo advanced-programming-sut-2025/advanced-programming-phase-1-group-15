@@ -28,6 +28,8 @@ public class CraftingMenu {
     private final Main main;
     private final Game game;
     private final Runnable onHideCallback;
+    private TextButton craftButton = new TextButton("Craft", skin);
+    private final Label errorLabel = new Label("", skin);
     public CraftingMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().addToAvailableCraftsRecipe(new CraftItem(CraftItemType.BEE_HOUSE));
         game.getCurrentPlayer().addToAvailableCraftsRecipe(new CraftItem(CraftItemType.DEHYDRATOR));
@@ -41,9 +43,7 @@ public class CraftingMenu {
         rootTable.setPosition(Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f - 350);
         rootTable.setVisible(false);
         rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
-        TextButton craftButton = new TextButton("Craft", skin);
         craftButton.setVisible(false);
-        final Label errorLabel = new Label("", skin);
         this.table = createCraftingContent(craftButton , errorLabel);
         rootTable.add(table).expand().fill().pad(20).row();
         TextButton exitButton = new TextButton("Exit", skin);
@@ -184,5 +184,9 @@ public class CraftingMenu {
                 errorLabel.setVisible(false);
             }
         }, 2);
+    }
+    public void refresh() {
+        table.clear();
+        table.add(createCraftingContent(craftButton , errorLabel));
     }
 }

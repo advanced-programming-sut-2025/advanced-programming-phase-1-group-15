@@ -260,6 +260,7 @@ public class BlackSmithMenu{
                             descriptionLabel.setVisible(true);
                             descriptionLabel.setColor(Color.BROWN);
                             Final.setText("Total number: "+num[0] +"    Total Price = " + num[0]*current[0].getPrice());
+                            descriptionLabel.setVisible(true);
                             Final.setVisible(true);
                             return true;
                         }
