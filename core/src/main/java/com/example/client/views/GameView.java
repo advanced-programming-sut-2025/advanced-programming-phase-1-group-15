@@ -556,24 +556,16 @@ public class GameView implements Screen {
                     }
                     return true;
                 case Input.Keys.C:
-                    if (pierreGeneralStoreMenu.isVisible()){
-                        pierreGeneralStoreMenu.setVisible(false,0);
+                    if (cookingMenu.isVisible()){
+                        craftingMenu.refresh();
+                        cookingMenu.setVisible(false , 0);
                         restoreGameInput();
                     }
                     else {
-                        pierreGeneralStoreMenu.setVisible(true, 1);
-                        Gdx.input.setInputProcessor(pierreGeneralStoreMenu.getStage());
+                        craftingMenu.refresh();
+                        cookingMenu.setVisible(true, 1);
+                        Gdx.input.setInputProcessor(cookingMenu.getStage());
                     }
-//                    if (cookingMenu.isVisible()){
-//                        craftingMenu.refresh();
-//                        cookingMenu.setVisible(false , 0);
-//                        restoreGameInput();
-//                    }
-//                    else {
-//                        craftingMenu.refresh();
-//                        cookingMenu.setVisible(true, 1);
-//                        Gdx.input.setInputProcessor(cookingMenu.getStage());
-//                    }
             }
             return false;
         }

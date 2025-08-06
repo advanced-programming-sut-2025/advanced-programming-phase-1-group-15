@@ -76,8 +76,8 @@ public class PierreGeneralStoreMenu{
         rootTable.setVisible(false);
         rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
         Table tabBar = new Table(skin);
-        TextButton recipeTab = new TextButton("Recipe", skin);
-        TextButton fridgeTab = new TextButton("Fridge", skin);
+        TextButton recipeTab = new TextButton("Buy", skin);
+        TextButton fridgeTab = new TextButton("Sell", skin);
         tabBar.add(recipeTab).pad(5);
         tabBar.add(fridgeTab).pad(5);
         rootTable.add(tabBar).expandX().top().padTop(10).row();
@@ -133,6 +133,9 @@ public class PierreGeneralStoreMenu{
     private Table createBuyContent() {
         Label titleLabel = new Label("Pierre General Store: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Recipe Price: ", skin);
+        Image craftIcon = new Image();
+        craftIcon.setSize(48, 48);
+        craftIcon.setVisible(false);
         ArrayList<CraftItemType> craftItemTypes = new ArrayList<>(Arrays.asList(CraftItemType.values()));
         final CraftItemType[] current = new CraftItemType[1];
         TextButton buy = new TextButton("Buy", skin);
@@ -144,6 +147,7 @@ public class PierreGeneralStoreMenu{
                         showError("You buy it successfully" , errorLabel);
                         current[0] = null;
                         descriptionLabel.setVisible(false);
+                        craftIcon.setVisible(false);
                         errorLabel.setColor(Color.GREEN);
                     } else {
                         for (CraftItem item : game.getCurrentPlayer().getAvailableCraftsRecipe()) {
@@ -153,11 +157,13 @@ public class PierreGeneralStoreMenu{
                                     current[0] = null;
                                     descriptionLabel.setVisible(false);
                                     errorLabel.setColor(Color.RED);
+                                    craftIcon.setVisible(false);
                                     return;
                                 }
                                 showError("You don't have enough gold" , errorLabel);
                                 current[0] = null;
                                 descriptionLabel.setVisible(false);
+                                craftIcon.setVisible(false);
                                 errorLabel.setColor(Color.RED);
                                 return;
                             }
@@ -176,6 +182,10 @@ public class PierreGeneralStoreMenu{
                     current[0] = item;
                     descriptionLabel.setText(current[0].getName() +" Price :" + item.price);
                     descriptionLabel.setVisible(true);
+                    Sprite sprite = new Sprite(current[0].getTexture());
+                    sprite.setSize(48, 48);
+                    craftIcon.setDrawable(new TextureRegionDrawable(sprite));
+                    craftIcon.setVisible(true);
                     return true;
                 }
             });
@@ -195,6 +205,7 @@ public class PierreGeneralStoreMenu{
         table.add(scrollPane).height(200).expandX().fillX().pad(10).row();;
         table.add(bottomRow).bottom().row();
         table.add(errorLabel).width(700).row();
+        bottomRow.add(craftIcon).size(80, 80).left().row();
         table.add(buy).right().row();
         return table;
     }

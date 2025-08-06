@@ -22,6 +22,8 @@ import com.example.common.animals.AnimalProduct;
 import com.example.common.animals.AnimalProductType;
 import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
+import com.example.common.crafting.CraftItem;
+import com.example.common.crafting.CraftItemType;
 import com.example.common.farming.Crop;
 import com.example.common.farming.Crops;
 import com.example.common.farming.Fruit;
@@ -57,6 +59,7 @@ public class StarDropSaloonMenu{
     private final Label tooltipLabel = new Label("", skin);
     private final TextButton add = new TextButton("+", skin);
     private final TextButton remove = new TextButton("-", skin);
+    private Label errorLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     public StarDropSaloonMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
@@ -72,8 +75,8 @@ public class StarDropSaloonMenu{
         rootTable.setVisible(false);
         rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
         Table tabBar = new Table(skin);
-        TextButton recipeTab = new TextButton("Recipe", skin);
-        TextButton fridgeTab = new TextButton("Fridge", skin);
+        TextButton recipeTab = new TextButton("Buy", skin);
+        TextButton fridgeTab = new TextButton("Sell", skin);
         tabBar.add(recipeTab).pad(5);
         tabBar.add(fridgeTab).pad(5);
         rootTable.add(tabBar).expandX().top().padTop(10).row();
@@ -127,54 +130,58 @@ public class StarDropSaloonMenu{
         stage.draw();
     }
     private Table createBuyContent() {
-        Label titleLabel = new Label("Recipe: ", skin); titleLabel.setColor(Color.FIREBRICK);
-        Label descriptionLabel = new Label("Desc: ", skin);
+        Label titleLabel = new Label("Star Drop Saloon: ", skin); titleLabel.setColor(Color.FIREBRICK);
+        Label descriptionLabel = new Label("Recipe Price: ", skin);
         Image foodIcon = new Image();
         foodIcon.setSize(48, 48);
         foodIcon.setVisible(false);
-        final Food[] current = new Food[1];
-        TextButton cookButton = new TextButton("Cook", skin);
-        Label errorLabel = new Label("", skin);
-        cookButton.addListener(new ClickListener() {
+        ArrayList<FoodType> foodTypes = new ArrayList<>(Arrays.asList(FoodType.values()));
+        final FoodType[] current = new FoodType[1];
+        TextButton buy = new TextButton("Buy", skin);
+        buy.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (current[0] != null) {
                     if (isAvailable(current[0])) {
-                        showError("You make it successfully" , errorLabel);
+                        showError("You buy it successfully" , errorLabel);
+                        current[0] = null;
+                        descriptionLabel.setVisible(false);
+                        foodIcon.setVisible(false);
                         errorLabel.setColor(Color.GREEN);
                     } else {
-                        if (game.getCurrentPlayer().getInventory().checkFilled()){
-                            showError("You don't have enough capacity" , errorLabel);
-                            errorLabel.setColor(Color.RED);
-                        }
-                        else{
-                            showError("You don't have enough material" , errorLabel);
-                            errorLabel.setColor(Color.RED);
+                        for (Food item : game.getCurrentPlayer().getAvailableFoods()) {
+                            if (item.getFoodType()==(current[0])) {
+                                if (item.isAvailable()){
+                                    showError("You have this Recipe" , errorLabel);
+                                    current[0] = null;
+                                    descriptionLabel.setVisible(false);
+                                    foodIcon.setVisible(false);
+                                    errorLabel.setColor(Color.RED);
+                                    return;
+                                }
+                                showError("You don't have enough gold" , errorLabel);
+                                current[0] = null;
+                                descriptionLabel.setVisible(false);
+                                foodIcon.setVisible(false);
+                                errorLabel.setColor(Color.RED);
+                                return;
+                            }
                         }
                     }
                 }
             }
         });
         Table itemTable = new Table(skin);
-        for (Food food : game.getCurrentPlayer().getAvailableFoods()) {
-            Label label = new Label(food.getName(), skin);
-            if (!food.isAvailable()) {
-                label.setColor(Color.LIGHT_GRAY);
-            }
-            else {
-                label.setColor(Color.BROWN);
-            }
+        for (FoodType item : foodTypes) {
+            Label label = new Label(item.getName(), skin);
+            label.setColor(Color.BROWN);
             label.addListener(new InputListener() {
                 @Override
                 public boolean mouseMoved(InputEvent event, float x, float y) {
-                    current[0] = food;
-                    if (!food.isAvailable()) {
-                        cookButton.setVisible(false);
-                    } else {
-                        cookButton.setVisible(true);
-                    }
-                    descriptionLabel.setText("Desc: " + food.getRecipe());
-                    Sprite sprite = food.getSprite();
+                    current[0] = item;
+                    descriptionLabel.setText(current[0].getName() +" Price :" + item.price);
+                    descriptionLabel.setVisible(true);
+                    Sprite sprite = new Sprite(current[0].getTexture());
                     sprite.setSize(48, 48);
                     foodIcon.setDrawable(new TextureRegionDrawable(sprite));
                     foodIcon.setVisible(true);
@@ -192,13 +199,13 @@ public class StarDropSaloonMenu{
         Table table = new Table(skin);
         Table bottomRow = new Table();
         bottomRow.top().right();
-        bottomRow.add(foodIcon).size(60, 60).left();
         bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
         table.add(titleLabel).padBottom(10).row();
-        table.add(scrollPane).expand().fill().pad(10).row();
+        table.add(scrollPane).height(200).expandX().fillX().pad(10).row();;
         table.add(bottomRow).bottom().row();
         table.add(errorLabel).width(700).row();
-        table.add(cookButton).right().row();
+        bottomRow.add(foodIcon).size(80, 80).left().row();
+        table.add(buy).right().row();
         return table;
     }
     private Table createSellContent() {
@@ -339,46 +346,22 @@ public class StarDropSaloonMenu{
         sell.setVisible(false);
         content.setVisible(true);
     }
-    public boolean isAvailable(Food food) {
-        if (game.getCurrentPlayer().getInventory().checkFilled()) {
-            return false;
-        }
-        for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
-            boolean found = false;
-            int num  = food.getFoodType().getIngredients().get(item);
-            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
-                found = true;
-                int total = game.getCurrentPlayer().getInventory().getItemCount(item.getName());
-                if (total < num) {
+    public boolean isAvailable(FoodType foodType) {
+        Food food = new Food(foodType);
+        Player player = game.getCurrentPlayer();
+        for (Food item : player.getAvailableFoods()) {
+            if (item.getFoodType()==(foodType)) {
+                if(item.isAvailable()) {
                     return false;
                 }
-            }
-            if (!found) {
-                if (game.getCurrentPlayer().getFridge().getItemByName(item.getName()) != null) {
-                    found = true;
-                    int total = game.getCurrentPlayer().getFridge().getItemCount(item.getName());
-                    if (total < num) {
-                        return false;
-                    }
+                if (item.getFoodType().price<player.getGold()){
+                    item.setAvailable(true);
+                    player.setGold(player.getGold()- foodType.price);
+                    return true;
                 }
             }
-            if (!found) {
-                return false;
-            }
         }
-        for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
-            boolean found = false;
-            int num  = food.getFoodType().getIngredients().get(item);
-            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
-                found = true;
-                game.getCurrentPlayer().getInventory().removeCountFromBackPack(item , num);
-            }
-            if (!found) {
-                game.getCurrentPlayer().getFridge().removeCountFromFridge(item , num);
-            }
-        }
-        game.getCurrentPlayer().getInventory().addToBackPack(food,1);
-        return true;
+        return false;
     }
     private void showError(String message, Label errorLabel) {
         errorLabel.setText(message);

@@ -172,8 +172,8 @@ public class CookingMenu {
         Table table = new Table(skin);
         Table bottomRow = new Table();
         bottomRow.top().right();
-        bottomRow.add(foodIcon).size(60, 60).left();
-        bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
+        bottomRow.add(descriptionLabel).padLeft(10).width(700);
+        bottomRow.add(foodIcon).size(80, 80).right();
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
         table.add(bottomRow).bottom().row();
