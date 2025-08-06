@@ -716,24 +716,54 @@ public class GameView implements Screen {
                                     Gdx.input.setInputProcessor(popUpMenu.getStage());
                                 }
                                 else if (store instanceof Blacksmith){
-                                    blackSmithMenu.setVisible(true , 1);
-                                    Gdx.input.setInputProcessor(popUpMenu.getStage());
+                                    if (blackSmithMenu.isVisible()){
+                                        blackSmithMenu.setVisible(false , 0);
+                                        restoreGameInput();
+                                    }
+                                    else {
+                                        blackSmithMenu.setVisible(true, 1);
+                                        Gdx.input.setInputProcessor(blackSmithMenu.getStage());
+                                    }
                                 }
                                 else if (store instanceof FishShop){
-                                    fishShopMenu.setVisible(true , 1);
-                                    Gdx.input.setInputProcessor(popUpMenu.getStage());
+                                    if (fishShopMenu.isVisible()){
+                                        fishShopMenu.setVisible(false , 0);
+                                        restoreGameInput();
+                                    }
+                                    else {
+                                        fishShopMenu.setVisible(true, 1);
+                                        Gdx.input.setInputProcessor(fishShopMenu.getStage());
+                                    }
                                 }
                                 else if (store instanceof JojaMart) {
-                                    jojaMartMenu.setVisible(true , 1);
-                                    Gdx.input.setInputProcessor(popUpMenu.getStage());
+                                    if (jojaMartMenu.isVisible()){
+                                        jojaMartMenu.setVisible(false , 0);
+                                        restoreGameInput();
+                                    }
+                                    else {
+                                        jojaMartMenu.setVisible(true, 1);
+                                        Gdx.input.setInputProcessor(jojaMartMenu.getStage());
+                                    }
                                 }
                                 else if (store instanceof PierreGeneralStore) {
-                                    pierreGeneralStoreMenu.setVisible(true , 1);
-                                    Gdx.input.setInputProcessor(popUpMenu.getStage());
+                                    if (pierreGeneralStoreMenu.isVisible()){
+                                        pierreGeneralStoreMenu.setVisible(false , 0);
+                                        restoreGameInput();
+                                    }
+                                    else {
+                                        pierreGeneralStoreMenu.setVisible(true, 1);
+                                        Gdx.input.setInputProcessor(pierreGeneralStoreMenu.getStage());
+                                    }
                                 }
                                 else if (store instanceof StarDropSaloon) {
-                                    starDropSaloonMenu.setVisible(true , 1);
-                                    Gdx.input.setInputProcessor(popUpMenu.getStage());
+                                    if (starDropSaloonMenu.isVisible()){
+                                        starDropSaloonMenu.setVisible(false , 0);
+                                        restoreGameInput();
+                                    }
+                                    else {
+                                        starDropSaloonMenu.setVisible(true, 1);
+                                        Gdx.input.setInputProcessor(starDropSaloonMenu.getStage());
+                                    }
                                 }
                             }
                             else {

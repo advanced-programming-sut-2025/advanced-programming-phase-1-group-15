@@ -113,8 +113,6 @@ public class Player extends User implements TimeObserver {
             currentFrame = walkDownAnimation.getKeyFrame(0);
             creatCraftListRecipe();
             creatCookList();
-            trashCan.getTrashes().put(new Food(FoodType.TORTILLA) , 3);
-            trashCan.getTrashes().put(new Food(FoodType.PIZZA) , 5);
         }
     }
 

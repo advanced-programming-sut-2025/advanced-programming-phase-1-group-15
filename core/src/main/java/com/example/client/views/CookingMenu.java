@@ -39,8 +39,6 @@ public class CookingMenu {
     private final Label tooltipLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     public CookingMenu(Main main, Game game, Runnable onHideCallback) {
-        game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
-        game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.BACKED_FISH));
         this.main = main;
         this.game = game;
         this.onHideCallback = onHideCallback;

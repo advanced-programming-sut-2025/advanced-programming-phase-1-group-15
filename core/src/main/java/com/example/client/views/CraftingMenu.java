@@ -31,8 +31,6 @@ public class CraftingMenu {
     private TextButton craftButton = new TextButton("Craft", skin);
     private final Label errorLabel = new Label("", skin);
     public CraftingMenu(Main main, Game game, Runnable onHideCallback) {
-        game.getCurrentPlayer().addToAvailableCraftsRecipe(new CraftItem(CraftItemType.BEE_HOUSE));
-        game.getCurrentPlayer().addToAvailableCraftsRecipe(new CraftItem(CraftItemType.DEHYDRATOR));
         this.main = main;
         this.game = game;
         this.onHideCallback = onHideCallback;
