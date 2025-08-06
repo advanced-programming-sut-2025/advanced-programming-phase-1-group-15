@@ -16,20 +16,13 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
 import com.example.common.Game;
-import com.example.common.animals.AnimalProduct;
-import com.example.common.animals.AnimalProductType;
 import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
-import com.example.common.farming.Crop;
-import com.example.common.farming.Crops;
 import com.example.common.foraging.ForagingMineral;
 import com.example.common.Player;
 import com.example.common.stores.BlackSmithItems;
 import com.example.common.tools.BackPackable;
-import com.example.common.tools.Fridge;
 import com.example.common.tools.TrashCan;
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -48,6 +41,7 @@ public class BlackSmithMenu{
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     private final TextButton add = new TextButton("+", skin);
     private final TextButton remove = new TextButton("-", skin);
+    private Label errorLabel = new Label("", skin);
     public BlackSmithMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.BACKED_FISH));
@@ -94,13 +88,13 @@ public class BlackSmithMenu{
         buyTab.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                refresh();
+                refresh("");
                 changeTab(buy);
             }
         });
         sellTab.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
-                refresh();
+                refresh("");
                 changeTab(sell);
             }
         });
@@ -126,7 +120,6 @@ public class BlackSmithMenu{
         final int[] num = {1};
         final ForagingMineral[] current = new ForagingMineral[1];
         TextButton buy = new TextButton("Buy", skin);
-        Label errorLabel = new Label("", skin);
         buy.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -263,7 +256,7 @@ public class BlackSmithMenu{
                         System.out.println(itemName);
                         current[0] = trashCan.getItemByName(itemName);
                         if (current[0] != null) {
-                            descriptionLabel.setText("Price :" + current[0].getPrice());
+                            descriptionLabel.setText(current[0].getName() +" Price :" + current[0].getPrice());
                             descriptionLabel.setVisible(true);
                             descriptionLabel.setColor(Color.BROWN);
                             Final.setText("Total number: "+num[0] +"    Total Price = " + num[0]*current[0].getPrice());
@@ -282,13 +275,11 @@ public class BlackSmithMenu{
                 }
                 game.getCurrentPlayer().getTrashCan().removeCountFromTrashCan(current[0],num[0]);
                 game.getCurrentPlayer().setGold(game.getCurrentPlayer().getGold()+ current[0].getPrice()*num[0]);
-                refresh();
+                refresh("You sell item successfully");
+                errorLabel.setColor(Color.GREEN);
                 Final.setVisible(false);
                 current[0] = null;
                 num[0] = 1;
-                showError("You sell item successfully" , errorLabel);
-                errorLabel.setVisible(true);
-                errorLabel.setColor(Color.GREEN);
             }
         });
         add.addListener(new ClickListener() {
@@ -319,7 +310,7 @@ public class BlackSmithMenu{
         Table quantityRow = new Table();
         quantityRow.add(remove).padRight(5);
         quantityRow.add(add).padLeft(5);
-        table.add(quantityRow).padBottom(5).row();
+        table.add(quantityRow).padBottom(5).right().row();
         table.add(errorLabel).width(700).row();
         table.add(Final);
         table.add(sell).right().row();
@@ -333,7 +324,7 @@ public class BlackSmithMenu{
         this.visible = visible;
         rootTable.setVisible(visible);
         if (visible) {
-            refresh();
+            refresh("");
             switch (tabNumber) {
                 case 1:
                     changeTab(buy);
@@ -354,10 +345,11 @@ public class BlackSmithMenu{
         stage.dispose();
         skin.dispose();
     }
-    private void refresh() {
+    private void refresh(String message) {
         buy.clear(); sell.clear();
         buy.add(createBuyContent()).expand().fill();
         sell.add(createSellContent()).expand().fill();
+        showError(message , errorLabel);
     }
     private void changeTab(Table content) {
         buy.setVisible(false);

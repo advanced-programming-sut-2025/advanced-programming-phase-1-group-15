@@ -6,7 +6,7 @@ import com.example.common.time.Season;
 public enum JojaMartItems {
     // Spring Stock
     PARSNIP_SEEDS(ForagingSeedsType.PARSNIP_SEEDS, "Plant these in the spring. Takes 4 days to mature.", 25, 5, Season.SPRING),
-    BEAN_STARTER(null, "Plant these in the spring. Takes 10 days to mature, but keeps producing after that. Grows on a trellis.", 75, 5, Season.SPRING),
+    BEAN_STARTER(ForagingSeedsType.COFFEE_BEAN, "Plant these in the spring. Takes 10 days to mature, but keeps producing after that. Grows on a trellis.", 75, 5, Season.SPRING),
     CAULIFLOWER_SEEDS(ForagingSeedsType.CAULIFLOWER_SEEDS, "Plant these in the spring. Takes 12 days to produce a large cauliflower.", 100, 5, Season.SPRING),
     POTATO_SEEDS(ForagingSeedsType.POTATO_SEEDS, "Plant these in the spring. Takes 6 days to mature, and has a chance of yielding multiple potatoes at harvest.", 62, 5, Season.SPRING),
     STRAWBERRY_SEEDS(ForagingSeedsType.STRAWBERRY_SEEDS, "Plant these in spring. Takes 8 days to mature, and keeps producing strawberries after that.", 100, 5, Season.SPRING),
@@ -32,7 +32,7 @@ public enum JojaMartItems {
     // Autumn Stock
     CORN_SEEDS(ForagingSeedsType.CORN_SEEDS, "Plant these in the summer or autumn. Takes 14 days to mature, and continues to produce after first harvest.", 187, 5, Season.AUTUMN),
     EGGPLANT_SEEDS(ForagingSeedsType.EGGPLANT_SEEDS, "Plant these in the autumn. Takes 5 days to mature, and continues to produce after first harvest.", 25, 5, Season.AUTUMN),
-    PUMPKIN_SEEDS(null, "Plant these in the autumn. Takes 13 days to mature.", 125, 5, Season.AUTUMN),
+    PUMPKIN_SEEDS(ForagingSeedsType.PUMBPKIN_SEEDS, "Plant these in the autumn. Takes 13 days to mature.", 125, 5, Season.AUTUMN),
     BROCCOLI_SEEDS(ForagingSeedsType.BROCCOLI_SEEDS, "Plant in the autumn. Takes 8 days to mature, and continues to produce after first harvest.", 15, 5, Season.AUTUMN),
     AMARANTH_SEEDS(ForagingSeedsType.AMARANTH_SEEDS, "Plant these in the autumn. Takes 7 days to grow. Harvest with the scythe.", 87, 5, Season.AUTUMN),
     GRAPE_STARTER(ForagingSeedsType.GRAPE_STARTER, "Plant these in the autumn. Takes 10 days to grow, but keeps producing after that. Grows on a trellis.", 75, 5, Season.AUTUMN),
@@ -41,10 +41,10 @@ public enum JojaMartItems {
     BOK_CHOY_SEEDS(ForagingSeedsType.BOK_CHOY_SEEDS, "Plant these in the autumn. Takes 4 days to mature.", 62, 5, Season.AUTUMN),
     CRANBERRY_SEEDS(ForagingSeedsType.CRANBERRY_SEEDS, "Plant these in the autumn. Takes 7 days to mature, and continues to produce after first harvest.", 300, 5, Season.AUTUMN),
     FAIRY_SEEDS(ForagingSeedsType.FAIRY_SEEDS, "Plant in autumn. Takes 12 days to produce a mysterious flower. Assorted Colors.", 250, 5, Season.AUTUMN),
-    RARE_SEED(null, "Sow in autumn. Takes all season to grow.", 1000, 1, Season.AUTUMN),
+    RARE_SEED(ForagingSeedsType.RARE_SEEDS, "Sow in autumn. Takes all season to grow.", 1000, 1, Season.AUTUMN),
 
     // Winter Stock
-    POWDER_MELON_SEEDS(null, "This special melon grows in the winter. Takes 7 days to grow.", 20, 10, Season.WINTER)
+    POWDER_MELON_SEEDS(ForagingSeedsType.POWDER_MELON_SEEDS, "This special melon grows in the winter. Takes 7 days to grow.", 20, 10, Season.WINTER)
     ;
 
     public final ForagingSeedsType foragingSeedsType;

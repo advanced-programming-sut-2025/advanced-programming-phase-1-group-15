@@ -554,13 +554,13 @@ public class GameView implements Screen {
                     }
                     return true;
                 case Input.Keys.C:
-//                    if (blackSmithMenu.isVisible()){
-//                        blackSmithMenu.setVisible(false,0);
+//                    if (jojaMartMenu.isVisible()){
+//                        jojaMartMenu.setVisible(false,0);
 //                        restoreGameInput();
 //                    }
 //                    else {
-//                        blackSmithMenu.setVisible(true, 1);
-//                        Gdx.input.setInputProcessor(blackSmithMenu.getStage());
+//                        jojaMartMenu.setVisible(true, 1);
+//                        Gdx.input.setInputProcessor(jojaMartMenu.getStage());
 //                    }
                     if (cookingMenu.isVisible()){
                         cookingMenu.setVisible(false , 0);
@@ -584,7 +584,7 @@ public class GameView implements Screen {
 
             return switch (keycode) {
                 case Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D -> {
-                    ClientGameController.sendPlayerStopMessage();
+                   // ClientGameController.sendPlayerStopMessage();
                     player.setWalking(false);
                     yield true;
                 }

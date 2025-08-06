@@ -27,6 +27,8 @@ import com.example.common.farming.Crops;
 import com.example.common.farming.Fruit;
 import com.example.common.foraging.ForagingCrop;
 import com.example.common.foraging.ForagingMineral;
+import com.example.common.foraging.ForagingSeeds;
+import com.example.common.foraging.ForagingSeedsType;
 import com.example.common.map.Area;
 import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
@@ -37,6 +39,7 @@ import com.example.common.map.Farm;
 import com.example.common.map.Tile;
 import com.example.common.stores.BlackSmithItems;
 import com.example.common.stores.Blacksmith;
+import com.example.common.stores.JojaMartItems;
 import com.example.common.tools.BackPackable;
 import com.example.common.tools.Fridge;
 import com.example.common.tools.TrashCan;
@@ -57,6 +60,7 @@ public class JojaMartMenu{
     private final Label tooltipLabel = new Label("", skin);
     private final TextButton add = new TextButton("+", skin);
     private final TextButton remove = new TextButton("-", skin);
+    private Label errorLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     public JojaMartMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
@@ -72,8 +76,8 @@ public class JojaMartMenu{
         rootTable.setVisible(false);
         rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
         Table tabBar = new Table(skin);
-        TextButton recipeTab = new TextButton("Recipe", skin);
-        TextButton fridgeTab = new TextButton("Fridge", skin);
+        TextButton recipeTab = new TextButton("Buy", skin);
+        TextButton fridgeTab = new TextButton("Sell", skin);
         tabBar.add(recipeTab).pad(5);
         tabBar.add(fridgeTab).pad(5);
         rootTable.add(tabBar).expandX().top().padTop(10).row();
@@ -127,57 +131,91 @@ public class JojaMartMenu{
         stage.draw();
     }
     private Table createBuyContent() {
-        Label titleLabel = new Label("Recipe: ", skin); titleLabel.setColor(Color.FIREBRICK);
-        Label descriptionLabel = new Label("Desc: ", skin);
-        Image foodIcon = new Image();
-        foodIcon.setSize(48, 48);
-        foodIcon.setVisible(false);
-        final Food[] current = new Food[1];
-        TextButton cookButton = new TextButton("Cook", skin);
-        Label errorLabel = new Label("", skin);
-        cookButton.addListener(new ClickListener() {
+        Label titleLabel = new Label("Joja Mart Store: ", skin); titleLabel.setColor(Color.FIREBRICK);
+        Label descriptionLabel = new Label("Price: ", skin);
+        TextButton addButton = new TextButton("+", skin);
+        TextButton removeButton = new TextButton("-", skin);
+        Label Final = new Label("", skin);
+        Final.setColor(Color.BROWN);
+        Final.setVisible(false);
+        add.setVisible(true);
+        remove.setVisible(true);
+        final JojaMartItems[] temp = new JojaMartItems[1];
+        final int[] num = {1};
+        final ForagingSeedsType[] current = new ForagingSeedsType[1];
+        TextButton buy = new TextButton("Buy", skin);
+        buy.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (current[0] != null) {
-                    if (isAvailable(current[0])) {
-                        showError("You make it successfully" , errorLabel);
+                if (temp[0] != null) {
+                    if (isAvailable(temp[0] , num[0])) {
+                        showError("You buy it successfully" , errorLabel);
+                        Final.setVisible(false);
+                        num[0] = 1;
+                        temp[0] = null;
+                        current[0] = null;
+                        descriptionLabel.setVisible(false);
                         errorLabel.setColor(Color.GREEN);
                     } else {
                         if (game.getCurrentPlayer().getInventory().checkFilled()){
                             showError("You don't have enough capacity" , errorLabel);
+                            Final.setVisible(false);
+                            num[0] = 1;
+                            temp[0] = null;
+                            current[0] = null;
+                            descriptionLabel.setVisible(false);
                             errorLabel.setColor(Color.RED);
                         }
                         else{
-                            showError("You don't have enough material" , errorLabel);
+                            showError("You don't have enough gold" , errorLabel);
+                            Final.setVisible(false);
+                            num[0] = 1;
+                            temp[0] = null;
+                            current[0] = null;
+                            descriptionLabel.setVisible(false);
                             errorLabel.setColor(Color.RED);
                         }
                     }
                 }
             }
         });
+        addButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (temp[0]!=null){
+                    num[0]++;
+                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*temp[0].price);
+                    Final.setVisible(true);
+                }
+            }
+        });
+        removeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (temp[0]!=null){
+                    num[0] = Math.max(1, num[0]-1);
+                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*temp[0].price);
+                }
+            }
+        });
         Table itemTable = new Table(skin);
-        for (Food food : game.getCurrentPlayer().getAvailableFoods()) {
-            Label label = new Label(food.getName(), skin);
-            if (!food.isAvailable()) {
-                label.setColor(Color.LIGHT_GRAY);
-            }
-            else {
-                label.setColor(Color.BROWN);
-            }
+        ArrayList<JojaMartItems> foragingSeed = new ArrayList<>(Arrays.asList(JojaMartItems.values()));
+        for (JojaMartItems item : foragingSeed) {
+            Label label = new Label(item.getName(), skin);
+            label.setColor(Color.BROWN);
             label.addListener(new InputListener() {
                 @Override
                 public boolean mouseMoved(InputEvent event, float x, float y) {
-                    current[0] = food;
-                    if (!food.isAvailable()) {
-                        cookButton.setVisible(false);
-                    } else {
-                        cookButton.setVisible(true);
+                    if (current[0] != null) {
+                        if (!current[0].getName().equals(item.getName())) {
+                            num[0] = 1;
+                        }
                     }
-                    descriptionLabel.setText("Desc: " + food.getRecipe());
-                    Sprite sprite = food.getSprite();
-                    sprite.setSize(48, 48);
-                    foodIcon.setDrawable(new TextureRegionDrawable(sprite));
-                    foodIcon.setVisible(true);
+                    temp[0]= item;
+                    current[0] = temp[0].foragingSeedsType;
+                    descriptionLabel.setText("Price :" + item.price);
+                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*temp[0].price);
+                    Final.setVisible(true);
                     return true;
                 }
             });
@@ -192,13 +230,17 @@ public class JojaMartMenu{
         Table table = new Table(skin);
         Table bottomRow = new Table();
         bottomRow.top().right();
-        bottomRow.add(foodIcon).size(60, 60).left();
         bottomRow.add(descriptionLabel).right().padLeft(10).width(700);
         table.add(titleLabel).padBottom(10).row();
-        table.add(scrollPane).expand().fill().pad(10).row();
+        table.add(scrollPane).height(200).expandX().fillX().pad(10).row();;
         table.add(bottomRow).bottom().row();
+        Table quantityRow = new Table();
+        quantityRow.add(removeButton).padRight(5);
+        quantityRow.add(addButton).padLeft(5);
+        table.add(quantityRow).padBottom(5).right().row();
         table.add(errorLabel).width(700).row();
-        table.add(cookButton).right().row();
+        table.add(Final);
+        table.add(buy).right().row();
         return table;
     }
     private Table createSellContent() {
@@ -238,7 +280,7 @@ public class JojaMartMenu{
                         System.out.println(itemName);
                         current[0] = trashCan.getItemByName(itemName);
                         if (current[0] != null) {
-                            descriptionLabel.setText("Price :" + current[0].getPrice());
+                            descriptionLabel.setText(current[0].getName() + " Price :" + current[0].getPrice());
                             descriptionLabel.setVisible(true);
                             descriptionLabel.setColor(Color.BROWN);
                             Final.setText("Total number: "+num[0] +"    Total Price = " + num[0]*current[0].getPrice());
@@ -339,45 +381,14 @@ public class JojaMartMenu{
         sell.setVisible(false);
         content.setVisible(true);
     }
-    public boolean isAvailable(Food food) {
-        if (game.getCurrentPlayer().getInventory().checkFilled()) {
+    public boolean isAvailable(JojaMartItems seed , int num) {
+        Player player = game.getCurrentPlayer();
+        if (seed.price*num > player.getGold()) {
             return false;
         }
-        for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
-            boolean found = false;
-            int num  = food.getFoodType().getIngredients().get(item);
-            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
-                found = true;
-                int total = game.getCurrentPlayer().getInventory().getItemCount(item.getName());
-                if (total < num) {
-                    return false;
-                }
-            }
-            if (!found) {
-                if (game.getCurrentPlayer().getFridge().getItemByName(item.getName()) != null) {
-                    found = true;
-                    int total = game.getCurrentPlayer().getFridge().getItemCount(item.getName());
-                    if (total < num) {
-                        return false;
-                    }
-                }
-            }
-            if (!found) {
-                return false;
-            }
-        }
-        for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
-            boolean found = false;
-            int num  = food.getFoodType().getIngredients().get(item);
-            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
-                found = true;
-                game.getCurrentPlayer().getInventory().removeCountFromBackPack(item , num);
-            }
-            if (!found) {
-                game.getCurrentPlayer().getFridge().removeCountFromFridge(item , num);
-            }
-        }
-        game.getCurrentPlayer().getInventory().addToBackPack(food,1);
+        player.setGold(player.getGold()-num);
+        ForagingSeeds s = new ForagingSeeds(seed.foragingSeedsType);
+        player.getInventory().addToBackPack(s , num);
         return true;
     }
     private void showError(String message, Label errorLabel) {
