@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
 import com.example.client.models.GraphicalModels.PopUpMenus.*;
+import com.example.client.models.GraphicalModels.ScoreboardWidget;
 import com.example.common.map.Area;
 import com.example.common.stores.*;
 import com.example.client.controllers.CheatCodeController;
@@ -67,6 +68,7 @@ public class GameView implements Screen {
     private Label energyLabel;
     private Label currentItemLabel;
     private NotificationLabel notificationLabel;
+    private ScoreboardWidget scoreboardWidget;
 
     // Pop-up menus
     private PopUpMenu popUpMenu;
@@ -101,6 +103,7 @@ public class GameView implements Screen {
 
         uiStage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
+        this.scoreboardWidget = new ScoreboardWidget(game, skin);
 
         gameInputProcessor = new GameInputProcessor();
 
@@ -134,6 +137,7 @@ public class GameView implements Screen {
         createHUDComponents();
 
         uiStage.addActor(hudTable);
+        uiStage.addActor(scoreboardWidget);
     }
 
     private void createHUDComponents() {
@@ -148,6 +152,7 @@ public class GameView implements Screen {
 
         TextButton friendsButton = new TextButton("Friends", skin);
         TextButton toolsButton = new TextButton("Tools", skin);
+        TextButton scoreboardButton = new TextButton("Scoreboard", skin);
 
         float buttonWidth = 125f;
         float buttonHeight = 60f;
@@ -178,6 +183,14 @@ public class GameView implements Screen {
             }
         });
 
+        scoreboardButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                scoreboardWidget.toggleVisibility();
+            }
+        });
+
+        hudTable.add(scoreboardButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(friendsButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(toolsButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(notificationLabel).expandX().bottom().center().padTop(700).row();
@@ -221,6 +234,7 @@ public class GameView implements Screen {
         renderHeldItemCursor(batch);
 
         renderHUD(batch, delta);
+        scoreboardWidget.update(delta);
 
         updateUIComponents();
         uiStage.act(delta);
@@ -375,6 +389,9 @@ public class GameView implements Screen {
         if (skin != null) {
             skin.dispose();
         }
+        if (scoreboardWidget != null) {
+            scoreboardWidget.remove();
+        }
         overlayRenderer.dispose();
         pauseMenuOverlay.dispose();
         craftingMenu.dispose();
@@ -507,6 +524,9 @@ public class GameView implements Screen {
                 case Input.Keys.D:
                     ClientGameController.sendPlayerMovementMessage(+1, 0);
                     player.walk(+1, 0);
+                    return true;
+                case Input.Keys.TAB:
+                    scoreboardWidget.toggleVisibility();
                     return true;
                 case Input.Keys.ESCAPE:
                     if (pauseMenuOverlay.isVisible()) {

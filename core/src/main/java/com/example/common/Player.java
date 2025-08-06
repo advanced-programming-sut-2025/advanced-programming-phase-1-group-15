@@ -600,4 +600,9 @@ public class Player extends User implements TimeObserver {
         }
         return currentFrame;
     }
+
+    public int calculateScore() {
+        int totalAbilityLevels = farmingLevel + miningLevel + foragingLevel + fishingLevel;
+        return gold + (totalAbilityLevels * 10) + (int)(energy * 0.5);
+    }
 }

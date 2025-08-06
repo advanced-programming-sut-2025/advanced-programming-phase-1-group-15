@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage; // Assuming Stage is available from PopUpMenu
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -418,12 +417,7 @@ public class FriendsMenu extends PopUpMenu {
     private void showQuantityDialog(BackPackable item, Integer availableQuantity) {
         final TextField quantityField = new TextField("1", skin);
         quantityField.setName("quantityField");
-        quantityField.setTextFieldFilter(new TextField.TextFieldFilter() {
-            @Override
-            public boolean acceptChar(TextField textField, char c) {
-                return Character.isDigit(c);
-            }
-        });
+        quantityField.setTextFieldFilter((textField, c) -> Character.isDigit(c));
 
         Dialog quantityDialog = new Dialog("Select Quantity", skin, getDialogStyleName(Color.BLUE)) {
             @Override

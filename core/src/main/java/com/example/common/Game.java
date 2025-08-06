@@ -1,5 +1,6 @@
 package com.example.common;
 
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.map.Map;
@@ -13,6 +14,8 @@ import com.example.common.time.TimeObserver;
 import com.example.common.weather.WeatherManagement;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Game implements TimeObserver {
     private ArrayList<Player> players = new ArrayList<>();
@@ -144,5 +147,24 @@ public class Game implements TimeObserver {
     @Override
     public void update(DateAndTime dateAndTime) {
 
+    }
+
+    public ArrayList<ScoreboardInfo> getScoreboardInfoList() {
+        ArrayList<ScoreboardInfo> scoreboard = new ArrayList<>();
+        for (Player player : players) {
+            scoreboard.add(new ScoreboardInfo(
+                player.getNickname(),
+                player.calculateScore(),
+                player.getGold(),
+                player.getEnergy(),
+                player.getFarmingLevel(),
+                player.getMiningLevel(),
+                player.getForagingLevel(),
+                player.getFishingLevel()
+            ));
+        }
+
+        Collections.sort(scoreboard, Comparator.comparingInt(ScoreboardInfo::getScore).reversed());
+        return scoreboard;
     }
 }
