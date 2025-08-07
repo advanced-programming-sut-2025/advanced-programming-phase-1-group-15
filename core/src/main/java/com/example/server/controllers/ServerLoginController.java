@@ -35,6 +35,7 @@ public class ServerLoginController {
 
         User user = new User(username, password, nickname, email, gender);
         ServerApp.users.put(address, user);
+        ServerApp.onlineAddresses.add(address);
 
         return new Result(true, "User registered successfully!");
     }
@@ -57,6 +58,7 @@ public class ServerLoginController {
         }
 
         ServerApp.users.put(address, user);
+        ServerApp.onlineAddresses.add(address);
 
         return new Result(true, "User logged in successfully! You are now in main menu.");
     }

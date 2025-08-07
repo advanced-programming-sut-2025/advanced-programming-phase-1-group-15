@@ -9,7 +9,7 @@ import com.example.server.models.ServerApp;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.example.server.controllers.ServerController.informOtherLobbyUsers;
+import static com.example.server.controllers.ServerController.*;
 
 public class ServerLobbyController {
     public static Result createLobby(String name, String adminUsername, boolean isPublic, String password, boolean isVisible) {
@@ -53,6 +53,7 @@ public class ServerLobbyController {
             respBody.put("username", username);
 
             informOtherLobbyUsers(respBody, lobby, username);
+            informNewJoinLobby();
         }
         else {
            if(lobby.getPassword().equals(password)) {
@@ -64,6 +65,7 @@ public class ServerLobbyController {
                respBody.put("username", username);
 
                informOtherLobbyUsers(respBody, lobby, username);
+               informNewJoinLobby();
            }
            else {
                respBody.put("success", false);
@@ -89,6 +91,7 @@ public class ServerLobbyController {
         respBody.put("username", username);
 
         informOtherLobbyUsers(respBody, lobby, username);
+        informNewLeaveLobby();
     }
 
     public static void handleSetMapNumber(Message req, Map<String,Object> respBody) {

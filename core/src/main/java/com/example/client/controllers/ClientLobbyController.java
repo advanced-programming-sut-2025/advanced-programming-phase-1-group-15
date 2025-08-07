@@ -39,6 +39,37 @@ public class ClientLobbyController {
         }
     }
 
+    public static void updateUsernames() {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "get_usernames");
+
+        try {
+            Message resp = NetworkClient.get().sendAndWaitForResponse(new Message(cmdBody, Message.Type.COMMAND), timeoutMs);
+
+            Type stringListType = new TypeToken<ArrayList<String>>(){}.getType();
+            ClientApp.usernames = resp.getObjectFromBody("usernames", stringListType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isOnline(String username) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "is_online");
+        cmdBody.put("username", username);
+
+        try {
+            Message resp = NetworkClient.get().sendAndWaitForResponse(new Message(cmdBody, Message.Type.COMMAND), timeoutMs);
+
+            Boolean success = resp.getObjectFromBody("success", Boolean.class);
+            return success != null && success;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     public static void sendJoinLobbyMessage(String lobbyId, String username, String password) {
         HashMap<String,Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "join_lobby");

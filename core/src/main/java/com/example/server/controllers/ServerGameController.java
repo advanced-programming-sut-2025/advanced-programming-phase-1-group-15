@@ -2,12 +2,10 @@ package com.example.server.controllers;
 
 import com.example.common.Lobby;
 import com.example.common.Message;
-import com.example.common.RandomGenerator;
 import com.example.server.models.ServerApp;
 
 import java.util.Map;
 
-import static com.example.server.controllers.ServerController.informAllLobbyUsers;
 import static com.example.server.controllers.ServerController.informOtherLobbyUsers;
 
 public class ServerGameController {

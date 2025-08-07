@@ -1,15 +1,17 @@
 package com.example.server.models;
 
-import com.example.common.Game;
 import com.example.common.Lobby;
 import com.example.common.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerApp {
     public static HashMap<String, User> users = new HashMap<>();
+    public static Set<String> onlineAddresses = ConcurrentHashMap.newKeySet();
     public static ArrayList<Lobby> lobbies = new ArrayList<>();
 
     public static boolean checkUsernameExists(String username) {

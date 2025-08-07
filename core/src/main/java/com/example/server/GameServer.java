@@ -2,8 +2,10 @@ package com.example.server;
 
 import com.example.common.JSONUtils;
 import com.example.common.Message;
+import com.example.server.controllers.ServerController;
 import com.example.server.controllers.ServerGameController;
 import com.example.server.controllers.ServerLobbyController;
+import com.example.server.models.ServerApp;
 
 import java.io.*;
 import java.net.*;
@@ -91,6 +93,8 @@ public class GameServer {
                         case "change_avatar_key" -> handleChangeAvatarKey(msg, respBody);
                         case "create_lobby" -> handleCreateLobby(msg, respBody);
                         case "get_lobbies" -> getLobbies(msg, respBody);
+                        case "get_usernames" -> getUsernames(msg, respBody);
+                        case "is_online" -> checkOnline(msg, respBody);
                         case "join_lobby" -> ServerLobbyController.handleJoinLobby(msg, respBody);
                         case "leave_lobby" -> ServerLobbyController.handleLeaveLobby(msg, respBody);
                         case "set_map_number" -> ServerLobbyController.handleSetMapNumber(msg, respBody);
@@ -111,6 +115,7 @@ public class GameServer {
             } catch (EOFException | SocketException e) {
                 System.out.println("Client disconnected: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                 System.out.println("--------------------------------------------------------");
+                disconnect();
             }  catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -137,6 +142,10 @@ public class GameServer {
 
         private void disconnect() {
             end.set(true);
+            String addr = getAddress();
+            ServerApp.onlineAddresses.remove(addr);
+            ServerController.informNewLogout(ServerApp.getUserByAddress(getAddress()).getUsername());
+
             if (clientId != null) {
                 clients.remove(clientId);
             }

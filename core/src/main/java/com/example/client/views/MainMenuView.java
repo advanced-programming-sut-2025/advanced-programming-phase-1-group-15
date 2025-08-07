@@ -19,7 +19,7 @@ public class MainMenuView implements Screen {
     private Texture background;
 
     private Table mainTable;
-    private TextButton lobbyMenuButton, profileMenuButton, logoutButton, exitButton;
+    private TextButton lobbyMenuButton, playersMenuButton, profileMenuButton, logoutButton, exitButton;
 
     public MainMenuView(Main game) {
         this.game = game;
@@ -90,6 +90,7 @@ public class MainMenuView implements Screen {
 
         Table leftCol = new Table();
         lobbyMenuButton = new TextButton("Go to Lobbies", skin);
+        playersMenuButton = new TextButton("See other Players", skin);
         profileMenuButton = new TextButton("Profile Menu", skin);
         logoutButton = new TextButton("Logout", skin);
         exitButton = new TextButton("Exit", skin);
@@ -102,6 +103,7 @@ public class MainMenuView implements Screen {
         rightCol.add(avatar).size(150).center().row();
 
         leftCol.add(lobbyMenuButton).width(300).row();
+        leftCol.add(playersMenuButton).width(300).row();
         leftCol.add(profileMenuButton).width(300).row();
         leftCol.add(logoutButton).width(200).padTop(10).row();
         leftCol.add(exitButton).width(200).padTop(10).row();
@@ -113,6 +115,13 @@ public class MainMenuView implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(new LobbyMenuView(game));
+            }
+        });
+
+        playersMenuButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new PlayersMenuView(game));
             }
         });
 

@@ -1,17 +1,16 @@
 package com.example.client.models;
 
-import com.example.client.controllers.ClientGameController;
 import com.example.client.controllers.ClientGameListener;
 import com.example.client.views.GameView;
 import com.example.common.Game;
 import com.example.common.Lobby;
-import com.example.common.Player;
 import com.example.common.User;
 
 import java.util.ArrayList;
 
 public class ClientApp {
     public static User user;
+    public static ArrayList<String> usernames = new ArrayList<>();
     public static ArrayList<Lobby> lobbies = new ArrayList<>();
 
     public static final String[] securityQuestions = {"1) What is your favorite color?",
