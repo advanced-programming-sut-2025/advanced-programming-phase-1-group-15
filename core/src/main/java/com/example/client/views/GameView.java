@@ -17,6 +17,7 @@ import com.example.client.Main;
 import com.example.client.models.GraphicalModels.PopUpMenus.*;
 import com.example.client.models.GraphicalModels.ScoreboardWidget;
 import com.example.common.map.Area;
+import com.example.common.relation.PlayerFriendship;
 import com.example.common.stores.*;
 import com.example.client.controllers.CheatCodeController;
 import com.example.client.controllers.ClientGameController;
@@ -68,6 +69,10 @@ public class GameView implements Screen {
     private Label energyLabel;
     private Label currentItemLabel;
     private NotificationLabel notificationLabel;
+    private boolean isNotificationShowing = false;
+    private Runnable cancelShow = () -> {
+        isNotificationShowing = false;
+    };
     private ScoreboardWidget scoreboardWidget;
 
     // Pop-up menus
@@ -145,7 +150,10 @@ public class GameView implements Screen {
         energyLabel.setColor(Color.FIREBRICK); energyLabel.setAlignment(Align.left);
         currentItemLabel = new Label("", skin);
         currentItemLabel.setColor(Color.FIREBRICK); currentItemLabel.setAlignment(Align.left);
-        notificationLabel = new NotificationLabel(skin);
+        this.notificationLabel = new NotificationLabel(skin);
+        this.notificationLabel.setSize(300, 50);
+        this.notificationLabel.setPosition((screenWidth / 2) - 150, screenHeight - 100);
+        uiStage.addActor(this.notificationLabel);
 
         hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
         hudTable.add(currentItemLabel).padTop(5).padLeft(10).left().row();
@@ -223,6 +231,8 @@ public class GameView implements Screen {
             player.updateAnimation(delta);
         }
         game.getDateAndTime().updateDateAndTime(delta);
+
+        processNotifications();
 
         SpriteBatch batch = main.getBatch();
 
@@ -677,14 +687,11 @@ public class GameView implements Screen {
                     }
                     NPC clickedNPC = getNPCAtPosition(tileX, tileY);
                     if (clickedNPC != null && clickedNPC.hasMessageForToday(ClientApp.currentGame.getCurrentPlayer())) {
-                        // Show the NPC's message
                         String message = clickedNPC.meet(ClientApp.currentGame.getCurrentPlayer());
 
-                        // Create and show message dialog
                         Dialog messageDialog = new Dialog("Message from " + clickedNPC.getName(), skin) {
                             @Override
                             protected void result(Object object) {
-                                // Restore game input when dialog is closed
                                 restoreGameInput();
                             }
                         };
@@ -767,13 +774,13 @@ public class GameView implements Screen {
                                 }
                             }
                             else {
-                                notificationLabel.showMessage("store is closed now!", Color.RED);
+                                notificationLabel.showMessage("store is closed now!", Color.RED, cancelShow);
                             }
                         }
 
                         else {
                             Result result = ClientGameController.useToolOrPlaceItem(game.getCurrentPlayer(), clickedTile);
-                            notificationLabel.showMessage(result.message(), result.success() ? Color.BLACK : Color.RED);
+                            notificationLabel.showMessage(result.message(), result.success() ? Color.BLACK : Color.RED, cancelShow);
                         }
                     }
                     return true;
@@ -932,6 +939,14 @@ public class GameView implements Screen {
             }
         }
         return null;
+    }
+
+    private void processNotifications() {
+        if (!isNotificationShowing && !game.getCurrentPlayer().getNotifications().isEmpty()) {
+            isNotificationShowing = true;
+            PlayerFriendship.Message message = game.getCurrentPlayer().readNotification();
+            notificationLabel.showMessage(message.message(), Color.BLUE, cancelShow);
+        }
     }
 
     public void setPopUpMenu(PopUpMenu popUpMenu) {

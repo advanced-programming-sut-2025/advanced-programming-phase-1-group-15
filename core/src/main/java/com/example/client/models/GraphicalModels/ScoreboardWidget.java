@@ -2,13 +2,10 @@ package com.example.client.models.GraphicalModels;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.example.common.Game;
@@ -66,7 +63,7 @@ public class ScoreboardWidget extends Table {
         this.add(toggleButton).colspan(2).padTop(5);
 
         this.setSize(320, 280);
-        this.setPosition(200, 400);
+        this.setPosition(75, 500);
     }
 
     public void update(float delta) {

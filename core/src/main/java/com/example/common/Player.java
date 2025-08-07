@@ -85,12 +85,16 @@ public class Player extends User implements TimeObserver {
     private ArrayList<ArtisanItem> artisanItems = new ArrayList<>();
 
     private ArrayList<PlayerFriendship.Message> receivedMessages = new ArrayList<>();
+    private Queue<PlayerFriendship.Message> notifications = new ArrayDeque<>();
+
     public void addMessage(PlayerFriendship.Message message) {
         receivedMessages.add(message);
     }
     private Player couple;
     private boolean rejected = false;
     private int rejectDay = 0;
+
+
 
     public int getCurrentId() {
         return CurrentId;
@@ -608,6 +612,17 @@ public class Player extends User implements TimeObserver {
 
     public int calculateScore() {
         int totalAbilityLevels = farmingLevel + miningLevel + foragingLevel + fishingLevel;
-        return gold + (totalAbilityLevels * 10) + (int)(energy * 0.5);
+        return gold * 2 + (totalAbilityLevels * 15) + (int)(energy);
+    }
+
+    public void addNotification(PlayerFriendship.Message message) {
+        notifications.add(message);
+    }
+    public PlayerFriendship.Message readNotification(){
+        return notifications.remove();
+    }
+
+    public Queue<PlayerFriendship.Message> getNotifications() {
+        return notifications;
     }
 }

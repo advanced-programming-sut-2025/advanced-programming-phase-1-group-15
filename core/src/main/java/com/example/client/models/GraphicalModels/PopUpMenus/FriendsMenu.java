@@ -568,7 +568,6 @@ public class FriendsMenu extends PopUpMenu {
         pixmap.dispose();
         return new TextureRegionDrawable(new TextureRegion(texture));
     }
-
     private boolean sendGift(BackPackable item, int quantity) {
         try {
             if (!currentPlayer.getInventory().removeCountFromBackPack(item, quantity)) {
@@ -585,4 +584,5 @@ public class FriendsMenu extends PopUpMenu {
             return false;
         }
     }
+
 }

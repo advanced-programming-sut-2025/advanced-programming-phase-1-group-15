@@ -1,12 +1,15 @@
 package com.example.common.relation;
 
+import com.example.common.Message;
 import com.example.common.Player;
 import com.example.common.time.DateAndTime;
 import com.example.common.time.TimeObserver;
 import com.example.common.tools.BackPackable;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Queue;
 
 public class PlayerFriendship implements TimeObserver {
     public record Message(Player sender, String message) {
@@ -124,6 +127,16 @@ public class PlayerFriendship implements TimeObserver {
     public void gift(Player sender, BackPackable gift) {
         gifts.putIfAbsent(sender, new ArrayList<>());
         gifts.get(sender).add(new Gift(gift));
+        Message message = new Message(sender,
+            String.format("You have received a nice gift! : " + gift.getName()));
+        if(player1.equals(sender)) {
+            player2.addMessage(message);
+            player2.addNotification(message);
+        }
+        else{
+            player1.addMessage(message);
+            player1.addNotification(message);
+        }
     }
     public void rateGift(int rate) {
         int amount = (rate - 3) * 30 + 15;
@@ -188,4 +201,6 @@ public class PlayerFriendship implements TimeObserver {
     public boolean giftToday() {
         return giftToday;
     }
+
+
 }
