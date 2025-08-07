@@ -211,7 +211,7 @@ public class GiftSelectionMenu extends PopUpMenu {
     }
 
     private void showResultDialog(String message) {
-        Dialog resultDialog = new Dialog("🎁 Gift Result", skin) {
+        Dialog resultDialog = new Dialog(" Gift Result", skin) {
             @Override
             protected void result(Object object) {
                 remove();

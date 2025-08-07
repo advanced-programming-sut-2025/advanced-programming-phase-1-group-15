@@ -30,10 +30,10 @@ public class NPCRightClickMenu extends RightClickMenu {
 
     @Override
     protected void setupMenuContent() {
-        TextButton talkButton = new TextButton("💬 Talk", skin);
-        TextButton giftButton = new TextButton("🎁 Gift", skin);
-        TextButton questsButton = new TextButton("📋 Quests", skin);
-        TextButton friendshipButton = new TextButton("❤️ Friendship", skin);
+        TextButton talkButton = new TextButton("Talk", skin);
+        TextButton giftButton = new TextButton("Gift", skin);
+        TextButton questsButton = new TextButton("Quests", skin);
+        TextButton friendshipButton = new TextButton("Friendship", skin);
 
         menuTable.add(talkButton).pad(3).fillX().row();
         menuTable.add(giftButton).pad(3).fillX().row();
@@ -73,7 +73,7 @@ public class NPCRightClickMenu extends RightClickMenu {
     private void showTalkDialog() {
         String message = targetNPC.meet(currentPlayer);
 
-        Dialog talkDialog = new Dialog("💬 Conversation with " + targetNPC.getName(), skin) {
+        Dialog talkDialog = new Dialog("Conversation with " + targetNPC.getName(), skin) {
             @Override
             protected void result(Object object) {
                 remove();
@@ -94,7 +94,7 @@ public class NPCRightClickMenu extends RightClickMenu {
 
         NPCFriendShip friendship = targetNPC.getFriendships().get(currentPlayer);
         if (friendship != null) {
-            String statusInfo = String.format("\n\n✨ Friendship Level: %d | Points: %d",
+            String statusInfo = String.format("\n\n Friendship Level: %d | Points: %d",
                 friendship.getLevel(), friendship.getPoints());
             Label statusLabel = new Label(statusInfo, skin);
             statusLabel.setFontScale(0.8f);
@@ -110,7 +110,7 @@ public class NPCRightClickMenu extends RightClickMenu {
         hide();
         GiftSelectionMenu giftMenu = new GiftSelectionMenu(
             skin,
-            "🎁 Give Gift to " + targetNPC.getName(),
+            " Give Gift to " + targetNPC.getName(),
             () -> {
                 activePopupMenu = null;
             },
@@ -125,7 +125,7 @@ public class NPCRightClickMenu extends RightClickMenu {
         hide();
         QuestDisplayMenu questMenu = new QuestDisplayMenu(
             skin,
-            "📋 Quests from " + targetNPC.getName(),
+            " Quests from " + targetNPC.getName(),
             () -> {
                 activePopupMenu = null;
             },
@@ -140,7 +140,7 @@ public class NPCRightClickMenu extends RightClickMenu {
         hide();
         FriendshipStatusMenu friendshipMenu = new FriendshipStatusMenu(
             skin,
-            "❤️ Friendship Status with " + targetNPC.getName(),
+            " Friendship Status with " + targetNPC.getName(),
             () -> {
                 activePopupMenu = null;
             },
