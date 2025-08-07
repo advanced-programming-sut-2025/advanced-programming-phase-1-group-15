@@ -46,6 +46,13 @@ public class ClientGameController {
 
     public static Result useToolOrPlaceItem(Player player, Tile tile) {
         if(player.getCurrentItem() != null) {
+            if (player.getCurrentItem() instanceof Food food) {
+                if (player.getEnergy() == 200){
+                    return new Result(false , "Your energy is full");
+                }
+                player.setEnergy(Math.min(player.getEnergy() + food.getEnergy(), 200));
+                return new Result(true , "You eat " + food.getName());
+            }
             if(player.getCurrentItem() instanceof Tool tool) {
                 return tool.use(tile, player);
             }

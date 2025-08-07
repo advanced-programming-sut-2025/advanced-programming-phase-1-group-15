@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
@@ -46,6 +47,7 @@ import com.example.common.tools.TrashCan;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 
 public class JojaMartMenu{
     private final Stage stage;
@@ -198,11 +200,37 @@ public class JojaMartMenu{
                 }
             }
         });
+        SelectBox select = new SelectBox(skin);
+        Array<String> array = new Array<>();
+        array.add("Available Items");
+        array.add("All Items");
+        select.setItems(array);
+        select.addListener(new ChangeListener() {
+            public void changed(ChangeEvent event, Actor actor) {
+                refresh();
+            }
+        });
         Table itemTable = new Table(skin);
         ArrayList<JojaMartItems> foragingSeed = new ArrayList<>(Arrays.asList(JojaMartItems.values()));
+        foragingSeed.sort(Comparator.comparing(JojaMartItems::available).reversed());
         for (JojaMartItems item : foragingSeed) {
             Label label = new Label(item.getName(), skin);
-            label.setColor(Color.BROWN);
+            if (select.getSelected().equals("All Items")) {
+                if (!item.available){
+                    label.setColor(Color.LIGHT_GRAY);
+                }
+                else {
+                    label.setColor(Color.BROWN);
+                }
+            }
+            else {
+                if (item.available){
+                    label.setColor(Color.BROWN);
+                }
+                else{
+                    label.setVisible(false);
+                }
+            }
             label.addListener(new InputListener() {
                 @Override
                 public boolean mouseMoved(InputEvent event, float x, float y) {
@@ -241,6 +269,7 @@ public class JojaMartMenu{
         table.add(errorLabel).width(700).row();
         table.add(Final);
         table.add(buy).right().row();
+        table.add(select).left().row();
         return table;
     }
     private Table createSellContent() {
@@ -402,4 +431,5 @@ public class JojaMartMenu{
             }
         }, 2);
     }
+
 }
