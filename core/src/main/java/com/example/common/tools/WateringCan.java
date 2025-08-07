@@ -14,8 +14,8 @@ public class WateringCan extends Tool {
     public WateringCan() {
         this.toolType = ToolType.WATERING_CAN;
         this.toolLevel = ToolLevel.NORMAL;
-        this.waterAmount = 0;
-        this.capacity = 40;
+        this.waterAmount = 90;
+        this.capacity = 90;
         this.description = "don't forget to water your plants everyday.";
     }
 

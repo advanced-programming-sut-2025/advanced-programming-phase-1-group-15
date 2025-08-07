@@ -1,20 +1,19 @@
 package com.example.client.controllers;
 
 import com.example.client.models.ClientApp;
+import com.example.common.Game;
 import com.example.common.Player;
 import com.example.common.Result;
 import com.example.common.animals.*;
+import com.example.common.farming.*;
 import com.example.common.foraging.*;
 import com.example.common.artisanry.ArtisanItem;
 import com.example.common.artisanry.ArtisanItemType;
 import com.example.common.crafting.CraftItem;
 import com.example.common.crafting.CraftItemType;
 import com.example.common.enums.commands.CheatCodeCommands;
-import com.example.common.farming.Crop;
-import com.example.common.farming.Crops;
-import com.example.common.farming.Fruit;
-import com.example.common.farming.FruitType;
 import com.example.common.farming.GeneralPlants.PloughedPlace;
+import com.example.common.map.Map;
 import com.example.common.map.Position;
 import com.example.common.map.Tile;
 import com.example.common.relation.PlayerFriendship;
@@ -99,6 +98,12 @@ public class CheatCodeController {
             return CheatCodeController.cheatTeleport(
                 new Position(Integer.parseInt(matcher.group("x"))
                     , Integer.parseInt(matcher.group("y"))));
+        }
+        else if(CheatCodeCommands.SEED.matches(command)) {
+            Matcher matcher = CheatCodeCommands.SEED.matcher(command);
+            matcher.matches();
+            return plant(matcher.group("seed"),
+                Integer.parseInt(matcher.group("dx")),Integer.parseInt(matcher.group("dy")));
         }
         else {
             return new Result(false, "Invalid command!");
@@ -395,6 +400,33 @@ public class CheatCodeController {
         if(artisanItem!=null)
             player.addToBackPack(artisanItem, num);
         return new Result(true , "item added successfully");
+    }
+    public static Result plant(String seedName, int dx, int dy) {
+        Game current = ClientApp.currentGame;
+        int nextX = current.getCurrentPlayer().getPosition().x + dx;
+        int nextY = current.getCurrentPlayer().getPosition().y + dy;
+
+        if(dx==0 && dy==0) {return new Result(false,"this is not a valid direction!");}
+
+        if(nextX> Map.COLS||nextY>Map.ROWS||nextX<0||nextY<0) {
+            return new Result(false,"you are going out of bounds!");}
+
+        Tile goalTile = ClientApp.currentGame.getMap().getTile(new Position(nextX,nextY));
+
+        if(!(goalTile.getObjectInTile() instanceof PloughedPlace))
+            return new Result(false,"you should plough the tile first!");
+
+        PloughedPlace tobeSeeded = (PloughedPlace) goalTile.getObjectInTile();
+
+        if(CropSeeds.getByName(seedName) != null){
+            return tobeSeeded.seed(CropSeeds.getByName(seedName));
+        }
+
+        if(SeedType.getByName(seedName) != null){
+            return tobeSeeded.seed(SeedType.getByName(seedName));
+        }
+
+        return new Result(false,"no seed found with this name");
     }
     public static Result AddItem(String name , int num) {
         name = name.trim().toLowerCase().replaceAll("_", " ");

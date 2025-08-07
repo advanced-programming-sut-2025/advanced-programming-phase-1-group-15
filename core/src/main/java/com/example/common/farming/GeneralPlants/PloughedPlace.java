@@ -325,19 +325,19 @@ public class PloughedPlace implements TimeObserver , Tilable, WeatherObserver {
 
     @Override
     public Sprite getSprite() {
-        if(currentState instanceof PloughedPlace){
+        if(currentState instanceof PloughedState){
             return GameAssetManager.plowed_tile;
         }
         else if(currentState instanceof SeededState){
             if(harvestable instanceof Tree){
                 TreeType t = SeedType.getTreeOfSeedType(seed);
                 ArrayList<Sprite> sprites = t.getSprites();
-                return sprites.get(Math.min(sprites.size()-1, ((SeededState) currentState).getGrowthLevel() ));
+                return sprites.get(Math.min(sprites.size()-1, (int) 1.5* ((SeededState)currentState).getGrowthLevel() ));
             }
             else{
                 Crops crop =  CropSeeds.cropOfThisSeed(cropSeed);
                 ArrayList<Sprite> sprites = crop.getSprites();
-                return sprites.get(Math.min(sprites.size()-1, ((SeededState) currentState).getGrowthLevel() ));
+                return sprites.get(Math.min(sprites.size()-1, (int) 1.5* ((SeededState)currentState).getGrowthLevel() ));
             }
         }
         else{

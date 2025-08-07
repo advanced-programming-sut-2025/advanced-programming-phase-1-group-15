@@ -485,7 +485,7 @@ public class GameView implements Screen {
     }
     public void printTileObject(Tile tile, int x, int y, Batch batch) {
         if(tile.getObjectSprite() != null) {
-            batch.draw(tile.getObjectSprite(), x, y);
+            batch.draw(tile.getObjectSprite(), x, y,16,16);
         }
     }
 
@@ -946,6 +946,7 @@ public class GameView implements Screen {
             isNotificationShowing = true;
             PlayerFriendship.Message message = game.getCurrentPlayer().readNotification();
             notificationLabel.showMessage(message.message(), Color.BLUE, cancelShow);
+            System.out.println("notification is called");
         }
     }
 
