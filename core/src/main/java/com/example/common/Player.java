@@ -106,7 +106,6 @@ public class Player extends User implements TimeObserver {
 
     public Player(User user) {
         super(user.getUsername(), user.getPassword(), user.getNickname(), user.getEmail(), user.getGender());
-        // this.currentGame = ClientApp.currentGame;
         if(user.getGender().equals(Gender.BOY)) {
             face = GameAssetManager.boy_face;
             faintedAnimation = GameAssetManager.boy_fainted;
@@ -115,21 +114,30 @@ public class Player extends User implements TimeObserver {
             walkLeftAnimation = GameAssetManager.boy_walking_left;
             walkRightAnimation = GameAssetManager.boy_walking_right;
             currentFrame = walkDownAnimation.getKeyFrame(0);
-            creatCraftListRecipe();
-            creatCookList();
         }
+        else {
+            face = GameAssetManager.girl_face;
+            faintedAnimation = GameAssetManager.girl_fainted;
+            walkUpAnimation = GameAssetManager.girl_walking_up;
+            walkDownAnimation = GameAssetManager.girl_walking_down;
+            walkLeftAnimation = GameAssetManager.girl_walking_left;
+            walkRightAnimation = GameAssetManager.girl_walking_right;
+            currentFrame = walkDownAnimation.getKeyFrame(0);
+        }
+        createCraftListRecipe();
+        createCookList();
     }
 
     public ArrayList<CraftItem> getBuildedCrafts() {
         return BuildedCrafts;
     }
-    public void creatCraftListRecipe(){
+    public void createCraftListRecipe(){
         ArrayList<CraftItemType> allTypes = new ArrayList<>(Arrays.asList(CraftItemType.values()));
         for (CraftItemType Type : allTypes) {
             availableCraftsRecipe.add(new CraftItem(Type));
         }
     }
-    public void creatCookList(){
+    public void createCookList(){
         ArrayList<FoodType> allTypes = new ArrayList<>(Arrays.asList(FoodType.values()));
         for (FoodType Type : allTypes) {
             availableFoods.add(new Food(Type));

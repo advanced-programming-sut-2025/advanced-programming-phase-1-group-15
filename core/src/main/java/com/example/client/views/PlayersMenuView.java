@@ -92,6 +92,11 @@ public class PlayersMenuView implements Screen {
     private void createLabels() {
         ClientLobbyController.updateUsernames();
         ClientLobbyController.updateLobbies();
+
+        usernameLabels.clear();
+        onlineLabels.clear();
+        lobbyLabels.clear();
+
         for(int i = 0; i < ClientApp.usernames.size(); i++) {
             String username = ClientApp.usernames.get(i);
             if(username.equals(ClientApp.user.getUsername())) {

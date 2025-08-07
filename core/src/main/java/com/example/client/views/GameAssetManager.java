@@ -33,6 +33,8 @@ public class GameAssetManager {
     // Player Sprites
     public static TextureRegion boy_face, boy_fainted;
     public static Animation<TextureRegion> boy_walking_up, boy_walking_down, boy_walking_right, boy_walking_left;
+    public static TextureRegion girl_face, girl_fainted;
+    public static Animation<TextureRegion> girl_walking_up, girl_walking_down, girl_walking_right, girl_walking_left;
 
     // Tools
     public static Sprite axe, copper_axe, iron_axe, gold_axe, iridium_axe;
@@ -183,6 +185,16 @@ public class GameAssetManager {
         boy_walking_right.setPlayMode(Animation.PlayMode.LOOP);
         boy_walking_left = createAnimation("Sprites/Characters/b", 12, 15);
         boy_walking_left.setPlayMode(Animation.PlayMode.LOOP);
+        girl_face = new TextureRegion(new Texture("Sprites/Characters/g_face.png"));
+        girl_fainted = new TextureRegion(new Texture("Sprites/Characters/g_fainted.png"));
+        girl_walking_up = createAnimation("Sprites/Characters/g", 8, 11);
+        girl_walking_up.setPlayMode(Animation.PlayMode.LOOP);
+        girl_walking_down = createAnimation("Sprites/Characters/g", 0, 3);
+        girl_walking_down.setPlayMode(Animation.PlayMode.LOOP);
+        girl_walking_right = createAnimation("Sprites/Characters/g", 4, 7);
+        girl_walking_right.setPlayMode(Animation.PlayMode.LOOP);
+        girl_walking_left = createAnimation("Sprites/Characters/g", 12, 15);
+        girl_walking_left.setPlayMode(Animation.PlayMode.LOOP);
 
         axe = new Sprite(new Texture("Sprites/Tools/Axe.png"));
         copper_axe = new Sprite(new Texture("Sprites/Tools/Copper_Axe.png"));
