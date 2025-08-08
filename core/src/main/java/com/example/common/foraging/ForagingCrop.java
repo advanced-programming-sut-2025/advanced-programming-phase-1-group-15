@@ -43,6 +43,6 @@ public class ForagingCrop implements Tilable, BackPackable, TimeObserver {
 
     @Override
     public Sprite getSprite() {
-        return null;
+        return foragingCropsType.getSprite();
     }
 }

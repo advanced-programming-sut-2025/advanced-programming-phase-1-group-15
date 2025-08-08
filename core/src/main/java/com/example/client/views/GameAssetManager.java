@@ -123,6 +123,12 @@ public class GameAssetManager {
     public static Sprite mushroom_tree_1,mushroom_tree_2,mushroom_tree_3,mushroom_tree_4,mushroom_tree_5;
     public static Sprite mystic_tree_1,mystic_tree_2,mystic_tree_3,mystic_tree_4,mystic_tree_5;
 
+    // foraging crops
+    public static Sprite daffodil,common_mushroom,dandelion,leek,morel,salmonberry,spring_union,wild_horseradish,
+        fiddle_head_fern,foraging_grape,red_mushroom,spice_berry,sweet_pea,blackberry,
+    chanterelle,hazelnut,purple_mushroom,wild_plum,crocus,crystal_fruit,holley,snow_yam,winter_root;
+
+
     public static void load() {
         font = new BitmapFont(Gdx.files.internal("UI/font.fnt"));
         boy_default_avatar = new TextureRegion(new Texture(Gdx.files.internal("Sprites/Characters/boy_default_avatar.png")));
@@ -695,6 +701,33 @@ public class GameAssetManager {
         mystic_tree_3 = new Sprite(new Texture(Gdx.files.internal("Sprites/Trees/Mystic_Tree_Stage_3.png")));
         mystic_tree_4 = new Sprite(new Texture(Gdx.files.internal("Sprites/Trees/Mystic_Tree_Stage_4.png")));
         mystic_tree_5 = new Sprite(new Texture(Gdx.files.internal("Sprites/Trees/Mystic_Tree_Stage_5.png")));
+
+        daffodil = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Daffodil.png")));
+        common_mushroom = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Common_Mushroom.png")));
+        dandelion = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Dandelion.png")));
+        leek = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Leek.png")));
+        morel = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Morel.png")));
+        salmonberry = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Salmonberry.png")));
+        spring_union = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Spring_Onion.png")));
+        wild_horseradish = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Wild_Horseradish.png")));
+        fiddle_head_fern = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Fiddlehead_Fern.png")));
+        foraging_grape = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Grape.png")));
+        red_mushroom = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Red_Mushroom.png")));
+        spice_berry = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Spice_Berry.png")));
+        sweet_pea = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Sweet_Pea.png")));
+        blackberry = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Blackberry.png")));
+        chanterelle = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Chanterelle.png")));
+        hazelnut = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Hazelnut.png")));
+        purple_mushroom = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Purple_Mushroom.png")));
+        wild_plum = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Wild_Plum.png")));
+        crocus = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Crocus.png")));
+        crystal_fruit = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Crystal_Fruit.png")));
+        holley = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Holly.png")));
+        snow_yam = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Snow_Yam.png")));
+        winter_root = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Winter_Root.png")));
+
+
+
     }
 
     private static TextureRegion loadRegion(String path) {
