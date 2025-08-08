@@ -684,8 +684,15 @@ public class ClientGameController {
         if(friendship.getLevel() < 2) {
             return new Result(false, "at least 2 levels of friendship required!");
         }
-
         friendship.hug();
+
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "hug");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("receiver", receiver.getUsername());
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+
         return new Result(true, "you hugged "  + receiver.getUsername() + "!");
     }
     public static Result flower(String username) {

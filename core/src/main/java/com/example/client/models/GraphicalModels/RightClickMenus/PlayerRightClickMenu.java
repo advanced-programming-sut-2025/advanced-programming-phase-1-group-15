@@ -3,6 +3,8 @@ package com.example.client.models.GraphicalModels.RightClickMenus;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.example.client.controllers.ClientGameController;
+import com.example.client.controllers.ClientGameListener;
 import com.example.client.models.ClientApp;
 import com.example.common.Player;
 import com.example.common.enums.Gender;
@@ -37,29 +39,30 @@ public class PlayerRightClickMenu extends RightClickMenu {
             public void changed(ChangeEvent event, Actor actor) {
                 Player currentPlayer = ClientApp.currentGame.getCurrentPlayer();
 
-                Tile playerTile = ClientApp.currentGame.getTile(currentPlayer.getPosition());
-                Tile targetTile = ClientApp.currentGame.getTile(targetPlayer.getPosition());
-                if (playerTile == null || targetTile == null || !playerTile.isAdjacent(targetTile)) {
-                    showResultDialog("You must be next to a player to hug them.");
-                    hide();
-                    return;
-                }
-
-                PlayerFriendship friendship = findFriendship(currentPlayer, targetPlayer);
-                if (friendship == null) {
-                    showResultDialog("Friendship not found.");
-                    hide();
-                    return;
-                }
-
-                if (friendship.getLevel() < 2) {
-                    showResultDialog("At least 2 levels of friendship are required to hug!");
-                } else {
-                    friendship.hug();
-                    targetPlayer.addMessage(new PlayerFriendship.Message(currentPlayer, "hugs you!"));
-                    showResultDialog("You hugged " + targetPlayer.getNickname() + "!");
-                }
-                hide();
+//                Tile playerTile = ClientApp.currentGame.getTile(currentPlayer.getPosition());
+//                Tile targetTile = ClientApp.currentGame.getTile(targetPlayer.getPosition());
+//                if (playerTile == null || targetTile == null || !playerTile.isAdjacent(targetTile)) {
+//                    showResultDialog("You must be next to a player to hug them.");
+//                    hide();
+//                    return;
+//                }
+//
+//                PlayerFriendship friendship = findFriendship(currentPlayer, targetPlayer);
+//                if (friendship == null) {
+//                    showResultDialog("Friendship not found.");
+//                    hide();
+//                    return;
+//                }
+//
+//                if (friendship.getLevel() < 2) {
+//                    showResultDialog("At least 2 levels of friendship are required to hug!");
+//                } else {
+//                    friendship.hug();
+//                    targetPlayer.addMessage(new PlayerFriendship.Message(currentPlayer, "hugs you!"));
+//                    showResultDialog("You hugged " + targetPlayer.getNickname() + "!");
+//                }
+                showResultDialog(ClientGameController.hug(targetPlayer.getUsername()).message());
+                //hide();
             }
         });
 

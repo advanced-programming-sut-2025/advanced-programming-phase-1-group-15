@@ -24,7 +24,7 @@ public class NotificationLabel extends Label {
         this.clearActions();
         SequenceAction sequence = Actions.sequence(
             Actions.fadeIn(0.4f),
-            Actions.delay(1f),
+            Actions.delay(20f),
             Actions.fadeOut(0.4f),
             Actions.run(() -> {
                 isShowing = false;

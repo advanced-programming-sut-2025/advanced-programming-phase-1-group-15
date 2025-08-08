@@ -142,11 +142,9 @@ public class NPC implements TimeObserver {
         if(lastDayUpdate != dateAndTime.getDay()){
             lastDayUpdate = dateAndTime.getDay();
 
-            // Reset daily flags for all friendships
             for(NPCFriendShip fs : friendships.values()){
                 fs.resetDaily();
 
-                // Give daily gifts to high-level friends
                 if(fs.getLevel() >= 3){
                     if(RandomGenerator.getInstance().randomInt(0,21) % 2 == 0){
                         BackPackable gift = favourites.get(RandomGenerator.getInstance().randomInt(0,favourites.size()-1));
@@ -169,16 +167,12 @@ public class NPC implements TimeObserver {
             return false;
         }
 
-        // Check if it's a new day and they haven't received their random gift yet
         int currentDay = ClientApp.currentGame.getDateAndTime().getDay();
         return lastDayUpdate == currentDay && !friendship.hasReceivedDailyGift();
     }
 
     public boolean hasMessageForToday(Player player) {
         NPCFriendShip friendship = friendships.get(player);
-//        if (friendship == null) {
-//            return true; // First time meeting, always has a message
-//        }
 
         boolean hasntTalkedToday = !friendship.hasTalkedToday();
         boolean hasActiveQuests = friendship.getPlayerQuests().values().contains(true);

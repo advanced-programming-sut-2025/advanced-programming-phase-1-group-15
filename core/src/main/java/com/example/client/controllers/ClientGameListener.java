@@ -12,6 +12,7 @@ import com.example.common.farming.TreeType;
 import com.example.common.foraging.Stone;
 import com.example.common.map.Map;
 import com.example.common.map.Tile;
+import com.example.common.relation.PlayerFriendship;
 import com.example.common.stores.GeneralItem;
 import com.example.common.stores.GeneralItemsType;
 import com.example.common.weather.WeatherOption;
@@ -54,6 +55,9 @@ public class ClientGameListener {
             case "predict_weather" -> {
                 handleWeatherForecast(msg);
             }
+            case "hug" -> {
+                handelHug(msg, senderUsername);
+            }
         }
     }
 
@@ -64,6 +68,19 @@ public class ClientGameListener {
                 int randomizer = msg.getIntFromBody(key);
                 game.getTile(i, j).setRandomizer(randomizer);
             }
+        }
+    }
+
+    private void handelHug(Message msg, String senderUsername) {
+        String receiverName = (String) msg.getBody().get("receiver");
+        System.err.println("reached before if");
+        System.err.println(receiverName + "   " + ClientApp.user.getUsername());
+        if(ClientApp.user.getUsername().equals(receiverName)) {
+            Player sender = game.getPlayerByUsername(senderUsername);
+            Player receiver = game.getPlayerByUsername(receiverName);
+            receiver.addNotification(new PlayerFriendship.Message(sender," I hugged you :)"));
+            System.err.println("reached this line");
+            game.getFriendshipByPlayers(sender, receiver).hug();
         }
     }
 
