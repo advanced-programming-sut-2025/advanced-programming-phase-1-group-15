@@ -98,6 +98,7 @@ public class GameView implements Screen {
     private final StarDropSaloonMenu starDropSaloonMenu;
     private ArrayList<ArtisanMenu> artisans = new ArrayList<>();
 
+
     public GameView(Game game, Main main) {
         this.game = game;
         this.main = main;
@@ -130,6 +131,15 @@ public class GameView implements Screen {
     public void show() {
         setupUI();
         setupInputHandling();
+
+        // just for test
+//        notificationLabel.setText("TEST");
+//        notificationLabel.setColor(Color.WHITE);
+//        notificationLabel.setPosition(100, 100);
+//        notificationLabel.setSize(200, 50);
+//        uiStage.addActor(notificationLabel);
+//        notificationLabel.setVisible(true);
+        //
     }
 
     private void setupUI() {
@@ -942,12 +952,21 @@ public class GameView implements Screen {
     }
 
     private void processNotifications() {
-        if (!isNotificationShowing && !game.getCurrentPlayer().getNotifications().isEmpty()) {
-            isNotificationShowing = true;
+        if (!notificationLabel.isShowing() && !game.getCurrentPlayer().getNotifications().isEmpty()) {
             PlayerFriendship.Message message = game.getCurrentPlayer().readNotification();
-            notificationLabel.showMessage(message.message(), Color.BLUE, cancelShow);
-            System.out.println("notification is called");
+            notificationLabel.setPosition(
+                uiStage.getWidth() / 2f - notificationLabel.getPrefWidth() / 2f,
+                uiStage.getHeight() - notificationLabel.getPrefHeight() - 20
+            );
+            boolean started = notificationLabel.showMessage(message.message(), Color.BLUE, () -> {
+            });
+            if (!started) {
+                game.getCurrentPlayer().addNotification(message);
+            } else {
+                System.out.println("notification is called");
+            }
         }
+
     }
 
     public void setPopUpMenu(PopUpMenu popUpMenu) {

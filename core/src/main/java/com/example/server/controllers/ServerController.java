@@ -199,12 +199,49 @@ public class ServerController {
         HashMap<String,Object> respBodyHashMap = new HashMap<>(respBody);
         Message resp = new Message(respBodyHashMap, Message.Type.RESPONSE);
 
+        String act = respBodyHashMap.get("action").toString();
+        if(act.equals("hug")) {
+            System.out.println(act);
+        }
+
         for (GameServer.ClientHandler clientHandler : GameServer.getClientHandlers()) {
             if(!clientHandler.getAddress().equals(ServerApp.getAddressByUser(senderUsername)) &&
                 lobby.checkIfUserIsInLobby(ServerApp.getUserByAddress(clientHandler.getAddress()))) {
                 clientHandler.sendMessage(resp);
             }
         }
+//        HashMap<String, Object> respBodyHashMap = new HashMap<>(respBody);
+//        Message resp = new Message(respBodyHashMap, Message.Type.COMMAND); // send as COMMAND so clients process actions
+//
+//        System.out.println("=== informOtherLobbyUsers ===");
+//        System.out.println("Sender: " + senderUsername);
+//        System.out.println("Action: " + respBody.get("action"));
+//
+//        for (GameServer.ClientHandler clientHandler : GameServer.getClientHandlers()) {
+//            String targetUser = ServerApp.getUserByAddress(clientHandler.getAddress()).getUsername();
+//
+//            System.out.println("Checking user: " + targetUser + " @ " + clientHandler.getAddress());
+//
+//            // Skip invalid connections
+//            if (targetUser == null) {
+//                System.out.println("  Skipped (no username for this address)");
+//                continue;
+//            }
+//
+//            // Skip the sender
+//            if (targetUser.equals(senderUsername)) {
+//                System.out.println("  Skipped (this is the sender)");
+//                continue;
+//            }
+//
+//            // Send only to users in the same lobby
+//            if (lobby.checkIfUserIsInLobby(targetUser)) {
+//                System.out.println("  Sending message to: " + targetUser);
+//                clientHandler.sendMessage(resp);
+//            } else {
+//                System.out.println("  Skipped (not in same lobby)");
+//            }
+//        }
     }
 
     public static void informAllLobbyUsers(Map<String,Object> respBody, Lobby lobby) {

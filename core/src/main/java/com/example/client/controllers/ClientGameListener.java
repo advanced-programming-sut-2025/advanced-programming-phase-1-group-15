@@ -35,6 +35,7 @@ public class ClientGameListener {
         if(senderUsername != null && senderUsername.equals(player.getUsername())) {
             return;
         }
+        System.out.println("Received message: " + msg.getBody());
 
         switch (action) {
             case "set_randomizers" -> {
@@ -56,6 +57,7 @@ public class ClientGameListener {
                 handleWeatherForecast(msg);
             }
             case "hug" -> {
+                System.out.println("hug detected here");
                 handelHug(msg, senderUsername);
             }
         }
@@ -78,7 +80,8 @@ public class ClientGameListener {
         if(ClientApp.user.getUsername().equals(receiverName)) {
             Player sender = game.getPlayerByUsername(senderUsername);
             Player receiver = game.getPlayerByUsername(receiverName);
-            receiver.addNotification(new PlayerFriendship.Message(sender," I hugged you :)"));
+            ClientApp.currentGame.getCurrentPlayer().addNotification(new PlayerFriendship.Message(sender," I hugged you :)"));
+            System.out.println("you have been hugged");
             System.err.println("reached this line");
             game.getFriendshipByPlayers(sender, receiver).hug();
         }
