@@ -729,11 +729,27 @@ public class ClientGameController {
 
         friendship.flower();
         receiver.addToBackPack(flower, 1);
-        receiver.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), "flowers for you ♡"));
         getCurrentPlayer().getInventory().removeCountFromBackPack(flower, 1);
+
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "flower");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("receiver", receiver.getUsername());
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
 
         return new Result(true, "you gave flower to "  + receiver.getUsername() + ". friendship upgraded to level 3.");
     }
+
+    public static void sendGiftMessage(BackPackable item, int quantity, String receiver) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "gift");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("receiver", receiver);
+        cmdBody.put("item", item.getName());
+        cmdBody.put("quantity", quantity);
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
     public static Result marry(String username) {
         Player target = ClientApp.currentGame.getPlayerByUsername(username);
         if(target == null) {

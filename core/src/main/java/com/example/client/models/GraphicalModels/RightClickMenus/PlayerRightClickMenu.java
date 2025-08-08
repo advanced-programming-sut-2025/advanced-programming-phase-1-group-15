@@ -48,38 +48,7 @@ public class PlayerRightClickMenu extends RightClickMenu {
             public void changed(ChangeEvent event, Actor actor) {
                 Player currentPlayer = ClientApp.currentGame.getCurrentPlayer();
 
-                Tile playerTile = ClientApp.currentGame.getTile(currentPlayer.getPosition());
-                Tile targetTile = ClientApp.currentGame.getTile(targetPlayer.getPosition());
-                if (playerTile == null || targetTile == null || !playerTile.isAdjacent(targetTile)) {
-                    showResultDialog("You must be next to a player to give them a flower.");
-                    hide();
-                    return;
-                }
-
-                PlayerFriendship friendship = findFriendship(currentPlayer, targetPlayer);
-                if (friendship == null) {
-                    showResultDialog("Friendship not found.");
-                    hide();
-                    return;
-                }
-
-                GeneralItem flower = (GeneralItem) currentPlayer.getInventory().getItemByName(GeneralItemsType.BOUQUET.getName());
-                if (flower == null) {
-                    showResultDialog("You must first purchase a bouquet!");
-                    hide();
-                    return;
-                }
-
-                if (friendship.getLevel() < 2) {
-                    showResultDialog("At least 2 levels of friendship are required to give a flower!");
-                } else {
-                    friendship.flower();
-                    targetPlayer.addMessage(new PlayerFriendship.Message(currentPlayer, "flowers for you ♡"));
-                    currentPlayer.getInventory().removeCountFromBackPack(flower, 1);
-                    targetPlayer.addToBackPack(flower, 1);
-                    showResultDialog("You gave a flower to " + targetPlayer.getNickname() + ".");
-                }
-                hide();
+                showResultDialog(ClientGameController.flower(targetPlayer.getUsername()).message());
             }
         });
 

@@ -15,7 +15,8 @@ public class ServerGameController {
         respBody.put("username", senderUsername);
 
         switch (action) {
-            case "set_randomizers", "player_movement", "player_stop", "generate_trees", "generate_stones", "predict_weather","hug" -> {
+            case "set_randomizers", "player_movement", "player_stop", "flower",
+                 "generate_trees", "generate_stones", "predict_weather","hug", "gift" -> {
                 reflectMessage(req, respBody);
             }
         }

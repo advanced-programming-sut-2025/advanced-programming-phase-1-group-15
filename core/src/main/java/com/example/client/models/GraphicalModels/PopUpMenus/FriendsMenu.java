@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.example.client.controllers.ClientGameController;
 import com.example.common.tools.Tool;
 import com.example.client.models.ClientApp;
 import com.example.common.Player;
@@ -440,6 +441,7 @@ public class FriendsMenu extends PopUpMenu {
             int quantity = Integer.parseInt(textField.getText());
             if (quantity > 0 && quantity <= availableQuantity) {
                 if (sendGift(item, quantity)) {
+                    ClientGameController.sendGiftMessage(item,quantity,selectedFriend.getUsername());
                     showGiftSentDialog(item, quantity);
                 } else {
                     showErrorDialog("Failed to send gift. Please try again.");

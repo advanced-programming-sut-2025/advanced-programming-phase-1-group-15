@@ -242,7 +242,7 @@ public class GameView implements Screen {
         }
         game.getDateAndTime().updateDateAndTime(delta);
 
-        processNotifications();
+        processNotifications(delta);
 
         SpriteBatch batch = main.getBatch();
 
@@ -951,7 +951,7 @@ public class GameView implements Screen {
         return null;
     }
 
-    private void processNotifications() {
+    private void processNotifications(float delta) {
         if (!notificationLabel.isShowing() && !game.getCurrentPlayer().getNotifications().isEmpty()) {
             PlayerFriendship.Message message = game.getCurrentPlayer().readNotification();
             notificationLabel.setPosition(

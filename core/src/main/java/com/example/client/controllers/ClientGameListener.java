@@ -15,9 +15,13 @@ import com.example.common.map.Tile;
 import com.example.common.relation.PlayerFriendship;
 import com.example.common.stores.GeneralItem;
 import com.example.common.stores.GeneralItemsType;
+import com.example.common.tools.BackPack;
+import com.example.common.tools.BackPackable;
 import com.example.common.weather.WeatherOption;
 
 import java.util.HashMap;
+
+import static com.example.client.controllers.ClientGameController.*;
 
 public class ClientGameListener {
     private final Game game;
@@ -60,6 +64,12 @@ public class ClientGameListener {
                 System.out.println("hug detected here");
                 handelHug(msg, senderUsername);
             }
+            case "flower" -> {
+                handelFlower(msg, senderUsername);
+            }
+            case "gift" -> {
+                handelGift(msg,senderUsername);
+            }
         }
     }
 
@@ -73,17 +83,46 @@ public class ClientGameListener {
         }
     }
 
+    private void handelGift(Message msg, String senderUsername) {
+        String receiverUsername = msg.getFromBody("receiver");
+        String itemName = msg.getFromBody("item");
+        int quantity = msg.getIntFromBody("quantity");
+        if(ClientApp.user.getUsername().equals(receiverUsername)) {
+            Player sender = game.getPlayerByUsername(senderUsername);
+            Player receiver = game.getPlayerByUsername(receiverUsername);
+            BackPackable item =  sender.getInventory().getItemByName(itemName);
+            sender.getInventory().removeCountFromBackPack(item,quantity);
+            receiver.getInventory().addToBackPack(item,quantity);
+            ClientApp.currentGame.getCurrentPlayer().addNotification(
+                new PlayerFriendship.Message(
+                    sender, sender.getNickname() +"sent you "+quantity+" number of "+itemName));
+        }
+    }
+
     private void handelHug(Message msg, String senderUsername) {
         String receiverName = (String) msg.getBody().get("receiver");
-        System.err.println("reached before if");
-        System.err.println(receiverName + "   " + ClientApp.user.getUsername());
         if(ClientApp.user.getUsername().equals(receiverName)) {
             Player sender = game.getPlayerByUsername(senderUsername);
             Player receiver = game.getPlayerByUsername(receiverName);
-            ClientApp.currentGame.getCurrentPlayer().addNotification(new PlayerFriendship.Message(sender," I hugged you :)"));
-            System.out.println("you have been hugged");
-            System.err.println("reached this line");
+            ClientApp.currentGame.getCurrentPlayer().addNotification(
+                new PlayerFriendship.Message(sender,
+                    sender.getNickname() +" : I hugged you :)"));
             game.getFriendshipByPlayers(sender, receiver).hug();
+        }
+    }
+
+    private void handelFlower(Message msg, String senderUsername){
+        String receiverName = (String) msg.getBody().get("receiver");
+        if(ClientApp.user.getUsername().equals(receiverName)) {
+            Player sender = game.getPlayerByUsername(senderUsername);
+            Player receiver = game.getPlayerByUsername(receiverName);
+            ClientApp.currentGame.getCurrentPlayer().addNotification(
+                new PlayerFriendship.Message(sender,
+                    sender.getNickname() + " : I gave this flower to you :)"));
+            game.getFriendshipByPlayers(sender, receiver).flower();
+            GeneralItem flower = (GeneralItem) sender.getInventory().getItemByName(GeneralItemsType.BOUQUET.getName());
+            receiver.addToBackPack(flower, 1);
+            sender.getInventory().removeCountFromBackPack(flower, 1);
         }
     }
 
