@@ -13,7 +13,6 @@ public class GroupQuest implements TimeObserver {
     private String questId;
     private String title;
     private String description;
-    private QuestType type;
     private QuestStatus status;
     private int requiredPlayers;
     private int maxPlayers;
@@ -27,13 +26,12 @@ public class GroupQuest implements TimeObserver {
     private HashMap<Player, Integer> playerProgress;
     private String creatorUsername;
 
-    public GroupQuest(String questId, String title, String description, QuestType type,
+    public GroupQuest(String questId, String title, String description,
                       int requiredPlayers, int maxPlayers, int targetAmount,
                       int rewardPerPlayer, int timeLimit) {
         this.questId = questId;
         this.title = title;
         this.description = description;
-        this.type = type;
         this.status = QuestStatus.AVAILABLE;
         this.requiredPlayers = requiredPlayers;
         this.maxPlayers = maxPlayers;
@@ -70,8 +68,8 @@ public class GroupQuest implements TimeObserver {
     public boolean activate() {
         if (participantUsernames.size() >= requiredPlayers) {
             status = QuestStatus.ACTIVE;
-            startday= ClientApp.currentGame.getDateAndTime().getDay();
-            endDay = startday+ timeLimit;
+            startday = ClientApp.currentGame.getDateAndTime().getDay();
+            endDay = startday + timeLimit;
             return true;
         }
         return false;
@@ -91,7 +89,6 @@ public class GroupQuest implements TimeObserver {
         }
     }
 
-
     public double getCompletionPercentage() {
         int totalProgress = playerProgress.values().stream().mapToInt(Integer::intValue).sum();
         return Math.min(100.0, (double) totalProgress / targetAmount * 100.0);
@@ -104,6 +101,25 @@ public class GroupQuest implements TimeObserver {
 
     @Override
     public void update(DateAndTime dateAndTime) {
-
+        if (status == QuestStatus.ACTIVE && dateAndTime.getDay() > endDay) {
+            status = QuestStatus.FAILED;
+        }
     }
+
+    public String getQuestId() { return questId; }
+    public String getTitle() { return title; }
+    public String getDescription() { return description; }
+    public QuestStatus getStatus() { return status; }
+    public int getRequiredPlayers() { return requiredPlayers; }
+    public int getMaxPlayers() { return maxPlayers; }
+    public int getTargetAmount() { return targetAmount; }
+    public int getRewardPerPlayer() { return rewardPerPlayer; }
+    public int getTimeLimit() { return timeLimit; }
+    public int getStartday() { return startday; }
+    public int getEndDay() { return endDay; }
+    public Set<String> getParticipantUsernames() { return new HashSet<>(participantUsernames); }
+    public HashMap<Player, Integer> getPlayerProgress() { return new HashMap<>(playerProgress); }
+    public String getCreatorUsername() { return creatorUsername; }
+    public void setStatus(QuestStatus status) { this.status = status; }
+    public void setCreatorUsername(String creatorUsername) { this.creatorUsername = creatorUsername; }
 }
