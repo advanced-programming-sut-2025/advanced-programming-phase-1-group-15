@@ -94,6 +94,8 @@ public class Player extends User implements TimeObserver {
     private boolean rejected = false;
     private int rejectDay = 0;
 
+    private boolean notifiedForMarriage = false;
+    private Player marriageAsker ;
 
 
     public int getCurrentId() {
@@ -126,6 +128,19 @@ public class Player extends User implements TimeObserver {
         }
         createCraftListRecipe();
         createCookList();
+    }
+
+    private void askForMarriage(Player player) {
+        notifiedForMarriage = true;
+        marriageAsker = player;
+    }
+
+    public boolean isNotifiedForMarriage() {
+        return notifiedForMarriage;
+    }
+
+    public Player getMarriageAsker() {
+        return marriageAsker;
     }
 
     public ArrayList<CraftItem> getBuildedCrafts() {
@@ -624,6 +639,7 @@ public class Player extends User implements TimeObserver {
     }
 
     public void addNotification(PlayerFriendship.Message message) {
+        addMessage(message);
         notifications.add(message);
     }
     public PlayerFriendship.Message readNotification(){
@@ -632,5 +648,13 @@ public class Player extends User implements TimeObserver {
 
     public Queue<PlayerFriendship.Message> getNotifications() {
         return notifications;
+    }
+
+    public void setNotifiedForMarriage(boolean notifiedForMarriage) {
+        this.notifiedForMarriage = notifiedForMarriage;
+    }
+
+    public void setMarriageAsker(Player marriageAsker) {
+        this.marriageAsker = marriageAsker;
     }
 }

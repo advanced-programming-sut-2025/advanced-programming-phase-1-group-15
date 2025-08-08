@@ -778,17 +778,19 @@ public class ClientGameController {
             return new Result(false, "first purchase wedding ring!");
         }
 
-        target.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), "Will you Marry me?"));
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "marry-request");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("receiver", target);
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+
         return new Result(true, "You're proposal has been sent to " + target.getUsername() + ".");
     }
     public static Result respondMarriage(String username, String answer) {
         Player husband = ClientApp.currentGame.getPlayerByUsername(username);
-        if(husband == null) {
-            return new Result(false, "invalid player username!\n");
-        }
-
         PlayerFriendship friendship = ClientApp.currentGame.getFriendshipByPlayers(husband, getCurrentPlayer());
-        if(answer.equals("-accept")) {
+
+        if(answer.equals("accept")) {
             friendship.marry();
 
             GeneralItem ring = (GeneralItem) husband.getInventory().getItemByName(GeneralItemsType.WEDDING_RING.getName());
@@ -799,12 +801,26 @@ public class ClientGameController {
             husband.getInventory().removeCountFromBackPack(ring, 1);
             husband.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), "I'll Marry you!"));
 
+            HashMap<String,Object> cmdBody = new HashMap<>();
+            cmdBody.put("action", "marry-response");
+            cmdBody.put("username", getCurrentPlayer().getUsername());
+            cmdBody.put("receiver", username);
+            cmdBody.put("answer", answer);
+            NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+
             return new Result(true, "CONGRATS ON YOUR WEDDING!");
         }
         else {
             friendship.reject();
             husband.reject(ClientApp.currentGame.getDateAndTime().getDay());
             husband.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), "your proposal has been rejected :("));
+
+            HashMap<String,Object> cmdBody = new HashMap<>();
+            cmdBody.put("action", "marry-response");
+            cmdBody.put("username", getCurrentPlayer().getUsername());
+            cmdBody.put("receiver", username);
+            cmdBody.put("answer", answer);
+            NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
 
             return new Result(true, "you broke his heart :(");
         }

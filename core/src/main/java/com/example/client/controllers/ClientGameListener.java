@@ -70,6 +70,48 @@ public class ClientGameListener {
             case "gift" -> {
                 handelGift(msg,senderUsername);
             }
+            case "marry-request" -> {
+                handelMarriageRequest(msg);
+            }
+            case "marry-response" -> {
+
+            }
+        }
+    }
+
+    private void handelMarriageResponse(Message msg) {
+        String senderUsername = msg.getFromBody("username");
+        String receiverUsername = msg.getFromBody("receiver");
+        if(ClientApp.user.getUsername().equals(receiverUsername)){
+            Player husband = game.getPlayerByUsername(receiverUsername);
+            Player wife = game.getPlayerByUsername(senderUsername);
+            String answer = msg.getFromBody("answer");
+            PlayerFriendship friendship = ClientApp.currentGame.getFriendshipByPlayers(husband, wife);
+            if(answer.equals("accept")) {
+                friendship.marry();
+                GeneralItem ring = (GeneralItem) husband.getInventory()
+                    .getItemByName(GeneralItemsType.WEDDING_RING.getName());
+                wife.addToBackPack(ring, 1);
+                husband.getInventory().removeCountFromBackPack(ring, 1);
+                husband.addNotification(new PlayerFriendship.Message(wife,"I'll Marry you!"));
+            }
+            else{
+                friendship.reject();
+                husband.reject(ClientApp.currentGame.getDateAndTime().getDay());
+                husband.addNotification(new PlayerFriendship.Message(wife,
+                    "your proposal has been rejected :("));
+            }
+        }
+    }
+
+    private void handelMarriageRequest(Message msg) {
+        String senderUsername = msg.getFromBody("username");
+        String receiverUsername = msg.getFromBody("receiver");
+        if(ClientApp.user.getUsername().equals(receiverUsername)) {
+            Player receiver = game.getPlayerByUsername(receiverUsername);
+            Player sender = game.getPlayerByUsername(senderUsername);
+            receiver.setNotifiedForMarriage(true);
+            receiver.setMarriageAsker(sender);
         }
     }
 

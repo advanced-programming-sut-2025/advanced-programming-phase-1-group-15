@@ -56,46 +56,7 @@ public class PlayerRightClickMenu extends RightClickMenu {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Player currentPlayer = ClientApp.currentGame.getCurrentPlayer();
-
-                Tile playerTile = ClientApp.currentGame.getTile(currentPlayer.getPosition());
-                Tile targetTile = ClientApp.currentGame.getTile(targetPlayer.getPosition());
-                if (playerTile == null || targetTile == null || !playerTile.isAdjacent(targetTile)) {
-                    showResultDialog("You must be next to a player to ask for marriage!");
-                    hide();
-                    return;
-                }
-
-                if (currentPlayer.getGender().equals(Gender.GIRL)) {
-                    showResultDialog("Only a boy can propose for marriage!");
-                    hide();
-                    return;
-                } else if (targetPlayer.getGender().equals(Gender.BOY)) {
-                    showResultDialog("Cannot marry another boy.");
-                    hide();
-                    return;
-                }
-
-                PlayerFriendship friendship = findFriendship(currentPlayer, targetPlayer);
-                if (friendship == null) {
-                    showResultDialog("Friendship not found.");
-                    hide();
-                    return;
-                }
-
-                GeneralItem ring = (GeneralItem) currentPlayer.getInventory().getItemByName(GeneralItemsType.WEDDING_RING.getName());
-                if (ring == null) {
-                    showResultDialog("You must first purchase a wedding ring!");
-                    hide();
-                    return;
-                }
-
-                if (friendship.getLevel() < 3) {
-                    showResultDialog("Friendship level is too low for marriage! At least 3 levels required.");
-                } else {
-                    targetPlayer.addMessage(new PlayerFriendship.Message(currentPlayer, "Will you Marry me?"));
-                    showResultDialog("Your proposal has been sent to " + targetPlayer.getNickname() + ".");
-                }
-                hide();
+                showResultDialog(ClientGameController.marry(targetPlayer.getUsername()).message());
             }
         });
     }

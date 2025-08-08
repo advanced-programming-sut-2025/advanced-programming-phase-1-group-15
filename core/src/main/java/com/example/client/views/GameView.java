@@ -14,8 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
+import com.example.client.models.GraphicalModels.*;
 import com.example.client.models.GraphicalModels.PopUpMenus.*;
-import com.example.client.models.GraphicalModels.ScoreboardWidget;
 import com.example.common.map.Area;
 import com.example.common.relation.PlayerFriendship;
 import com.example.common.stores.*;
@@ -23,9 +23,6 @@ import com.example.client.controllers.CheatCodeController;
 import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.Game;
-import com.example.client.models.GraphicalModels.MapCamera;
-import com.example.client.models.GraphicalModels.NPCUIHelper;
-import com.example.client.models.GraphicalModels.NotificationLabel;
 import com.example.client.models.GraphicalModels.RightClickMenus.NPCRightClickMenu;
 import com.example.client.models.GraphicalModels.RightClickMenus.PlayerRightClickMenu;
 import com.example.client.models.GraphicalModels.RightClickMenus.RightClickMenu;
@@ -81,6 +78,9 @@ public class GameView implements Screen {
     // right-click menus
     private RightClickMenu rightClickMenu;
 
+    // mariage notif
+    private MarriageProposalNotification marriageNotification;
+
     // Input handling
     private final GameInputProcessor gameInputProcessor;
     private final ExecutorService commandExecutor;
@@ -131,15 +131,6 @@ public class GameView implements Screen {
     public void show() {
         setupUI();
         setupInputHandling();
-
-        // just for test
-//        notificationLabel.setText("TEST");
-//        notificationLabel.setColor(Color.WHITE);
-//        notificationLabel.setPosition(100, 100);
-//        notificationLabel.setSize(200, 50);
-//        uiStage.addActor(notificationLabel);
-//        notificationLabel.setVisible(true);
-        //
     }
 
     private void setupUI() {
@@ -164,6 +155,9 @@ public class GameView implements Screen {
         this.notificationLabel.setSize(300, 50);
         this.notificationLabel.setPosition((screenWidth / 2) - 150, screenHeight - 100);
         uiStage.addActor(this.notificationLabel);
+
+        marriageNotification = new MarriageProposalNotification(skin);
+        uiStage.addActor(marriageNotification);
 
         hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
         hudTable.add(currentItemLabel).padTop(5).padLeft(10).left().row();
@@ -243,6 +237,7 @@ public class GameView implements Screen {
         game.getDateAndTime().updateDateAndTime(delta);
 
         processNotifications(delta);
+        proccessMariageProposal(delta);
 
         SpriteBatch batch = main.getBatch();
 
@@ -709,7 +704,6 @@ public class GameView implements Screen {
                         messageDialog.button("OK");
                         messageDialog.show(uiStage);
 
-                        // Set input processor to the dialog's stage
                         Gdx.input.setInputProcessor(messageDialog.getStage());
                         return true;
                     }
@@ -797,14 +791,12 @@ public class GameView implements Screen {
                 }
                 NPC clickedNPC = getNPCAtPosition(tileX, tileY);
                 if (clickedNPC != null && clickedNPC.hasMessageForToday(ClientApp.currentGame.getCurrentPlayer())) {
-                    // Show the NPC's message
                     String message = clickedNPC.meet(ClientApp.currentGame.getCurrentPlayer());
 
-                    // You can show this in a dialog or notification
                     Dialog messageDialog = new Dialog("Message from " + clickedNPC.getName(), skin);
                     messageDialog.text(message);
                     messageDialog.button("OK");
-                    messageDialog.show(uiStage); // You'll need access to the stage here
+                    messageDialog.show(uiStage);
 
                     return true;
                 }
@@ -917,28 +909,14 @@ public class GameView implements Screen {
             int drawX = pos.x * tileSideLength;
             int drawY = pos.y * tileSideLength;
 
-            // Draw the NPC sprite
             batch.draw(npc.getSprite(), drawX, drawY, tileSideLength, tileSideLength);
 
-            // Draw message indicator if NPC has a message for today
             if (npc.hasMessageForToday(currentPlayer)) {
                 int indicatorX = drawX + tileSideLength - 18;
                 int indicatorY = drawY + tileSideLength - 18;
                 uiHelper.drawMessageIndicator(batch, indicatorX, indicatorY, 6);
             }
         }
-    }
-
-    private void drawMessageIndicator(SpriteBatch batch, int npcX, int npcY) {
-
-        int indicatorX = npcX + tileSideLength - 16; // Top-right corner
-        int indicatorY = npcY + tileSideLength - 16;
-
-        // batch.draw(messageIcon, indicatorX, indicatorY, 16, 16);
-
-        // batch.setColor(Color.YELLOW);
-        // batch.draw(whitePixelTexture, indicatorX, indicatorY, 16, 16);
-        // batch.setColor(Color.WHITE);
     }
 
     private NPC getNPCAtPosition(int tileX, int tileY) {
@@ -966,7 +944,18 @@ public class GameView implements Screen {
                 System.out.println("notification is called");
             }
         }
+    }
 
+    private void proccessMariageProposal(float delta){
+        if(game.getCurrentPlayer().isNotifiedForMarriage()){
+            Player currentPlayer = game.getCurrentPlayer();
+            marriageNotification = new MarriageProposalNotification(skin);
+            marriageNotification.setPosition(
+                uiStage.getWidth() / 2f - notificationLabel.getPrefWidth() / 2f,
+                uiStage.getHeight() - notificationLabel.getPrefHeight() - 20
+            );
+            marriageNotification.showProposal(currentPlayer.getMarriageAsker());
+        }
     }
 
     public void setPopUpMenu(PopUpMenu popUpMenu) {
