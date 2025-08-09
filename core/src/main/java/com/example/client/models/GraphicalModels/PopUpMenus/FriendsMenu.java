@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.ArrayList;
 
 public class FriendsMenu extends PopUpMenu {
-    // Constants
     private static final float MIN_WIDTH = 400f;
     private static final float MIN_HEIGHT = 300f;
     private static final float MAX_WIDTH_RATIO = 0.7f;
@@ -30,20 +29,17 @@ public class FriendsMenu extends PopUpMenu {
     private static final float PADDING = 20f;
     private static final int ITEMS_PER_ROW = 4;
 
-    // Menu states
     private enum MenuState {
         FRIENDS_LIST,
         GIFT_SELECTION,
         GIFT_HISTORY
     }
 
-    // State variables
     private final Player currentPlayer;
     private MenuState currentState = MenuState.FRIENDS_LIST;
     private Player selectedFriend;
     private PlayerFriendship selectedFriendship;
 
-    // UI Components
     private ScrollPane currentScrollPane;
     private TextButton currentBackButton;
 
@@ -94,7 +90,6 @@ public class FriendsMenu extends PopUpMenu {
         }
     }
 
-    // FRIENDS LIST VIEW
     private void populateFriendsContent(Window w) {
         Table contentTable = createContentTable();
         addFriendsHeader(contentTable);
@@ -200,7 +195,6 @@ public class FriendsMenu extends PopUpMenu {
         return historyButton;
     }
 
-    // GIFT SELECTION VIEW
     private void populateGiftContent(Window w) {
         Table contentTable = createContentTable();
         addGiftHeader(contentTable);
@@ -250,7 +244,6 @@ public class FriendsMenu extends PopUpMenu {
         }
     }
 
-    // GIFT HISTORY VIEW
     private void populateGiftHistoryContent(Window w) {
         Table contentTable = createContentTable();
         addHistoryHeader(contentTable);
@@ -320,7 +313,6 @@ public class FriendsMenu extends PopUpMenu {
         return giftRow;
     }
 
-    // UTILITY METHODS
     private Table createContentTable() {
         Table contentTable = new Table();
         contentTable.pad(PADDING);
@@ -356,7 +348,6 @@ public class FriendsMenu extends PopUpMenu {
         return null;
     }
 
-    // STATE MANAGEMENT
     private void enterGiftMode(Player recipient, PlayerFriendship friendship) {
         this.currentState = MenuState.GIFT_SELECTION;
         this.selectedFriend = recipient;
@@ -389,7 +380,6 @@ public class FriendsMenu extends PopUpMenu {
         populate(window);
     }
 
-    // INVENTORY ITEM CREATION
     private Table createInventoryItem(BackPackable item, Integer quantity) {
         Table itemTable = new Table();
         itemTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));

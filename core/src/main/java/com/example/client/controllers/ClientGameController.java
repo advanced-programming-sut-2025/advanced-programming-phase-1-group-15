@@ -521,6 +521,13 @@ public class ClientGameController {
         friendship.talk(getCurrentPlayer(), message);
         receiver.addMessage(new PlayerFriendship.Message(getCurrentPlayer(), message));
 
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "talk");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("receiver", username);
+        cmdBody.put("message", message);
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+
         return new Result(true, "your message sent successfully.");
     }
     public static Result talkHistory(String username) {

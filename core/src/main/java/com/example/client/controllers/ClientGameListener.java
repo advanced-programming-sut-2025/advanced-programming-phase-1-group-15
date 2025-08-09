@@ -73,8 +73,25 @@ public class ClientGameListener {
                 handelMarriageRequest(msg);
             }
             case "marry-response" -> {
-
+                handelMarriageResponse(msg);
             }
+            case "talk" -> {
+                handelTalk(msg);
+            }
+        }
+    }
+
+    private void handelTalk(Message msg){
+        String receiverUsername = msg.getFromBody("receiver");
+        if(ClientApp.user.getUsername().equals(receiverUsername)) {
+            String senderUsername = msg.getFromBody("username");
+            Player receiver = game.getPlayerByUsername(receiverUsername);
+            Player sender = game.getPlayerByUsername(senderUsername);
+            String message = msg.getFromBody("message");
+
+            PlayerFriendship friendship = new PlayerFriendship(receiver, sender);
+            friendship.talk(sender,message);
+            receiver.addNotification(new PlayerFriendship.Message(sender,message));
         }
     }
 

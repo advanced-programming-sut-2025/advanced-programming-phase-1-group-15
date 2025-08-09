@@ -210,7 +210,8 @@ public class GiftSelectionMenu extends PopUpMenu {
         populateInventory(); // Refresh the inventory display
     }
 
-    private void showResultDialog(String message) {
+    @Override
+    protected void showResultDialog(String message) {
         Dialog resultDialog = new Dialog(" Gift Result", skin) {
             @Override
             protected void result(Object object) {

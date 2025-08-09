@@ -953,9 +953,8 @@ public class GameView implements Screen {
 
             menu.show();
 
-            // Instead of completely replacing input processor, add the popup stage to multiplexer
             if (gameInputMultiplexer != null) {
-                gameInputMultiplexer.addProcessor(0, menu.getStage()); // Add at front for priority
+                gameInputMultiplexer.addProcessor(0, menu.getStage());
             } else {
                 Gdx.input.setInputProcessor(menu.getStage());
             }

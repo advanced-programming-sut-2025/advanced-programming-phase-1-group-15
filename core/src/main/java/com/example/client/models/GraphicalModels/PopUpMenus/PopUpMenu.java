@@ -7,9 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -157,5 +155,25 @@ public abstract class PopUpMenu {
 
     public Stage getStage() {
         return stage;
+    }
+
+    protected void showResultDialog(String message) {
+        Dialog resultDialog = new Dialog(" Result", skin) {
+            @Override
+            protected void result(Object object) {
+                remove();
+            }
+        };
+
+        Table contentTable = new Table();
+        Label messageLabel = new Label(message, skin);
+        messageLabel.setWrap(true);
+        messageLabel.setAlignment(1);
+
+        contentTable.add(messageLabel).width(300).pad(20);
+
+        resultDialog.getContentTable().add(contentTable);
+        resultDialog.button("OK", true);
+        resultDialog.show(stage);
     }
 }

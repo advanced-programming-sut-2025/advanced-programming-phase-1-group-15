@@ -1,5 +1,6 @@
 package com.example.client.models.GraphicalModels.RightClickMenus;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -25,29 +26,43 @@ public class PlayerRightClickMenu extends RightClickMenu {
 
     @Override
     protected void setupMenuContent() {
+        TextField messageField = new TextField("your message", skin);
+        messageField.setColor(Color.BLACK);
+        TextButton talkButton = new TextButton("Talk", skin);
         TextButton hugButton = new TextButton("Hug", skin);
         TextButton buyFlowerButton = new TextButton("Buy Flower", skin);
         TextButton marryButton = new TextButton("Marry", skin);
 
+        menuTable.add(talkButton).pad(3).fillX().row();
+        menuTable.add(talkButton).pad(3).fillX().row();
         menuTable.add(hugButton).pad(3).fillX().row();
         menuTable.add(buyFlowerButton).pad(3).fillX().row();
         menuTable.add(marryButton).pad(3).fillX().row();
 
+        talkButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                //TalkMenu talkMenu = new TalkMenu(skin, targetPlayer, () -> hide());
+                //talkMenu.show();
+                //hide();
+                String message = messageField.getText().trim();
+                if (!message.isEmpty()) {
+                    Result result = ClientGameController.talkFriendship(targetPlayer.getUsername(), message);
+                    showResultDialog(result.message());
+                }
+            }
+        });
 
         hugButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                hide();
                 showResultDialog(ClientGameController.hug(targetPlayer.getUsername()).message());
-                ClientGameController.sendHugMessage(targetPlayer.getUsername());
             }
         });
 
         buyFlowerButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Player currentPlayer = ClientApp.currentGame.getCurrentPlayer();
-
                 showResultDialog(ClientGameController.flower(targetPlayer.getUsername()).message());
             }
         });
@@ -55,33 +70,13 @@ public class PlayerRightClickMenu extends RightClickMenu {
         marryButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Player currentPlayer = ClientApp.currentGame.getCurrentPlayer();
                 showResultDialog(ClientGameController.marry(targetPlayer.getUsername()).message());
             }
         });
     }
 
+
     private PlayerFriendship findFriendship(Player player1, Player player2) {
         return ClientApp.currentGame.getFriendshipByPlayers(player1, player2);
-    }
-
-    private void showResultDialog(String message) {
-        Dialog resultDialog = new Dialog(" Result", skin) {
-            @Override
-            protected void result(Object object) {
-                remove();
-            }
-        };
-
-        Table contentTable = new Table();
-        Label messageLabel = new Label(message, skin);
-        messageLabel.setWrap(true);
-        messageLabel.setAlignment(1);
-
-        contentTable.add(messageLabel).width(300).pad(20);
-
-        resultDialog.getContentTable().add(contentTable);
-        resultDialog.button("OK", true);
-        resultDialog.show(stage);
     }
 }
