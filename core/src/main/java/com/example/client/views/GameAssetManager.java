@@ -122,7 +122,7 @@ public class GameAssetManager {
     public static Sprite mahogany_tree_1,mahogany_tree_2,mahogany_tree_3,mahogany_tree_4,mahogany_tree_5;
     public static Sprite mushroom_tree_1,mushroom_tree_2,mushroom_tree_3,mushroom_tree_4,mushroom_tree_5;
     public static Sprite mystic_tree_1,mystic_tree_2,mystic_tree_3,mystic_tree_4,mystic_tree_5;
-
+    public static Sprite angry,cry,laugh,love,party,smile,thumbs_up;
     // foraging crops
     public static Sprite daffodil,common_mushroom,dandelion,leek,morel,salmonberry,spring_union,wild_horseradish,
         fiddle_head_fern,foraging_grape,red_mushroom,spice_berry,sweet_pea,blackberry,
@@ -726,7 +726,14 @@ public class GameAssetManager {
         snow_yam = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Snow_Yam.png")));
         winter_root = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Winter_Root.png")));
 
-
+        //emoji
+        angry = new Sprite(new Texture("Sprites/Emoji/angry.png"));
+        cry = new Sprite(new Texture("Sprites/Emoji/cry.png"));
+        laugh = new Sprite(new Texture("Sprites/Emoji/laugh.png"));
+        love = new Sprite(new Texture("Sprites/Emoji/love.png"));
+        party = new Sprite(new Texture("Sprites/Emoji/party.png"));
+        smile = new Sprite(new Texture("Sprites/Emoji/smile.png"));
+        thumbs_up = new Sprite(new Texture("Sprites/Emoji/thumbs_up.png"));
 
     }
 

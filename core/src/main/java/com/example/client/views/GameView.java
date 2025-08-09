@@ -7,10 +7,12 @@ import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
@@ -92,6 +94,7 @@ public class GameView implements Screen {
     private final JojaMartMenu jojaMartMenu;
     private final PierreGeneralStoreMenu pierreGeneralStoreMenu;
     private final StarDropSaloonMenu starDropSaloonMenu;
+    private final ReActMenu reActMenu;
     private ArrayList<ArtisanMenu> artisans = new ArrayList<>();
 
 
@@ -121,6 +124,7 @@ public class GameView implements Screen {
         this.fishShopMenu = new FishShopMenu(main,game,this::restoreGameInput);
         this.pierreGeneralStoreMenu = new PierreGeneralStoreMenu(main , game , this::restoreGameInput);
         this.starDropSaloonMenu = new StarDropSaloonMenu(main, game, this::restoreGameInput);
+        this.reActMenu = new ReActMenu(main , game , this::restoreGameInput);
         ClientApp.setCurrentGameView(this);
     }
 
@@ -159,10 +163,21 @@ public class GameView implements Screen {
         TextButton friendsButton = new TextButton("Friends", skin);
         TextButton toolsButton = new TextButton("Tools", skin);
         TextButton scoreboardButton = new TextButton("Scoreboard", skin);
-
+        TextButton sendMessage = new TextButton("Send Message", skin);
         float buttonWidth = 125f;
         float buttonHeight = 60f;
-
+        sendMessage.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y) {
+                if (reActMenu.isVisible()){
+                    reActMenu.setVisible(false , 0);
+                    restoreGameInput();
+                }
+                else {
+                    reActMenu.setVisible(true, 1);
+                    Gdx.input.setInputProcessor(reActMenu.getStage());
+                }
+            }
+        });
         friendsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -198,7 +213,8 @@ public class GameView implements Screen {
 
         hudTable.add(scoreboardButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(friendsButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
-        hudTable.add(toolsButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
+        hudTable.add(toolsButton).padLeft(5).size(150, buttonHeight).left().row();
+        hudTable.add(sendMessage).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(notificationLabel).expandX().bottom().center().padTop(650).row();
     }
 
@@ -262,6 +278,7 @@ public class GameView implements Screen {
         fishShopMenu.draw(delta);
         pierreGeneralStoreMenu.draw(delta);
         starDropSaloonMenu.draw(delta);
+        reActMenu.draw(delta);
         for (ArtisanMenu artisan : artisans) {
             artisan.draw(delta);
         }
@@ -408,6 +425,7 @@ public class GameView implements Screen {
         jojaMartMenu.dispose();
         pierreGeneralStoreMenu.dispose();
         starDropSaloonMenu.dispose();
+        reActMenu.dispose();
         for (ArtisanMenu artisan : artisans) {
             artisan.dispose();
         }
