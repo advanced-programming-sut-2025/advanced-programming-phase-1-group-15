@@ -23,6 +23,9 @@ import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
 import com.example.common.farming.Crop;
 import com.example.common.farming.Crops;
+import com.example.common.foraging.ForagingCrop;
+import com.example.common.foraging.ForagingCropsType;
+import com.example.common.foraging.ForagingMineral;
 import com.example.common.tools.BackPackable;
 import com.example.common.tools.Fridge;
 
@@ -39,6 +42,7 @@ public class CookingMenu {
     private final Label tooltipLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     public CookingMenu(Main main, Game game, Runnable onHideCallback) {
+        game.getCurrentPlayer().getInventory().addToBackPack(new Food(FoodType.SALMON_DINNER) , 3);
         this.main = main;
         this.game = game;
         this.onHideCallback = onHideCallback;

@@ -53,7 +53,7 @@ public enum JojaMartItems {
     public final int dailyLimit;
     public final Season season;
     public boolean available;
-
+    public int sold;
     JojaMartItems(ForagingSeedsType foragingSeedsType, String description, int price, int dailyLimit, Season season) {
         this.foragingSeedsType = foragingSeedsType;
         this.description = description;
@@ -61,6 +61,7 @@ public enum JojaMartItems {
         this.dailyLimit = dailyLimit;
         this.season = season;
         this.available = true;
+        this.sold = 0;
     }
 
     public String getName() {
@@ -71,5 +72,11 @@ public enum JojaMartItems {
     }
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+    public int getSold(){
+        return this.sold;
+    }
+    public void setSold(int sold) {
+        this.sold = sold;
     }
 }

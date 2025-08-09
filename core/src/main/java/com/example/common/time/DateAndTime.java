@@ -1,6 +1,9 @@
 package com.example.common.time;
 
+import com.example.common.stores.JojaMartItems;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DateAndTime {
@@ -78,7 +81,11 @@ public class DateAndTime {
         else {
             this.day++;
         }
-
+        ArrayList<JojaMartItems> temp = new ArrayList<>(Arrays.asList(JojaMartItems.values()));
+        for (JojaMartItems item : temp) {
+            item.setSold(0);
+            item.setAvailable(true);
+        }
         nextDayOfWeek();
     }
     public void nextNDays(int n) {

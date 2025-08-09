@@ -64,6 +64,7 @@ public class JojaMartMenu{
     private final TextButton remove = new TextButton("-", skin);
     private Label errorLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
+    private SelectBox select = new SelectBox(skin);
     public JojaMartMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.BACKED_FISH));
@@ -77,6 +78,10 @@ public class JojaMartMenu{
         rootTable.setPosition(Gdx.graphics.getWidth() / 2f - 400, Gdx.graphics.getHeight() / 2f - 350);
         rootTable.setVisible(false);
         rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
+        Array<String> array = new Array<>();
+        array.add("All Items");
+        array.add("Available Items");
+        select.setItems(array);
         Table tabBar = new Table(skin);
         TextButton recipeTab = new TextButton("Buy", skin);
         TextButton fridgeTab = new TextButton("Sell", skin);
@@ -185,7 +190,7 @@ public class JojaMartMenu{
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (temp[0]!=null){
-                    num[0]++;
+                    num[0] = Math.min(num[0]+1 , temp[0].dailyLimit-temp[0].getSold());
                     Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*temp[0].price);
                     Final.setVisible(true);
                 }
@@ -200,56 +205,50 @@ public class JojaMartMenu{
                 }
             }
         });
-        SelectBox select = new SelectBox(skin);
-        Array<String> array = new Array<>();
-        array.add("Available Items");
-        array.add("All Items");
-        select.setItems(array);
-        select.addListener(new ChangeListener() {
-            public void changed(ChangeEvent event, Actor actor) {
-                refresh();
-            }
-        });
-        Table itemTable = new Table(skin);
         ArrayList<JojaMartItems> foragingSeed = new ArrayList<>(Arrays.asList(JojaMartItems.values()));
         foragingSeed.sort(Comparator.comparing(JojaMartItems::available).reversed());
-        for (JojaMartItems item : foragingSeed) {
-            Label label = new Label(item.getName(), skin);
-            if (select.getSelected().equals("All Items")) {
-                if (!item.available){
-                    label.setColor(Color.LIGHT_GRAY);
-                }
-                else {
-                    label.setColor(Color.BROWN);
-                }
-            }
-            else {
-                if (item.available){
-                    label.setColor(Color.BROWN);
-                }
-                else{
-                    label.setVisible(false);
-                }
-            }
-            label.addListener(new InputListener() {
-                @Override
-                public boolean mouseMoved(InputEvent event, float x, float y) {
-                    if (current[0] != null) {
-                        if (!current[0].getName().equals(item.getName())) {
-                            num[0] = 1;
+        Table itemTable = new Table(skin);
+        select.addListener(new ChangeListener() {
+            public void changed(ChangeEvent event, Actor actor) {
+                for (JojaMartItems item : foragingSeed) {
+                    Label label = new Label(item.getName(), skin);
+                    if (select.getSelected().equals("All Items")) {
+                        if (item.getSold() < item.dailyLimit) {
+                            label.setColor(Color.BROWN);
+                            add.setVisible(true);
+                            remove.setVisible(true);
+                        } else {
+                            label.setColor(Color.LIGHT_GRAY);
+                            add.setVisible(false);
+                            remove.setVisible(false);
+                        }
+                    } else {
+                        if (item.available) {
+                            label.setColor(Color.BROWN);
+                        } else {
+                            label.setVisible(false);
                         }
                     }
-                    temp[0]= item;
-                    current[0] = temp[0].foragingSeedsType;
-                    descriptionLabel.setText("Price :" + item.price);
-                    Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*temp[0].price);
-                    Final.setVisible(true);
-                    return true;
+                    label.addListener(new InputListener() {
+                        @Override
+                        public boolean mouseMoved(InputEvent event, float x, float y) {
+                            if (current[0] != null) {
+                                if (!current[0].getName().equals(item.getName())) {
+                                    num[0] = 1;
+                                }
+                            }
+                            temp[0]= item;
+                            current[0] = temp[0].foragingSeedsType;
+                            descriptionLabel.setText("Price :" + item.price);
+                            Final.setText("Total number: "+num[0] + "    Total Price = " + num[0]*temp[0].price);
+                            Final.setVisible(true);
+                            return true;
+                        }
+                    });
+                    itemTable.add(label).left().pad(5).row();
                 }
-            });
-
-            itemTable.add(label).left().pad(5).row();
-        }
+            }
+        });
         ScrollPane scrollPane = new ScrollPane(itemTable, skin);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(true, false);
@@ -419,6 +418,11 @@ public class JojaMartMenu{
         player.setGold(player.getGold()-num);
         ForagingSeeds s = new ForagingSeeds(seed.foragingSeedsType);
         player.getInventory().addToBackPack(s , num);
+        seed.setSold(seed.getSold()+num);
+        if (seed.dailyLimit <= seed.getSold()){
+            seed.setAvailable(false);
+        }
+        refresh();
         return true;
     }
     private void showError(String message, Label errorLabel) {
