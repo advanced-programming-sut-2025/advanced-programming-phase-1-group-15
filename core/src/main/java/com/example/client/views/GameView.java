@@ -57,8 +57,7 @@ public class GameView implements Screen {
     private final Stage uiStage;
     private final Skin skin;
     private final ShapeRenderer shapeRenderer = new ShapeRenderer();
-    private final ShapeRenderer overlayRenderer = new ShapeRenderer();
-    private final Color eveningTint = new Color(0.2f, 0.2f, 0.4f, 0.3f);
+    private final GameOverlayRenderer overlayRenderer;
 
     // UI
     private Table hudTable;
@@ -103,6 +102,7 @@ public class GameView implements Screen {
         game.build();
 
         mapCamera = new MapCamera(game.getCurrentPlayer());
+        overlayRenderer = new GameOverlayRenderer(main.getBatch(), 16);
 
         uiStage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
@@ -236,10 +236,7 @@ public class GameView implements Screen {
         SpriteBatch batch = main.getBatch();
 
         renderMap(batch);
-        int currentHour = game.getDateAndTime().getHour();
-        if (currentHour >= 18) {
-            drawEveningTintOverlay();
-        }
+        overlayRenderer.draw(delta, game, mapCamera);
         renderHeldItemCursor(batch);
 
         renderHUD(batch, delta);
@@ -387,7 +384,7 @@ public class GameView implements Screen {
     public void dispose() {
         running = false;
         commandExecutor.shutdownNow();
-        shapeRenderer.dispose();
+        overlayRenderer.dispose();
         uiStage.dispose();
 
         if (rightClickMenu != null) {
@@ -888,17 +885,6 @@ public class GameView implements Screen {
 
         return Math.abs(mouseTileX - playerPos.getX()) <= 1 && Math.abs(mouseTileY - playerPos.getY()) <= 1;
     }
-
-    private void drawEveningTintOverlay() {
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        overlayRenderer.setProjectionMatrix(mapCamera.getCamera().combined);
-        overlayRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        overlayRenderer.setColor(eveningTint);
-        overlayRenderer.rect(0, 0, Map.COLS * tileSideLength, Map.ROWS * tileSideLength);
-        overlayRenderer.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-    }
-
 
     private void drawNPCs(SpriteBatch batch) {
         Player currentPlayer = ClientApp.currentGame.getCurrentPlayer();
