@@ -428,9 +428,11 @@ public class CheatCodeController {
 
         return new Result(false,"no seed found with this name");
     }
-    public static Result AddItem(String playerUserName,String name , int num) {
+
+    public static Result AddItem(String playerUsername, String name , int num) {
         name = name.trim().toLowerCase().replaceAll("_", " ");
-        Player player = ClientApp.currentGame.getPlayerByUsername(playerUserName);
+        Player player = ClientApp.currentGame.getPlayerByUsername(playerUsername);
+
         for(FruitType fruitType : FruitType.values()) {
             if (fruitType.getName().equals(name)) {
                 Fruit fruit = new Fruit(fruitType);
@@ -480,6 +482,7 @@ public class CheatCodeController {
                 return new Result(true , "item add successfully");
             }
         }
+
         return new Result(false , "item not found");
     }
 }

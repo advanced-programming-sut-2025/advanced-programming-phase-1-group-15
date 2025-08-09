@@ -83,6 +83,7 @@ public class GameServer {
                     switch (action) {
                         case "signup" -> handleSignup(msg, respBody, IP, port);
                         case "login"  -> handleLogin(msg, respBody, IP, port);
+                        case "logout" -> handleLogout(msg, respBody, IP, port);
                         case "get_user" -> getUser(msg, respBody);
                         case "security_question" -> handleSecurityQuestion(msg, respBody);
                         case "get_user_by_username" -> getUserByUsername(msg, respBody);

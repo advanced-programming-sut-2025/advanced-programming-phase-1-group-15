@@ -36,6 +36,29 @@ public class NotificationLabel extends Label {
         return true;
     }
 
+    public boolean showMessage(String text, Color color, Runnable onComplete, float duration) {
+        if (isShowing) return false;
+        isShowing = true;
+
+        setText(text);
+        setColor(new Color(color.r, color.g, color.b, 0f));
+        setVisible(true);
+        clearActions();
+
+        addAction(Actions.sequence(
+            Actions.fadeIn(0.4f),
+            Actions.delay(duration),
+            Actions.fadeOut(0.4f),
+            Actions.run(() -> {
+                setVisible(false);
+                isShowing = false;
+                if (onComplete != null) onComplete.run();
+            })
+        ));
+
+        return true;
+    }
+
     public void cancel() {
         clearActions();
         setVisible(false);

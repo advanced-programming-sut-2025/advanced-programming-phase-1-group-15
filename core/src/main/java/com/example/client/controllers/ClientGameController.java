@@ -167,7 +167,7 @@ public class ClientGameController {
         return new Result(true, tool.upgrade(getCurrentPlayer()));
     }
 //    public static Result useTool(int dx, int dy) {
-////        Tool tool = getCurrentPlayer().getCurrentTool();
+//        Tool tool = getCurrentPlayer().getCurrentTool();
 //        if(tool == null) {
 //            return new Result(false, "choose a tool first");
 //        }
@@ -1308,15 +1308,15 @@ public class ClientGameController {
         player.getArtisanItems().remove(temp);
         return new Result(true , "You receive Artisan item successfully");
     }
-    public static Result Cooking(String Rcipe){
-        Rcipe = Rcipe.trim().toLowerCase().replaceAll("_" , " ");
+    public static Result Cooking(String Recipe){
+        Recipe = Recipe.trim().toLowerCase().replaceAll("_" , " ");
         Player player = ClientApp.currentGame.getCurrentPlayer();
         if (player.getInventory().getCapacity() == player.getInventory().getItems().size()) {
             return new Result(false, "Your inventory is full");
         }
         Food food = null;
         for (Food availableFood : player.getAvailableFoods()) {
-            if (availableFood.getName().equals(Rcipe)) {
+            if (availableFood.getName().equals(Recipe)) {
                 food = availableFood;
             }
         }
@@ -1325,7 +1325,7 @@ public class ClientGameController {
         }
         FoodType ingredient = null;
         for(FoodType foodRecipe : FoodType.values()) {
-            if (foodRecipe.getName().equals(Rcipe)) {
+            if (foodRecipe.getName().equals(Recipe)) {
                 ingredient = foodRecipe;
             }
         }
@@ -1483,6 +1483,15 @@ public class ClientGameController {
         cmdBody.put("action", "predict_weather");
         cmdBody.put("username", getCurrentPlayer().getUsername());
         cmdBody.put("tomorrow_weather", ClientApp.currentGame.getWeather().getTomorrowWeather());
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendHugMessage(String receiverUsername) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "hug");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("receiver", receiverUsername);
 
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }

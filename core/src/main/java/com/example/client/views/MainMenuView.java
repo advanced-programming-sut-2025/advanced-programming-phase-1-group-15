@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.example.client.Main;
+import com.example.client.controllers.ClientLoginController;
 import com.example.client.models.ClientApp;
 
 public class MainMenuView implements Screen {
@@ -135,6 +136,7 @@ public class MainMenuView implements Screen {
         logoutButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                ClientLoginController.sendLogoutMessage(ClientApp.user.getUsername());
                 ClientApp.user = null;
                 game.setScreen(new LoginMenuView(game));
             }

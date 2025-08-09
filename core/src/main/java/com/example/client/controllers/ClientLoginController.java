@@ -34,6 +34,14 @@ public class ClientLoginController {
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }
 
+    public static void sendLogoutMessage(String username) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "logout");
+        cmdBody.put("username", username);
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
     public static void updateUser() {
         HashMap<String,Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "get_user");

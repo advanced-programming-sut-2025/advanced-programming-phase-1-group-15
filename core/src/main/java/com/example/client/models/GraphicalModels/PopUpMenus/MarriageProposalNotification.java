@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.example.client.controllers.ClientGameController;
-import com.example.client.models.ClientApp;
 
 public class MarriageProposalNotification extends PopUpMenu {
     private String proposerName;
@@ -71,4 +70,3 @@ public class MarriageProposalNotification extends PopUpMenu {
         super.show();
     }
 }
-

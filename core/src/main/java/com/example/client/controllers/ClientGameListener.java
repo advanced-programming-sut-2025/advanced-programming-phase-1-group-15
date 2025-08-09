@@ -73,7 +73,7 @@ public class ClientGameListener {
                 handelMarriageRequest(msg);
             }
             case "marry-response" -> {
-                handelMarriageResponse(msg);
+
             }
         }
     }
@@ -111,7 +111,6 @@ public class ClientGameListener {
             Player sender = game.getPlayerByUsername(senderUsername);
             receiver.setNotifiedForMarriage(true);
             receiver.setMarriageAsker(sender);
-            System.out.println("reached marriage");
         }
     }
 
@@ -142,14 +141,12 @@ public class ClientGameListener {
     }
 
     private void handelHug(Message msg, String senderUsername) {
-        String receiverName = (String) msg.getBody().get("receiver");
-        if(ClientApp.user.getUsername().equals(receiverName)) {
+        String receiverName = msg.getFromBody("receiver");
+
+        if(player.getUsername().equals(receiverName)) {
             Player sender = game.getPlayerByUsername(senderUsername);
-            Player receiver = game.getPlayerByUsername(receiverName);
-            ClientApp.currentGame.getCurrentPlayer().addNotification(
-                new PlayerFriendship.Message(sender,
-                    sender.getNickname() +" : I hugged you :)"));
-            game.getFriendshipByPlayers(sender, receiver).hug();
+            player.addNotification(new PlayerFriendship.Message(sender, sender.getNickname() + ": I hugged you :)"));
+            game.getFriendshipByPlayers(sender, player).hug();
         }
     }
 

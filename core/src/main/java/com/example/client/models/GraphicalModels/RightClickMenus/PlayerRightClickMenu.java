@@ -37,9 +37,9 @@ public class PlayerRightClickMenu extends RightClickMenu {
         hugButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Player currentPlayer = ClientApp.currentGame.getCurrentPlayer();
+                hide();
                 showResultDialog(ClientGameController.hug(targetPlayer.getUsername()).message());
-                //hide();
+                ClientGameController.sendHugMessage(targetPlayer.getUsername());
             }
         });
 

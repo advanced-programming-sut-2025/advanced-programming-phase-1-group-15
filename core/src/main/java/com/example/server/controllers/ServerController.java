@@ -41,6 +41,17 @@ public class ServerController {
         }
     }
 
+    public static void handleLogout(Message req, Map<String,Object> respBody, String IP, int port) {
+        String username = req.getFromBody("username");
+
+        String address = IP + ":" + port;
+        ServerApp.onlineAddresses.remove(address);
+
+        respBody.put("success", true);
+        respBody.put("message", "User logged out successfully.");
+        informNewLogout(username);
+    }
+
     public static void getUser(Message req, Map<String,Object> respBody) {
         String IP = req.getFromBody("ip");
         int port = req.getIntFromBody("port");

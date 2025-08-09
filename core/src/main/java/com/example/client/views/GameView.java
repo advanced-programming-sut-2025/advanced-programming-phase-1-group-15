@@ -30,7 +30,6 @@ import com.example.common.Player;
 import com.example.common.Result;
 import com.example.common.animals.Animal;
 import com.example.common.crafting.CraftItem;
-import com.example.common.enums.Direction;
 import com.example.common.map.GreenHouse;
 import com.example.common.map.Map;
 import com.example.common.map.Position;
@@ -71,7 +70,6 @@ public class GameView implements Screen {
         isNotificationShowing = false;
     };
     private ScoreboardWidget scoreboardWidget;
-
     private boolean marriageNotificationShown = false;
 
     // Pop-up menus
@@ -173,7 +171,6 @@ public class GameView implements Screen {
                 Gdx.input.setInputProcessor(popUpMenu.getStage());
             }
 
-
             private void restoreGameInput() {
                 Gdx.input.setInputProcessor(gameInputMultiplexer);
             }
@@ -202,7 +199,7 @@ public class GameView implements Screen {
         hudTable.add(scoreboardButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(friendsButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(toolsButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
-        hudTable.add(notificationLabel).expandX().bottom().center().padTop(700).row();
+        hudTable.add(notificationLabel).expandX().bottom().center().padTop(650).row();
     }
 
     private void setupInputHandling() {
@@ -383,6 +380,7 @@ public class GameView implements Screen {
 
     @Override
     public void hide() {
+        dispose();
     }
 
     @Override
@@ -423,8 +421,13 @@ public class GameView implements Screen {
         while (running) {
             if (scanner.hasNextLine()) {
                 String command = scanner.nextLine();
-                Result result = CheatCodeController.processCommand(command);
-                System.out.println(result);
+                if(game.isAdmin()) {
+                    Result result = CheatCodeController.processCommand(command);
+                    System.out.println(result);
+                }
+                else {
+                    System.out.println("you need to have admin privileges to run cheat codes.");
+                }
             }
         }
         scanner.close();
@@ -592,7 +595,7 @@ public class GameView implements Screen {
 
             return switch (keycode) {
                 case Input.Keys.W, Input.Keys.S, Input.Keys.A, Input.Keys.D -> {
-                   // ClientGameController.sendPlayerStopMessage();
+                    ClientGameController.sendPlayerStopMessage();
                     player.setWalking(false);
                     yield true;
                 }
@@ -929,10 +932,6 @@ public class GameView implements Screen {
     private void processNotifications(float delta) {
         if (!notificationLabel.isShowing() && !game.getCurrentPlayer().getNotifications().isEmpty()) {
             PlayerFriendship.Message message = game.getCurrentPlayer().readNotification();
-            notificationLabel.setPosition(
-                uiStage.getWidth() / 2f - notificationLabel.getPrefWidth() / 2f,
-                uiStage.getHeight() - notificationLabel.getPrefHeight() - 20
-            );
             boolean started = notificationLabel.showMessage(message.message(), Color.BLUE, () -> {
             });
             if (!started) {
@@ -972,7 +971,6 @@ public class GameView implements Screen {
         Player currentPlayer = game.getCurrentPlayer();
         currentPlayer.setNotifiedForMarriage(false);
     }
-
 
     public void setPopUpMenu(PopUpMenu popUpMenu) {
         this.popUpMenu = popUpMenu;
