@@ -773,7 +773,7 @@ public class ClientGameController {
     public static void sendGiftMessage(BackPackable item, int quantity, String receiver) {
         HashMap<String, Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "gift");
-        cmdBody.put("sender", getCurrentPlayer().getUsername());
+        cmdBody.put("username", getCurrentPlayer().getUsername());
         cmdBody.put("receiver", receiver);
         cmdBody.put("item", item.getName());
         cmdBody.put("quantity", quantity);
@@ -784,7 +784,7 @@ public class ClientGameController {
         HashMap<String, Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "rateGift");
         cmdBody.put("other", getCurrentPlayer().getUsername());
-        cmdBody.put("sender", senderUsername);
+        cmdBody.put("username", senderUsername);
         cmdBody.put("giftIndex", giftIndex);
         cmdBody.put("rating", rating);
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));

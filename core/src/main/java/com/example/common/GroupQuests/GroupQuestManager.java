@@ -1,6 +1,8 @@
 package com.example.common.GroupQuests;
 
+import com.example.client.NetworkClient;
 import com.example.client.models.ClientApp;
+import com.example.common.Message;
 import com.example.common.Player;
 
 import java.util.*;
@@ -19,7 +21,40 @@ public class GroupQuestManager {
     }
 
     private void initializePrimaryQuests() {
-        GroupQuest[] primaryQuests = {};
+        GroupQuest[] primaryQuests = {
+            new GroupQuest("MILK", "milk_pale",
+                "Collect 20 milk_pales together to make your own milk",
+                2, 4, 20, 150, 7),
+
+            new GroupQuest("STONE_MINERS", "stone",
+                "Mine 300 Stone blocks for the new fortress walls",
+                3, 5, 300, 200, 5),
+
+            new GroupQuest("FISH_CATCH", "salmon",
+                "Catch 100 Fish to feed the hungry townspeople",
+                2, 3, 100, 100, 4),
+
+            new GroupQuest("CROP_HARVEST", " Harvest Festival",
+                "Harvest 100 Crops before the season ends",
+                2, 6, 400, 120, 6),
+
+            new GroupQuest("ORE_EXPEDITION", "Deep Earth Treasures",
+                "Extract 150 Ore from the dangerous mountain mines",
+                4, 6, 150, 300, 8),
+
+            new GroupQuest("HERB_GATHERING", "Alchemist's Request",
+                "Gather 250 Herbs for the kingdom's medicine supply",
+                2, 4, 250, 80, 5),
+
+            new GroupQuest("METAL_FORGE", "Blacksmith's Challenge",
+                "Forge 100 Metal Bars for the royal armory",
+                3, 4, 100, 250, 6),
+
+            new GroupQuest("GEM_HUNT", "Royal Jewel Collection",
+                "Find 50 Precious Gems for the crown jewels",
+                5, 8, 50, 500, 10)
+        };
+
         for (GroupQuest quest : primaryQuests) {
             allQuests.put(quest.getQuestId(), quest);
         }
@@ -61,8 +96,9 @@ public class GroupQuestManager {
             playerActiveQuests.computeIfAbsent(player.getUsername(), k -> new HashSet<>())
                 .add(questId);
 
-            quest.activate();
+            sendJoinQuestMessage(questId, player.getUsername());
 
+            quest.activate();
             return true;
         }
         return false;
@@ -81,6 +117,8 @@ public class GroupQuestManager {
             userQuests.remove(questId);
         }
 
+        sendLeaveQuestMessage(questId, player.getUsername());
+
         return true;
     }
 
@@ -88,7 +126,7 @@ public class GroupQuestManager {
         GroupQuest quest = allQuests.get(questId);
         if (quest != null) {
             quest.updateProgress(player, amount);
-
+            sendQuestProgressMessage(questId, player.getUsername(), amount);
             if (quest.getStatus() == QuestStatus.COMPLETED) {
                 distributeRewards(quest);
                 cleanupCompletedQuest(questId);
@@ -100,11 +138,10 @@ public class GroupQuestManager {
         for (String username : quest.getParticipantUsernames()) {
             Player player = getPlayerByUsername(username);
             if (player != null) {
-                // player.addCoins(quest.getRewardPerPlayer());
-
-                // TODO : send notification to player
+                player.addGold(quest.getRewardPerPlayer());
+                sendQuestRewardMessage(quest.getQuestId(), username, quest.getRewardPerPlayer());
                 System.out.println("Player " + username + " received " +
-                    quest.getRewardPerPlayer() + " coins from completing quest: " + quest.getTitle());
+                    quest.getRewardPerPlayer() + " coins from completing quest: " + quest.getDescription());
             }
         }
     }
@@ -129,7 +166,7 @@ public class GroupQuestManager {
 
         GroupQuest newQuest = new GroupQuest(
             oldQuest.getQuestId(),
-            oldQuest.getTitle(),
+            oldQuest.getToBeDelivered(),
             oldQuest.getDescription(),
             oldQuest.getRequiredPlayers(),
             oldQuest.getMaxPlayers(),
@@ -168,6 +205,86 @@ public class GroupQuestManager {
         resetQuestToAvailable(questId);
     }
 
+    private void sendJoinQuestMessage(String questId, String username) {
+        HashMap<String, Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "joinQuest");
+        cmdBody.put("questId", questId);
+        cmdBody.put("username", username);
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    private void sendLeaveQuestMessage(String questId, String username) {
+        HashMap<String, Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "leaveQuest");
+        cmdBody.put("questId", questId);
+        cmdBody.put("username", username);
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    private void sendQuestProgressMessage(String questId, String username, int amount) {
+        HashMap<String, Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "questProgress");
+        cmdBody.put("questId", questId);
+        cmdBody.put("username", username);
+        cmdBody.put("amount", amount);
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    private void sendQuestRewardMessage(String questId, String username, int reward) {
+        HashMap<String, Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "questReward");
+        cmdBody.put("questId", questId);
+        cmdBody.put("username", username);
+        cmdBody.put("reward", reward);
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    private void sendQuestFailedMessage(String questId, String username) {
+        HashMap<String, Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "questFailed");
+        cmdBody.put("questId", questId);
+        cmdBody.put("username", username);
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public void handleJoinQuest(String questId, String username) {
+        GroupQuest quest = allQuests.get(questId);
+        Player player = getPlayerByUsername(username);
+
+        if (quest != null && player != null && quest.canJoin(username)) {
+            quest.addPlayer(player);
+            playerActiveQuests.computeIfAbsent(username, k -> new HashSet<>()).add(questId);
+            quest.activate();
+        }
+    }
+
+    public void handleLeaveQuest(String questId, String username) {
+        GroupQuest quest = allQuests.get(questId);
+        Player player = getPlayerByUsername(username);
+
+        if (quest != null && player != null) {
+            quest.removePlayer(player);
+            Set<String> userQuests = playerActiveQuests.get(username);
+            if (userQuests != null) {
+                userQuests.remove(questId);
+            }
+        }
+    }
+
+    public void handleQuestProgress(String questId, String username, int amount) {
+        GroupQuest quest = allQuests.get(questId);
+        Player player = getPlayerByUsername(username);
+
+        if (quest != null && player != null) {
+            quest.updateProgress(player, amount);
+
+            if (quest.getStatus() == QuestStatus.COMPLETED) {
+                distributeRewards(quest);
+                cleanupCompletedQuest(questId);
+            }
+        }
+    }
+
     public int getCurrentDay() {
         if (ClientApp.currentGame != null && ClientApp.currentGame.getDateAndTime() != null) {
             return ClientApp.currentGame.getDateAndTime().getDay();
@@ -195,7 +312,7 @@ public class GroupQuestManager {
         System.out.println("=== Quest Status ===");
         for (GroupQuest quest : allQuests.values()) {
             System.out.printf("Quest: %s | Status: %s | Players: %d/%d | Progress: %.1f%%\n",
-                quest.getTitle(), quest.getStatus(),
+                quest.getToBeDelivered(), quest.getStatus(),
                 quest.getParticipantUsernames().size(), quest.getMaxPlayers(),
                 quest.getCompletionPercentage());
         }

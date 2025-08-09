@@ -162,7 +162,7 @@ public class ClientGameListener {
 //    }
     private void handleGift(Message msg) {
         String receiverUsername = msg.getFromBody("receiver");
-        String senderUsername = msg.getFromBody("sender");
+        String senderUsername = msg.getFromBody("username");
         String itemName = msg.getFromBody("item");
         int quantity = msg.getIntFromBody("quantity");
         if (ClientApp.user.getUsername().equals(receiverUsername)) {
@@ -173,7 +173,7 @@ public class ClientGameListener {
 
     private void handleRateGift(Message msg) {
         String raterUsername = msg.getFromBody("other");
-        String senderUsername = msg.getFromBody("sender");
+        String senderUsername = msg.getFromBody("username");
         int giftIndex = msg.getIntFromBody("giftIndex");
         int rating = msg.getIntFromBody("rating");
 

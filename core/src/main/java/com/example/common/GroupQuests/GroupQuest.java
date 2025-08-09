@@ -4,6 +4,7 @@ import com.example.client.models.ClientApp;
 import com.example.common.Player;
 import com.example.common.time.DateAndTime;
 import com.example.common.time.TimeObserver;
+import com.example.common.tools.BackPackable;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,7 +12,7 @@ import java.util.Set;
 
 public class GroupQuest implements TimeObserver {
     private String questId;
-    private String title;
+    private String toBeDelivered;
     private String description;
     private QuestStatus status;
     private int requiredPlayers;
@@ -26,11 +27,11 @@ public class GroupQuest implements TimeObserver {
     private HashMap<Player, Integer> playerProgress;
     private String creatorUsername;
 
-    public GroupQuest(String questId, String title, String description,
+    public GroupQuest(String questId, String toBeDelivered, String description,
                       int requiredPlayers, int maxPlayers, int targetAmount,
                       int rewardPerPlayer, int timeLimit) {
         this.questId = questId;
-        this.title = title;
+        this.toBeDelivered = toBeDelivered;
         this.description = description;
         this.status = QuestStatus.AVAILABLE;
         this.requiredPlayers = requiredPlayers;
@@ -107,7 +108,7 @@ public class GroupQuest implements TimeObserver {
     }
 
     public String getQuestId() { return questId; }
-    public String getTitle() { return title; }
+    public String getToBeDelivered() {return toBeDelivered;}
     public String getDescription() { return description; }
     public QuestStatus getStatus() { return status; }
     public int getRequiredPlayers() { return requiredPlayers; }
