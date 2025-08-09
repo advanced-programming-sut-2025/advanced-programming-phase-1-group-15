@@ -41,7 +41,6 @@ public class BlackSmithMenu{
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     private final TextButton add = new TextButton("+", skin);
     private final TextButton remove = new TextButton("-", skin);
-    private Label errorLabel = new Label("", skin);
     public BlackSmithMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.BACKED_FISH));
@@ -88,13 +87,13 @@ public class BlackSmithMenu{
         buyTab.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                refresh("");
+                refresh();
                 changeTab(buy);
             }
         });
         sellTab.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
-                refresh("");
+                refresh();
                 changeTab(sell);
             }
         });
@@ -113,6 +112,7 @@ public class BlackSmithMenu{
     private Table createBuyContent() {
         Label titleLabel = new Label("Black Smith Store: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Price: ", skin);
+        Label errorLabel = new Label("", skin);
         Label Final = new Label("", skin);
         Final.setColor(Color.BROWN);
         Final.setVisible(false);
@@ -276,7 +276,8 @@ public class BlackSmithMenu{
                 }
                 game.getCurrentPlayer().getTrashCan().removeCountFromTrashCan(current[0],num[0]);
                 game.getCurrentPlayer().setGold(game.getCurrentPlayer().getGold()+ current[0].getPrice()*num[0]);
-                refresh("You sell item successfully");
+                refresh();
+                showError("You sell items successfully", errorLabel);
                 errorLabel.setColor(Color.GREEN);
                 Final.setVisible(false);
                 current[0] = null;
@@ -325,7 +326,7 @@ public class BlackSmithMenu{
         this.visible = visible;
         rootTable.setVisible(visible);
         if (visible) {
-            refresh("");
+            refresh();
             switch (tabNumber) {
                 case 1:
                     changeTab(buy);
@@ -346,11 +347,10 @@ public class BlackSmithMenu{
         stage.dispose();
         skin.dispose();
     }
-    private void refresh(String message) {
+    private void refresh() {
         buy.clear(); sell.clear();
         buy.add(createBuyContent()).expand().fill();
         sell.add(createSellContent()).expand().fill();
-        showError(message , errorLabel);
     }
     private void changeTab(Table content) {
         buy.setVisible(false);

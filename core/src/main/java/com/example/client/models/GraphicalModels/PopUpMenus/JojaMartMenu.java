@@ -62,7 +62,6 @@ public class JojaMartMenu{
     private final Label tooltipLabel = new Label("", skin);
     private final TextButton add = new TextButton("+", skin);
     private final TextButton remove = new TextButton("-", skin);
-    private Label errorLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     private SelectBox select = new SelectBox(skin);
     public JojaMartMenu(Main main, Game game, Runnable onHideCallback) {
@@ -141,6 +140,7 @@ public class JojaMartMenu{
         Label titleLabel = new Label("Joja Mart Store: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Price: ", skin);
         TextButton addButton = new TextButton("+", skin);
+        Label errorLabel = new Label("", skin);
         TextButton removeButton = new TextButton("-", skin);
         Label Final = new Label("", skin);
         Final.setColor(Color.BROWN);

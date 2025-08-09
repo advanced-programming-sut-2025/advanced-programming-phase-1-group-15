@@ -62,7 +62,6 @@ public class FishShopMenu{
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     private final TextButton add = new TextButton("+", skin);
     private final TextButton remove = new TextButton("-", skin);
-    private Label errorLabel = new Label("", skin);
     public FishShopMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.BACKED_FISH));
@@ -134,6 +133,7 @@ public class FishShopMenu{
     private Table createBuyContent() {
         Label titleLabel = new Label("Fish Shop: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label(" Fish Price: ", skin);
+        Label errorLabel = new Label("", skin);
         TextButton addButton = new TextButton("+", skin);
         TextButton removeButton = new TextButton("-", skin);
         Label Final = new Label("", skin);

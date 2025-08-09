@@ -60,7 +60,6 @@ public class PierreGeneralStoreMenu{
     private final Label tooltipLabel = new Label("", skin);
     private final TextButton add = new TextButton("+", skin);
     private final TextButton remove = new TextButton("-", skin);
-    private Label errorLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     public PierreGeneralStoreMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().addToAvailableFoods(new Food(FoodType.TRIPLE_SHOT_ESPRESSO));
@@ -133,6 +132,7 @@ public class PierreGeneralStoreMenu{
     private Table createBuyContent() {
         Label titleLabel = new Label("Pierre General Store: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Label descriptionLabel = new Label("Recipe Price: ", skin);
+        Label errorLabel = new Label("", skin);
         Image craftIcon = new Image();
         craftIcon.setSize(48, 48);
         craftIcon.setVisible(false);

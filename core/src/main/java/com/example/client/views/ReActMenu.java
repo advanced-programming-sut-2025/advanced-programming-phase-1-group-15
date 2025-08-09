@@ -18,6 +18,7 @@ import com.example.client.NetworkClient;
 import com.example.client.controllers.ClientGameController;
 import com.example.client.controllers.ClientGameListener;
 import com.example.common.Game;
+import com.example.common.Player;
 import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
 import com.example.common.tools.BackPackable;
@@ -35,7 +36,6 @@ public class ReActMenu {
     private final Runnable onHideCallback;
     private final Label tooltipLabel = new Label("", skin);
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
-    private Label errorLabel = new Label("",skin);
     public ReActMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().getInventory().addToBackPack(new Food(FoodType.SALMON_DINNER) , 3);
         this.main = main;
@@ -106,95 +106,85 @@ public class ReActMenu {
     private Table createCookingContent() {
         Label titleLabel = new Label("Message: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Table table = new Table(skin);
+        Label errorLabel = new Label("",skin);
+        TextField username = new TextField("Enter UserName:", skin);
+        username.setColor(Color.BLACK);
+        username.getStyle().fontColor = Color.BROWN;
+        table.add(username).width(500).padTop(10).row();
+        TextField message = new TextField("Enter your message" , skin);
+        message.setColor(Color.BLACK);
+        message.getStyle().fontColor = Color.BROWN;
+        table.add(message).width(500).padTop(10).row();
         TextButton sendButton = new TextButton("Send", skin);
         sendButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                Player player = game.getPlayerByUsername(username.getText());
+                if (player == null) {
+                    showError("No player find whit this username" , errorLabel);
+                    errorLabel.setColor(Color.RED);
+                    return;
+                }
+                if (message.getText().length() > 15) {
+                    showError("Your message is to long", errorLabel);
+                    errorLabel.setColor(Color.RED);
+                }
+                showError("Sent Message successfully", errorLabel);
+                errorLabel.setColor(Color.GREEN);
             }
         });
+        table.add(errorLabel).left().row();
+        table.add(sendButton).left().pad(10);
         return table;
     }
     private Table createFridgeContent() {
         Table table = new Table(skin);
+        TextField username = new TextField("Enter UserName:", skin);
+        Label errorLabel = new Label("",skin);
+        table.add(username).width(500).padTop(10).row();
+        username.setColor(Color.BLACK);
+        username.getStyle().fontColor = Color.BROWN;
         Label titleLabel = new Label("Emoji: ", skin);
         titleLabel.setColor(Color.FIREBRICK);
         table.add(titleLabel).left();
-
         HorizontalGroup emojiGroup = new HorizontalGroup();
         emojiGroup.space(10);
-
+        float emojiSize = 48f;
         final String[] selectedEmoji = {null};
-
-        ImageButton angryButton = new ImageButton(new SpriteDrawable(GameAssetManager.angry));
-        angryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                selectedEmoji[0] = "angry";
-                highlightSelected(angryButton, emojiGroup);
+        String[][] emojis = {
+                {"angry", "angry"},
+                {"cry", "cry"},
+                {"laugh", "laugh"},
+                {"love", "love"},
+                {"party", "party"},
+                {"smile", "smile"},
+                {"thumbs_up", "thumbs_up"}
+        };
+        for (String[] emoji : emojis) {
+            String name = emoji[0];
+            Sprite sprite = switch (name) {
+                case "angry" -> GameAssetManager.angry;
+                case "cry" -> GameAssetManager.cry;
+                case "laugh" -> GameAssetManager.laugh;
+                case "love" -> GameAssetManager.love;
+                case "party" -> GameAssetManager.party;
+                case "smile" -> GameAssetManager.smile;
+                case "thumbs_up" -> GameAssetManager.thumbs_up;
+                default -> null;
+            };
+            if (sprite != null) {
+                ImageButton button = new ImageButton(new SpriteDrawable(sprite));
+                button.getImageCell().size(emojiSize, emojiSize);
+                button.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        selectedEmoji[0] = name;
+                        highlightSelected(button, emojiGroup);
+                    }
+                });
+                emojiGroup.addActor(button);
             }
-        });
-        emojiGroup.addActor(angryButton);
-
-        ImageButton cryButton = new ImageButton(new SpriteDrawable(GameAssetManager.cry));
-        angryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                selectedEmoji[0] = "cry";
-                highlightSelected(cryButton, emojiGroup);
-            }
-        });
-        emojiGroup.addActor(cryButton);
-
-        ImageButton laughButton = new ImageButton(new SpriteDrawable(GameAssetManager.laugh));
-        angryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                selectedEmoji[0] = "laugh";
-                highlightSelected(laughButton, emojiGroup);
-            }
-        });
-        emojiGroup.addActor(laughButton);
-
-        ImageButton loveButton = new ImageButton(new SpriteDrawable(GameAssetManager.love));
-        angryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                selectedEmoji[0] = "love";
-                highlightSelected(loveButton, emojiGroup);
-            }
-        });
-        emojiGroup.addActor(loveButton);
-
-        ImageButton partyButton = new ImageButton(new SpriteDrawable(GameAssetManager.party));
-        angryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                selectedEmoji[0] = "party";
-                highlightSelected(partyButton, emojiGroup);
-            }
-        });
-        emojiGroup.addActor(partyButton);
-
-        ImageButton smileButton = new ImageButton(new SpriteDrawable(GameAssetManager.smile));
-        angryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                selectedEmoji[0] = "smile";
-                highlightSelected(smileButton, emojiGroup);
-            }
-        });
-        emojiGroup.addActor(smileButton);
-
-        ImageButton thumbsButton = new ImageButton(new SpriteDrawable(GameAssetManager.thumbs_up));
-        angryButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                selectedEmoji[0] = "thumbs_up";
-                highlightSelected(thumbsButton, emojiGroup);
-            }
-        });
-        emojiGroup.addActor(thumbsButton);
+        }
 
         table.row().padTop(10);
         table.add(emojiGroup).colspan(2);
@@ -203,18 +193,28 @@ public class ReActMenu {
         sendButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (selectedEmoji[0] == null) {
-                    showError("No emoji selected!" , errorLabel);
+                Player player = game.getPlayerByUsername(username.getText());
+                if (player == null) {
+                    showError("No player find whit this username" , errorLabel);
+                    errorLabel.setColor(Color.RED);
                     return;
                 }
-                showError("Sent emoji: " + selectedEmoji[0] , errorLabel);
+                if (selectedEmoji[0] == null) {
+                    showError("No emoji selected!", errorLabel);
+                    errorLabel.setColor(Color.RED);
+                    return;
+                }
+                showError("Sent emoji: " + selectedEmoji[0], errorLabel);
+                errorLabel.setColor(Color.GREEN);
             }
         });
-        table.row().padTop(10);
-        table.add(sendButton).left();
 
+        table.row().padTop(10);
+        table.add(errorLabel).left().padTop(10).row();
+        table.add(sendButton).left();
         return table;
     }
+
     public boolean isVisible() {
         return visible;
     }
