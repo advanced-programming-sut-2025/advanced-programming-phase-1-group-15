@@ -83,7 +83,7 @@ public class CheatCodeController {
         else if(CheatCodeCommands.ADD_ITEMS.matches(command)) {
             Matcher matcher = CheatCodeCommands.ADD_ITEMS.matcher(command);
             matcher.matches();
-            return CheatCodeController.AddItem(matcher.group("name"),Integer.parseInt(matcher.group("count")));
+            return CheatCodeController.AddItem(matcher.group("username"),matcher.group("name"),Integer.parseInt(matcher.group("count")));
         }
         else if(CheatCodeCommands.CHEAT_THOR.matches(command)) {
             Matcher matcher = CheatCodeCommands.CHEAT_THOR.matcher(command);
@@ -428,9 +428,9 @@ public class CheatCodeController {
 
         return new Result(false,"no seed found with this name");
     }
-    public static Result AddItem(String name , int num) {
+    public static Result AddItem(String playerUserName,String name , int num) {
         name = name.trim().toLowerCase().replaceAll("_", " ");
-        Player player = ClientApp.currentGame.getCurrentPlayer();
+        Player player = ClientApp.currentGame.getPlayerByUsername(playerUserName);
         for(FruitType fruitType : FruitType.values()) {
             if (fruitType.getName().equals(name)) {
                 Fruit fruit = new Fruit(fruitType);

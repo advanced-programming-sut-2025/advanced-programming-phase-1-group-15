@@ -61,7 +61,6 @@ public class ClientGameListener {
                 handleWeatherForecast(msg);
             }
             case "hug" -> {
-                System.out.println("hug detected here");
                 handelHug(msg, senderUsername);
             }
             case "flower" -> {
@@ -74,7 +73,7 @@ public class ClientGameListener {
                 handelMarriageRequest(msg);
             }
             case "marry-response" -> {
-
+                handelMarriageResponse(msg);
             }
         }
     }
@@ -112,6 +111,7 @@ public class ClientGameListener {
             Player sender = game.getPlayerByUsername(senderUsername);
             receiver.setNotifiedForMarriage(true);
             receiver.setMarriageAsker(sender);
+            System.out.println("reached marriage");
         }
     }
 

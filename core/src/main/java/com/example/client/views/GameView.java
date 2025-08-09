@@ -72,14 +72,13 @@ public class GameView implements Screen {
     };
     private ScoreboardWidget scoreboardWidget;
 
+    private boolean marriageNotificationShown = false;
+
     // Pop-up menus
     private PopUpMenu popUpMenu;
 
     // right-click menus
     private RightClickMenu rightClickMenu;
-
-    // mariage notif
-    private MarriageProposalNotification marriageNotification;
 
     // Input handling
     private final GameInputProcessor gameInputProcessor;
@@ -156,9 +155,6 @@ public class GameView implements Screen {
         this.notificationLabel.setPosition((screenWidth / 2) - 150, screenHeight - 100);
         uiStage.addActor(this.notificationLabel);
 
-        marriageNotification = new MarriageProposalNotification(skin);
-        uiStage.addActor(marriageNotification);
-
         hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
         hudTable.add(currentItemLabel).padTop(5).padLeft(10).left().row();
 
@@ -176,6 +172,7 @@ public class GameView implements Screen {
                 popUpMenu.show();
                 Gdx.input.setInputProcessor(popUpMenu.getStage());
             }
+
 
             private void restoreGameInput() {
                 Gdx.input.setInputProcessor(gameInputMultiplexer);
@@ -237,7 +234,7 @@ public class GameView implements Screen {
         game.getDateAndTime().updateDateAndTime(delta);
 
         processNotifications(delta);
-        proccessMariageProposal(delta);
+        processMarriageProposal(delta);
 
         SpriteBatch batch = main.getBatch();
 
@@ -946,17 +943,36 @@ public class GameView implements Screen {
         }
     }
 
-    private void proccessMariageProposal(float delta){
-        if(game.getCurrentPlayer().isNotifiedForMarriage()){
-            Player currentPlayer = game.getCurrentPlayer();
-            marriageNotification = new MarriageProposalNotification(skin);
-            marriageNotification.setPosition(
-                uiStage.getWidth() / 2f - notificationLabel.getPrefWidth() / 2f,
-                uiStage.getHeight() - notificationLabel.getPrefHeight() - 20
-            );
-            marriageNotification.showProposal(currentPlayer.getMarriageAsker());
+    private void processMarriageProposal(float delta) {
+        Player currentPlayer = game.getCurrentPlayer();
+        if (currentPlayer.isNotifiedForMarriage() && !marriageNotificationShown) {
+            String proposerName = currentPlayer.getMarriageAsker().getUsername();
+            MarriageProposalNotification menu =
+                new MarriageProposalNotification(skin, this::onMarriageNotificationHide);
+            menu.setProposal(proposerName);
+            popUpMenu = menu;
+
+            menu.show();
+
+            // Instead of completely replacing input processor, add the popup stage to multiplexer
+            if (gameInputMultiplexer != null) {
+                gameInputMultiplexer.addProcessor(0, menu.getStage()); // Add at front for priority
+            } else {
+                Gdx.input.setInputProcessor(menu.getStage());
+            }
+
+            marriageNotificationShown = true;
         }
     }
+
+    private void onMarriageNotificationHide() {
+        marriageNotificationShown = false;
+        restoreGameInput();
+
+        Player currentPlayer = game.getCurrentPlayer();
+        currentPlayer.setNotifiedForMarriage(false);
+    }
+
 
     public void setPopUpMenu(PopUpMenu popUpMenu) {
         this.popUpMenu = popUpMenu;

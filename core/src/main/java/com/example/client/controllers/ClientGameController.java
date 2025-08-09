@@ -781,7 +781,7 @@ public class ClientGameController {
         HashMap<String,Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "marry-request");
         cmdBody.put("username", getCurrentPlayer().getUsername());
-        cmdBody.put("receiver", target);
+        cmdBody.put("receiver", target.getUsername());
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
 
         return new Result(true, "You're proposal has been sent to " + target.getUsername() + ".");
