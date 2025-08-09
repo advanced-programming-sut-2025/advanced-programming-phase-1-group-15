@@ -418,13 +418,13 @@ public class GameView implements Screen {
         while (running) {
             if (scanner.hasNextLine()) {
                 String command = scanner.nextLine();
-                if(game.isAdmin()) {
+                //if(game.isAdmin()) {
                     Result result = CheatCodeController.processCommand(command);
                     System.out.println(result);
-                }
-                else {
-                    System.out.println("you need to have admin privileges to run cheat codes.");
-                }
+                //}
+                //else {
+                //    System.out.println("you need to have admin privileges to run cheat codes.");
+                //}
             }
         }
         scanner.close();

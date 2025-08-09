@@ -67,7 +67,11 @@ public class ClientGameListener {
                 handelFlower(msg, senderUsername);
             }
             case "gift" -> {
-                handelGift(msg,senderUsername);
+                System.out.println("reached gift case");
+                handleGift(msg);
+            }
+            case "rateGift" -> {
+                handleRateGift(msg);
             }
             case "marry-request" -> {
                 handelMarriageRequest(msg);
@@ -141,21 +145,49 @@ public class ClientGameListener {
         }
     }
 
-    private void handelGift(Message msg, String senderUsername) {
+//    private void handelGift(Message msg, String senderUsername) {
+//        String receiverUsername = msg.getFromBody("receiver");
+//        String itemName = msg.getFromBody("item");
+//        int quantity = msg.getIntFromBody("quantity");
+//        if(ClientApp.user.getUsername().equals(receiverUsername)) {
+//            Player sender = game.getPlayerByUsername(senderUsername);
+//            Player receiver = game.getPlayerByUsername(receiverUsername);
+//            BackPackable item =  sender.getInventory().getItemByName(itemName);
+//            sender.getInventory().removeCountFromBackPack(item,quantity);
+//            receiver.getInventory().addToBackPack(item,quantity);
+//            ClientApp.currentGame.getCurrentPlayer().addNotification(
+//                new PlayerFriendship.Message(
+//                    sender, sender.getNickname() +"sent you "+quantity+" number of "+itemName));
+//        }
+//    }
+    private void handleGift(Message msg) {
         String receiverUsername = msg.getFromBody("receiver");
+        String senderUsername = msg.getFromBody("sender");
         String itemName = msg.getFromBody("item");
         int quantity = msg.getIntFromBody("quantity");
-        if(ClientApp.user.getUsername().equals(receiverUsername)) {
-            Player sender = game.getPlayerByUsername(senderUsername);
-            Player receiver = game.getPlayerByUsername(receiverUsername);
-            BackPackable item =  sender.getInventory().getItemByName(itemName);
-            sender.getInventory().removeCountFromBackPack(item,quantity);
-            receiver.getInventory().addToBackPack(item,quantity);
-            ClientApp.currentGame.getCurrentPlayer().addNotification(
-                new PlayerFriendship.Message(
-                    sender, sender.getNickname() +"sent you "+quantity+" number of "+itemName));
+        if (ClientApp.user.getUsername().equals(receiverUsername)) {
+            ClientGameController.getGift(senderUsername, itemName, quantity);
+            System.out.println("reached this line");
         }
     }
+
+    private void handleRateGift(Message msg) {
+        String raterUsername = msg.getFromBody("other");
+        String senderUsername = msg.getFromBody("sender");
+        int giftIndex = msg.getIntFromBody("giftIndex");
+        int rating = msg.getIntFromBody("rating");
+
+        Player rater = game.getPlayerByUsername(raterUsername);
+        Player sender = game.getPlayerByUsername(senderUsername);
+        PlayerFriendship friendship = game.getFriendshipByPlayers(sender, rater);
+
+        if (friendship != null && giftIndex >= 0 && giftIndex < friendship.getGifts(sender).size()) {
+            PlayerFriendship.Gift gift = friendship.getGifts(sender).get(giftIndex);
+            gift.setRate(rating);
+            friendship.rateGift(rating);
+        }
+    }
+
 
     private void handelHug(Message msg, String senderUsername) {
         String receiverName = msg.getFromBody("receiver");

@@ -583,6 +583,29 @@ public class ClientGameController {
 
         return new Result(true, "you gave "  + amount + " " + itemName + " to " + receiver.getUsername() + "!");
     }
+
+    public static void giveGift(String receiverUsername,String itemName, int amount){
+        Player receiver = ClientApp.currentGame.getPlayerByUsername(receiverUsername);
+        Player sender = getCurrentPlayer();
+        BackPackable item = getCurrentPlayer().getInventory().getItemByName(itemName);
+        PlayerFriendship friendship = ClientApp.currentGame.getFriendshipByPlayers(sender, receiver);
+        friendship.gift(sender, item);
+        receiver.addToBackPack(item, amount);
+        receiver.addMessage(new PlayerFriendship.Message(sender, amount + " " + itemName + " for you!"));
+        sender.getInventory().removeCountFromBackPack(item, amount);
+    }
+
+    public static void getGift(String senderUsername, String itemName, int amount) {
+        Player sender = ClientApp.currentGame.getPlayerByUsername(senderUsername);
+        Player receiver = ClientApp.currentGame.getCurrentPlayer();
+        BackPackable item = getCurrentPlayer().getInventory().getItemByName(itemName);
+        PlayerFriendship friendship = ClientApp.currentGame.getFriendshipByPlayers(sender, receiver);
+        friendship.gift(sender, item);
+        receiver.addToBackPack(item, amount);
+        receiver.addMessage(new PlayerFriendship.Message(sender, amount + " " + itemName + " for you!"));
+        sender.getInventory().removeCountFromBackPack(item, amount);
+    }
+
     public static Result giftList(String username) {
         Player sender = ClientApp.currentGame.getPlayerByUsername(username);
         if(sender == null) {
@@ -748,12 +771,22 @@ public class ClientGameController {
     }
 
     public static void sendGiftMessage(BackPackable item, int quantity, String receiver) {
-        HashMap<String,Object> cmdBody = new HashMap<>();
+        HashMap<String, Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "gift");
-        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("sender", getCurrentPlayer().getUsername());
         cmdBody.put("receiver", receiver);
         cmdBody.put("item", item.getName());
         cmdBody.put("quantity", quantity);
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendRateGiftMessage(String senderUsername, int giftIndex, int rating) {
+        HashMap<String, Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "rateGift");
+        cmdBody.put("other", getCurrentPlayer().getUsername());
+        cmdBody.put("sender", senderUsername);
+        cmdBody.put("giftIndex", giftIndex);
+        cmdBody.put("rating", rating);
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }
 

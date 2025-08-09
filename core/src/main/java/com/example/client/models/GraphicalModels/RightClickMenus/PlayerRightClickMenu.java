@@ -27,13 +27,13 @@ public class PlayerRightClickMenu extends RightClickMenu {
     @Override
     protected void setupMenuContent() {
         TextField messageField = new TextField("your message", skin);
-        messageField.setColor(Color.BLACK);
+        messageField.setColor(Color.RED);
         TextButton talkButton = new TextButton("Talk", skin);
         TextButton hugButton = new TextButton("Hug", skin);
         TextButton buyFlowerButton = new TextButton("Buy Flower", skin);
         TextButton marryButton = new TextButton("Marry", skin);
 
-        menuTable.add(talkButton).pad(3).fillX().row();
+        menuTable.add(messageField).pad(3).fillX().row();
         menuTable.add(talkButton).pad(3).fillX().row();
         menuTable.add(hugButton).pad(3).fillX().row();
         menuTable.add(buyFlowerButton).pad(3).fillX().row();

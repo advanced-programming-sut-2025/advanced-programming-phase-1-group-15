@@ -16,7 +16,7 @@ public class ServerGameController {
 
         switch (action) {
             case "set_randomizers", "player_movement", "player_stop", "flower", "marry-request", "talk",
-                 "generate_trees", "generate_stones", "predict_weather","hug", "gift", "marry-response" -> {
+                 "generate_trees", "generate_stones", "predict_weather","hug", "gift" , "rateGift" , "marry-response" -> {
                 reflectMessage(req, respBody);
             }
         }
