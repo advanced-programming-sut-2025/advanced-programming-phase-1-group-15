@@ -11,36 +11,47 @@ import com.example.common.time.TimeObserver;
 import com.example.common.tools.BackPackable;
 import com.example.common.tools.Tool;
 import com.example.common.weather.WeatherOption;
+import com.example.server.models.OllamaClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class NPC implements TimeObserver {
     protected String name;
     protected String job;
+    private String personality;
     private Tile homeLocation;
     private int lastDayUpdate = ClientApp.currentGame.getDateAndTime().getDay();
     private TextureRegion sprite;
 
     protected ArrayList<BackPackable> favourites = new ArrayList<>();
-
     protected HashMap<Quest,Integer> questTemplates = new HashMap<>();
+    protected HashMap<Player, NPCFriendShip> friendships = new HashMap<>();
+
+    private HashMap<Player, List<String>> interactionHistory = new HashMap<>();
+    private boolean useLLM = true;
+    private int maxHistoryEntries = 10;
+
+    public NPC(String name, String job, Tile homeLocation, TextureRegion sprite) {
+        this(name, job, homeLocation, sprite, "friendly and helpful");
+    }
+
+    public NPC(String name, String job, Tile homeLocation, TextureRegion sprite, String personality) {
+        this.name = name;
+        this.job = job;
+        this.homeLocation = homeLocation;
+        this.sprite = sprite;
+        this.personality = personality;
+    }
 
     public HashMap<Player, NPCFriendShip> getFriendships() {
         return friendships;
     }
 
     public void addToFriendShip(Player player) {
-        friendships.put(player,new NPCFriendShip(this,player));
-    }
-
-    protected HashMap<Player, NPCFriendShip> friendships = new HashMap<>();
-
-    public NPC(String name, String job, Tile homeLocation, TextureRegion sprite) {
-        this.name = name;
-        this.job = job;
-        this.homeLocation = homeLocation;
-        this.sprite = sprite;
+        friendships.put(player, new NPCFriendShip(this, player));
+        interactionHistory.putIfAbsent(player, new ArrayList<>());
     }
 
     public Tile getHomeLocation() {
@@ -48,26 +59,167 @@ public class NPC implements TimeObserver {
     }
 
     public String meet(Player player) {
-        NPCFriendShip fs = friendships.computeIfAbsent(player, k -> new NPCFriendShip(this,player));
-        if (!fs.hasTalkedToday()) {
+        NPCFriendShip fs = friendships.computeIfAbsent(player, k -> {
+            interactionHistory.putIfAbsent(player, new ArrayList<>());
+            return new NPCFriendShip(this, player);
+        });
+        boolean firstInteractionToday = !fs.hasTalkedToday();
+        if (firstInteractionToday) {
             fs.addPoints(20);
             fs.markTalked();
         }
+        String response;
+        if (useLLM) {
+            response = generateLLMResponse(player, "talk");
+        } else {
+            response = generateTraditionalGreeting(fs);
+        }
+        recordInteraction(player, "Player talked to " + name + ". " + name + " responded: " + response);
+        return response;
+    }
 
+    public String gift(Player player, BackPackable item) {
+        if (item instanceof Tool) {
+            return "Cannot gift tools to NPCs";
+        }
+        NPCFriendShip friendShip = friendships.computeIfAbsent(player, k -> {
+            interactionHistory.putIfAbsent(player, new ArrayList<>());
+            return new NPCFriendShip(this, player);
+        });
+        boolean firstGiftToday = !friendShip.hasGiftedToday();
+        int pointsGained = 0;
 
+        if (firstGiftToday) {
+            pointsGained += 50;
+            friendShip.addPoints(50);
+            friendShip.markGifted();
+        }
+        if (favourites.contains(item)) {
+            pointsGained += 150;
+            friendShip.addPoints(150);
+        }
+
+        String response;
+        if (useLLM) {
+            response = generateLLMResponse(player, "gift:" + item.getName() + ":" + (favourites.contains(item) ? "favorite" : "normal"));
+        } else {
+            if (favourites.contains(item)) {
+                response = "Thank you for your gift! 200 points added to our friendship!";
+            } else {
+                response = "Thank you for your gift! 50 points added to our friendship!";
+            }
+        }
+
+        recordInteraction(player, "Player gave " + item.getName() + " to " + name + ". " +
+            name + " responded: " + response + " (+" + pointsGained + " friendship points)");
+        return response;
+    }
+
+    private String generateLLMResponse(Player player, String interactionType) {
+        try {
+            String context = buildContextForLLM(player, interactionType);
+            return OllamaClient.generateNPCDialog(name, job, context);
+        } catch (Exception e) {
+            e.printStackTrace();
+            NPCFriendShip fs = friendships.get(player);
+            if (fs != null) {
+                return generateTraditionalGreeting(fs);
+            }
+            return "Hello there!";
+        }
+    }
+
+    private String buildContextForLLM(Player player, String interactionType) {
+        StringBuilder context = new StringBuilder();
+
+        context.append("Character: You are ").append(name).append(", a ").append(job).append(".\n");
+        context.append("Personality: ").append(personality).append(".\n");
+
+        DateAndTime currentTime = ClientApp.currentGame.getDateAndTime();
+        WeatherOption weather = ClientApp.currentGame.getWeather().getCurrentWeather();
+
+        context.append("Current situation: It's ").append(getTimeOfDayPhrase())
+            .append(" in ").append(currentTime.getSeason().displaySeason())
+            .append(", and the weather is ").append(weather.toString().toLowerCase()).append(".\n");
+
+        NPCFriendShip friendship = friendships.get(player);
+        if (friendship != null) {
+            context.append("Friendship with ").append(player.getNickname()).append(": Level ")
+                .append(friendship.getLevel()).append(" (").append(friendship.getPoints()).append(" points).\n");
+
+            if (friendship.hasTalkedToday()) {
+                context.append("You've already talked to this player today.\n");
+            }
+            if (friendship.hasGiftedToday()) {
+                context.append("This player has already given you a gift today.\n");
+            }
+        }
+
+        if (interactionType.startsWith("gift:")) {
+            String[] parts = interactionType.split(":");
+            String itemName = parts[1];
+            String giftType = parts[2];
+
+            context.append("The player is giving you a ").append(itemName).append(".\n");
+            if ("favorite".equals(giftType)) {
+                context.append("This is one of your favorite items!\n");
+            }
+        }
+
+        List<String> history = interactionHistory.get(player);
+        if (history != null && !history.isEmpty()) {
+            context.append("Recent interactions:\n");
+            int startIndex = Math.max(0, history.size() - 3);
+            for (int i = startIndex; i < history.size(); i++) {
+                context.append("- ").append(history.get(i)).append("\n");
+            }
+        }
+
+        if (friendship != null) {
+            long activeQuests = friendship.getPlayerQuests().values().stream()
+                .filter(active -> active).count();
+            if (activeQuests > 0) {
+                context.append("You have ").append(activeQuests).append(" active quest(s) for this player.\n");
+            }
+        }
+
+        if (hasDailyGiftAvailable(player)) {
+            context.append("You have a daily gift available for this player.\n");
+        }
+
+        return context.toString();
+    }
+
+    private String generateTraditionalGreeting(NPCFriendShip fs) {
         StringBuilder message = new StringBuilder();
 
         message.append(getHiBasedOnFriendShipLevel(fs));
-
         message.append("it's ")
-                .append(getWeatherDescriptor(ClientApp.currentGame.getWeather().getCurrentWeather()))
-                .append(" ")
-                .append(getTimeOfDayPhrase())
-                .append(" of ")
-                .append(getSeasonPhrase())
-                .append(", isn't it?");
+            .append(getWeatherDescriptor(ClientApp.currentGame.getWeather().getCurrentWeather()))
+            .append(" ")
+            .append(getTimeOfDayPhrase())
+            .append(" of ")
+            .append(getSeasonPhrase())
+            .append(", isn't it?");
 
         return message.toString();
+    }
+
+    private void recordInteraction(Player player, String interaction) {
+        List<String> history = interactionHistory.computeIfAbsent(player, k -> new ArrayList<>());
+
+        DateAndTime currentTime = ClientApp.currentGame.getDateAndTime();
+        String timestampedInteraction = String.format("[Day %d, %s, %s] %s",
+            currentTime.getDay(),
+            currentTime.getSeason().displaySeason(),
+            getTimeOfDayPhrase(),
+            interaction);
+
+        history.add(timestampedInteraction);
+
+        while (history.size() > maxHistoryEntries) {
+            history.remove(0);
+        }
     }
 
     private String getHiBasedOnFriendShipLevel(NPCFriendShip fs) {
@@ -94,7 +246,7 @@ public class NPC implements TimeObserver {
         if (hour < 6)  return "night";
         if (hour < 12) return "morning";
         if (hour < 18) return "afternoon";
-        return "day";
+        return "evening";
     }
 
     private String getSeasonPhrase() {
@@ -102,24 +254,8 @@ public class NPC implements TimeObserver {
         return season.displaySeason();
     }
 
-    public String gift(Player player, BackPackable item) {
-        if (item instanceof Tool) {
-            return "Cannot gift tools to NPCs";
-        }
-        NPCFriendShip friendShip = friendships.computeIfAbsent(player, k -> new NPCFriendShip(this,player));
-        if (!friendShip.hasGiftedToday()) {
-            friendShip.addPoints(50);
-            friendShip.markGifted();
-        }
-        if (favourites.contains(item)) {
-            friendShip.addPoints(150);
-            return "thank you for your gift! 200 points added to our friendship!";
-        }
-        return "thank you for your gift! 50 points added to our friendship!";
-    }
-
-    public void addQuestTemplate(BackPackable quest,int questAmount, BackPackable reward, int rewardAmount,int level) {
-        questTemplates.put(new Quest(quest,reward,questAmount,rewardAmount),level);
+    public void addQuestTemplate(BackPackable quest, int questAmount, BackPackable reward, int rewardAmount, int level) {
+        questTemplates.put(new Quest(quest, reward, questAmount, rewardAmount), level);
     }
 
     public String showQuests(Player player) {
@@ -128,9 +264,12 @@ public class NPC implements TimeObserver {
         return "no quest for this player";
     }
 
-    public void finishQuest(Player player,BackPackable item) {
+    public void finishQuest(Player player, BackPackable item) {
         NPCFriendShip fs = friendships.get(player);
-        if (fs != null) fs.finishQuest(item);
+        if (fs != null) {
+            String result = fs.finishQuest(item).getMessage();
+            recordInteraction(player, "Player completed quest with " + item.getName() + ". Result: " + result);
+        }
     }
 
     public String getName() {
@@ -150,6 +289,9 @@ public class NPC implements TimeObserver {
                         BackPackable gift = favourites.get(RandomGenerator.getInstance().randomInt(0,favourites.size()-1));
                         fs.player.getInventory().addToBackPack(gift, 1);
                         fs.markDailyGiftReceived();
+
+                        // Record this interaction
+                        recordInteraction(fs.player, name + " gave a daily gift: " + gift.getName());
                     }
                 }
             }
@@ -159,7 +301,6 @@ public class NPC implements TimeObserver {
     public TextureRegion getSprite() {
         return sprite;
     }
-
 
     public boolean hasDailyGiftAvailable(Player player) {
         NPCFriendShip friendship = friendships.get(player);
@@ -173,11 +314,9 @@ public class NPC implements TimeObserver {
 
     public boolean hasMessageForToday(Player player) {
         NPCFriendShip friendship = friendships.get(player);
+        if (friendship == null) return true;
 
         boolean hasntTalkedToday = !friendship.hasTalkedToday();
-        boolean hasActiveQuests = friendship.getPlayerQuests().values().contains(true);
-        boolean hasDailyGift = hasDailyGiftAvailable(player);
-
         return hasntTalkedToday;
     }
 
@@ -213,5 +352,32 @@ public class NPC implements TimeObserver {
 
     public ArrayList<BackPackable> getFavourites() {
         return favourites;
+    }
+    public void setUseLLM(boolean useLLM) {
+        this.useLLM = useLLM;
+    }
+
+    public boolean isUsingLLM() {
+        return useLLM;
+    }
+
+    public void setPersonality(String personality) {
+        this.personality = personality;
+    }
+
+    public String getPersonality() {
+        return personality;
+    }
+
+    public List<String> getInteractionHistory(Player player) {
+        return interactionHistory.getOrDefault(player, new ArrayList<>());
+    }
+
+    public void clearInteractionHistory(Player player) {
+        interactionHistory.remove(player);
+    }
+
+    public void setMaxHistoryEntries(int maxHistoryEntries) {
+        this.maxHistoryEntries = maxHistoryEntries;
     }
 }

@@ -59,6 +59,7 @@ public class GroupQuestMenu extends PopUpMenu {
         tabContent.top();
 
         Label headerLabel = new Label("Available Group Quests", skin);
+        headerLabel.setColor(Color.DARK_GRAY);
         headerLabel.setAlignment(Align.center);
         tabContent.add(headerLabel).fillX().padBottom(PADDING).row();
 
@@ -77,6 +78,7 @@ public class GroupQuestMenu extends PopUpMenu {
         tabContent.top();
 
         Label headerLabel = new Label("My Active Quests", skin);
+        headerLabel.setColor(Color.DARK_GRAY);
         headerLabel.setAlignment(Align.center);
         tabContent.add(headerLabel).fillX().padBottom(PADDING).row();
 
@@ -100,6 +102,7 @@ public class GroupQuestMenu extends PopUpMenu {
 
         if (availableQuests.isEmpty()) {
             Label noQuestsLabel = new Label("No quests available at the moment.", skin);
+            noQuestsLabel.setColor(Color.PURPLE);
             noQuestsLabel.setAlignment(Align.center);
             availableQuestsTable.add(noQuestsLabel).fillX().pad(20);
             return;
@@ -119,6 +122,7 @@ public class GroupQuestMenu extends PopUpMenu {
 
         if (activeQuests.isEmpty()) {
             Label noQuestsLabel = new Label("You have no active quests.", skin);
+            noQuestsLabel.setColor(Color.PURPLE);
             noQuestsLabel.setAlignment(Align.center);
             activeQuestsTable.add(noQuestsLabel).fillX().pad(20);
             return;
@@ -137,7 +141,7 @@ public class GroupQuestMenu extends PopUpMenu {
         Table infoSection = new Table();
 
         Label titleLabel = new Label(quest.getTitle(), skin);
-        titleLabel.setColor(Color.CYAN);
+        titleLabel.setColor(Color.DARK_GRAY);
         infoSection.add(titleLabel).fillX().row();
 
         Label descLabel = new Label(quest.getDescription(), skin);
@@ -146,11 +150,19 @@ public class GroupQuestMenu extends PopUpMenu {
         infoSection.add(descLabel).width(400).fillX().padTop(5).row();
 
         Table detailsTable = new Table();
-        detailsTable.add(new Label("Target: " + quest.getTargetAmount() + " items", skin)).left().row();
-        detailsTable.add(new Label("Players: " + quest.getParticipantUsernames().size() + "/"
-            + quest.getRequiredPlayers() + "-" + quest.getMaxPlayers(), skin)).left().row();
-        detailsTable.add(new Label("Reward: " + quest.getRewardPerPlayer() + " coins", skin)).left().row();
-        detailsTable.add(new Label("Time Limit: " + quest.getTimeLimit() + " days", skin)).left().row();
+        Label targetLabel = new Label("Target: " + quest.getTargetAmount() + " items", skin);
+        targetLabel.setColor(Color.BLACK);
+        detailsTable.add(targetLabel).left().row();
+        Label playersLabel = new Label("Players: " + quest.getParticipantUsernames().size() + "/"
+            + quest.getRequiredPlayers() + "-" + quest.getMaxPlayers(), skin);
+        playersLabel.setColor(Color.BLACK);
+        detailsTable.add(playersLabel).left().row();
+        Label rewardLabel = new Label("Reward: " + quest.getRewardPerPlayer() + " coins", skin);
+        rewardLabel.setColor(Color.BLACK);
+        detailsTable.add(rewardLabel).left().row();
+        Label limitLabel = new Label("Time Limit: " + quest.getTimeLimit() + " days", skin);
+        limitLabel.setColor(Color.BLACK);
+        detailsTable.add(limitLabel).left().row();
 
         infoSection.add(detailsTable).left().padTop(10);
 
@@ -207,7 +219,7 @@ public class GroupQuestMenu extends PopUpMenu {
         Table infoSection = new Table();
 
         Label titleLabel = new Label(quest.getTitle(), skin);
-        titleLabel.setColor(Color.YELLOW);
+        titleLabel.setColor(Color.DARK_GRAY);
         infoSection.add(titleLabel).fillX().row();
 
         ProgressBar progressBar = new ProgressBar(0f, 100f, 1f, false, skin);
@@ -222,7 +234,7 @@ public class GroupQuestMenu extends PopUpMenu {
 
         double yourContribution = quest.getPlayerCompletionPercentage(currentPlayer);
         Label contributionLabel = new Label(String.format("Your contribution: %.1f%%", yourContribution), skin);
-        contributionLabel.setColor(Color.LIGHT_GRAY);
+        contributionLabel.setColor(Color.DARK_GRAY);
         infoSection.add(contributionLabel).left().padTop(2).row();
 
         BackPackable item = currentPlayer.getInventory().getItemByName(quest.getTitle());
@@ -232,7 +244,7 @@ public class GroupQuestMenu extends PopUpMenu {
 
         Label inventoryLabel = new Label(String.format("Available: %d items (Max deliverable: %d)",
             availableItems, maxDeliverable), skin);
-        inventoryLabel.setColor(availableItems > 0 ? Color.WHITE : Color.RED);
+        inventoryLabel.setColor(availableItems > 0 ? Color.GREEN : Color.RED);
         infoSection.add(inventoryLabel).left().padTop(2).row();
 
         int daysRemaining = quest.getEndDay() - questManager.getCurrentDay();
