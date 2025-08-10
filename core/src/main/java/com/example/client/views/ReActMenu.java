@@ -122,6 +122,7 @@ public class ReActMenu {
                 if (message.getText().length() > 10) {
                     showError("Your message is to long", errorLabel);
                     errorLabel.setColor(Color.RED);
+                    return;
                 }
                 HashMap<String , Object> body = new HashMap<>();
                 body.put("action", "message");
@@ -183,7 +184,6 @@ public class ReActMenu {
 
         table.row().padTop(10);
         table.add(emojiGroup).colspan(2);
-
         TextButton sendButton = new TextButton("Send", skin);
         sendButton.addListener(new ClickListener() {
             @Override

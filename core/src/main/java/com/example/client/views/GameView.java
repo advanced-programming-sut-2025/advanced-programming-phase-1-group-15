@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
@@ -154,16 +156,16 @@ public class GameView implements Screen {
         energyLabel = new Label("", skin);
         energyLabel.setColor(Color.FIREBRICK); energyLabel.setAlignment(Align.left);
         currentItemLabel = new Label("", skin);
-        Message = new Label("Hi", skin);
+        Message = new Label("", skin);
         image = new Image();
-        image.setSize(48,48);
+        image.setSize(64,64);
         currentItemLabel.setColor(Color.FIREBRICK); currentItemLabel.setAlignment(Align.left);
         this.notificationLabel = new NotificationLabel(skin);
 
         hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
         hudTable.add(currentItemLabel).padTop(5).padLeft(10).left().row();
         hudTable.add(Message).padTop(5).padLeft(10).left().width(100).row();
-        hudTable.add(image).padTop(5).padLeft(10).left().row();
+        hudTable.add(image).padTop(5).padLeft(10).left().bottom().row();
         TextButton friendsButton = new TextButton("Friends", skin);
         TextButton toolsButton = new TextButton("Tools", skin);
         TextButton scoreboardButton = new TextButton("Scoreboard", skin);
@@ -260,25 +262,35 @@ public class GameView implements Screen {
             player.updateAnimation(delta);
         }
         game.getDateAndTime().updateDateAndTime(delta);
-        if(game.getCurrentPlayer().getMessage()!=null){
+//        game.getCurrentPlayer().updateLabel(delta);
+//        if (game.getCurrentPlayer().getMessage()==null || game.getCurrentPlayer().getMessage().isEmpty()){
+//            Message.setText("");
+//        }
+        if(game.getCurrentPlayer().getMessage()!=null && !game.getCurrentPlayer().getMessage().isEmpty()){
             Message.setText(game.getCurrentPlayer().getMessage());
             Message.setColor(Color.BLACK);
             game.getCurrentPlayer().updateLabel(delta);
-        }
-        else if(game.getCurrentPlayer().getActiveEmoji()!=null){
-            image = new Image(game.getCurrentPlayer().getActiveEmoji());
-            game.getCurrentPlayer().updateLabel(delta);
+            if (game.getCurrentPlayer().getMessage()==null){
+                Message.setText("");
+            }
         }
         processNotifications(delta);
         processMarriageProposal(delta);
 
         SpriteBatch batch = main.getBatch();
-
         renderMap(batch);
         overlayRenderer.draw(delta, game, mapCamera);
         renderHeldItemCursor(batch);
-
         renderHUD(batch, delta);
+        if(game.getCurrentPlayer().getActiveEmoji()!=null){
+//            game.getCurrentPlayer().getActiveEmoji().setSize(64 ,64);
+//            image.setDrawable(new TextureRegionDrawable((game.getCurrentPlayer().getActiveEmoji())));
+//            image.setVisible(true);
+            batch.begin();
+            batch.draw(game.getCurrentPlayer().getActiveEmoji(), game.getCurrentPlayer().getPosition().x, game.getCurrentPlayer().getPosition().y + 20, 48, 48);
+            batch.end();
+            game.getCurrentPlayer().updateLabel(delta);
+        }
         scoreboardWidget.update(delta);
 
         updateUIComponents();

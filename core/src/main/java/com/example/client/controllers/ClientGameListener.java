@@ -104,9 +104,9 @@ public class ClientGameListener {
         }
     }
     private void handleSendEmoji(Message msg) {
-        String fromUser = msg.getFromBody("username");
         String emoji = msg.getFromBody("emoji");
-        Sprite sprite = switch (emoji) {
+        Sprite sprite;
+        sprite = switch (emoji) {
             case "angry" -> GameAssetManager.angry;
             case "cry" -> GameAssetManager.cry;
             case "laugh" -> GameAssetManager.laugh;
@@ -117,7 +117,7 @@ public class ClientGameListener {
             default -> null;
         };
         for (Player player : game.getPlayers()) {
-           player.setActiveEmoji(sprite);
+           player.setActiveEmoji(new Sprite(sprite));
         }
     }
 

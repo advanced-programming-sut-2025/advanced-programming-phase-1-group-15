@@ -600,8 +600,9 @@ public class Player extends User implements TimeObserver {
         if (emojiTimer > 0) {
             emojiTimer -= delta;
             if (emojiTimer <= 0) {
-                activeEmoji = null;
-                message = null;
+                this.activeEmoji = null;
+                this.message = null;
+                emojiTimer = 5f;
             }
         }
     }
