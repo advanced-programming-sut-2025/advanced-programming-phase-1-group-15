@@ -1,7 +1,11 @@
 package com.example.common;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.animals.Animal;
@@ -40,7 +44,8 @@ public class Player extends User implements TimeObserver {
     private Farm farm;
     private int CurrentId;
     private int mapNumber;
-
+    private Sprite activeEmoji = null;
+    private String message = null;
     TextureRegion face, faintedAnimation;
     Animation<TextureRegion> walkUpAnimation;
     Animation<TextureRegion> walkDownAnimation;
@@ -90,6 +95,22 @@ public class Player extends User implements TimeObserver {
     public void addMessage(PlayerFriendship.Message message) {
         receivedMessages.add(message);
     }
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Sprite getActiveEmoji() {
+        return activeEmoji;
+    }
+
+    public void setActiveEmoji(Sprite activeEmoji) {
+        this.activeEmoji = activeEmoji;
+    }
+
     private Player couple;
     private boolean rejected = false;
     private int rejectDay = 0;

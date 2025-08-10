@@ -1,5 +1,6 @@
 package com.example.client.controllers;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.client.NetworkClient;
 import com.example.client.models.ClientApp;
@@ -104,10 +105,16 @@ public class ClientGameListener {
                 handelTalk(msg);
             }
             case "send_emoji" -> handleSendEmoji(msg);
+            case "send_message" -> handleSendMessage(msg);
+        }
+    }
+    private void handleSendMessage(Message msg) {
+        String message = msg.getFromBody("messages");
+        for (Player player : game.getPlayers()) {
+            player.setMessage(message);
         }
     }
     private void handleSendEmoji(Message msg) {
-        String fromUser = msg.getFromBody("username");
         String emoji = msg.getFromBody("emoji");
         Sprite sprite = switch (emoji) {
             case "angry" -> GameAssetManager.angry;
@@ -119,8 +126,10 @@ public class ClientGameListener {
             case "thumbs_up" -> GameAssetManager.thumbs_up;
             default -> null;
         };
-        if (sprite != null) {
-            System.out.println("send_emoji: " + emoji);
+        for (Player player : game.getPlayers()) {
+            if (sprite != null) {
+                player.setActiveEmoji(sprite);
+            }
         }
     }
 
