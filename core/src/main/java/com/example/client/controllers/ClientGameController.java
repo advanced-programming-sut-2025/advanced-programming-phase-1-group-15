@@ -1534,4 +1534,13 @@ public class ClientGameController {
 
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }
+
+    public static void sendEmoji(String fromUsername, String targetUsername, String emoji) {
+        HashMap<String,Object> msg = new HashMap<>();
+        msg.put("action", "send_emoji");
+        msg.put("username", fromUsername);
+        msg.put("target", targetUsername);
+        msg.put("emoji", emoji);
+        NetworkClient.get().sendMessage(new Message(msg, Message.Type.COMMAND));
+    }
 }

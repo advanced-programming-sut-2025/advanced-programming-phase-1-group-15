@@ -21,7 +21,7 @@ public class GameOverlayRenderer {
 
     // Colors
     private final Color nightTint  = new Color(0.08f, 0.12f, 0.22f, 0.45f);
-    private final Color duskTint   = new Color(0.6f, 0.35f, 0.15f, 0.45f);
+    private final Color duskTint   = new Color(0.6f, 0.35f, 0.15f, 0.3f);
     private final Color dayTint    = new Color(0f, 0f, 0f, 0f);
 
     private final Color rainTint   = new Color(0.15f, 0.18f, 0.25f, 0.18f);
@@ -41,6 +41,7 @@ public class GameOverlayRenderer {
     private boolean dropsInitialized = false;
 
     // Lightning
+    private boolean isLightning = false;
     private float lightningTimer = 0f;
     private float nextLightningIn = MathUtils.random(5f, 12f);
 
@@ -110,14 +111,15 @@ public class GameOverlayRenderer {
         base.lerp(seasonColor, seasonColor.a);
 
         // Storm lightning
-        if (weather == WeatherOption.STORM) {
+        if (isLightning || weather == WeatherOption.STORM) {
             lightningTimer += delta;
-            if (lightningTimer >= nextLightningIn) {
+            if (isLightning || lightningTimer >= nextLightningIn) {
                 float flash = Math.abs(MathUtils.sin(overlayTime * 20f));
                 if (flash > 0.7f) {
                     base.set(1f, 1f, 1f, 0.8f * (flash - 0.7f) * 3f);
                 }
                 if (flash < 0.05f) {
+                    isLightning = false;
                     lightningTimer = 0f;
                     nextLightningIn = MathUtils.random(60f, 120f);
                 }
@@ -184,5 +186,9 @@ public class GameOverlayRenderer {
     public void dispose() {
         if (rainTexture != null) rainTexture.dispose();
         if (snowTexture != null) snowTexture.dispose();
+    }
+
+    public void setLightning() {
+        isLightning = true;
     }
 }

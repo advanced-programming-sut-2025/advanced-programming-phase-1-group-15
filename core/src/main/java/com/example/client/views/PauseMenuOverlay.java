@@ -428,6 +428,12 @@ public class PauseMenuOverlay {
         Label descriptionLabel = new Label("Desc: ", skin);
         descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
 
+        String selected = itemList.getSelected();
+        String itemName = selected.split(" x")[0];
+        Sprite itemSprite = inventory.getItemByName(itemName).getSprite();
+        itemSprite.setSize(48, 48);
+        Image itemIcon = new Image(new TextureRegionDrawable(itemSprite));
+
         TrashCan trashCan = game.getCurrentPlayer().getTrashCan();
         Sprite trashSprite = trashCan.getSprite();
         trashSprite.setSize(48, 48);
@@ -457,6 +463,9 @@ public class PauseMenuOverlay {
                         String itemName = item.split(" x")[0];
                         BackPackable hoveredItem = inventory.getItemByName(itemName);
                         if (hoveredItem != null) {
+                            if(hoveredItem.getSprite() != null) {
+                                itemIcon.setDrawable(new TextureRegionDrawable(hoveredItem.getSprite()));
+                            }
                             descriptionLabel.setText("Desc: " + hoveredItem.getDescription());
                             game.getCurrentPlayer().setCurrentItem(hoveredItem);
                             if (hoveredItem instanceof Food || hoveredItem instanceof Crop
@@ -486,15 +495,22 @@ public class PauseMenuOverlay {
                 }
             }
         });
-        Table bottomRow = new Table();
-        bottomRow.add(trashIcon).size(48, 48).left();
-        bottomRow.add(descriptionLabel).right().padLeft(10).width(700).row();
+
+        Table infoRow = new Table();
+        infoRow.add(itemIcon).size(48, 48).pad(10);
+        infoRow.add(descriptionLabel).width(700).left();
+
+        Table controlsRow = new Table();
+        controlsRow.add(trashIcon).size(48, 48).pad(10);
+        controlsRow.add(addToFridgeButton).left();
+
         table.add(titleLabel).padBottom(10).row();
         table.add(scrollPane).expand().fill().pad(10).row();
-        table.add(bottomRow).bottom().row();
-        table.add(addToFridgeButton).right().pad(10);
+        table.add(infoRow).pad(10).left().row();
+        table.add(controlsRow).pad(10).left();
         return table;
     }
+
     private Table createMapContent() {
         Table table = new Table(skin);
 

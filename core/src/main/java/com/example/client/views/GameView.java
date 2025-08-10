@@ -153,9 +153,6 @@ public class GameView implements Screen {
         currentItemLabel = new Label("", skin);
         currentItemLabel.setColor(Color.FIREBRICK); currentItemLabel.setAlignment(Align.left);
         this.notificationLabel = new NotificationLabel(skin);
-        this.notificationLabel.setSize(300, 50);
-        this.notificationLabel.setPosition((screenWidth / 2) - 150, screenHeight - 100);
-        uiStage.addActor(this.notificationLabel);
 
         hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
         hudTable.add(currentItemLabel).padTop(5).padLeft(10).left().row();
@@ -164,7 +161,7 @@ public class GameView implements Screen {
         TextButton toolsButton = new TextButton("Tools", skin);
         TextButton scoreboardButton = new TextButton("Scoreboard", skin);
         TextButton sendMessage = new TextButton("Send Message", skin);
-        float buttonWidth = 125f;
+        float buttonWidth = 200f;
         float buttonHeight = 60f;
         sendMessage.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
@@ -213,9 +210,9 @@ public class GameView implements Screen {
 
         hudTable.add(scoreboardButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(friendsButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
-        hudTable.add(toolsButton).padLeft(5).size(150, buttonHeight).left().row();
+        hudTable.add(toolsButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(sendMessage).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
-        hudTable.add(notificationLabel).expandX().bottom().center().padTop(650).row();
+        hudTable.add(notificationLabel).expandX().bottom().center().padTop(600).row();
     }
 
     private void setupInputHandling() {
@@ -505,7 +502,7 @@ public class GameView implements Screen {
     }
     public void printTileObject(Tile tile, int x, int y, Batch batch) {
         if(tile.getObjectSprite() != null) {
-            batch.draw(tile.getObjectSprite(), x, y,16,16);
+            batch.draw(tile.getObjectSprite(), x, y);
         }
     }
 
@@ -550,6 +547,9 @@ public class GameView implements Screen {
                     return true;
                 case Input.Keys.D:
                     player.walk(+1, 0);
+                    return true;
+                case Input.Keys.E:
+                    overlayRenderer.setLightning();
                     return true;
                 case Input.Keys.TAB:
                     scoreboardWidget.toggleVisibility();
