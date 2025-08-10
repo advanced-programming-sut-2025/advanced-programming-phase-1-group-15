@@ -12,6 +12,8 @@ import com.example.client.models.ClientApp;
 import com.example.common.GroupQuests.GroupQuest;
 import com.example.common.GroupQuests.GroupQuestManager;
 import com.example.common.Player;
+import com.example.common.Result;
+import com.example.common.tools.BackPackable;
 
 import java.util.List;
 
@@ -37,7 +39,6 @@ public class GroupQuestMenu extends PopUpMenu {
 
     @Override
     protected void populate(Window w) {
-        //w.
         tabPane = new TabPane(skin);
 
         Table availableTab = createAvailableQuestsTab();
@@ -169,7 +170,7 @@ public class GroupQuestMenu extends PopUpMenu {
             joinButton.setDisabled(true);
 
             if (!questManager.canPlayerJoinMoreQuests(currentPlayer.getUsername())) {
-                joinButton.setText("MAX QUESTS");
+                joinButton.setText("MAX QUESTS (3/3)");
             } else if (quest.getParticipantUsernames().size() >= quest.getMaxPlayers()) {
                 joinButton.setText("FULL");
             } else if (quest.getParticipantUsernames().contains(currentPlayer.getUsername())) {
@@ -187,12 +188,12 @@ public class GroupQuestMenu extends PopUpMenu {
                     refreshActiveQuests();
                 } else {
                     statusLabel.setColor(Color.RED);
-                    statusLabel.setText("Failed to join quest. Check requirements.");
+                    statusLabel.setText("Failed to join quest. Check requirements or quest limit (max 3).");
                 }
             }
         });
 
-        buttonSection.add(joinButton).size(120, 40);
+        buttonSection.add(joinButton).size(140, 40);
         row.add(buttonSection).right().padLeft(20);
 
         return row;
@@ -224,6 +225,16 @@ public class GroupQuestMenu extends PopUpMenu {
         contributionLabel.setColor(Color.LIGHT_GRAY);
         infoSection.add(contributionLabel).left().padTop(2).row();
 
+        BackPackable item = currentPlayer.getInventory().getItemByName(quest.getTitle());
+        int count = currentPlayer.getInventory().getItemCount(quest.getTitle());
+        int availableItems = item != null ? count : 0;
+        int maxDeliverable = questManager.getMaxDeliverable(quest.getQuestId(), currentPlayer);
+
+        Label inventoryLabel = new Label(String.format("Available: %d items (Max deliverable: %d)",
+            availableItems, maxDeliverable), skin);
+        inventoryLabel.setColor(availableItems > 0 ? Color.WHITE : Color.RED);
+        infoSection.add(inventoryLabel).left().padTop(2).row();
+
         int daysRemaining = quest.getEndDay() - questManager.getCurrentDay();
         Label timeLabel = new Label("Days remaining: " + Math.max(0, daysRemaining), skin);
         if (daysRemaining <= 1) {
@@ -237,7 +248,61 @@ public class GroupQuestMenu extends PopUpMenu {
             String.join(", ", quest.getParticipantUsernames()), skin);
         participantsLabel.setWrap(true);
         participantsLabel.setAlignment(Align.left);
-        infoSection.add(participantsLabel).width(500).left().padTop(5);
+        infoSection.add(participantsLabel).width(500).left().padTop(5).row();
+
+        Table deliverySection = new Table();
+        deliverySection.add(new Label("Deliver items:", skin)).left().padRight(10);
+
+        TextField amountField = new TextField("1", skin);
+        amountField.setTextFieldFilter(new TextField.TextFieldFilter() {
+            @Override
+            public boolean acceptChar(TextField textField, char c) {
+                return Character.isDigit(c);
+            }
+        });
+        amountField.setAlignment(Align.center);
+        deliverySection.add(amountField).size(80, 30).padRight(10);
+
+        TextButton deliverButton = new TextButton("DELIVER", skin);
+        deliverButton.setColor(Color.CYAN);
+
+        if (maxDeliverable <= 0) {
+            deliverButton.setDisabled(true);
+            deliverButton.setColor(Color.GRAY);
+        }
+
+        deliverButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                try {
+                    int amount = Integer.parseInt(amountField.getText().trim());
+                    if (amount <= 0) {
+                        statusLabel.setColor(Color.RED);
+                        statusLabel.setText("Amount must be greater than 0");
+                        return;
+                    }
+
+                    Result result = questManager.deliverItems(
+                        quest.getQuestId(), currentPlayer, amount);
+
+                    if (result.isSuccessFull()) {
+                        statusLabel.setColor(Color.GREEN);
+                        statusLabel.setText(result.getMessage());
+                        refreshActiveQuests();
+                        refreshAvailableQuests();
+                    } else {
+                        statusLabel.setColor(Color.RED);
+                        statusLabel.setText(result.getMessage());
+                    }
+                } catch (NumberFormatException e) {
+                    statusLabel.setColor(Color.RED);
+                    statusLabel.setText("Please enter a valid number");
+                }
+            }
+        });
+
+        deliverySection.add(deliverButton).size(80, 30);
+        infoSection.add(deliverySection).left().padTop(10).row();
 
         row.add(infoSection).expand().fill().left();
 

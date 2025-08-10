@@ -847,6 +847,20 @@ public class ClientGameController {
         }
     }
 
+    public static void notifyAboutScoreInfo(Player player){
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "score-info");
+        cmdBody.put("username", player.getUsername());
+        cmdBody.put("score", player.calculateScore());
+        cmdBody.put("gold", player.getGold());
+        cmdBody.put("energy", player.getEnergy());
+        cmdBody.put("farming-level", player.getFarmingLevel());
+        cmdBody.put("mining-level", player.getMiningLevel());
+        cmdBody.put("foraging-level", player.getForagingLevel());
+        cmdBody.put("fishing-level", player.getFishingLevel());
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
     public static Result showCropInfo(String name) {
         Crops crop = Crops.getByName(name);
         if (crop != null) {

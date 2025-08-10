@@ -69,9 +69,29 @@ public class ClientGameListener {
             case "questFailed"-> handleQuestFailed(msg);
             case "talk" -> handelTalk(msg);
             case "send_emoji" -> handleSendEmoji(msg);
+            case "score-info" -> handleScoreInfo(msg);
             case "build_greenhouse" -> handleBuildGreenhouse(senderUsername);
         }
     }
+
+    public void handleScoreInfo(Message msg){
+        String username = msg.getFromBody("username");
+        Player player = game.getPlayerByUsername(username);
+        double gold = msg.getFromBody("gold");
+        double energy = msg.getFromBody("energy");
+        double farmingLevel = msg.getFromBody("farming-level");
+        double miningLevel = msg.getFromBody("mining-level");
+        double foragingLevel = msg.getFromBody("foraging-level");
+        double fishingLevel = msg.getFromBody("fishing-level");
+
+        player.setGold((int)gold);
+        player.setEnergy(energy);
+        player.setFarmingLevel((int)farmingLevel);
+        player.setMiningLevel((int)miningLevel);
+        player.setForagingLevel((int)foragingLevel);
+        player.setFishingLevel((int)fishingLevel);
+    }
+
     private void handleSendEmoji(Message msg) {
         String fromUser = msg.getFromBody("username");
         String emoji = msg.getFromBody("emoji");

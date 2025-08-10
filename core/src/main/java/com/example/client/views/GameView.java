@@ -99,6 +99,8 @@ public class GameView implements Screen {
     private final ReActMenu reActMenu;
     private ArrayList<ArtisanMenu> artisans = new ArrayList<>();
 
+    float sinceLastInfoUpdate = 0;
+
 
     public GameView(Game game, Main main) {
         this.game = game;
@@ -297,6 +299,12 @@ public class GameView implements Screen {
         reActMenu.draw(delta);
         for (ArtisanMenu artisan : artisans) {
             artisan.draw(delta);
+        }
+
+        sinceLastInfoUpdate += delta;
+        if(sinceLastInfoUpdate >= 2){
+            game.notifyOthersScoreInfo();
+            sinceLastInfoUpdate = 0;
         }
     }
 

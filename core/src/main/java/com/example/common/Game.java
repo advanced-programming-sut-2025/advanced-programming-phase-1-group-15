@@ -173,6 +173,12 @@ public class Game implements TimeObserver {
         return scoreboard;
     }
 
+    public void notifyOthersScoreInfo(){
+        for(Player player: players) {
+            ClientGameController.notifyAboutScoreInfo(player);
+        }
+    }
+
     public GroupQuestManager getGroupQuestManager() {
         return groupQuestManager;
     }

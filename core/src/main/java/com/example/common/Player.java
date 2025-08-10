@@ -675,6 +675,22 @@ public class Player extends User implements TimeObserver {
         this.notifiedForMarriage = notifiedForMarriage;
     }
 
+    public void setMiningLevel(int miningLevel) {
+        this.miningLevel = miningLevel;
+    }
+
+    public void setForagingLevel(int foragingLevel) {
+        this.foragingLevel = foragingLevel;
+    }
+
+    public void setFishingLevel(int fishingLevel) {
+        this.fishingLevel = fishingLevel;
+    }
+
+    public void setFarmingLevel(int farmingLevel) {
+        this.farmingLevel = farmingLevel;
+    }
+
     public void setMarriageAsker(Player marriageAsker) {
         this.marriageAsker = marriageAsker;
     }

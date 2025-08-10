@@ -4,6 +4,7 @@ import com.example.client.NetworkClient;
 import com.example.client.models.ClientApp;
 import com.example.common.Message;
 import com.example.common.Player;
+import com.example.common.Result;
 import com.example.common.relation.PlayerFriendship;
 import com.example.common.tools.BackPackable;
 
@@ -62,7 +63,6 @@ public class GroupQuestManager {
         }
     }
 
-
     public List<GroupQuest> getAvailableQuests() {
         return allQuests.values().stream()
             .filter(quest -> quest.getStatus() == QuestStatus.AVAILABLE)
@@ -80,13 +80,17 @@ public class GroupQuestManager {
 
     public boolean canPlayerJoinMoreQuests(String username) {
         Set<String> activeQuests = playerActiveQuests.getOrDefault(username, new HashSet<>());
-        long actualActiveCount = activeQuests.stream()
+
+        // Count both ACTIVE and AVAILABLE quests that the player has joined
+        long totalActiveQuests = activeQuests.stream()
             .map(allQuests::get)
             .filter(Objects::nonNull)
-            .filter(quest -> quest.getStatus() == QuestStatus.ACTIVE)
+            .filter(quest -> quest.getStatus() == QuestStatus.ACTIVE ||
+                (quest.getStatus() == QuestStatus.AVAILABLE &&
+                    quest.getParticipantUsernames().contains(username)))
             .count();
 
-        return actualActiveCount < MAX_QUESTS_PER_PLAYER;
+        return totalActiveQuests < MAX_QUESTS_PER_PLAYER;
     }
 
     public boolean joinQuest(String questId, Player player) {
@@ -135,6 +139,67 @@ public class GroupQuestManager {
                 cleanupCompletedQuest(questId);
             }
         }
+    }
+
+    /**
+     * Delivers a specific amount of items for a quest
+     * @param questId The quest ID
+     * @param player The player delivering items
+     * @param amount The amount to deliver
+     * @return DeliveryResult indicating success, failure, or insufficient items
+     */
+    public Result deliverItems(String questId, Player player, int amount) {
+        GroupQuest quest = allQuests.get(questId);
+        if (quest == null) {
+            return new Result(false, "Quest not found");
+        }
+
+        if (quest.getStatus() != QuestStatus.ACTIVE) {
+            return new Result(false, "Quest is not active");
+        }
+
+        if (!quest.getParticipantUsernames().contains(player.getUsername())) {
+            return new Result(false, "You are not part of this quest");
+        }
+
+        if (amount <= 0) {
+            return new Result(false, "Amount must be greater than 0");
+        }
+
+        BackPackable item = player.getInventory().getItemByName(quest.getTitle());
+        int count = player.getInventory().getItemCount(quest.getTitle());
+        if (item == null || count < amount) {
+            int availableCount = item != null ? count : 0;
+            return new Result(false,
+                String.format("Insufficient items. You have %d but need %d", availableCount, amount));
+        }
+        player.getInventory().removeCountFromBackPack(item, amount);
+        quest.updateProgress(player, amount);
+
+        sendQuestProgressMessage(questId, player.getUsername(), amount);
+
+        if (quest.getStatus() == QuestStatus.COMPLETED) {
+            distributeRewards(quest);
+            cleanupCompletedQuest(questId);
+            return new Result(true,
+                String.format("Successfully delivered %d items! Quest completed!", amount));
+        }
+
+        return new Result(true,
+            String.format("Successfully delivered %d items!", amount));
+    }
+
+    public int getMaxDeliverable(String questId, Player player) {
+        GroupQuest quest = allQuests.get(questId);
+        if (quest == null) return 0;
+
+        BackPackable item = player.getInventory().getItemByName(quest.getTitle());
+        int availableItems = item != null ? player.getInventory().getItemCount(quest.getTitle()) : 0;
+
+        int totalProgress = quest.getPlayerProgress().values().stream().mapToInt(Integer::intValue).sum();
+        int remainingTarget = quest.getTargetAmount() - totalProgress;
+
+        return Math.min(availableItems, Math.max(0, remainingTarget));
     }
 
     private void distributeRewards(GroupQuest quest) {
@@ -280,8 +345,8 @@ public class GroupQuestManager {
 
         if (quest != null && player != null) {
             quest.updateProgress(player, amount);
-            BackPackable item =  player.getInventory().getItemByName(quest.getTitle());
-            if(item != null){
+            BackPackable item = player.getInventory().getItemByName(quest.getTitle());
+            if (item != null) {
                 player.getInventory().removeCountFromBackPack(item, amount);
                 if (quest.getStatus() == QuestStatus.COMPLETED) {
                     distributeRewards(quest);
