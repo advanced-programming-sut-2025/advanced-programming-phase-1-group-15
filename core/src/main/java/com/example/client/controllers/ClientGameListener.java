@@ -11,6 +11,8 @@ import com.example.common.GroupQuests.GroupQuestManager;
 import com.example.common.Message;
 import com.example.common.Player;
 import com.example.common.Result;
+import com.example.common.animals.Barn;
+import com.example.common.animals.Coop;
 import com.example.common.enums.Direction;
 import com.example.common.farming.Seed;
 import com.example.common.farming.Tree;
@@ -71,7 +73,9 @@ public class ClientGameListener {
             case "send_emoji" -> handleSendEmoji(msg);
             case "message" -> handleSendMessage(msg);
             case "score-info" -> handleScoreInfo(msg);
-            case "build_greenhouse" -> handleBuildGreenhouse(senderUsername);
+            case "build_greenhouse" -> handleBuildGreenhouse(msg, senderUsername);
+            case "build_barn" -> handleBuildBarn(msg, senderUsername);
+            case "build_coop" -> handleBuildCoop(msg, senderUsername);
         }
     }
 
@@ -363,13 +367,50 @@ public class ClientGameListener {
         game.getWeather().setForecast(tomorrowWeather);
     }
 
-    private void handleBuildGreenhouse(String senderUsername) {
+    private void handleBuildGreenhouse(Message msg, String senderUsername) {
         Player player = game.getPlayerByUsername(senderUsername);
         GreenHouse greenHouse = player.getFarm().getGreenHouse();
 
-        player.subtractGold(1000);
-        player.subtractWood(500);
+        int gold = msg.getIntFromBody("gold");
+        int wood = msg.getIntFromBody("wood");
+
         greenHouse.buildGreenHouse();
+        player.setGold(gold);
+        player.setWood(wood);
+    }
+
+    private void handleBuildBarn(Message msg, String senderUsername) {
+        Player player = game.getPlayerByUsername(senderUsername);
+
+        int x = msg.getIntFromBody("x");
+        int y = msg.getIntFromBody("y");
+
+        int gold = msg.getIntFromBody("gold");
+        int wood = msg.getIntFromBody("wood");
+        int stone = msg.getIntFromBody("stone");
+
+        Farm farm = player.getFarm();
+        farm.getInnerAreas().add(new Barn(farm.getSubArea(farm.getTiles(), x, x + Barn.COLS, y, y + Barn.ROWS)));
+        player.setGold(gold);
+        player.setWood(wood);
+        player.setStone(stone);
+    }
+
+    private void handleBuildCoop(Message msg, String senderUsername) {
+        Player player = game.getPlayerByUsername(senderUsername);
+
+        int x = msg.getIntFromBody("x");
+        int y = msg.getIntFromBody("y");
+
+        int gold = msg.getIntFromBody("gold");
+        int wood = msg.getIntFromBody("wood");
+        int stone = msg.getIntFromBody("stone");
+
+        Farm farm = player.getFarm();
+        farm.getInnerAreas().add(new Coop(farm.getSubArea(farm.getTiles(), x, x + Coop.COLS, y, y + Coop.ROWS)));
+        player.setGold(gold);
+        player.setWood(wood);
+        player.setStone(stone);
     }
 
     public void disconnect() {

@@ -19,6 +19,7 @@ import com.example.common.enums.Gender;
 import com.example.common.farming.GeneralPlants.PloughedPlace;
 import com.example.common.farming.Tree;
 import com.example.common.foraging.ForagingSeedsType;
+import com.example.common.foraging.Stone;
 import com.example.common.map.AreaType;
 import com.example.common.map.Farm;
 import com.example.common.map.Map;
@@ -27,12 +28,11 @@ import com.example.common.map.Position;
 import com.example.common.relation.PlayerFriendship;
 import com.example.common.relation.TradeWhitMoney;
 import com.example.common.relation.TradeWithItem;
+import com.example.common.stores.GeneralItem;
+import com.example.common.stores.GeneralItemsType;
 import com.example.common.time.DateAndTime;
 import com.example.common.time.TimeObserver;
-import com.example.common.tools.BackPack;
-import com.example.common.tools.BackPackable;
-import com.example.common.tools.Fridge;
-import com.example.common.tools.TrashCan;
+import com.example.common.tools.*;
 import com.example.common.weather.WeatherOption;
 import com.example.client.views.GameAssetManager;
 
@@ -299,8 +299,16 @@ public class Player extends User implements TimeObserver {
     public void subtractWood(int wood) {
         inventory.removeCountFromBackPack(inventory.getItemByName("wood"), wood);
     }
+    public void setWood(int wood) {
+        inventory.removeFromBackPack(inventory.getItemByName("wood"));
+        inventory.addToBackPack(new GeneralItem(GeneralItemsType.WOOD), wood);
+    }
     public void subtractStone(int stone) {
         inventory.removeCountFromBackPack(inventory.getItemByName("stone"), stone);
+    }
+    public void setStone(int stone) {
+        inventory.removeFromBackPack(inventory.getItemByName("stone"));
+        inventory.addToBackPack(new Stone(), stone);
     }
 
     public double getEnergy() {

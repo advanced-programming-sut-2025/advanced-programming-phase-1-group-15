@@ -114,54 +114,6 @@ public class ClientGameController {
 //        }
 //    }
 
-//    public static Result equipTool(String toolName) {
-//        Tool tool = (Tool) getCurrentPlayer().getInventory().getItemByName(toolName);
-//
-//        if(tool == null) {
-//            return new Result(false, "You don't have that tool.");
-//        }
-//
-//        getCurrentPlayer().setCurrentTool(tool);
-//        return new Result(true, "equipped tool " + tool.getName() + " successfully.");
-//    }
-//    public static Result showCurrentTool() {
-//        Tool tool = getCurrentPlayer().getCurrentTool();
-//        if(tool == null) {
-//            return new Result(false, "you're not holding any tool!");
-//        }
-//
-//        return new Result(true, tool.getName());
-//    }
-    public static Result upgradeTool(String toolName) {
-        Tile playerTile = ClientApp.currentGame.getTile(getCurrentPlayer().getPosition());
-
-        if(!(playerTile.getArea() instanceof Blacksmith)) {
-            return new Result(false, "you have to be inside blacksmith to run this command.");
-        }
-
-        Tool tool = (Tool) getCurrentPlayer().getInventory().getItemByName(toolName);
-
-        if(tool == null) {
-            return new Result(false, "You don't have that tool.");
-        }
-
-        return new Result(true, tool.upgrade(getCurrentPlayer()));
-    }
-//    public static Result useTool(int dx, int dy) {
-//        Tool tool = getCurrentPlayer().getCurrentTool();
-//        if(tool == null) {
-//            return new Result(false, "choose a tool first");
-//        }
-//        Position usePosition = new Position(getCurrentPlayer().getPosition().x + dx, getCurrentPlayer().getPosition().y + dy);
-//        if(!Map.isBoundValid(usePosition)) {
-//            return new Result(false, "you are out of bounds!");
-//        }
-//
-//        Tile useTile = App.currentGame.getTile(usePosition);
-//
-//        return new Result(true, tool.use(useTile, getCurrentPlayer()));
-//    }
-
     public static Result putInFridge(String itemName) {
         Tile tile = ClientApp.currentGame.getTile(getCurrentPlayer().getPosition());
         if(!(tile.getArea() instanceof House playersHouse)) {
@@ -180,6 +132,7 @@ public class ClientGameController {
 
         return new Result(true, item.getName() + " moved to fridge.");
     }
+
     public static Result pickFromFridge(String itemName) {
         Tile tile = ClientApp.currentGame.getTile(getCurrentPlayer().getPosition());
         if(!(tile.getArea() instanceof House playersHouse)) {
@@ -198,6 +151,7 @@ public class ClientGameController {
 
         return new Result(true, item.getName() +  " moved to inventory.");
     }
+
     public static Result eatFood(String foodName) {
         Food food = (Food) getCurrentPlayer().getInventory().getItemByName(foodName);
         if(food == null) {
@@ -242,11 +196,24 @@ public class ClientGameController {
         else {
             farm.getInnerAreas().add(new Barn(farm.getSubArea(farm.getTiles(), x, x + Barn.COLS,
                 y, y + Barn.ROWS)));
-            getCurrentPlayer().subtractGold(requiredGold); getCurrentPlayer().subtractWood(requiredWood);
+            getCurrentPlayer().subtractGold(requiredGold);
+            getCurrentPlayer().subtractWood(requiredWood);
             getCurrentPlayer().subtractStone(requiredStone);
+
+            HashMap<String,Object> cmdBody = new HashMap<>();
+            cmdBody.put("action", "build_barn");
+            cmdBody.put("username", getCurrentPlayer().getUsername());
+            cmdBody.put("x", x);
+            cmdBody.put("y", y);
+            cmdBody.put("gold", getCurrentPlayer().getGold());
+            cmdBody.put("wood", getCurrentPlayer().getWood());
+            cmdBody.put("stone", getCurrentPlayer().getStone());
+            NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+
             return new Result(true, "barn built successfully.");
         }
     }
+
     public static Result buildCoop(int x, int y, Farm farm) {
         boolean buildable = true;
         int requiredGold = 4000, requiredWood = 300, requiredStone = 100;
@@ -280,11 +247,24 @@ public class ClientGameController {
         else {
             farm.getInnerAreas().add(new Coop(farm.getSubArea(farm.getTiles(), x, x + Coop.COLS,
                 y, y + Coop.ROWS)));
-            getCurrentPlayer().subtractGold(requiredGold); getCurrentPlayer().subtractWood(requiredWood);
+            getCurrentPlayer().subtractGold(requiredGold);
+            getCurrentPlayer().subtractWood(requiredWood);
             getCurrentPlayer().subtractStone(requiredStone);
+
+            HashMap<String,Object> cmdBody = new HashMap<>();
+            cmdBody.put("action", "build_coop");
+            cmdBody.put("username", getCurrentPlayer().getUsername());
+            cmdBody.put("x", x);
+            cmdBody.put("y", y);
+            cmdBody.put("gold", getCurrentPlayer().getGold());
+            cmdBody.put("wood", getCurrentPlayer().getWood());
+            cmdBody.put("stone", getCurrentPlayer().getStone());
+            NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+
             return new Result(true, "coop built successfully.");
         }
     }
+
     public static Result buyAnimal(Player buyer, AnimalType animalType, String name) {
         if(animalType.price > buyer.getGold()) {
             return new Result(false, "not enough gold to buy a " + animalType.name().toLowerCase() + "!");
@@ -303,6 +283,7 @@ public class ClientGameController {
             return new Result(false, "not enough " + animal.getMaintenance() + " space to buy this animal.");
         }
     }
+
     public static Result petAnimal(Animal animal) {
         if(animal.isPetted()) {
             return new Result(false, "you can pet an animal only once in a day.");
@@ -311,6 +292,7 @@ public class ClientGameController {
         animal.pet();
         return new Result(true, "you pet " + animal.getName() + ".");
     }
+
     public static Result shepherdAnimal(Animal animal) {
         if(!ClientApp.currentGame.getWeather().couldShepherdAnimals()) {
             return new Result(false, "you cannot shepherd animals in this weather!");
@@ -334,19 +316,7 @@ public class ClientGameController {
         getCurrentPlayer().getInventory().removeCountFromBackPack(Hay, 1);
         return new Result(true, animal.getName() + " fed with hay.");
     }
-    public static Result showAnimalProducts() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Available animal products: \n");
-        for(Animal animal : getCurrentPlayer().getAnimals()) {
-            if(animal.getCurrentProduct() != null) {
-                sb.append(animal.getName()).append("    ");
-                sb.append(animal.getCurrentProduct().getName()).append("  quality: ");
-                sb.append(animal.getCurrentProduct().getProductQuality()).append("\n");
-            }
-        }
 
-        return new Result(true, sb.toString());
-    }
     public static Result collectProduce(Animal animal) {
         if(animal.getCurrentProduct() == null) {
             return new Result(false, "no product is available for this animal!");
@@ -362,6 +332,7 @@ public class ClientGameController {
 
         return new Result(true, "product added to the inventory.");
     }
+
     public static Result sellAnimal(Animal animal) {
         Tile animalTile = animal.getTile();
 
@@ -372,6 +343,7 @@ public class ClientGameController {
 
         return new Result(true,  animal.getName() + " has been sold with price " + animal.getPrice() + "G.");
     }
+
     public static Result fishing(String material) {
         Lake lake = null;
         for(int row = getCurrentPlayer().getPosition().y - 1; row <= getCurrentPlayer().getPosition().y + 1; row++) {
@@ -1539,6 +1511,8 @@ public class ClientGameController {
         HashMap<String,Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "build_greenhouse");
         cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("gold", getCurrentPlayer().getGold());
+        cmdBody.put("wood", getCurrentPlayer().getWood());
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
 
         return new Result(true, "Greenhouse built successfully!");
