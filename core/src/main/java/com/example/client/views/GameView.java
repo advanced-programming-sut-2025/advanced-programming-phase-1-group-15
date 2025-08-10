@@ -161,6 +161,7 @@ public class GameView implements Screen {
         TextButton toolsButton = new TextButton("Tools", skin);
         TextButton scoreboardButton = new TextButton("Scoreboard", skin);
         TextButton sendMessage = new TextButton("Send Message", skin);
+        TextButton groupQuestButton = new TextButton("Group Quests", skin);
         float buttonWidth = 200f;
         float buttonHeight = 60f;
         sendMessage.addListener(new ClickListener(){
@@ -180,7 +181,6 @@ public class GameView implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 popUpMenu = new FriendsMenu(skin, "Friends:", this::restoreGameInput);
                 popUpMenu.show();
-                Gdx.input.setInputProcessor(popUpMenu.getStage());
             }
 
             private void restoreGameInput() {
@@ -200,6 +200,17 @@ public class GameView implements Screen {
                 Gdx.input.setInputProcessor(gameInputMultiplexer);
             }
         });
+        groupQuestButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                popUpMenu = new GroupQuestMenu(skin,game.getGroupQuestManager(),this::restoreGameInput);
+                popUpMenu.show();
+                Gdx.input.setInputProcessor(popUpMenu.getStage());
+            }
+            private void restoreGameInput() {
+                Gdx.input.setInputProcessor(gameInputMultiplexer);
+            }
+        });
 
         scoreboardButton.addListener(new ChangeListener() {
             @Override
@@ -212,6 +223,7 @@ public class GameView implements Screen {
         hudTable.add(friendsButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(toolsButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(sendMessage).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
+        hudTable.add(groupQuestButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(notificationLabel).expandX().bottom().center().padTop(600).row();
     }
 
@@ -219,7 +231,7 @@ public class GameView implements Screen {
         gameInputMultiplexer = new InputMultiplexer();
         gameInputMultiplexer.addProcessor(uiStage);
         gameInputMultiplexer.addProcessor(gameInputProcessor);
-        Gdx.input.setInputProcessor(gameInputMultiplexer); // Set the primary game input multiplexer
+        Gdx.input.setInputProcessor(gameInputMultiplexer);
     }
 
     public void restoreGameInput() {

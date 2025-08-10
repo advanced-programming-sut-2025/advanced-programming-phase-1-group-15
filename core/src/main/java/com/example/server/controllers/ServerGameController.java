@@ -16,12 +16,15 @@ public class ServerGameController {
         String senderUsername = req.getFromBody("username");
         respBody.put("username", senderUsername);
 
-        switch (action) {
-            case "set_randomizers", "player_movement", "player_stop", "flower", "marry-request", "talk",
-                 "generate_trees", "generate_stones", "predict_weather","hug", "gift" , "rateGift" , "marry-response" , "send_emoji"-> {
+        //switch (action) {
+        //    case "set_randomizers", "player_movement", "player_stop", "flower", "marry-request", "talk",
+        //         "generate_trees", "generate_stones", "predict_weather","hug", "gift" , "rateGift" , "marry-response" , "send_emoji"-> {
+        //switch (action) {
+            //case "set_randomizers", "player_movement", "player_stop", "flower", "marry-request", "talk",
+                 //"generate_trees", "generate_stones", "predict_weather","hug", "gift" , "rateGift" , "marry-response" -> {
                 reflectMessage(req, respBody);
-            }
-        }
+            //}
+        //}
     }
 
     public static void reflectMessage(Message req, Map<String,Object> respBody) {

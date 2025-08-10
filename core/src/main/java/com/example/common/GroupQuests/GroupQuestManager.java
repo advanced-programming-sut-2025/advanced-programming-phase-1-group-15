@@ -4,6 +4,8 @@ import com.example.client.NetworkClient;
 import com.example.client.models.ClientApp;
 import com.example.common.Message;
 import com.example.common.Player;
+import com.example.common.relation.PlayerFriendship;
+import com.example.common.tools.BackPackable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,43 +24,44 @@ public class GroupQuestManager {
 
     private void initializePrimaryQuests() {
         GroupQuest[] primaryQuests = {
-            new GroupQuest("MILK", "milk_pale",
+            new GroupQuest("MILK_PALE", "milk_pale",
                 "Collect 20 milk_pales together to make your own milk",
-                2, 4, 20, 150, 7),
+                3, 3, 20, 150, 7),
 
-            new GroupQuest("STONE_MINERS", "stone",
-                "Mine 300 Stone blocks for the new fortress walls",
-                3, 5, 300, 200, 5),
+            new GroupQuest("STONE", "stone",
+                "Mine 300 stones for the new fortress walls",
+                4, 4, 300, 200, 5),
 
-            new GroupQuest("FISH_CATCH", "salmon",
-                "Catch 100 Fish to feed the hungry townspeople",
-                2, 3, 100, 100, 4),
+            new GroupQuest("SALMON", "salmon",
+                "Catch 100 salmons to feed the hungry townspeople",
+                2, 2, 30, 100, 4),
 
-            new GroupQuest("CROP_HARVEST", " Harvest Festival",
-                "Harvest 100 Crops before the season ends",
-                2, 6, 400, 120, 6),
+            new GroupQuest("ORANGE", "orange",
+                "Harvest 400 oranges before the season ends",
+                3, 3, 20, 120, 6),
 
-            new GroupQuest("ORE_EXPEDITION", "Deep Earth Treasures",
-                "Extract 150 Ore from the dangerous mountain mines",
-                4, 6, 150, 300, 8),
+            new GroupQuest("COMMON_MUSHROOM", "common_mushroom",
+                "Gather 150 common mushrooms from the dangerous mountain mines",
+                4, 4, 30, 300, 8),
 
-            new GroupQuest("HERB_GATHERING", "Alchemist's Request",
-                "Gather 250 Herbs for the kingdom's medicine supply",
-                2, 4, 250, 80, 5),
+            new GroupQuest("GARLIC", "garlic",
+                "Gather 250 garlic for the kingdom's medicine supply",
+                2, 2, 20, 80, 5),
 
-            new GroupQuest("METAL_FORGE", "Blacksmith's Challenge",
-                "Forge 100 Metal Bars for the royal armory",
-                3, 4, 100, 250, 6),
+            new GroupQuest("EGG", "egg",
+                "Collect 100 eggs for the royal kitchen",
+                3, 3, 20, 250, 6),
 
-            new GroupQuest("GEM_HUNT", "Royal Jewel Collection",
-                "Find 50 Precious Gems for the crown jewels",
-                5, 8, 50, 500, 10)
+            new GroupQuest("AXE", "axe",
+                "Find 50 axes for the kingdom's lumberjacks",
+                2, 2, 30, 500, 10)
         };
 
         for (GroupQuest quest : primaryQuests) {
             allQuests.put(quest.getQuestId(), quest);
         }
     }
+
 
     public List<GroupQuest> getAvailableQuests() {
         return allQuests.values().stream()
@@ -277,10 +280,13 @@ public class GroupQuestManager {
 
         if (quest != null && player != null) {
             quest.updateProgress(player, amount);
-
-            if (quest.getStatus() == QuestStatus.COMPLETED) {
-                distributeRewards(quest);
-                cleanupCompletedQuest(questId);
+            BackPackable item =  player.getInventory().getItemByName(quest.getTitle());
+            if(item != null){
+                player.getInventory().removeCountFromBackPack(item, amount);
+                if (quest.getStatus() == QuestStatus.COMPLETED) {
+                    distributeRewards(quest);
+                    cleanupCompletedQuest(questId);
+                }
             }
         }
     }

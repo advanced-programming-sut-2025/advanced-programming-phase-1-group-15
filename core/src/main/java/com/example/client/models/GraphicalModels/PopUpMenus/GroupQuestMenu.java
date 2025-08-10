@@ -1,9 +1,12 @@
 package com.example.client.models.GraphicalModels.PopUpMenus;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.example.client.models.ClientApp;
 import com.example.common.GroupQuests.GroupQuest;
@@ -26,11 +29,15 @@ public class GroupQuestMenu extends PopUpMenu {
     public GroupQuestMenu(Skin skin, GroupQuestManager questManager, Runnable onHideCallback) {
         super(skin, "Group Quests", WIDTH, HEIGHT, onHideCallback);
         this.questManager = questManager;
+        availableQuestsTable = new Table();
+        activeQuestsTable = new Table();
+        statusLabel = new Label("status", skin);
+        tabPane = new TabPane(skin);
     }
 
     @Override
     protected void populate(Window w) {
-        w.clear();
+        //w.
         tabPane = new TabPane(skin);
 
         Table availableTab = createAvailableQuestsTab();
@@ -39,7 +46,7 @@ public class GroupQuestMenu extends PopUpMenu {
         Table activeTab = createActiveQuestsTab();
         tabPane.addTab("My Active Quests", activeTab);
 
-        w.add(tabPane).expand().fill().pad(PADDING).row();
+        w.add(tabPane).fill().pad(PADDING).padTop(30).row();
 
         statusLabel = new Label("", skin);
         statusLabel.setAlignment(Align.center);
@@ -50,17 +57,15 @@ public class GroupQuestMenu extends PopUpMenu {
         Table tabContent = new Table();
         tabContent.top();
 
-        Label headerLabel = new Label("Available Group Quests", skin, "title");
+        Label headerLabel = new Label("Available Group Quests", skin);
         headerLabel.setAlignment(Align.center);
         tabContent.add(headerLabel).fillX().padBottom(PADDING).row();
 
         availableQuestsTable = new Table();
         refreshAvailableQuests();
-
         ScrollPane scrollPane = new ScrollPane(availableQuestsTable, skin);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(true, false);
-
         tabContent.add(scrollPane).expand().fill();
 
         return tabContent;
@@ -70,7 +75,7 @@ public class GroupQuestMenu extends PopUpMenu {
         Table tabContent = new Table();
         tabContent.top();
 
-        Label headerLabel = new Label("My Active Quests", skin, "title");
+        Label headerLabel = new Label("My Active Quests", skin);
         headerLabel.setAlignment(Align.center);
         tabContent.add(headerLabel).fillX().padBottom(PADDING).row();
 
@@ -125,12 +130,12 @@ public class GroupQuestMenu extends PopUpMenu {
 
     private Table createAvailableQuestRow(GroupQuest quest, Player currentPlayer) {
         Table row = new Table();
-        row.setBackground(skin.getDrawable("default-round"));
+        row.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
         row.pad(10);
 
         Table infoSection = new Table();
 
-        Label titleLabel = new Label(quest.getTitle(), skin, "title");
+        Label titleLabel = new Label(quest.getTitle(), skin);
         titleLabel.setColor(Color.CYAN);
         infoSection.add(titleLabel).fillX().row();
 
@@ -195,12 +200,12 @@ public class GroupQuestMenu extends PopUpMenu {
 
     private Table createActiveQuestRow(GroupQuest quest, Player currentPlayer) {
         Table row = new Table();
-        row.setBackground(skin.getDrawable("default-round"));
+        row.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
         row.pad(10);
 
         Table infoSection = new Table();
 
-        Label titleLabel = new Label(quest.getTitle(), skin, "title");
+        Label titleLabel = new Label(quest.getTitle(), skin);
         titleLabel.setColor(Color.YELLOW);
         infoSection.add(titleLabel).fillX().row();
 
@@ -281,7 +286,7 @@ public class GroupQuestMenu extends PopUpMenu {
         }
 
         public void addTab(String title, Table content) {
-            TextButton tabButton = new TextButton(title, getSkin(), "toggle");
+            TextButton tabButton = new TextButton(title, getSkin());
             tabButtons.add(tabButton);
 
             tabButton.addListener(new ChangeListener() {

@@ -85,6 +85,21 @@ public class ClientGameListener {
             case "marry-response" -> {
                 handelMarriageResponse(msg);
             }
+            case "joinQuest" ->{
+                handleJoinQuest(msg);
+            }
+            case "leaveQuest"-> {
+                handleLeaveQuest(msg);
+            }
+            case "questProgress" -> {
+                handleQuestProgress(msg);
+            }
+            case "questReward" ->{
+                handleQuestReward(msg);
+            }
+            case "questFailed"->{
+                handleQuestFailed(msg);
+            }
             case "talk" -> {
                 handelTalk(msg);
             }
