@@ -46,6 +46,7 @@ public class Player extends User implements TimeObserver {
     private int mapNumber;
     private Sprite activeEmoji = null;
     private String message = null;
+    private float emojiTimer = 5f;
     TextureRegion face, faintedAnimation;
     Animation<TextureRegion> walkUpAnimation;
     Animation<TextureRegion> walkDownAnimation;
@@ -587,7 +588,15 @@ public class Player extends User implements TimeObserver {
         lastUpdate.setDay(dateAndTime.getDay());
         lastUpdate.setSeason(dateAndTime.getSeason());
     }
-
+    public void updateLabel(float delta) {
+        if (emojiTimer > 0) {
+            emojiTimer -= delta;
+            if (emojiTimer <= 0) {
+                activeEmoji = null;
+                message = null;
+            }
+        }
+    }
     public void thorOnThreeTiles(){
         List<PloughedPlace> ploughed = new ArrayList<>();
         for (List<Tile> row : farm.getTiles()) {

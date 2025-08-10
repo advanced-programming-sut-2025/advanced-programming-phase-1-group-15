@@ -69,6 +69,7 @@ public class ClientGameListener {
             case "questFailed"-> handleQuestFailed(msg);
             case "talk" -> handelTalk(msg);
             case "send_emoji" -> handleSendEmoji(msg);
+            case "message" -> handleSendMessage(msg);
             case "score-info" -> handleScoreInfo(msg);
             case "build_greenhouse" -> handleBuildGreenhouse(senderUsername);
         }
@@ -92,6 +93,12 @@ public class ClientGameListener {
         player.setFishingLevel((int)fishingLevel);
     }
 
+    private void handleSendMessage(Message msg){
+        String message = msg.getFromBody("messages");
+        for (Player player : game.getPlayers()) {
+            player.setMessage(message);
+        }
+    }
     private void handleSendEmoji(Message msg) {
         String fromUser = msg.getFromBody("username");
         String emoji = msg.getFromBody("emoji");
@@ -105,10 +112,11 @@ public class ClientGameListener {
             case "thumbs_up" -> GameAssetManager.thumbs_up;
             default -> null;
         };
-        if (sprite != null) {
-            System.out.println("send_emoji: " + emoji);
+        for (Player player : game.getPlayers()) {
+           player.setActiveEmoji(sprite);
         }
     }
+
 
     private void handelTalk(Message msg){
         String receiverUsername = msg.getFromBody("receiver");

@@ -67,6 +67,7 @@ public class GameView implements Screen {
     private Label energyLabel;
     private Label currentItemLabel;
     private Label Message;
+    private Image image;
     private NotificationLabel notificationLabel;
     private boolean isNotificationShowing = false;
     private Runnable cancelShow = () -> {
@@ -110,7 +111,6 @@ public class GameView implements Screen {
 
         mapCamera = new MapCamera(game.getCurrentPlayer());
         overlayRenderer = new GameOverlayRenderer(main.getBatch(), 16);
-
         uiStage = new Stage(new ScreenViewport());
         skin = new Skin(Gdx.files.internal("UI/StardewValley.json"));
         this.scoreboardWidget = new ScoreboardWidget(game, skin);
@@ -119,7 +119,6 @@ public class GameView implements Screen {
 
         commandExecutor = Executors.newSingleThreadExecutor();
         commandExecutor.submit(this::readTerminalInput);
-
         this.pauseMenuOverlay = new PauseMenuOverlay(main, game, this::restoreGameInput);
         this.craftingMenu = new CraftingMenu(main, game, this::restoreGameInput);
         this.cookingMenu = new CookingMenu(main, game, this::restoreGameInput);
@@ -156,12 +155,15 @@ public class GameView implements Screen {
         energyLabel.setColor(Color.FIREBRICK); energyLabel.setAlignment(Align.left);
         currentItemLabel = new Label("", skin);
         Message = new Label("Hi", skin);
+        image = new Image();
+        image.setSize(48,48);
         currentItemLabel.setColor(Color.FIREBRICK); currentItemLabel.setAlignment(Align.left);
         this.notificationLabel = new NotificationLabel(skin);
 
         hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
         hudTable.add(currentItemLabel).padTop(5).padLeft(10).left().row();
-        hudTable.add(Message).padTop(5).padLeft(10).left().row();
+        hudTable.add(Message).padTop(5).padLeft(10).left().width(100).row();
+        hudTable.add(image).padTop(5).padLeft(10).left().row();
         TextButton friendsButton = new TextButton("Friends", skin);
         TextButton toolsButton = new TextButton("Tools", skin);
         TextButton scoreboardButton = new TextButton("Scoreboard", skin);
@@ -260,9 +262,12 @@ public class GameView implements Screen {
         game.getDateAndTime().updateDateAndTime(delta);
         if(game.getCurrentPlayer().getMessage()!=null){
             Message.setText(game.getCurrentPlayer().getMessage());
+            Message.setColor(Color.BLACK);
+            game.getCurrentPlayer().updateLabel(delta);
         }
         else if(game.getCurrentPlayer().getActiveEmoji()!=null){
-
+            image = new Image(game.getCurrentPlayer().getActiveEmoji());
+            game.getCurrentPlayer().updateLabel(delta);
         }
         processNotifications(delta);
         processMarriageProposal(delta);
