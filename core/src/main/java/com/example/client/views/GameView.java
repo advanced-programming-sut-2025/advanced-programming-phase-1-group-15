@@ -737,7 +737,7 @@ public class GameView implements Screen {
                     // Regular left-click handling for adjacent tiles
                     if(checkCursorInAdjacent()) {
                         if(clickedTile.getArea() instanceof GreenHouse greenHouse && !greenHouse.isBuilt()){
-                            popUpMenu = new GreenHouseMenu(skin, "Repair GREENHOUSE", this::restoreGameInput, greenHouse);
+                            popUpMenu = new GreenHouseMenu(skin, "Repair GREENHOUSE", this::restoreGameInput);
                             popUpMenu.show();
                             Gdx.input.setInputProcessor(popUpMenu.getStage());
                         }

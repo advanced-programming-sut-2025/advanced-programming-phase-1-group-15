@@ -5,8 +5,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.Player;
+import com.example.common.Result;
 import com.example.common.map.GreenHouse;
 
 public class GreenHouseMenu extends PopUpMenu {
@@ -14,16 +16,14 @@ public class GreenHouseMenu extends PopUpMenu {
     private static final float HEIGHT = 400f;
     private static final float PADDING = 10f;
 
-    private final GreenHouse greenHouse;
     private final Label label;
     private final Player player;
     private TextButton repairButton;
     private Label messageLabel;
 
-    public GreenHouseMenu(Skin skin, String title, Runnable onHideCallback, GreenHouse greenHouse) {
+    public GreenHouseMenu(Skin skin, String title, Runnable onHideCallback) {
         super(skin, title, WIDTH, HEIGHT, onHideCallback);
 
-        this.greenHouse = greenHouse;
         label = new Label("""
                 To repair your GREENHOUSE you need to have at least:\s
                 * 500 wood\s
@@ -48,19 +48,16 @@ public class GreenHouseMenu extends PopUpMenu {
         repairButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(couldBeRepaired()) {
-                    player.getInventory().removeCountFromBackPack(player.getInventory().getItemByName("wood"), 500);
-                    player.subtractGold(1000);
-                    greenHouse.buildGreenHouse();
+                Result res = ClientGameController.sendBuildGreenHouseMessage();
 
+                if(res.success()) {
                     messageLabel.setColor(Color.GREEN);
-                    messageLabel.setText("Greenhouse repaired successfully!");
                     repairButton.setDisabled(true);
                 }
                 else {
                     messageLabel.setColor(Color.RED);
-                    messageLabel.setText("You don't have enough resources.");
                 }
+                messageLabel.setText(res.getMessage());
             }
         });
         w.add(repairButton).center().padTop(PADDING).row();

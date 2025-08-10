@@ -16,6 +16,8 @@ import com.example.common.farming.Seed;
 import com.example.common.farming.Tree;
 import com.example.common.farming.TreeType;
 import com.example.common.foraging.Stone;
+import com.example.common.map.Farm;
+import com.example.common.map.GreenHouse;
 import com.example.common.map.Map;
 import com.example.common.map.Tile;
 import com.example.common.relation.PlayerFriendship;
@@ -48,62 +50,26 @@ public class ClientGameListener {
         System.out.println("Received message: " + msg.getBody());
 
         switch (action) {
-            case "set_randomizers" -> {
-                handleSetRandomizers(msg);
-            }
-            case "player_movement" -> {
-                handlePlayerMovement(msg, senderUsername);
-            }
-            case "player_stop" -> {
-                handlePlayerStop(msg, senderUsername);
-            }
-            case "generate_trees" -> {
-                handleGenerateTrees(msg);
-            }
-            case "generate_stones" -> {
-                handleGenerateStones(msg);
-            }
-            case "predict_weather" -> {
-                handleWeatherForecast(msg);
-            }
-            case "hug" -> {
-                handelHug(msg, senderUsername);
-            }
-            case "flower" -> {
-                handelFlower(msg, senderUsername);
-            }
-            case "gift" -> {
-                System.out.println("reached gift case");
-                handleGift(msg);
-            }
-            case "rateGift" -> {
-                handleRateGift(msg);
-            }
-            case "marry-request" -> {
-                handelMarriageRequest(msg);
-            }
-            case "marry-response" -> {
-                handelMarriageResponse(msg);
-            }
-            case "joinQuest" ->{
-                handleJoinQuest(msg);
-            }
-            case "leaveQuest"-> {
-                handleLeaveQuest(msg);
-            }
-            case "questProgress" -> {
-                handleQuestProgress(msg);
-            }
-            case "questReward" ->{
-                handleQuestReward(msg);
-            }
-            case "questFailed"->{
-                handleQuestFailed(msg);
-            }
-            case "talk" -> {
-                handelTalk(msg);
-            }
+            case "set_randomizers" -> handleSetRandomizers(msg);
+            case "player_movement" -> handlePlayerMovement(msg, senderUsername);
+            case "player_stop" -> handlePlayerStop(msg, senderUsername);
+            case "generate_trees" -> handleGenerateTrees(msg);
+            case "generate_stones" -> handleGenerateStones(msg);
+            case "predict_weather" -> handleWeatherForecast(msg);
+            case "hug" -> handelHug(msg, senderUsername);
+            case "flower" -> handelFlower(msg, senderUsername);
+            case "gift" -> handleGift(msg);
+            case "rateGift" -> handleRateGift(msg);
+            case "marry-request" -> handelMarriageRequest(msg);
+            case "marry-response" -> handelMarriageResponse(msg);
+            case "joinQuest" -> handleJoinQuest(msg);
+            case "leaveQuest"-> handleLeaveQuest(msg);
+            case "questProgress" -> handleQuestProgress(msg);
+            case "questReward" -> handleQuestReward(msg);
+            case "questFailed"-> handleQuestFailed(msg);
+            case "talk" -> handelTalk(msg);
             case "send_emoji" -> handleSendEmoji(msg);
+            case "build_greenhouse" -> handleBuildGreenhouse(senderUsername);
         }
     }
     private void handleSendEmoji(Message msg) {
@@ -367,6 +333,15 @@ public class ClientGameListener {
     private void handleWeatherForecast(Message msg) {
         WeatherOption tomorrowWeather = msg.getFromBody("tomorrow_weather", WeatherOption.class);
         game.getWeather().setForecast(tomorrowWeather);
+    }
+
+    private void handleBuildGreenhouse(String senderUsername) {
+        Player player = game.getPlayerByUsername(senderUsername);
+        GreenHouse greenHouse = player.getFarm().getGreenHouse();
+
+        player.subtractGold(1000);
+        player.subtractWood(500);
+        greenHouse.buildGreenHouse();
     }
 
     public void disconnect() {

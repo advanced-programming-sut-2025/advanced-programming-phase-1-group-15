@@ -88,24 +88,6 @@ public class ClientGameController {
 
         return new Result(false, "You have to hold an item first.");
     }
-    public static Result buildGreenHouse() {
-        GreenHouse greenHouse = getCurrentPlayer().getFarm().getGreenHouse();
-
-        if(greenHouse.isBuilt()) {
-            return new Result(false, "you can't build your greenhouse twice");
-        }
-        else if(getCurrentPlayer().getGold() < 1000) {
-            return new Result(false, "not enough gold to build your greenhouse");
-        }
-        else if (getCurrentPlayer().getWood() < 500) {
-            return new Result(false, "not enough wood to build your greenhouse");
-        }
-
-        getCurrentPlayer().subtractGold(1000);
-        getCurrentPlayer().subtractWood(500);
-        greenHouse.buildGreenHouse();
-        return new Result(true, "greenhouse built successfully!");
-    }
 
 //    public static Result removeFromInventory(String itemName, int count) {
 //        BackPackable item = getCurrentPlayer().getInventory().getItemByName(itemName);
@@ -1524,6 +1506,28 @@ public class ClientGameController {
         cmdBody.put("tomorrow_weather", ClientApp.currentGame.getWeather().getTomorrowWeather());
 
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static Result sendBuildGreenHouseMessage() {
+        GreenHouse greenHouse = getCurrentPlayer().getFarm().getGreenHouse();
+
+        if(getCurrentPlayer().getGold() < 1000) {
+            return new Result(false, "Not enough gold to build your greenhouse.");
+        }
+        else if (getCurrentPlayer().getWood() < 500) {
+            return new Result(false, "Not enough wood to build your greenhouse.");
+        }
+
+        getCurrentPlayer().subtractGold(1000);
+        getCurrentPlayer().subtractWood(500);
+        greenHouse.buildGreenHouse();
+
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "build_greenhouse");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+
+        return new Result(true, "Greenhouse built successfully!");
     }
 
     public static void sendHugMessage(String receiverUsername) {
