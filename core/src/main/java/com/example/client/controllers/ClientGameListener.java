@@ -1,12 +1,16 @@
 package com.example.client.controllers;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.client.NetworkClient;
 import com.example.client.models.ClientApp;
+import com.example.client.views.GameAssetManager;
+import com.example.client.views.GameView;
 import com.example.common.Game;
 import com.example.common.GroupQuests.GroupQuest;
 import com.example.common.GroupQuests.GroupQuestManager;
 import com.example.common.Message;
 import com.example.common.Player;
+import com.example.common.Result;
 import com.example.common.enums.Direction;
 import com.example.common.farming.Seed;
 import com.example.common.farming.Tree;
@@ -84,6 +88,24 @@ public class ClientGameListener {
             case "talk" -> {
                 handelTalk(msg);
             }
+            case "send_emoji" -> handleSendEmoji(msg);
+        }
+    }
+    private void handleSendEmoji(Message msg) {
+        String fromUser = msg.getFromBody("username");
+        String emoji = msg.getFromBody("emoji");
+        Sprite sprite = switch (emoji) {
+            case "angry" -> GameAssetManager.angry;
+            case "cry" -> GameAssetManager.cry;
+            case "laugh" -> GameAssetManager.laugh;
+            case "love" -> GameAssetManager.love;
+            case "party" -> GameAssetManager.party;
+            case "smile" -> GameAssetManager.smile;
+            case "thumbs_up" -> GameAssetManager.thumbs_up;
+            default -> null;
+        };
+        if (sprite != null) {
+            System.out.println("send_emoji: " + emoji);
         }
     }
 

@@ -18,11 +18,15 @@ import com.example.client.NetworkClient;
 import com.example.client.controllers.ClientGameController;
 import com.example.client.controllers.ClientGameListener;
 import com.example.common.Game;
+import com.example.common.Message;
 import com.example.common.Player;
 import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
 import com.example.common.tools.BackPackable;
 import com.example.common.tools.Fridge;
+
+import java.util.HashMap;
+import java.util.Objects;
 
 public class ReActMenu {
     private final Stage stage;
@@ -107,10 +111,6 @@ public class ReActMenu {
         Label titleLabel = new Label("Message: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Table table = new Table(skin);
         Label errorLabel = new Label("",skin);
-        TextField username = new TextField("Enter UserName:", skin);
-        username.setColor(Color.BLACK);
-        username.getStyle().fontColor = Color.BROWN;
-        table.add(username).width(500).padTop(10).row();
         TextField message = new TextField("Enter your message" , skin);
         message.setColor(Color.BLACK);
         message.getStyle().fontColor = Color.BROWN;
@@ -119,12 +119,6 @@ public class ReActMenu {
         sendButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Player player = game.getPlayerByUsername(username.getText());
-                if (player == null) {
-                    showError("No player find whit this username" , errorLabel);
-                    errorLabel.setColor(Color.RED);
-                    return;
-                }
                 if (message.getText().length() > 15) {
                     showError("Your message is to long", errorLabel);
                     errorLabel.setColor(Color.RED);
@@ -139,11 +133,7 @@ public class ReActMenu {
     }
     private Table createFridgeContent() {
         Table table = new Table(skin);
-        TextField username = new TextField("Enter UserName:", skin);
         Label errorLabel = new Label("",skin);
-        table.add(username).width(500).padTop(10).row();
-        username.setColor(Color.BLACK);
-        username.getStyle().fontColor = Color.BROWN;
         Label titleLabel = new Label("Emoji: ", skin);
         titleLabel.setColor(Color.FIREBRICK);
         table.add(titleLabel).left();
@@ -193,22 +183,20 @@ public class ReActMenu {
         sendButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Player player = game.getPlayerByUsername(username.getText());
-                if (player == null) {
-                    showError("No player find whit this username" , errorLabel);
-                    errorLabel.setColor(Color.RED);
-                    return;
-                }
                 if (selectedEmoji[0] == null) {
                     showError("No emoji selected!", errorLabel);
                     errorLabel.setColor(Color.RED);
                     return;
                 }
+                HashMap<String , Object> body = new HashMap<>();
+                body.put("action", "send_emoji");
+                body.put("username", game.getCurrentPlayer().getUsername());
+                body.put("emoji", selectedEmoji[0]);
+                NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
                 showError("Sent emoji: " + selectedEmoji[0], errorLabel);
                 errorLabel.setColor(Color.GREEN);
             }
         });
-
         table.row().padTop(10);
         table.add(errorLabel).left().padTop(10).row();
         table.add(sendButton).left();
