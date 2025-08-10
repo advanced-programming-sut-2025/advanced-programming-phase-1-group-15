@@ -119,10 +119,15 @@ public class ReActMenu {
         sendButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (message.getText().length() > 15) {
+                if (message.getText().length() > 10) {
                     showError("Your message is to long", errorLabel);
                     errorLabel.setColor(Color.RED);
                 }
+                HashMap<String , Object> body = new HashMap<>();
+                body.put("action", "message");
+                body.put("username", game.getCurrentPlayer().getUsername());
+                body.put("messages", message.getText());
+                NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
                 showError("Sent Message successfully", errorLabel);
                 errorLabel.setColor(Color.GREEN);
             }

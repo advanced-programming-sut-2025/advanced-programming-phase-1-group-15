@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
+import com.example.client.controllers.ClientGameListener;
 import com.example.client.models.GraphicalModels.*;
 import com.example.client.models.GraphicalModels.PopUpMenus.*;
 import com.example.common.map.Area;
@@ -65,6 +66,7 @@ public class GameView implements Screen {
     private Table hudTable;
     private Label energyLabel;
     private Label currentItemLabel;
+    private Label Message;
     private NotificationLabel notificationLabel;
     private boolean isNotificationShowing = false;
     private Runnable cancelShow = () -> {
@@ -151,12 +153,13 @@ public class GameView implements Screen {
         energyLabel = new Label("", skin);
         energyLabel.setColor(Color.FIREBRICK); energyLabel.setAlignment(Align.left);
         currentItemLabel = new Label("", skin);
+        Message = new Label("Hi", skin);
         currentItemLabel.setColor(Color.FIREBRICK); currentItemLabel.setAlignment(Align.left);
         this.notificationLabel = new NotificationLabel(skin);
 
         hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
         hudTable.add(currentItemLabel).padTop(5).padLeft(10).left().row();
-
+        hudTable.add(Message).padTop(5).padLeft(10).left().row();
         TextButton friendsButton = new TextButton("Friends", skin);
         TextButton toolsButton = new TextButton("Tools", skin);
         TextButton scoreboardButton = new TextButton("Scoreboard", skin);
@@ -249,12 +252,16 @@ public class GameView implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         for(Player player : game.getPlayers()) {
             player.updateAnimation(delta);
         }
         game.getDateAndTime().updateDateAndTime(delta);
+        if(game.getCurrentPlayer().getMessage()!=null){
+            Message.setText(game.getCurrentPlayer().getMessage());
+        }
+        else if(game.getCurrentPlayer().getActiveEmoji()!=null){
 
+        }
         processNotifications(delta);
         processMarriageProposal(delta);
 
@@ -332,7 +339,6 @@ public class GameView implements Screen {
         WeatherOption weatherOption = game.getWeather().getCurrentWeather();
         Season season = dateAndTime.getSeason();
         int gold = game.getCurrentPlayer().getGold();
-
         TextureRegion clock = GameAssetManager.clock;
         float clockWidth = 4 * clock.getRegionWidth();
         float clockHeight = 4 * clock.getRegionHeight();
