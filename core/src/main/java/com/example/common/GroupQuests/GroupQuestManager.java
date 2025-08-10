@@ -166,7 +166,7 @@ public class GroupQuestManager {
 
         GroupQuest newQuest = new GroupQuest(
             oldQuest.getQuestId(),
-            oldQuest.getToBeDelivered(),
+            oldQuest.getTitle(),
             oldQuest.getDescription(),
             oldQuest.getRequiredPlayers(),
             oldQuest.getMaxPlayers(),
@@ -312,7 +312,7 @@ public class GroupQuestManager {
         System.out.println("=== Quest Status ===");
         for (GroupQuest quest : allQuests.values()) {
             System.out.printf("Quest: %s | Status: %s | Players: %d/%d | Progress: %.1f%%\n",
-                quest.getToBeDelivered(), quest.getStatus(),
+                quest.getTitle(), quest.getStatus(),
                 quest.getParticipantUsernames().size(), quest.getMaxPlayers(),
                 quest.getCompletionPercentage());
         }

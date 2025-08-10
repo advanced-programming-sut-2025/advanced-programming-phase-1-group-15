@@ -3,6 +3,7 @@ package com.example.common;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
+import com.example.common.GroupQuests.GroupQuestManager;
 import com.example.common.map.Map;
 import com.example.common.map.Position;
 import com.example.common.map.Tile;
@@ -31,6 +32,8 @@ public class Game implements TimeObserver {
 
     private final ArrayList<PlayerFriendship> friendships = new ArrayList<>();
 
+    private GroupQuestManager groupQuestManager;
+
     private boolean finished = false;
 
     public Game(Lobby lobby, User currentUser) {
@@ -50,6 +53,8 @@ public class Game implements TimeObserver {
         if(adminPlayer.equals(currentPlayer)) {
             isAdmin = true;
         }
+
+        groupQuestManager = new GroupQuestManager();
     }
 
     public void build() {
@@ -166,5 +171,13 @@ public class Game implements TimeObserver {
 
         Collections.sort(scoreboard, Comparator.comparingInt(ScoreboardInfo::getScore).reversed());
         return scoreboard;
+    }
+
+    public GroupQuestManager getGroupQuestManager() {
+        return groupQuestManager;
+    }
+
+    public ArrayList<ArrayList<Tile>> getMapTiles() {
+        return mapTiles;
     }
 }

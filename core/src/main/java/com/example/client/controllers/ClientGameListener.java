@@ -3,6 +3,8 @@ package com.example.client.controllers;
 import com.example.client.NetworkClient;
 import com.example.client.models.ClientApp;
 import com.example.common.Game;
+import com.example.common.GroupQuests.GroupQuest;
+import com.example.common.GroupQuests.GroupQuestManager;
 import com.example.common.Message;
 import com.example.common.Player;
 import com.example.common.enums.Direction;
@@ -145,21 +147,6 @@ public class ClientGameListener {
         }
     }
 
-//    private void handelGift(Message msg, String senderUsername) {
-//        String receiverUsername = msg.getFromBody("receiver");
-//        String itemName = msg.getFromBody("item");
-//        int quantity = msg.getIntFromBody("quantity");
-//        if(ClientApp.user.getUsername().equals(receiverUsername)) {
-//            Player sender = game.getPlayerByUsername(senderUsername);
-//            Player receiver = game.getPlayerByUsername(receiverUsername);
-//            BackPackable item =  sender.getInventory().getItemByName(itemName);
-//            sender.getInventory().removeCountFromBackPack(item,quantity);
-//            receiver.getInventory().addToBackPack(item,quantity);
-//            ClientApp.currentGame.getCurrentPlayer().addNotification(
-//                new PlayerFriendship.Message(
-//                    sender, sender.getNickname() +"sent you "+quantity+" number of "+itemName));
-//        }
-//    }
     private void handleGift(Message msg) {
         String receiverUsername = msg.getFromBody("receiver");
         String senderUsername = msg.getFromBody("username");
@@ -169,6 +156,72 @@ public class ClientGameListener {
             ClientGameController.getGift(senderUsername, itemName, quantity);
             System.out.println("reached this line");
         }
+    }
+
+    private void handleJoinQuest(Message msg) {
+        String questId = msg.getFromBody("questId");
+        String username = msg.getFromBody("username");
+        Player joiner = game.getPlayerByUsername(username);
+
+        GroupQuestManager questManager = ClientApp.currentGame.getGroupQuestManager();
+        questManager.handleJoinQuest(questId, username);
+    }
+
+    private void handleLeaveQuest(Message msg) {
+        String questId = msg.getFromBody("questId");
+        String username = msg.getFromBody("username");
+
+        GroupQuestManager questManager = ClientApp.currentGame.getGroupQuestManager();
+        questManager.handleLeaveQuest(questId, username);
+    }
+
+    private void handleQuestProgress(Message msg) {
+        String questId = msg.getFromBody("questId");
+        String username = msg.getFromBody("username");
+        int amount = msg.getIntFromBody("amount");
+
+        GroupQuestManager questManager = ClientApp.currentGame.getGroupQuestManager();
+        questManager.handleQuestProgress(questId, username, amount);
+
+        GroupQuest quest = questManager.getQuest(questId);
+    }
+
+    private void handleQuestReward(Message msg) {
+        String questId = msg.getFromBody("questId");
+        String username = msg.getFromBody("username");
+        int reward = msg.getIntFromBody("reward");
+
+        if (ClientApp.user.getUsername().equals(username)) {
+            GroupQuest quest = ClientApp.currentGame.getGroupQuestManager().getQuest(questId);
+            if(quest != null){
+                showQuestCompletionNotification(username,quest.getTitle(), reward);
+            }
+        }
+    }
+
+    private void handleQuestFailed(Message msg) {
+        String questId = msg.getFromBody("questId");
+        String username = msg.getFromBody("username");
+
+        if (ClientApp.user.getUsername().equals(username)) {
+            GroupQuest quest = ClientApp.currentGame.getGroupQuestManager().getQuest(questId);
+            if(quest != null){
+                showQuestFailureNotification(username,quest.getTitle());
+            }
+        }
+    }
+
+    private void showQuestCompletionNotification(String sender,String questTitle, int reward) {
+        Player senderPlayer = game.getPlayerByUsername(sender);
+        game.getCurrentPlayer().addNotification(new PlayerFriendship.Message(senderPlayer,
+            "QUEST COMPLETED: " + questTitle + " - Earned " + reward + " coins!"));
+    }
+
+    private void showQuestFailureNotification(String sender,String questTitle) {
+        System.out.println("QUEST FAILED: " + questTitle + " - Time limit exceeded!");
+        Player senderPlayer = game.getPlayerByUsername(sender);
+        game.getCurrentPlayer().addNotification(new PlayerFriendship.Message(senderPlayer,
+            "QUEST FAILED: " + questTitle + " - Time limit exceeded!"));
     }
 
     private void handleRateGift(Message msg) {

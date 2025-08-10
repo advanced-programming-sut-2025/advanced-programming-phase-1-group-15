@@ -12,7 +12,7 @@ import java.util.Set;
 
 public class GroupQuest implements TimeObserver {
     private String questId;
-    private String toBeDelivered;
+    private String title;
     private String description;
     private QuestStatus status;
     private int requiredPlayers;
@@ -31,7 +31,7 @@ public class GroupQuest implements TimeObserver {
                       int requiredPlayers, int maxPlayers, int targetAmount,
                       int rewardPerPlayer, int timeLimit) {
         this.questId = questId;
-        this.toBeDelivered = toBeDelivered;
+        this.title = toBeDelivered;
         this.description = description;
         this.status = QuestStatus.AVAILABLE;
         this.requiredPlayers = requiredPlayers;
@@ -108,7 +108,7 @@ public class GroupQuest implements TimeObserver {
     }
 
     public String getQuestId() { return questId; }
-    public String getToBeDelivered() {return toBeDelivered;}
+    public String getTitle() {return title;}
     public String getDescription() { return description; }
     public QuestStatus getStatus() { return status; }
     public int getRequiredPlayers() { return requiredPlayers; }
