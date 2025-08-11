@@ -99,6 +99,7 @@ public class GameView implements Screen {
     private final JojaMartMenu jojaMartMenu;
     private final PierreGeneralStoreMenu pierreGeneralStoreMenu;
     private final StarDropSaloonMenu starDropSaloonMenu;
+    private final TradeMenu tradeMenu;
     private final ReActMenu reActMenu;
     private ArrayList<ArtisanMenu> artisans = new ArrayList<>();
 
@@ -130,6 +131,7 @@ public class GameView implements Screen {
         this.pierreGeneralStoreMenu = new PierreGeneralStoreMenu(main , game , this::restoreGameInput);
         this.starDropSaloonMenu = new StarDropSaloonMenu(main, game, this::restoreGameInput);
         this.reActMenu = new ReActMenu(main , game , this::restoreGameInput);
+        this.tradeMenu = new TradeMenu(main, game, this::restoreGameInput);
         ClientApp.setCurrentGameView(this);
     }
 
@@ -158,21 +160,31 @@ public class GameView implements Screen {
         currentItemLabel = new Label("", skin);
         Message = new Label("", skin);
         image = new Image();
-        image.setSize(64,64);
         currentItemLabel.setColor(Color.FIREBRICK); currentItemLabel.setAlignment(Align.left);
         this.notificationLabel = new NotificationLabel(skin);
 
         hudTable.add(energyLabel).padTop(5).padLeft(10).left().row();
         hudTable.add(currentItemLabel).padTop(5).padLeft(10).left().row();
-        hudTable.add(Message).padTop(5).padLeft(10).left().width(100).row();
-        hudTable.add(image).padTop(5).padLeft(10).left().bottom().row();
         TextButton friendsButton = new TextButton("Friends", skin);
         TextButton toolsButton = new TextButton("Tools", skin);
         TextButton scoreboardButton = new TextButton("Scoreboard", skin);
         TextButton sendMessage = new TextButton("Send Message", skin);
         TextButton groupQuestButton = new TextButton("Group Quests", skin);
+        TextButton TradeButton = new TextButton("Trade", skin);
         float buttonWidth = 200f;
         float buttonHeight = 60f;
+        TradeButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if (tradeMenu.isVisible()){
+                    tradeMenu.setVisible(false , 0);
+                    restoreGameInput();
+                }
+                else {
+                    tradeMenu.setVisible(true, 1);
+                    Gdx.input.setInputProcessor(tradeMenu.getStage());
+                }
+            }
+        });
         sendMessage.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y) {
                 if (reActMenu.isVisible()){
@@ -233,7 +245,10 @@ public class GameView implements Screen {
         hudTable.add(toolsButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(sendMessage).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(groupQuestButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
-        hudTable.add(notificationLabel).expandX().bottom().center().padTop(400).row();
+        hudTable.add(TradeButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
+        hudTable.add(Message).expandX().bottom().center().padTop(350).row();
+        hudTable.add(image).expandX().bottom().center().row();
+        hudTable.add(notificationLabel).expandX().bottom().center().row();
     }
 
     private void setupInputHandling() {
@@ -262,35 +277,14 @@ public class GameView implements Screen {
             player.updateAnimation(delta);
         }
         game.getDateAndTime().updateDateAndTime(delta);
-//        game.getCurrentPlayer().updateLabel(delta);
-//        if (game.getCurrentPlayer().getMessage()==null || game.getCurrentPlayer().getMessage().isEmpty()){
-//            Message.setText("");
-//        }
-        if(game.getCurrentPlayer().getMessage()!=null && !game.getCurrentPlayer().getMessage().isEmpty()){
-            Message.setText(game.getCurrentPlayer().getMessage());
-            Message.setColor(Color.BLACK);
-            game.getCurrentPlayer().updateLabel(delta);
-            if (game.getCurrentPlayer().getMessage()==null){
-                Message.setText("");
-            }
-        }
+        updateMessageEmoji(delta);
         processNotifications(delta);
         processMarriageProposal(delta);
-
         SpriteBatch batch = main.getBatch();
         renderMap(batch);
         overlayRenderer.draw(delta, game, mapCamera);
         renderHeldItemCursor(batch);
         renderHUD(batch, delta);
-        if(game.getCurrentPlayer().getActiveEmoji()!=null){
-//            game.getCurrentPlayer().getActiveEmoji().setSize(64 ,64);
-//            image.setDrawable(new TextureRegionDrawable((game.getCurrentPlayer().getActiveEmoji())));
-//            image.setVisible(true);
-            batch.begin();
-            batch.draw(game.getCurrentPlayer().getActiveEmoji(), game.getCurrentPlayer().getPosition().x, game.getCurrentPlayer().getPosition().y + 20, 48, 48);
-            batch.end();
-            game.getCurrentPlayer().updateLabel(delta);
-        }
         scoreboardWidget.update(delta);
 
         updateUIComponents();
@@ -314,6 +308,7 @@ public class GameView implements Screen {
         pierreGeneralStoreMenu.draw(delta);
         starDropSaloonMenu.draw(delta);
         reActMenu.draw(delta);
+        tradeMenu.draw(delta);
         for (ArtisanMenu artisan : artisans) {
             artisan.draw(delta);
         }
@@ -346,7 +341,35 @@ public class GameView implements Screen {
 
         batch.end();
     }
-
+    private void updateMessageEmoji(float delta) {
+        if (game.getCurrentPlayer().getMessage()== null){
+            Message.setText("");
+            Message.setVisible(false);
+        }
+        if(game.getCurrentPlayer().getMessage()!=null && !game.getCurrentPlayer().getMessage().isEmpty()){
+            Message.setText(game.getCurrentPlayer().getMessage());
+            Message.setColor(Color.BLACK);
+            Message.setVisible(true);
+            game.getCurrentPlayer().updateLabel(delta);
+            if (game.getCurrentPlayer().getMessage()==null){
+                Message.setText("");
+                Message.setVisible(false);
+            }
+        }
+        if (game.getCurrentPlayer().getActiveEmoji() == null){
+            image.setVisible(false);
+        }
+        else{
+            image.setDrawable(new TextureRegionDrawable(game.getCurrentPlayer().getActiveEmoji()));
+            image.setVisible(true);
+            image.setSize(48,48);
+            System.out.println(game.getCurrentPlayer().getActiveEmoji());
+            game.getCurrentPlayer().updateLabel(delta);
+            if (game.getCurrentPlayer().getActiveEmoji()==null){
+                image.setVisible(false);
+            }
+        }
+    }
     private void updateUIComponents() {
         int energy = (int) game.getCurrentPlayer().getEnergy();
         energyLabel.setText("Energy: " + energy);
@@ -466,6 +489,7 @@ public class GameView implements Screen {
         pierreGeneralStoreMenu.dispose();
         starDropSaloonMenu.dispose();
         reActMenu.dispose();
+        tradeMenu.dispose();
         for (ArtisanMenu artisan : artisans) {
             artisan.dispose();
         }
