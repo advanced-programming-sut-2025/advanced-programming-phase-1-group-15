@@ -16,7 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
+import com.example.client.NetworkClient;
 import com.example.common.Game;
+import com.example.common.Message;
 import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
 import com.example.common.farming.Crop;
@@ -40,6 +42,7 @@ public class TradeMenu {
     private final Game game;
     private final Runnable onHideCallback;
     private final Label tooltipLabel = new Label("", skin);
+
     private final Container<Label> tooltipContainer = new Container<>(tooltipLabel);
     public TradeMenu(Main main, Game game, Runnable onHideCallback) {
         game.getCurrentPlayer().getInventory().addToBackPack(new Food(FoodType.SALMON_DINNER) , 3);
@@ -119,8 +122,15 @@ public class TradeMenu {
         stage.draw();
     }
     private Table createRequestContent() {
-        Label titleLabel = new Label("Crate Request: ", skin); titleLabel.setColor(Color.FIREBRICK);
         Table table = new Table(skin);
+        if (game.getCurrentPlayer().getTradePlayer() == null) {
+            Label label = new Label("You don't have request", skin);
+            label.setColor(Color.RED);
+            table.add(label).row();
+            return table;
+        }
+        Label titleLabel = new Label("You have Request from: "+ game.getCurrentPlayer().getTradePlayer().getUsername(), skin); titleLabel.setColor(Color.FIREBRICK);
+        table.add(titleLabel).row();
         return table;
     }
     private Table createOfferContent() {
@@ -151,6 +161,7 @@ public class TradeMenu {
                         game.getCurrentPlayer().getWantedItems().put(wantedField.getText(), num);
                     }
                     showError("add successfully" , errorLabel);
+                    errorLabel.setColor(Color.GREEN);
                 }catch (NumberFormatException e){
                     showError("invalid number" , errorLabel);
                     errorLabel.setColor(Color.RED);
@@ -183,6 +194,7 @@ public class TradeMenu {
                         game.getCurrentPlayer().getItems().put(temp, num);
                     }
                     showError("add successfully" , errorLabel);
+                    errorLabel.setColor(Color.GREEN);
                 }catch (NumberFormatException e){
                     showError("invalid number" , errorLabel);
                     errorLabel.setColor(Color.RED);
@@ -224,7 +236,16 @@ public class TradeMenu {
         });
         send.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-
+                if (game.getPlayerByUsername(userField.getText()) == null) {
+                    showError("user not find" , errorLabel);
+                    errorLabel.setColor(Color.RED);
+                    return;
+                }
+                HashMap<String , Object> body = new HashMap<>();
+                body.put("action", "trade");
+                body.put("username", game.getCurrentPlayer().getUsername());
+                body.put("target", userField.getText());
+                NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
             }
         });
         table.add(errorLabel).width(500).row();
@@ -360,10 +381,10 @@ public class TradeMenu {
             refresh();
             switch (tabNumber) {
                 case 1:
-                    changeTab(request);
+                    changeTab(offer);
                     break;
                 case 2:
-                    changeTab(offer);
+                    changeTab(request);
                     break;
                 case 3:
                     changeTab(history);

@@ -70,6 +70,7 @@ public class GameView implements Screen {
     private Label currentItemLabel;
     private Label Message;
     private Image image;
+    private TextButton TradeMessage;
     private NotificationLabel notificationLabel;
     private boolean isNotificationShowing = false;
     private Runnable cancelShow = () -> {
@@ -160,6 +161,8 @@ public class GameView implements Screen {
         currentItemLabel = new Label("", skin);
         Message = new Label("", skin);
         image = new Image();
+        TradeMessage = new TextButton("You have new Trade Request, Click to see" , skin);
+        TradeMessage.setVisible(false);
         currentItemLabel.setColor(Color.FIREBRICK); currentItemLabel.setAlignment(Align.left);
         this.notificationLabel = new NotificationLabel(skin);
 
@@ -173,6 +176,18 @@ public class GameView implements Screen {
         TextButton TradeButton = new TextButton("Trade", skin);
         float buttonWidth = 200f;
         float buttonHeight = 60f;
+        TradeMessage.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y){
+                if (tradeMenu.isVisible()){
+                    tradeMenu.setVisible(false , 0);
+                    restoreGameInput();
+                }
+                else {
+                    tradeMenu.setVisible(true, 2);
+                    Gdx.input.setInputProcessor(tradeMenu.getStage());
+                }
+            }
+        });
         TradeButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 if (tradeMenu.isVisible()){
@@ -246,9 +261,10 @@ public class GameView implements Screen {
         hudTable.add(sendMessage).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(groupQuestButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(TradeButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
-        hudTable.add(Message).expandX().bottom().center().padTop(250).row();
+        hudTable.add(Message).expandX().bottom().center().padTop(200).row();
         hudTable.add(image).expandX().bottom().center().row();
         hudTable.add(notificationLabel).expandX().bottom().center().row();
+        hudTable.add(TradeMessage).expandX().bottom().center().width(700).row();
     }
     private void setupInputHandling() {
         gameInputMultiplexer = new InputMultiplexer();
@@ -277,6 +293,7 @@ public class GameView implements Screen {
         }
         game.getDateAndTime().updateDateAndTime(delta);
         updateMessageEmoji(delta);
+        updateTradeMessage(delta);
         processNotifications(delta);
         processMarriageProposal(delta);
         SpriteBatch batch = main.getBatch();
@@ -318,7 +335,6 @@ public class GameView implements Screen {
 //            sinceLastInfoUpdate = 0;
 //        }
     }
-
     private void renderMap(SpriteBatch batch) {
         mapCamera.setPlayer(game.getCurrentPlayer());
         mapCamera.update();
@@ -339,6 +355,15 @@ public class GameView implements Screen {
         drawClock(batch);
 
         batch.end();
+    }
+    private void updateTradeMessage(float delta) {
+        if (game.getCurrentPlayer().isNewTrade()){
+            TradeMessage.setVisible(true);
+        }
+        game.getCurrentPlayer().updateTrade(delta);
+        if (!game.getCurrentPlayer().isNewTrade()){
+            TradeMessage.setVisible(false);
+        }
     }
     private void updateMessageEmoji(float delta) {
         if (game.getCurrentPlayer().getMessage()== null){

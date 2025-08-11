@@ -83,9 +83,15 @@ public class ClientGameListener {
             case "hoe_use" -> handleHoeUse(msg, senderUsername);
             case "pickaxe_use" -> handlePickaxeUse(msg, senderUsername);
             case "put_in_tile" -> handlePutInTile(msg);
+            case "trade" -> handelTrade(msg);
         }
     }
-
+    public void handelTrade(Message msg) {
+        Player player = game.getPlayerByUsername(msg.getFromBody("username"));
+        Player target = game.getPlayerByUsername(msg.getFromBody("target"));
+        target.setNewTrade(true);
+        target.setTradePlayer(player);
+    }
     public void handleScoreInfo(Message msg){
         String username = msg.getFromBody("username");
         Player player = game.getPlayerByUsername(username);

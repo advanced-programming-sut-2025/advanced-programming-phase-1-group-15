@@ -47,6 +47,7 @@ public class Player extends User implements TimeObserver {
     private Sprite activeEmoji = null;
     private String message = null;
     private float emojiTimer = 5f;
+    private float tradeTimer = 7f;
     TextureRegion face, faintedAnimation;
     Animation<TextureRegion> walkUpAnimation;
     Animation<TextureRegion> walkDownAnimation;
@@ -57,7 +58,24 @@ public class Player extends User implements TimeObserver {
     boolean isWalking = false;
     float stateTime = 0f;
     public final static double walkingEnergyConsume = 0.1;
+    private boolean newTrade = false;
+    private Player tradePlayer;
 
+    public Player getTradePlayer() {
+        return tradePlayer;
+    }
+
+    public void setTradePlayer(Player tradePlayer) {
+        this.tradePlayer = tradePlayer;
+    }
+
+    public boolean isNewTrade() {
+        return newTrade;
+    }
+
+    public void setNewTrade(boolean newTrade) {
+        this.newTrade = newTrade;
+    }
     private int gold = 1000;
     private double energy = 200;
     private boolean unlimitedEnergy = false;
@@ -613,6 +631,15 @@ public class Player extends User implements TimeObserver {
                 this.activeEmoji = null;
                 this.message = null;
                 emojiTimer = 5f;
+            }
+        }
+    }
+    public void updateTrade(float delta) {
+        if (tradeTimer > 0) {
+            tradeTimer -= delta;
+            if (tradeTimer <= 0) {
+                newTrade = false;
+                tradeTimer = 5f;
             }
         }
     }
