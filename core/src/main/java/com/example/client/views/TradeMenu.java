@@ -19,6 +19,9 @@ import com.example.client.Main;
 import com.example.common.Game;
 import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
+import com.example.common.farming.Crop;
+import com.example.common.farming.Fruit;
+import com.example.common.foraging.ForagingCrop;
 import com.example.common.tools.BackPackable;
 import org.w3c.dom.Text;
 
@@ -124,14 +127,13 @@ public class TradeMenu {
         Table table = new Table(skin);
         Label errorLabel = new Label("" , skin);
         Label titleLabel = new Label("Offer", skin); titleLabel.setColor(Color.FIREBRICK);
+        TextButton send = new TextButton("send", skin);
         TextField userField = new TextField("Enter Player UserName for trade", skin);
-        HashMap<String , Integer> wantedItems = new HashMap<>();
-        HashMap<BackPackable , Integer> items = new HashMap<>();
         TextField wantedField = new TextField("Name Item you want", skin);
         TextField wantedNumber = new TextField("Number" , skin);
         TextButton addWantItem = new TextButton("add" , skin);
         TextField itemField = new TextField("Name Item to sell", skin);
-        TextField itemNumber = new TextField("Number of Item" , skin);
+        TextField itemNumber = new TextField("Number" , skin);
         TextButton addItem = new TextButton("add" , skin);
         addWantItem.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
@@ -142,7 +144,12 @@ public class TradeMenu {
                 }
                 try{
                     int num = Integer.parseInt(wantedNumber.getText());
-                    wantedItems.put(wantedField.getText(), num);
+                    if (game.getCurrentPlayer().getWantedItems().containsKey(wantedField.getText())) {
+                        game.getCurrentPlayer().getWantedItems().put(wantedField.getText(), game.getCurrentPlayer().getWantedItems().get(wantedField.getText()) + num);
+                    }
+                    else {
+                        game.getCurrentPlayer().getWantedItems().put(wantedField.getText(), num);
+                    }
                     showError("add successfully" , errorLabel);
                 }catch (NumberFormatException e){
                     showError("invalid number" , errorLabel);
@@ -165,7 +172,16 @@ public class TradeMenu {
                 try{
                     BackPackable temp = game.getCurrentPlayer().getInventory().getItemByName(itemField.getText());
                     int num = Integer.parseInt(itemNumber.getText());
-                    items.put(temp, num);
+                    if (game.getCurrentPlayer().getInventory().getItemCount(itemField.getText()) < num) {
+                        showError("you don't have enough item" , errorLabel);
+                        return;
+                    }
+                    if (game.getCurrentPlayer().getItems().get(temp) != 0) {
+                        game.getCurrentPlayer().getItems().put(temp, game.getCurrentPlayer().getItems().get(temp) + num);
+                    }
+                    else {
+                        game.getCurrentPlayer().getItems().put(temp, num);
+                    }
                     showError("add successfully" , errorLabel);
                 }catch (NumberFormatException e){
                     showError("invalid number" , errorLabel);
@@ -206,18 +222,125 @@ public class TradeMenu {
                 contentArea.add(showItemTable()).expand().fill();
             }
         });
+        send.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+
+            }
+        });
         table.add(errorLabel).width(500).row();
         table.add(showWantedItem).left();
         table.add(showItem).right().row();
+        table.add(send).right().pad(10).row();
         return table;
     }
     private Table showItemTable(){
         Table table = new Table(skin);
-
+        TextButton removeItem = new TextButton("remove", skin);
+        TextButton Back = new TextButton("back", skin);
+        Label errorLabel = new Label("" , skin);
+        List<String> itemList = new List<>(skin);
+        String[] items = game.getCurrentPlayer().getItems().entrySet().stream()
+            .map(entry -> entry.getKey() + " x" + entry.getValue())
+            .toArray(String[]::new);
+        itemList.setItems(items);
+        ScrollPane scrollPane = new ScrollPane(itemList, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        BackPackable[] current = new BackPackable[1];
+        itemList.addListener(new InputListener() {
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                int index = itemList.getSelectedIndex();
+                if (index >= 0) {
+                    String item = itemList.getItems().get(index);
+                    if (item != null && !item.isEmpty()) {
+                        String itemName = item.split(" x")[0];
+                        current[0] = game.getCurrentPlayer().getInventory().getItemByName(itemName);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        removeItem.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (current[0] == null) {
+                    showError("choose item to remove" , errorLabel);
+                    errorLabel.setColor(Color.RED);
+                    return;
+                }
+                game.getCurrentPlayer().getItems().remove(current[0]);
+                table.clear();
+                table.add(showItemTable()).expand().fill();
+                showError("remove successfully" , errorLabel);
+                errorLabel.setColor(Color.GREEN);
+            }
+        });
+        Back.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                refresh();
+                changeTab(offer);
+            }
+        });
+        table.add(scrollPane).expand().fill().pad(10).row();
+        table.add(removeItem).right().row();
+        table.add(Back).left().pad(10);
         return table;
     }
     private Table showWantedTable(){
         Table table = new Table(skin);
+        TextButton removeItem = new TextButton("remove", skin);
+        TextButton Back = new TextButton("back", skin);
+        Label errorLabel = new Label("" , skin);
+        List<String> itemList = new List<>(skin);
+        String[] items = game.getCurrentPlayer().getWantedItems().entrySet().stream()
+            .map(entry -> entry.getKey() + " x" + entry.getValue())
+            .toArray(String[]::new);
+        itemList.setItems(items);
+        ScrollPane scrollPane = new ScrollPane(itemList, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        String[] current = new String[1];
+        itemList.addListener(new InputListener() {
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                int index = itemList.getSelectedIndex();
+                if (index >= 0) {
+                    String item = itemList.getItems().get(index);
+                    if (item != null && !item.isEmpty()) {
+                        String itemName = item.split(" x")[0];
+                        current[0] = itemName;
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        removeItem.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (current[0] == null || current[0].isEmpty()) {
+                    showError("choose item to remove" , errorLabel);
+                    errorLabel.setColor(Color.RED);
+                    return;
+                }
+                game.getCurrentPlayer().getWantedItems().remove(current[0]);
+                table.clear();
+                table.add(showWantedTable()).expand().fill();
+                showError("remove successfully" , errorLabel);
+                errorLabel.setColor(Color.GREEN);
+            }
+        });
+        Back.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                refresh();
+                changeTab(offer);
+            }
+        });
+        table.add(scrollPane).expand().fill().pad(10).row();
+        table.add(removeItem).right().row();
+        table.add(Back).left().pad(10);
         return table;
     }
     private Table createHistoryContent() {
