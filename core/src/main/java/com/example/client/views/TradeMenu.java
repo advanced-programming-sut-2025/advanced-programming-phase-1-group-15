@@ -19,6 +19,11 @@ import com.example.client.Main;
 import com.example.common.Game;
 import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
+import com.example.common.tools.BackPackable;
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TradeMenu {
     private final Stage stage;
@@ -26,7 +31,8 @@ public class TradeMenu {
     private boolean visible ;
     private final Table rootTable;
     private final Table request;
-    private final Table response;
+    private final Table offer;
+    private final Table history;
     private final Main main;
     private final Game game;
     private final Runnable onHideCallback;
@@ -45,19 +51,21 @@ public class TradeMenu {
         rootTable.setVisible(false);
         rootTable.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture("UI/overlay.png"))));
         Table tabBar = new Table(skin);
+        TextButton responseTab = new TextButton("Offer", skin);
         TextButton requestTab = new TextButton("Request", skin);
-        TextButton responseTab = new TextButton("Response", skin);
         TextButton historyTab = new TextButton("History", skin);
-        tabBar.add(requestTab).pad(5);
         tabBar.add(responseTab).pad(5);
+        tabBar.add(requestTab).pad(5);
         tabBar.add(historyTab).pad(5);
         rootTable.add(tabBar).expandX().top().padTop(10).row();
+        offer = createOfferContent();
         request = createRequestContent();
-        response = createResponseContent();
+        history = createHistoryContent();
         Stack stack = new Stack();
         stack.add(request);
-        stack.add(response);
-        changeTab(request);
+        stack.add(offer);
+        stack.add(history);
+        changeTab(offer);
         rootTable.add(stack).expand().fill().row();
         TextButton closeButton = new TextButton("X Close", skin);
         closeButton.addListener(new ChangeListener() {
@@ -86,7 +94,14 @@ public class TradeMenu {
         responseTab.addListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 refresh();
-                changeTab(response);
+                changeTab(offer);
+            }
+        });
+        historyTab.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                refresh();
+                changeTab(history);
             }
         });
     }
@@ -101,80 +116,113 @@ public class TradeMenu {
         stage.draw();
     }
     private Table createRequestContent() {
-        Label titleLabel = new Label("request: ", skin); titleLabel.setColor(Color.FIREBRICK);
-        Label descriptionLabel = new Label("Desc: ", skin);
-        Image foodIcon = new Image();
-        foodIcon.setSize(48, 48);
-        foodIcon.setVisible(false);
-        final Food[] current = new Food[1];
-        TextButton cookButton = new TextButton("Cook", skin);
-        Label errorLabel = new Label("", skin);
-        cookButton.addListener(new ClickListener() {
-            @Override
+        Label titleLabel = new Label("Crate Request: ", skin); titleLabel.setColor(Color.FIREBRICK);
+        Table table = new Table(skin);
+        return table;
+    }
+    private Table createOfferContent() {
+        Table table = new Table(skin);
+        Label errorLabel = new Label("" , skin);
+        Label titleLabel = new Label("Offer", skin); titleLabel.setColor(Color.FIREBRICK);
+        TextField userField = new TextField("Enter Player UserName for trade", skin);
+        HashMap<String , Integer> wantedItems = new HashMap<>();
+        HashMap<BackPackable , Integer> items = new HashMap<>();
+        TextField wantedField = new TextField("Name Item you want", skin);
+        TextField wantedNumber = new TextField("Number" , skin);
+        TextButton addWantItem = new TextButton("add" , skin);
+        TextField itemField = new TextField("Name Item to sell", skin);
+        TextField itemNumber = new TextField("Number of Item" , skin);
+        TextButton addItem = new TextButton("add" , skin);
+        addWantItem.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                if (current[0] != null) {
-                    if (isAvailable(current[0])) {
-                        showError("You make it successfully" , errorLabel);
-                        errorLabel.setColor(Color.GREEN);
-                    } else {
-                        if (game.getCurrentPlayer().getInventory().checkFilled()){
-                            showError("You don't have enough capacity" , errorLabel);
-                            errorLabel.setColor(Color.RED);
-                        }
-                        else{
-                            showError("You don't have enough material" , errorLabel);
-                            errorLabel.setColor(Color.RED);
-                        }
-                    }
+                if (game.getPlayerByUsername(userField.getText()) == null) {
+                    showError("user not find" , errorLabel);
+                    errorLabel.setColor(Color.RED);
+                    return;
+                }
+                try{
+                    int num = Integer.parseInt(wantedNumber.getText());
+                    wantedItems.put(wantedField.getText(), num);
+                    showError("add successfully" , errorLabel);
+                }catch (NumberFormatException e){
+                    showError("invalid number" , errorLabel);
+                    errorLabel.setColor(Color.RED);
                 }
             }
         });
-        Table itemTable = new Table(skin);
-        for (Food food : game.getCurrentPlayer().getAvailableFoods()) {
-            Label label = new Label(food.getName(), skin);
-            if (!food.isAvailable()) {
-                label.setColor(Color.LIGHT_GRAY);
-            }
-            else {
-                label.setColor(Color.BROWN);
-            }
-            label.addListener(new InputListener() {
-                @Override
-                public boolean mouseMoved(InputEvent event, float x, float y) {
-                    current[0] = food;
-                    if (!food.isAvailable()) {
-                        cookButton.setVisible(false);
-                    } else {
-                        cookButton.setVisible(true);
-                    }
-                    Sprite sprite = food.getSprite();
-                    sprite.setSize(48, 48);
-                    foodIcon.setDrawable(new TextureRegionDrawable(sprite));
-                    foodIcon.setVisible(true);
-                    return true;
+        addItem.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if (game.getPlayerByUsername(userField.getText()) == null) {
+                    showError("user not find" , errorLabel);
+                    errorLabel.setColor(Color.RED);
+                    return;
                 }
-            });
-
-            itemTable.add(label).left().pad(5).row();
-        }
-        ScrollPane scrollPane = new ScrollPane(itemTable, skin);
-        scrollPane.setFadeScrollBars(false);
-        scrollPane.setScrollingDisabled(true, false);
-        errorLabel.setVisible(false);
-        descriptionLabel.setColor(Color.FIREBRICK); descriptionLabel.setWrap(true); descriptionLabel.setWidth(700);
-        Table table = new Table(skin);
-        Table bottomRow = new Table();
-        bottomRow.top().right();
-        bottomRow.add(descriptionLabel).padLeft(10).width(700);
-        bottomRow.add(foodIcon).size(80, 80).right();
-        table.add(titleLabel).padBottom(10).row();
-        table.add(scrollPane).expand().fill().pad(10).row();
-        table.add(bottomRow).bottom().row();
-        table.add(errorLabel).width(700).row();
-        table.add(cookButton).right().row();
+                if (game.getCurrentPlayer().getInventory().getItemByName(itemField.getText()) == null) {
+                    showError("You don't have this item" , errorLabel);
+                    errorLabel.setColor(Color.RED);
+                    return;
+                }
+                try{
+                    BackPackable temp = game.getCurrentPlayer().getInventory().getItemByName(itemField.getText());
+                    int num = Integer.parseInt(itemNumber.getText());
+                    items.put(temp, num);
+                    showError("add successfully" , errorLabel);
+                }catch (NumberFormatException e){
+                    showError("invalid number" , errorLabel);
+                    errorLabel.setColor(Color.RED);
+                }
+            }
+        });
+        userField.getStyle().fontColor = Color.BLACK;
+        wantedField.getStyle().fontColor = Color.BLACK;
+        itemField.getStyle().fontColor = Color.BLACK;
+        itemNumber.getStyle().fontColor = Color.BLACK;
+        wantedNumber.getStyle().fontColor = Color.BLACK;
+        table.add(titleLabel).row();
+        table.add(userField).width(700).row();
+        table.add(wantedField).width(400);
+        table.add(wantedNumber).width(200).right().row();
+        table.add(addWantItem).right().pad(10).row();
+        table.add(itemField).width(400);
+        table.add(itemNumber).width(200).right().row();
+        table.add(addItem).right().pad(10).row();
+        TextButton showWantedItem = new TextButton("show wanted item", skin);
+        TextButton showItem = new TextButton("show item to sell", skin);
+        Table contentArea = new Table(skin);
+        table.add(contentArea).expand().fill().row();
+        showWantedItem.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                table.clear();
+                table.add(contentArea).expand().fill();
+                contentArea.clear();
+                contentArea.add(showWantedTable()).expand().fill();
+            }
+        });
+        showItem.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                table.clear();
+                table.add(contentArea).expand().fill();
+                contentArea.clear();
+                contentArea.add(showItemTable()).expand().fill();
+            }
+        });
+        table.add(errorLabel).width(500).row();
+        table.add(showWantedItem).left();
+        table.add(showItem).right().row();
         return table;
     }
-    private Table createResponseContent() {
+    private Table showItemTable(){
+        Table table = new Table(skin);
+
+        return table;
+    }
+    private Table showWantedTable(){
+        Table table = new Table(skin);
+        return table;
+    }
+    private Table createHistoryContent() {
+        Label titleLabel = new Label("History: ", skin); titleLabel.setColor(Color.FIREBRICK);
+
         Table table = new Table(skin);
         return table;
     }
@@ -192,8 +240,10 @@ public class TradeMenu {
                     changeTab(request);
                     break;
                 case 2:
-                    changeTab(response);
+                    changeTab(offer);
                     break;
+                case 3:
+                    changeTab(history);
                 default:
                     break;
             }
@@ -208,13 +258,15 @@ public class TradeMenu {
         skin.dispose();
     }
     private void refresh() {
-        request.clear(); response.clear();
+        request.clear(); offer.clear(); history.clear();
         request.add(createRequestContent()).expand().fill();
-        response.add(createResponseContent()).expand().fill();
+        offer.add(createOfferContent()).expand().fill();
+        history.add(createHistoryContent()).expand().fill();
     }
     private void changeTab(Table content) {
         request.setVisible(false);
-        response.setVisible(false);
+        offer.setVisible(false);
+        history.setVisible(false);
         content.setVisible(true);
     }
     public boolean isAvailable(Food food) {

@@ -246,11 +246,10 @@ public class GameView implements Screen {
         hudTable.add(sendMessage).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(groupQuestButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(TradeButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
-        hudTable.add(Message).expandX().bottom().center().padTop(350).row();
+        hudTable.add(Message).expandX().bottom().center().padTop(250).row();
         hudTable.add(image).expandX().bottom().center().row();
         hudTable.add(notificationLabel).expandX().bottom().center().row();
     }
-
     private void setupInputHandling() {
         gameInputMultiplexer = new InputMultiplexer();
         gameInputMultiplexer.addProcessor(uiStage);
@@ -362,7 +361,7 @@ public class GameView implements Screen {
         else{
             image.setDrawable(new TextureRegionDrawable(game.getCurrentPlayer().getActiveEmoji()));
             image.setVisible(true);
-            image.setSize(48,48);
+            image.setSize(64,64);
             System.out.println(game.getCurrentPlayer().getActiveEmoji());
             game.getCurrentPlayer().updateLabel(delta);
             if (game.getCurrentPlayer().getActiveEmoji()==null){
