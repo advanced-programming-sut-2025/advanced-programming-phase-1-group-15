@@ -47,11 +47,7 @@ public class ClientGameController {
     public static Result useToolOrPlaceItem(Player player, Tile tile) {
         if(player.getCurrentItem() != null) {
             if (player.getCurrentItem() instanceof Food food) {
-                if (player.getEnergy() == 200){
-                    return new Result(false , "Your energy is full");
-                }
-                player.setEnergy(Math.min(player.getEnergy() + food.getEnergy(), 200));
-                return new Result(true , "You eat " + food.getName());
+                return eatFood(food);
             }
             if(player.getCurrentItem() instanceof Tool tool) {
                 return tool.use(tile, player);
@@ -152,14 +148,17 @@ public class ClientGameController {
         return new Result(true, item.getName() +  " moved to inventory.");
     }
 
-    public static Result eatFood(String foodName) {
-        Food food = (Food) getCurrentPlayer().getInventory().getItemByName(foodName);
-        if(food == null) {
-            return new Result(false, "You don't have that food.");
-        }
-
+    public static Result eatFood(Food food) {
         getCurrentPlayer().eat(food);
         getCurrentPlayer().getInventory().removeCountFromBackPack(food, 1);
+
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "eat_food");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("food_name", food.getName());
+        cmdBody.put("energy", getCurrentPlayer().getEnergy());
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+
         return new Result(true, "You ate " + food.getName() + ". " + food.getEnergy() + " energy added.");
     }
 
@@ -1527,4 +1526,20 @@ public class ClientGameController {
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }
 
+    public static void sendAxeUseMessage(boolean success, int xUse, int yUse, SeedType seedType, int seedCount) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "axe_use");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("success", success);
+        cmdBody.put("x_use", xUse);
+        cmdBody.put("y_use", yUse);
+        cmdBody.put("seed_type", seedType);
+        cmdBody.put("seed_count", seedCount);
+        cmdBody.put("energy", getCurrentPlayer().getEnergy());
+        cmdBody.put("wood", getCurrentPlayer().getWood());
+        cmdBody.put("foraging_ability", getCurrentPlayer().getForagingAbility());
+        cmdBody.put("foraging_level", getCurrentPlayer().getForagingLevel());
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
 }

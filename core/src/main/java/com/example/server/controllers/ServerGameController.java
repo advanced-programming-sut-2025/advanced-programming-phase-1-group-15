@@ -2,10 +2,8 @@ package com.example.server.controllers;
 
 import com.example.common.Lobby;
 import com.example.common.Message;
-import com.example.server.GameServer;
 import com.example.server.models.ServerApp;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.example.server.controllers.ServerController.informOtherLobbyUsers;
@@ -16,14 +14,9 @@ public class ServerGameController {
         String senderUsername = req.getFromBody("username");
         respBody.put("username", senderUsername);
 
-//        switch (action) {
-//            case "set_randomizers", "player_movement", "player_stop", "flower", "marry-request", "talk",
-//                 "generate_trees", "generate_stones", "predict_weather", "hug", "gift", "rateGift", "marry-response",
-//                 "send_emoji" , "message" ,"score-info" -> {
-                reflectMessage(req, respBody);
-//            }
-//        }
+        reflectMessage(req, respBody);
     }
+
     public static void reflectMessage(Message req, Map<String,Object> respBody) {
         String senderUsername = req.getFromBody("username");
         Lobby lobby = ServerApp.getLobbyByUser(senderUsername);

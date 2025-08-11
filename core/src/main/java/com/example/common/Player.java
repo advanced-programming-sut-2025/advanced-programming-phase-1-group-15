@@ -697,6 +697,9 @@ public class Player extends User implements TimeObserver {
         this.miningLevel = miningLevel;
     }
 
+    public void setForagingAbility(int foragingAbility) {
+        this.foragingAbility = foragingAbility;
+    }
     public void setForagingLevel(int foragingLevel) {
         this.foragingLevel = foragingLevel;
     }

@@ -1,6 +1,7 @@
 package com.example.common.tools;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.example.client.controllers.ClientGameController;
 import com.example.common.Player;
 import com.example.common.Result;
 import com.example.common.farming.Seed;
@@ -135,15 +136,19 @@ public class Axe extends Tool {
                 user.upgradeForagingAbility(10);
                 tile.empty();
 
+                ClientGameController.sendAxeUseMessage(true, tile.getPosition().x, tile.getPosition().y, tr.getSeedType(), count);
                 return new Result(true, count + " " + s.getName() + " + 50 wood added to your inventory.\n" + energyConsume + " energy has been consumed.");
             }
             else {
                 user.addToBackPack(new GeneralItem(GeneralItemsType.WOOD), 1);
                 tile.empty();
+
+                ClientGameController.sendAxeUseMessage(true, tile.getPosition().x, tile.getPosition().y, null, 0);
                 return new Result(true, "1 wood added to your inventory.\n" + energyConsume + " energy has been consumed.");
             }
         }
         else {
+            ClientGameController.sendAxeUseMessage(false, tile.getPosition().x, tile.getPosition().y, null, 0);
             return new Result(false, "unsuccessful attempt! " + energyConsume + " energy has been consumed.");
         }
     }

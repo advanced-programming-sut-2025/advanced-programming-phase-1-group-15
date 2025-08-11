@@ -4,17 +4,16 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.example.client.NetworkClient;
 import com.example.client.models.ClientApp;
 import com.example.client.views.GameAssetManager;
-import com.example.client.views.GameView;
 import com.example.common.Game;
 import com.example.common.GroupQuests.GroupQuest;
 import com.example.common.GroupQuests.GroupQuestManager;
 import com.example.common.Message;
 import com.example.common.Player;
-import com.example.common.Result;
 import com.example.common.animals.Barn;
 import com.example.common.animals.Coop;
 import com.example.common.enums.Direction;
 import com.example.common.farming.Seed;
+import com.example.common.farming.SeedType;
 import com.example.common.farming.Tree;
 import com.example.common.farming.TreeType;
 import com.example.common.foraging.Stone;
@@ -25,13 +24,9 @@ import com.example.common.map.Tile;
 import com.example.common.relation.PlayerFriendship;
 import com.example.common.stores.GeneralItem;
 import com.example.common.stores.GeneralItemsType;
-import com.example.common.tools.BackPack;
-import com.example.common.tools.BackPackable;
 import com.example.common.weather.WeatherOption;
 
 import java.util.HashMap;
-
-import static com.example.client.controllers.ClientGameController.*;
 
 public class ClientGameListener {
     private final Game game;
@@ -76,6 +71,8 @@ public class ClientGameListener {
             case "build_greenhouse" -> handleBuildGreenhouse(msg, senderUsername);
             case "build_barn" -> handleBuildBarn(msg, senderUsername);
             case "build_coop" -> handleBuildCoop(msg, senderUsername);
+            case "eat_food" -> handleEatFood(msg, senderUsername);
+            case "axe_use" -> handleAxeUse(msg, senderUsername);
         }
     }
 
@@ -411,6 +408,44 @@ public class ClientGameListener {
         player.setGold(gold);
         player.setWood(wood);
         player.setStone(stone);
+    }
+
+    private void handleEatFood(Message msg, String senderUsername) {
+        Player player = game.getPlayerByUsername(senderUsername);
+
+        String foodName = msg.getFromBody("food_name");
+        double energy = msg.getFromBody("energy");
+
+        player.setEnergy(energy);
+        player.getInventory().removeCountFromBackPack(player.getInventory().getItemByName(foodName), 1);
+    }
+
+    private void handleAxeUse(Message msg, String senderUsername) {
+        Player player = game.getPlayerByUsername(senderUsername);
+
+        boolean success = msg.getFromBody("success");
+        int xUse = msg.getIntFromBody("x_use");
+        int yUse = msg.getIntFromBody("y_use");
+        double energy = msg.getFromBody("energy");
+        int wood = msg.getIntFromBody("wood");
+        int foragingAbility = msg.getIntFromBody("foraging_ability");
+        int foragingLevel = msg.getIntFromBody("foraging_level");
+
+        Tile tile = game.getTile(xUse, yUse);
+        player.setEnergy(energy);
+        player.setWood(wood);
+        player.setForagingAbility(foragingAbility);
+        player.setForagingLevel(foragingLevel);
+
+        if(success) {
+            tile.empty();
+            if(msg.getFromBody("seed_type") != null) {
+                SeedType seedType = msg.getFromBody("seed_type", SeedType.class);
+                int seedCount = msg.getIntFromBody("seed_count");
+
+                player.addToBackPack(new Seed(seedType), seedCount);
+            }
+        }
     }
 
     public void disconnect() {
