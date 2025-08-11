@@ -28,6 +28,7 @@ import com.example.common.map.Tile;
 import com.example.common.relation.PlayerFriendship;
 import com.example.common.stores.GeneralItem;
 import com.example.common.stores.GeneralItemsType;
+import com.example.common.tools.BackPackable;
 import com.example.common.weather.WeatherOption;
 
 import java.util.HashMap;
@@ -91,6 +92,8 @@ public class ClientGameListener {
         Player target = game.getPlayerByUsername(msg.getFromBody("target"));
         target.setNewTrade(true);
         target.setTradePlayer(player);
+        target.getTradePlayer().getWantedItems().put(msg.getFromBody("WantedItem") , Integer.parseInt(msg.getFromBody("WantedNumber")));
+        target.getTradePlayer().getItems().put(msg.getFromBody("Items") , Integer.parseInt(msg.getFromBody("ItemNumber")));
     }
     public void handleScoreInfo(Message msg){
         String username = msg.getFromBody("username");

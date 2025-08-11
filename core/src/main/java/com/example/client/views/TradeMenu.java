@@ -29,6 +29,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class TradeMenu {
     private final Stage stage;
@@ -129,8 +130,55 @@ public class TradeMenu {
             table.add(label).row();
             return table;
         }
-        Label titleLabel = new Label("You have Request from: "+ game.getCurrentPlayer().getTradePlayer().getUsername(), skin); titleLabel.setColor(Color.FIREBRICK);
-        table.add(titleLabel).row();
+        Label errorLabel = new Label("", skin);
+        TextButton acceptButton = new TextButton("Accept", skin);
+        TextButton declineButton = new TextButton("Decline", skin);
+        acceptButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(isAvailable()){
+                    showError("Trade done successfully",errorLabel);
+                    return;
+                }
+                showError("You don't have enough items to Trade",errorLabel);
+            }
+        });
+        declineButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                game.getCurrentPlayer().getTradePlayer().getWantedItems().clear();
+                game.getCurrentPlayer().getTradePlayer().getItems().clear();
+                game.getCurrentPlayer().setTradePlayer(null);
+            }
+        });
+        Label wantedLabel = new Label("items you pay:" , skin);
+        wantedLabel.setColor(Color.FIREBRICK);
+        List<String> WantedList = new List<>(skin);
+        String[] wants = game.getCurrentPlayer().getTradePlayer().getWantedItems().entrySet().stream()
+            .map(entry -> entry.getKey() + " x" + entry.getValue())
+            .toArray(String[]::new);
+        WantedList.setItems(wants);
+        ScrollPane wantScrollPane = new ScrollPane(WantedList, skin);
+        wantScrollPane.setFadeScrollBars(false);
+        wantScrollPane.setScrollingDisabled(true, false);
+        Label itemLabel = new Label("items you give:", skin);
+        itemLabel.setColor(Color.FIREBRICK);
+        List<String> itemList = new List<>(skin);
+        String[] items = game.getCurrentPlayer().getTradePlayer().getItems().entrySet().stream()
+            .map(entry -> entry.getKey() + " x" + entry.getValue())
+            .toArray(String[]::new);
+        itemList.setItems(items);
+        ScrollPane scrollPane = new ScrollPane(itemList, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        table.add(wantedLabel).row();
+        table.add(wantScrollPane).expand().fill().row();
+        table.add(itemLabel).row();
+        table.add(scrollPane).expand().fill().row();
+        table.add(errorLabel).width(500).row();
+        Table quantityRow = new Table();
+        quantityRow.add(acceptButton).padRight(5);
+        quantityRow.add(declineButton).padLeft(5);
+        table.add(quantityRow).expand().fill().row();
         return table;
     }
     private Table createOfferContent() {
@@ -185,14 +233,10 @@ public class TradeMenu {
                     int num = Integer.parseInt(itemNumber.getText());
                     if (game.getCurrentPlayer().getInventory().getItemCount(itemField.getText()) < num) {
                         showError("you don't have enough item" , errorLabel);
+                        errorLabel.setColor(Color.RED);
                         return;
                     }
-                    if (game.getCurrentPlayer().getItems().get(temp) != 0) {
-                        game.getCurrentPlayer().getItems().put(temp, game.getCurrentPlayer().getItems().get(temp) + num);
-                    }
-                    else {
-                        game.getCurrentPlayer().getItems().put(temp, num);
-                    }
+                    game.getCurrentPlayer().getItems().merge(temp.getName(), num, Integer::sum);
                     showError("add successfully" , errorLabel);
                     errorLabel.setColor(Color.GREEN);
                 }catch (NumberFormatException e){
@@ -245,12 +289,18 @@ public class TradeMenu {
                 body.put("action", "trade");
                 body.put("username", game.getCurrentPlayer().getUsername());
                 body.put("target", userField.getText());
+                body.put("Items", itemField.getText());
+                body.put("ItemNumber", itemNumber.getText());
+                body.put("WantedItem", wantedField.getText());
+                body.put("WantedNumber", wantedNumber.getText());
                 NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
             }
         });
         table.add(errorLabel).width(500).row();
-        table.add(showWantedItem).left();
-        table.add(showItem).right().row();
+        Table quantityRow = new Table();
+        quantityRow.add(showWantedItem).padRight(5);
+        quantityRow.add(showItem).padLeft(5);
+        table.add(quantityRow).expand().fill().row();
         table.add(send).right().pad(10).row();
         return table;
     }
@@ -413,7 +463,7 @@ public class TradeMenu {
         history.setVisible(false);
         content.setVisible(true);
     }
-    public boolean isAvailable(Food food) {
+    public boolean isAvailable() {
         return true;
     }
     private void showError(String message, Label errorLabel) {
@@ -426,43 +476,4 @@ public class TradeMenu {
             }
         }, 2);
     }
-//    public void run(Scanner scanner) {
-//        String command = scanner.nextLine().trim();
-//        if(Commands.checkShowCurrentMenuRegex(command)) {
-//            System.out.println("trade menu");
-//        }
-//        else if(TradeMenuCommands.TRADE_MONEY.matches(command)) {
-//            Matcher matcher = TradeMenuCommands.TRADE_MONEY.matcher(command);
-//            matcher.matches();
-//            System.out.println(TradeMenuController.tradeWithMoney(matcher.group("username"),
-//                    matcher.group("type"),matcher.group("item"),matcher.group("amount"),matcher.group("price")));
-//        }
-//        else if(TradeMenuCommands.TRADE_ITEM.matches(command)) {
-//            Matcher matcher = TradeMenuCommands.TRADE_ITEM.matcher(command);
-//            matcher.matches();
-//            System.out.println(TradeMenuController.tradeWithItem(matcher.group("username"),matcher.group("type"),
-//                    matcher.group("item"),matcher.group("amount"),matcher.group("targetItem"),matcher.group("targetAmount")));
-//        }
-//        else if(TradeMenuCommands.TRADE_LIST.matches(command)) {
-//            Matcher matcher = TradeMenuCommands.TRADE_LIST.matcher(command);
-//            matcher.matches();
-//            TradeMenuController.tradeList();
-//        }
-//        else if(TradeMenuCommands.TRADE_RESPONSE.matches(command)) {
-//            Matcher matcher = TradeMenuCommands.TRADE_RESPONSE.matcher(command);
-//            matcher.matches();
-//            System.out.println(TradeMenuController.tradeResponse(matcher.group("response"),matcher.group("id")));
-//        }
-//        else if(TradeMenuCommands.SHOW_TRADE_HISTORY.matches(command)) {
-//            Matcher matcher = TradeMenuCommands.SHOW_TRADE_HISTORY.matcher(command);
-//            matcher.matches();
-//            TradeMenuController.showTradeHistory();
-//        }
-//        else if (TradeMenuCommands.BACK.matches(command)) {
-//            Matcher matcher = TradeMenuCommands.BACK.matcher(command);
-//        }
-//        else {
-//            System.out.println("invalid command");
-//        }
-//    }
 }

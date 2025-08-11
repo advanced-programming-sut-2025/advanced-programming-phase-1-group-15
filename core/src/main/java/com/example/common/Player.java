@@ -104,13 +104,13 @@ public class Player extends User implements TimeObserver {
     private ArrayList<TradeWithItem> tradesWithItemHistory = new ArrayList<>();
     private ArrayList<TradeWhitMoney> tradesWithMoneyHistory = new ArrayList<>();
     private HashMap<String , Integer> wantedItems = new HashMap<>();
-    private HashMap<BackPackable , Integer> items = new HashMap<>();
+    private HashMap<String , Integer> items = new HashMap<>();
 
     public HashMap<String, Integer> getWantedItems() {
         return wantedItems;
     }
 
-    public HashMap<BackPackable, Integer> getItems() {
+    public HashMap<String, Integer> getItems() {
         return items;
     }
 
