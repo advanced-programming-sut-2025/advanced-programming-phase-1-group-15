@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.example.client.models.ClientApp;
 import com.example.common.Player;
-import com.example.common.Result;
 import com.example.common.npcs.NPC;
 import com.example.common.npcs.NPCFriendShip;
 import com.example.common.npcs.Quest;
@@ -24,8 +23,8 @@ import java.util.Map;
 public class QuestDisplayMenu extends PopUpMenu {
     private final NPC targetNPC;
     private final Player currentPlayer;
-    private ScrollPane scrollPane;
-    private Table questTable;
+    private ScrollPane questScrollPane;
+    private Table questContentTable;
     private Label statusLabel;
 
     private static final float DEFAULT_WIDTH = 550;
@@ -39,40 +38,45 @@ public class QuestDisplayMenu extends PopUpMenu {
 
     @Override
     protected void populate(Window w) {
+        // Main content table to hold the quest list and header.
         Table mainContentTable = new Table(skin);
         mainContentTable.top();
         mainContentTable.pad(15);
 
+        // Header section with the title and status label.
         Table headerTable = new Table();
         Label titleLabel = new Label("📋 Available Quests from " + targetNPC.getName(), skin);
         titleLabel.setFontScale(1.1f);
         headerTable.add(titleLabel).pad(5).row();
 
         statusLabel = new Label("", skin);
-        statusLabel.setColor(Color.LIGHT_GRAY);
+        // Changed from LIGHT_GRAY to DARK_GRAY for better visibility on a cream background.
+        statusLabel.setColor(Color.DARK_GRAY);
         statusLabel.setFontScale(0.9f);
         headerTable.add(statusLabel).pad(2);
 
+        // Add the header to the main content area.
         mainContentTable.add(headerTable).pad(10).row();
 
-        if (questTable == null) {
-            questTable = new Table(skin);
-            questTable.top();
+        // Create the table that will hold the quest cards.
+        if (questContentTable == null) {
+            questContentTable = new Table(skin);
+            questContentTable.top();
         } else {
-            questTable.clear();
+            questContentTable.clear();
         }
 
-        if (scrollPane == null) {
-            scrollPane = new ScrollPane(questTable, skin);
-            scrollPane.setFadeScrollBars(false);
-            scrollPane.setScrollingDisabled(true, false);
+        // Wrap the quest table in a scroll pane.
+        if (questScrollPane == null) {
+            questScrollPane = new ScrollPane(questContentTable, skin);
+            questScrollPane.setFadeScrollBars(false);
+            questScrollPane.setScrollingDisabled(true, false);
         }
 
-        mainContentTable.add(scrollPane)
-            .width(DEFAULT_WIDTH - 40)
-            .height(DEFAULT_HEIGHT - 120)
-            .pad(10).row();
+        // Add the scroll pane to the main content, allowing it to expand.
+        mainContentTable.add(questScrollPane).expand().fill().pad(10).row();
 
+        // Create a separate table for the buttons to ensure they're always visible.
         Table buttonTable = new Table();
         TextButton refreshButton = new TextButton("Refresh", skin);
         TextButton closeButton = new TextButton("Close", skin);
@@ -93,15 +97,17 @@ public class QuestDisplayMenu extends PopUpMenu {
 
         buttonTable.add(refreshButton).pad(5);
         buttonTable.add(closeButton).pad(5);
-        mainContentTable.add(buttonTable).pad(10);
 
+        // Clear existing content and add the main components back to the window.
+        w.clearChildren();
         w.add(mainContentTable).expand().fill().row();
+        w.add(buttonTable).pad(10);
 
         populateQuests();
     }
 
     private void populateQuests() {
-        questTable.clear();
+        questContentTable.clear();
 
         NPCFriendShip friendship = targetNPC.getFriendships().get(currentPlayer);
         if (friendship == null) {
@@ -157,7 +163,7 @@ public class QuestDisplayMenu extends PopUpMenu {
 
         Table descriptionTable = new Table();
         String questText = "Deliver " + quest.getRequestAmount() + " × " + quest.getRequest().getName();
-        Label questLabel = new Label("📦 " + questText, skin);
+        Label questLabel = new Label(" " + questText, skin);
         questLabel.setFontScale(0.95f);
         descriptionTable.add(questLabel).left().pad(2).row();
 
@@ -187,6 +193,9 @@ public class QuestDisplayMenu extends PopUpMenu {
         progressTable.add(progressBar).width(200).height(15).pad(2).row();
 
         Table actionTable = new Table();
+
+        // This is where the 'Finish Quest' button is created. It will only show up
+        // when the player has enough items to complete the quest (canComplete is true).
         if (canComplete) {
             TextButton completeButton = new TextButton("✅ Complete Quest", skin);
             completeButton.addListener(new ChangeListener() {
@@ -195,7 +204,7 @@ public class QuestDisplayMenu extends PopUpMenu {
                     completeQuest(quest);
                 }
             });
-            actionTable.add(completeButton).pad(5);
+            actionTable.add(completeButton).pad(1);
         } else {
             int needed = quest.getRequestAmount() - playerItemCount;
             Label statusLabel = new Label("⏳ Need " + needed + " more items", skin);
@@ -209,12 +218,12 @@ public class QuestDisplayMenu extends PopUpMenu {
         questCard.add(progressTable).left().fillX().pad(5, 0, 5, 0).row();
         questCard.add(actionTable).left().fillX().row();
 
-        questTable.add(questCard).fillX().pad(8).row();
+        questContentTable.add(questCard).fillX().pad(8).row();
 
         Label separator = new Label("─────────────────────────────────────", skin);
         separator.setColor(Color.GRAY);
         separator.setFontScale(0.7f);
-        questTable.add(separator).pad(5).row();
+        questContentTable.add(separator).pad(5).row();
     }
 
     private void showNoFriendshipMessage() {
@@ -222,13 +231,14 @@ public class QuestDisplayMenu extends PopUpMenu {
         Label noFriendshipLabel = new Label("❌ No friendship established with " + targetNPC.getName(), skin);
         noFriendshipLabel.setColor(Color.RED);
         Label suggestionLabel = new Label("💡 Talk to them first to start a friendship!", skin);
-        suggestionLabel.setColor(Color.LIGHT_GRAY);
+        // Changed from LIGHT_GRAY to DARK_GRAY for better contrast.
+        suggestionLabel.setColor(Color.DARK_GRAY);
         suggestionLabel.setFontScale(0.9f);
 
         messageTable.add(noFriendshipLabel).pad(20).row();
         messageTable.add(suggestionLabel).pad(5);
 
-        questTable.add(messageTable).expand().center().row();
+        questContentTable.add(messageTable).expand().center().row();
         statusLabel.setText("No friendship established");
     }
 
@@ -237,13 +247,14 @@ public class QuestDisplayMenu extends PopUpMenu {
         Label noQuestsLabel = new Label("📭 No quests available!", skin);
         noQuestsLabel.setColor(Color.ORANGE);
         Label infoLabel = new Label("💡 Increase friendship level to unlock quests", skin);
-        infoLabel.setColor(Color.LIGHT_GRAY);
+        // Changed from LIGHT_GRAY to DARK_GRAY for better contrast.
+        infoLabel.setColor(Color.DARK_GRAY);
         infoLabel.setFontScale(0.9f);
 
         messageTable.add(noQuestsLabel).pad(20).row();
         messageTable.add(infoLabel).pad(5);
 
-        questTable.add(messageTable).expand().center().row();
+        questContentTable.add(messageTable).expand().center().row();
         statusLabel.setText("No quests in quest pool");
     }
 
@@ -252,13 +263,14 @@ public class QuestDisplayMenu extends PopUpMenu {
         Label noActiveLabel = new Label("✅ No active quests available!", skin);
         noActiveLabel.setColor(Color.GREEN);
         Label completedLabel = new Label("🎉 All available quests completed", skin);
-        completedLabel.setColor(Color.LIGHT_GRAY);
+        // Changed from LIGHT_GRAY to DARK_GRAY for better contrast.
+        completedLabel.setColor(Color.DARK_GRAY);
         completedLabel.setFontScale(0.9f);
 
         messageTable.add(noActiveLabel).pad(20).row();
         messageTable.add(completedLabel).pad(5);
 
-        questTable.add(messageTable).expand().center().row();
+        questContentTable.add(messageTable).expand().center().row();
         statusLabel.setText("All quests completed");
     }
 
@@ -279,7 +291,7 @@ public class QuestDisplayMenu extends PopUpMenu {
     private void completeQuest(Quest quest) {
         String resultMessage = targetNPC.finishQuest(currentPlayer, quest);
 
-        Dialog resultDialog = new Dialog("🎉 Quest Result", skin) {
+        Dialog resultDialog = new Dialog(" Quest Result", skin) {
             @Override
             protected void result(Object object) {
                 remove();
@@ -313,8 +325,8 @@ public class QuestDisplayMenu extends PopUpMenu {
     @Override
     public void show() {
         super.show();
-        if (scrollPane != null) {
-            stage.setScrollFocus(scrollPane);
+        if (questScrollPane != null) {
+            stage.setScrollFocus(questScrollPane);
         }
     }
 

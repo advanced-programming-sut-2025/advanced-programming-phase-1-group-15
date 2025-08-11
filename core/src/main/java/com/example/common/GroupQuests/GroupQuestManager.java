@@ -15,7 +15,6 @@ public class GroupQuestManager {
     private Map<String, GroupQuest> allQuests;
     private Map<String, Set<String>> playerActiveQuests;
     private static final int MAX_QUESTS_PER_PLAYER = 3;
-    private static final int TOTAL_PRIMARY_QUESTS = 8;
 
     public GroupQuestManager() {
         this.allQuests = new HashMap<>();
