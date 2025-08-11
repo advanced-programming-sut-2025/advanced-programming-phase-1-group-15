@@ -85,15 +85,65 @@ public class ClientGameListener {
             case "pickaxe_use" -> handlePickaxeUse(msg, senderUsername);
             case "put_in_tile" -> handlePutInTile(msg);
             case "trade" -> handelTrade(msg);
+            case "remove" -> handelRemove(msg);
+            case "accept_trade" -> handelAccept(msg);
+            case "decline" -> handelDecline(msg);
         }
+    }
+    public void handelDecline(Message msg) {
+        Player player = game.getPlayerByUsername(msg.getFromBody("username"));
+        Player target = game.getPlayerByUsername(msg.getFromBody("target"));
+        target.setTradePlayer(null);
+        player.setTradePlayer(null);
+        player.getWantedItems().clear();
+        player.getItems().clear();
+        target.setRefresh(true);
+        player.setRefresh(true);
+    }
+    public void handelAccept(Message msg) {
+        Player player = game.getPlayerByUsername(msg.getFromBody("username"));
+        Player target = game.getPlayerByUsername(msg.getFromBody("target"));
+        for (String s : target.getTradePlayer().getWantedItems().keySet()) {
+            BackPackable temp = target.getInventory().getItemByName(s);
+            int num = target.getTradePlayer().getWantedItems().get(s);
+            player.getInventory().addToBackPack(temp , num);
+            target.getInventory().removeCountFromBackPack(temp , num);
+        }
+
+        target.setTradePlayer(null);
+        player.setTradePlayer(null);
+        player.getItems().clear();
+        target.setRefresh(true);
+        player.setRefresh(true);
+    }
+    public void handelRemove(Message msg) {
+        Player player = game.getPlayerByUsername(msg.getFromBody("username"));
+        Player target = game.getPlayerByUsername(msg.getFromBody("target"));
+        String Type = msg.getFromBody("type");
+        if(Type.equals("wanted")) {
+            target.getTradePlayer().getWantedItems().remove((String)msg.getFromBody("item"));
+        }
+        else {
+            target.getTradePlayer().getItems().remove((String)msg.getFromBody("item"));
+        }
+        target.setRefresh(true);
     }
     public void handelTrade(Message msg) {
         Player player = game.getPlayerByUsername(msg.getFromBody("username"));
         Player target = game.getPlayerByUsername(msg.getFromBody("target"));
+        player.setTradePlayer(target);
         target.setNewTrade(true);
         target.setTradePlayer(player);
-        target.getTradePlayer().getWantedItems().put(msg.getFromBody("WantedItem") , Integer.parseInt(msg.getFromBody("WantedNumber")));
-        target.getTradePlayer().getItems().put(msg.getFromBody("Items") , Integer.parseInt(msg.getFromBody("ItemNumber")));
+        String type = msg.getFromBody("type");
+        if (type.equals("wanted")) {
+            int num = Integer.parseInt(msg.getFromBody("number"));
+            target.getTradePlayer().getWantedItems().merge(msg.getFromBody("item") , num , Integer::sum);
+        }
+        else{
+            int num = Integer.parseInt(msg.getFromBody("number"));
+            target.getTradePlayer().getItems().merge(msg.getFromBody("item") , num , Integer::sum);
+        }
+        target.setRefresh(true);
     }
     public void handleScoreInfo(Message msg){
         String username = msg.getFromBody("username");

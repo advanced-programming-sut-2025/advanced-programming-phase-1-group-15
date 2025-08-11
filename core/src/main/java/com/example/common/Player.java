@@ -59,6 +59,15 @@ public class Player extends User implements TimeObserver {
     float stateTime = 0f;
     public final static double walkingEnergyConsume = 0.1;
     private boolean newTrade = false;
+    private boolean refresh = false;
+    public boolean isRefresh() {
+        return refresh;
+    }
+
+    public void setRefresh(boolean refresh) {
+        this.refresh = refresh;
+    }
+
     private Player tradePlayer;
 
     public Player getTradePlayer() {

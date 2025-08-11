@@ -19,6 +19,7 @@ import com.example.client.Main;
 import com.example.client.NetworkClient;
 import com.example.common.Game;
 import com.example.common.Message;
+import com.example.common.Player;
 import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
 import com.example.common.farming.Crop;
@@ -137,6 +138,11 @@ public class TradeMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(isAvailable()){
+                    HashMap<String,Object> body = new HashMap<>();
+                    body.put("action", "accept_trade");
+                    body.put("username", game.getCurrentPlayer().getTradePlayer().getUsername());
+                    body.put("target", game.getCurrentPlayer().getUsername());
+                    NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
                     showError("Trade done successfully",errorLabel);
                     return;
                 }
@@ -145,9 +151,12 @@ public class TradeMenu {
         });
         declineButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
-                game.getCurrentPlayer().getTradePlayer().getWantedItems().clear();
-                game.getCurrentPlayer().getTradePlayer().getItems().clear();
-                game.getCurrentPlayer().setTradePlayer(null);
+                HashMap<String,Object> body = new HashMap<>();
+                body.put("action", "decline");
+                body.put("username", game.getCurrentPlayer().getTradePlayer().getUsername());
+                body.put("target", game.getCurrentPlayer().getUsername());
+                NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
+                showError("Trade done successfully",errorLabel);
             }
         });
         Label wantedLabel = new Label("items you pay:" , skin);
@@ -210,6 +219,15 @@ public class TradeMenu {
                     }
                     showError("add successfully" , errorLabel);
                     errorLabel.setColor(Color.GREEN);
+                    game.getCurrentPlayer().setTradePlayer(game.getPlayerByUsername(userField.getText()));
+                    HashMap<String , Object> body = new HashMap<>();
+                    body.put("action", "trade");
+                    body.put("username", game.getCurrentPlayer().getUsername());
+                    body.put("target", userField.getText());
+                    body.put("type", "wanted" );
+                    body.put("item", wantedField.getText());
+                    body.put("number", wantedNumber.getText());
+                    NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
                 }catch (NumberFormatException e){
                     showError("invalid number" , errorLabel);
                     errorLabel.setColor(Color.RED);
@@ -238,7 +256,16 @@ public class TradeMenu {
                     }
                     game.getCurrentPlayer().getItems().merge(temp.getName(), num, Integer::sum);
                     showError("add successfully" , errorLabel);
+                    game.getCurrentPlayer().setTradePlayer(game.getPlayerByUsername(userField.getText()));
                     errorLabel.setColor(Color.GREEN);
+                    HashMap<String , Object> body = new HashMap<>();
+                    body.put("action", "trade");
+                    body.put("username", game.getCurrentPlayer().getUsername());
+                    body.put("target", userField.getText());
+                    body.put("type", "item" );
+                    body.put("item", itemField.getText());
+                    body.put("number", itemNumber.getText());
+                    NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
                 }catch (NumberFormatException e){
                     showError("invalid number" , errorLabel);
                     errorLabel.setColor(Color.RED);
@@ -278,30 +305,11 @@ public class TradeMenu {
                 contentArea.add(showItemTable()).expand().fill();
             }
         });
-        send.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) {
-                if (game.getPlayerByUsername(userField.getText()) == null) {
-                    showError("user not find" , errorLabel);
-                    errorLabel.setColor(Color.RED);
-                    return;
-                }
-                HashMap<String , Object> body = new HashMap<>();
-                body.put("action", "trade");
-                body.put("username", game.getCurrentPlayer().getUsername());
-                body.put("target", userField.getText());
-                body.put("Items", itemField.getText());
-                body.put("ItemNumber", itemNumber.getText());
-                body.put("WantedItem", wantedField.getText());
-                body.put("WantedNumber", wantedNumber.getText());
-                NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
-            }
-        });
         table.add(errorLabel).width(500).row();
         Table quantityRow = new Table();
         quantityRow.add(showWantedItem).padRight(5);
         quantityRow.add(showItem).padLeft(5);
         table.add(quantityRow).expand().fill().row();
-        table.add(send).right().pad(10).row();
         return table;
     }
     private Table showItemTable(){
@@ -346,6 +354,12 @@ public class TradeMenu {
                 table.add(showItemTable()).expand().fill();
                 showError("remove successfully" , errorLabel);
                 errorLabel.setColor(Color.GREEN);
+                HashMap<String , Object> body = new HashMap<>();
+                body.put("action", "remove");
+                body.put("username", game.getCurrentPlayer().getUsername());
+                body.put("target", game.getCurrentPlayer().getTradePlayer().getUsername());
+                body.put("type", "item");
+                NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
             }
         });
         Back.addListener(new ClickListener() {
@@ -401,6 +415,12 @@ public class TradeMenu {
                 table.add(showWantedTable()).expand().fill();
                 showError("remove successfully" , errorLabel);
                 errorLabel.setColor(Color.GREEN);
+                HashMap<String , Object> body = new HashMap<>();
+                body.put("action", "remove");
+                body.put("username", game.getCurrentPlayer().getUsername());
+                body.put("target", game.getCurrentPlayer().getTradePlayer().getUsername());
+                body.put("type", "wanted");
+                NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
             }
         });
         Back.addListener(new ClickListener() {
@@ -451,7 +471,7 @@ public class TradeMenu {
         stage.dispose();
         skin.dispose();
     }
-    private void refresh() {
+    public void refresh() {
         request.clear(); offer.clear(); history.clear();
         request.add(createRequestContent()).expand().fill();
         offer.add(createOfferContent()).expand().fill();
@@ -464,6 +484,15 @@ public class TradeMenu {
         content.setVisible(true);
     }
     public boolean isAvailable() {
+        Player player = game.getCurrentPlayer().getTradePlayer();
+        for (String s : player.getWantedItems().keySet()) {
+           if (game.getCurrentPlayer().getInventory().getItemByName(s) == null) {
+               return false;
+           }
+           else if (game.getCurrentPlayer().getInventory().getItemCount(s) < player.getWantedItems().get(s)) {
+               return false;
+           }
+        }
         return true;
     }
     private void showError(String message, Label errorLabel) {

@@ -340,7 +340,6 @@ public class GameView implements Screen {
         mapCamera.update();
         batch.setProjectionMatrix(mapCamera.getCamera().combined);
         batch.begin();
-
         showMap(batch);
         drawNPCs(batch);
         drawPlayers(batch);
@@ -357,6 +356,13 @@ public class GameView implements Screen {
         batch.end();
     }
     private void updateTradeMessage(float delta) {
+        if (game.getCurrentPlayer().isRefresh()){
+            tradeMenu.refresh();
+            if (tradeMenu.isAvailable()){
+                tradeMenu.setVisible(true , 2);
+                game.getCurrentPlayer().setRefresh(false);
+            }
+        }
         if (game.getCurrentPlayer().isNewTrade()){
             TradeMessage.setVisible(true);
         }
