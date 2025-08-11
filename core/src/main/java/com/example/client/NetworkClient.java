@@ -54,7 +54,7 @@ public class NetworkClient {
         }
     }
 
-    public void sendMessage(Message message) {
+    public synchronized void sendMessage(Message message) {
         message.addToBody("ip", IP);
         message.addToBody("port", port);
         String JSONString = JSONUtils.toJson(message);
@@ -66,6 +66,8 @@ public class NetworkClient {
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
+            end.set(true);
+            try { socket.close(); } catch (IOException ignored) {}
         }
     }
 
@@ -97,27 +99,63 @@ public class NetworkClient {
         readerThread = new Thread(() -> {
             try {
                 while (!Thread.currentThread().isInterrupted() && !end.get()) {
-                    int len = in.readInt();
-                    byte[] buf = new byte[len];
-                    in.readFully(buf);
-                    String receivedStr = new String(buf, StandardCharsets.UTF_8);
-                    Message msg = JSONUtils.fromJson(receivedStr);
-
-                    String respId = msg.getFromBody("requestId");
-                    if (respId != null && pending.containsKey(respId)) {
-                        pending.get(respId).complete(msg);
-                    }
-
-                    Gdx.app.postRunnable(() -> {
-                        for (var l : listeners) {
-                            l.accept(msg);
+                    try {
+                        int len = in.readInt();
+                        if (len <= 0) {
+                            System.err.println("Invalid length: " + len);
+                            continue;
                         }
-                    });
+                        byte[] buf = new byte[len];
+                        in.readFully(buf);
+                        String receivedStr = new String(buf, StandardCharsets.UTF_8);
+                        System.out.println("RECV len=" + len + " json=" + receivedStr);
+
+                        Message msg;
+                        try {
+                            msg = JSONUtils.fromJson(receivedStr);
+                        } catch (Exception je) {
+                            System.err.println("Failed to parse JSON: " + je.getMessage());
+                            System.err.println(receivedStr);
+                            continue;
+                        }
+
+                        String respId = msg.getFromBody("requestId");
+                        if (respId != null && pending.containsKey(respId)) {
+                            pending.get(respId).complete(msg);
+                        }
+
+                        Gdx.app.postRunnable(() -> {
+                            for (var l : listeners) {
+                                try {
+                                    l.accept(msg);
+                                } catch (Throwable t) {
+                                    t.printStackTrace();
+                                }
+                            }
+                        });
+                    } catch (EOFException eof) {
+                        System.out.println("Remote closed connection (EOF).");
+                        break;
+                    } catch (IOException ioe) {
+                        System.err.println("IO error while reading: " + ioe.getMessage());
+                        break;
+                    }
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } finally {
+                end.set(true);
+                try { if (in != null) in.close(); } catch (IOException ignored) {}
+                try { if (out != null) out.close(); } catch (IOException ignored) {}
+                try { if (socket != null) socket.close(); } catch (IOException ignored) {}
+
+                var iter = pending.entrySet().iterator();
+                while (iter.hasNext()) {
+                    var e = iter.next();
+                    e.getValue().completeExceptionally(new IOException("Disconnected"));
+                    iter.remove();
+                }
+                System.out.println("Network reader thread ended.");
             }
-        });
+        }, "Network-Reader");
         readerThread.setDaemon(true);
         readerThread.start();
     }

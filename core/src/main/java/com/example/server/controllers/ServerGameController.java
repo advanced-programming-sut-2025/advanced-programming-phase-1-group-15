@@ -10,11 +10,15 @@ import static com.example.server.controllers.ServerController.informOtherLobbyUs
 
 public class ServerGameController {
     public static void handleCommand(Message req, Map<String,Object> respBody) {
-        String action = req.getFromBody("action");
-        String senderUsername = req.getFromBody("username");
-        respBody.put("username", senderUsername);
-
-        reflectMessage(req, respBody);
+        try {
+            String action = req.getFromBody("action");
+            String senderUsername = req.getFromBody("username");
+            respBody.put("username", senderUsername);
+            reflectMessage(req, respBody);
+        } catch (Exception e) {
+            System.err.println("Error handling command: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public static void reflectMessage(Message req, Map<String,Object> respBody) {

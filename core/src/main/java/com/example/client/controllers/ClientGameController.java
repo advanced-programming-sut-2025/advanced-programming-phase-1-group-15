@@ -1581,6 +1581,7 @@ public class ClientGameController {
                                              ForagingMineralType foragingMineralType, int foragingMineralCount) {
         HashMap<String,Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "pickaxe_use");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
         cmdBody.put("pickaxe_action", pickaxeAction);
         cmdBody.put("x_use", xUse);
         cmdBody.put("y_use", yUse);
@@ -1597,6 +1598,7 @@ public class ClientGameController {
     public static void sendPutInTileMessage(int x, int y, String itemName) {
         HashMap<String,Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "put_in_tile");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
         cmdBody.put("x", x);
         cmdBody.put("y", y);
         cmdBody.put("item_name", itemName);

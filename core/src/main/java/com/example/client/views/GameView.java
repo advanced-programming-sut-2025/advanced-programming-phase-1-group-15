@@ -313,11 +313,11 @@ public class GameView implements Screen {
             artisan.draw(delta);
         }
 
-        sinceLastInfoUpdate += delta;
-        if(sinceLastInfoUpdate >= 2){
-            game.notifyOthersScoreInfo();
-            sinceLastInfoUpdate = 0;
-        }
+//        sinceLastInfoUpdate += delta;
+//        if(sinceLastInfoUpdate >= 60){
+//            game.notifyOthersScoreInfo();
+//            sinceLastInfoUpdate = 0;
+//        }
     }
 
     private void renderMap(SpriteBatch batch) {
