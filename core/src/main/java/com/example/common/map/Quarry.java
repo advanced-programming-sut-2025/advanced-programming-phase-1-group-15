@@ -1,12 +1,15 @@
 package com.example.common.map;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.example.client.controllers.ClientGameController;
+import com.example.client.models.ClientApp;
 import com.example.common.RandomGenerator;
 import com.example.common.foraging.ForagingMineral;
 import com.example.common.foraging.ForagingMineralType;
 import com.example.common.time.DateAndTime;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Quarry extends Area {
     public static int[][] coordinates = {
@@ -28,8 +31,10 @@ public class Quarry extends Area {
     }
 
     public void build() {
-        randomCommonMineralGenerator();
-        randomSpecialMineralGenerator();
+        if(ClientApp.currentGame.isAdmin()) {
+            randomCommonMineralGenerator();
+            randomSpecialMineralGenerator();
+        }
     }
 
     @Override
@@ -40,15 +45,21 @@ public class Quarry extends Area {
     @Override
     public void update(DateAndTime dateAndTime) {
         if((dateAndTime.getDay() % 3 == 1) && dateAndTime.getHour() == 9) {
-            randomCommonMineralGenerator();
+            if(ClientApp.currentGame.isAdmin()) {
+                randomCommonMineralGenerator();
+            }
         }
         if((dateAndTime.getDay() % 7 == 1) && dateAndTime.getHour() == 9) {
-            randomSpecialMineralGenerator();
+            if(ClientApp.currentGame.isAdmin()) {
+                randomSpecialMineralGenerator();
+            }
         }
     }
 
     private void randomCommonMineralGenerator() {
+        HashMap<String,Object> cmdBody = new HashMap<>();
         int mineralsCount = RandomGenerator.getInstance().randomInt(25, 50);
+        cmdBody.put("minerals_count", mineralsCount);
 
         for (int i = 0; i < mineralsCount; i++) {
             while (true) {
@@ -60,21 +71,28 @@ public class Quarry extends Area {
                     int randomInt = RandomGenerator.getInstance().randomInt(0, 9);
                     if(randomInt % 2 == 0) {
                         randomTile.put(new ForagingMineral(ForagingMineralType.COAL));
+                        cmdBody.put("(" + randomTile.getPosition().x + "," + randomTile.getPosition().y + ")", 0);
                     }
                     else if (randomInt % 3 == 0) {
                         randomTile.put(new ForagingMineral(ForagingMineralType.COPPER));
+                        cmdBody.put("(" + randomTile.getPosition().x + "," + randomTile.getPosition().y + ")", 1);
                     }
                     else if(randomInt % 5 == 0) {
                         randomTile.put(new ForagingMineral(ForagingMineralType.IRON));
+                        cmdBody.put("(" + randomTile.getPosition().x + "," + randomTile.getPosition().y + ")", 2);
                     }
                     break;
                 }
             }
         }
+
+        ClientGameController.sendGenerateCommonMineralsMessage(cmdBody);
     }
 
     private void randomSpecialMineralGenerator() {
+        HashMap<String,Object> cmdBody = new HashMap<>();
         int mineralsCount = RandomGenerator.getInstance().randomInt(10, 15);
+        cmdBody.put("minerals_count", mineralsCount);
 
         for (int i = 0; i < mineralsCount; i++) {
             while (true) {
@@ -87,9 +105,13 @@ public class Quarry extends Area {
                         [RandomGenerator.getInstance().randomInt(0, ForagingMineralType.values().length - 1)];
 
                     randomTile.put(new ForagingMineral(randomMineralType));
+
+                    cmdBody.put("(" + randomTile.getPosition().x + "," + randomTile.getPosition().y + ")", randomMineralType.ordinal());
                     break;
                 }
             }
         }
+
+        ClientGameController.sendGenerateSpecialMineralsMessage(cmdBody);
     }
 }

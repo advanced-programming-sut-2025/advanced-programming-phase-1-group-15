@@ -11,9 +11,8 @@ import com.example.common.Result;
 import com.example.common.animals.*;
 import com.example.common.enums.Direction;
 import com.example.common.farming.*;
-import com.example.common.foraging.ForagingMineralType;
+import com.example.common.foraging.*;
 import com.example.common.map.*;
-import com.example.common.stores.Blacksmith;
 import com.example.common.stores.GeneralItem;
 import com.example.common.stores.GeneralItemsType;
 import com.example.common.stores.Store;
@@ -26,8 +25,6 @@ import com.example.common.crafting.CraftItem;
 import com.example.common.crafting.CraftItemType;
 import com.example.common.enums.Gender;
 import com.example.common.farming.GeneralPlants.PloughedPlace;
-import com.example.common.foraging.ForagingCropsType;
-import com.example.common.foraging.ForagingSeedsType;
 import com.example.common.npcs.DefaultNPCs;
 import com.example.common.npcs.NPC;
 import com.example.common.npcs.NPCFriendShip;
@@ -63,6 +60,8 @@ public class ClientGameController {
                 if(tile.isEmpty()) {
                     tile.setObjectInTile(player.getCurrentItem());
                     player.getInventory().removeCountFromBackPack(player.getCurrentItem(), 1);
+                    sendPutInTileMessage(tile.getPosition().x, tile.getPosition().y, player.getCurrentItem().getName());
+
                     if (player.getInventory().getItemCount(player.getCurrentItem().getName()) == 0) {
                         float spriteX = tile.getPosition().x * 16;
                         float spriteY = tile.getPosition().y * 16;
@@ -75,6 +74,7 @@ public class ClientGameController {
                         }
                         player.setCurrentItem(null);
                     }
+
                     return new Result(true, "Item placed successfully.");
                 }
                 else {
@@ -1485,6 +1485,27 @@ public class ClientGameController {
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }
 
+    public static void sendGenerateFishMessage(HashMap<String,Object> cmdBody) {
+        cmdBody.put("action", "generate_fish");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendGenerateCommonMineralsMessage(HashMap<String,Object> cmdBody) {
+        cmdBody.put("action", "generate_common_minerals");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendGenerateSpecialMineralsMessage(HashMap<String,Object> cmdBody) {
+        cmdBody.put("action", "generate_special_minerals");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
     public static void sendPredictWeatherMessage() {
         HashMap<String,Object> cmdBody = new HashMap<>();
         cmdBody.put("action", "predict_weather");
@@ -1571,5 +1592,90 @@ public class ClientGameController {
         cmdBody.put("mining_level", getCurrentPlayer().getMiningLevel());
 
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendPutInTileMessage(int x, int y, String itemName) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "put_in_tile");
+        cmdBody.put("x", x);
+        cmdBody.put("y", y);
+        cmdBody.put("item_name", itemName);
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static Tilable getItemByName(String name) {
+        name = name.trim().toLowerCase().replaceAll("_", " ");
+
+        for(FruitType fruitType : FruitType.values()) {
+            if (fruitType.getName().equals(name)) {
+                return new Fruit(fruitType);
+            }
+        }
+        for(Crops crop : Crops.values()) {
+            if (crop.getName().equals(name)) {
+                return new Crop(crop);
+            }
+        }
+        for(ForagingCropsType foragingCropsType : ForagingCropsType.values()) {
+            if (foragingCropsType.getName().equals(name)) {
+                return new ForagingCrop(foragingCropsType);
+            }
+        }
+        for(ForagingMineralType foragingMineralType : ForagingMineralType.values()) {
+            if (foragingMineralType.getName().equals(name)) {
+                return new ForagingMineral(foragingMineralType);
+            }
+        }
+        for(AnimalProductType animalProductType : AnimalProductType.values()) {
+            if (animalProductType.getName().equals(name)) {
+                return new AnimalProduct(animalProductType);
+            }
+        }
+        for (FishType fishType : FishType.values()) {
+            if (fishType.getName().equals(name)){
+                return new Fish(fishType);
+            }
+        }
+        for(GeneralItemsType generalItemsType : GeneralItemsType.values()) {
+            if (generalItemsType.getName().equals(name)) {
+                return new GeneralItem(generalItemsType);
+            }
+        }
+        for(ArtisanItemType artisanItemType: ArtisanItemType.values()) {
+            if (artisanItemType.getName().equals(name)) {
+                return new ArtisanItem(artisanItemType);
+            }
+        }
+        for(CraftItemType craftItemType : CraftItemType.values()) {
+            if (craftItemType.getName().equals(name)) {
+                return new CraftItem(craftItemType);
+            }
+        }
+        for(ForagingSeedsType foragingSeedsType : ForagingSeedsType.values()) {
+            if (foragingSeedsType.getName().equals(name)) {
+                return new ForagingSeeds(foragingSeedsType);
+            }
+        }
+        for(FoodType foodType : FoodType.values()) {
+            if (foodType.getName().equals(name)) {
+                return new Food(foodType);
+            }
+        }
+        for(SeedType seedType : SeedType.values()) {
+            if (seedType.getName().equals(name)) {
+                return new Seed(seedType);
+            }
+        }
+        for(TreeType treeType : TreeType.values()) {
+            if (treeType.getName().equals(name)) {
+                return new Tree(treeType);
+            }
+        }
+        if(name.equals("stone")) {
+            return new Stone();
+        }
+
+        return null;
     }
 }

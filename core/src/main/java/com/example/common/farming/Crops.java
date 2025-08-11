@@ -702,8 +702,8 @@ public enum Crops{
         this.energy = energy;
     }
 
-    public String getName(){
-        return name();
+    public String getName() {
+        return this.name().toLowerCase().replaceAll("_", " ");
     }
     public static Crops getByName(String name) {
         String lowerName = name.trim().toLowerCase();

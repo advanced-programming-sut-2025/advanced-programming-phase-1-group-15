@@ -1,6 +1,8 @@
 package com.example.common.map;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.example.client.controllers.ClientGameController;
+import com.example.client.models.ClientApp;
 import com.example.common.RandomGenerator;
 import com.example.common.animals.Fish;
 import com.example.common.animals.FishType;
@@ -9,6 +11,7 @@ import com.example.common.time.Season;
 import com.example.client.views.GameAssetManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Lake extends Area {
     public static int[][] coordinates = {
@@ -40,7 +43,9 @@ public class Lake extends Area {
         todayFishTypes.clear();
     }
     private void randomFishGenerator(Season season) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
         int fishesCount = RandomGenerator.getInstance().randomInt(1, 4);
+        cmdBody.put("fish_count", fishesCount);
 
         ArrayList<FishType> validFishTypes = new ArrayList<>();
         for (FishType fishType : FishType.values()) {
@@ -58,7 +63,11 @@ public class Lake extends Area {
             Tile randomTile = tiles.get(randomRow).get(randomCol);
 
             randomTile.put(new Fish(randomFishType));
+
+            cmdBody.put("(" + randomTile.getPosition().x + "," + randomTile.getPosition().y + ")", randomFishType.ordinal());
         }
+
+        ClientGameController.sendGenerateFishMessage(cmdBody);
     }
 
     public FishType getTodaysFishType() {
@@ -66,7 +75,9 @@ public class Lake extends Area {
     }
 
     public void build() {
-        randomFishGenerator(Season.SPRING);
+        if(ClientApp.currentGame.isAdmin()) {
+            randomFishGenerator(Season.SPRING);
+        }
     }
 
     @Override
@@ -77,8 +88,10 @@ public class Lake extends Area {
     @Override
     public void update(DateAndTime dateAndTime) {
         if(dateAndTime.getHour() == 9) {
-            emptyLake();
-            randomFishGenerator(dateAndTime.getSeason());
+            if(ClientApp.currentGame.isAdmin()) {
+                emptyLake();
+                randomFishGenerator(dateAndTime.getSeason());
+            }
         }
     }
 }

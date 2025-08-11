@@ -11,6 +11,8 @@ import com.example.common.Message;
 import com.example.common.Player;
 import com.example.common.animals.Barn;
 import com.example.common.animals.Coop;
+import com.example.common.animals.Fish;
+import com.example.common.animals.FishType;
 import com.example.common.enums.Direction;
 import com.example.common.farming.Seed;
 import com.example.common.farming.SeedType;
@@ -54,6 +56,9 @@ public class ClientGameListener {
             case "player_stop" -> handlePlayerStop(msg, senderUsername);
             case "generate_trees" -> handleGenerateTrees(msg);
             case "generate_stones" -> handleGenerateStones(msg);
+            case "generate_fish" -> handleGenerateFish(msg);
+            case "generate_common_minerals" -> handleGenerateCommonMinerals(msg);
+            case "generate_special_minerals" -> handleGenerateSpecialMinerals(msg);
             case "predict_weather" -> handleWeatherForecast(msg);
             case "hug" -> handelHug(msg, senderUsername);
             case "flower" -> handelFlower(msg, senderUsername);
@@ -77,6 +82,7 @@ public class ClientGameListener {
             case "axe_use" -> handleAxeUse(msg, senderUsername);
             case "hoe_use" -> handleHoeUse(msg, senderUsername);
             case "pickaxe_use" -> handlePickaxeUse(msg, senderUsername);
+            case "put_in_tile" -> handlePutInTile(msg);
         }
     }
 
@@ -363,6 +369,69 @@ public class ClientGameListener {
         }
     }
 
+    private void handleGenerateFish(Message msg) {
+        HashMap<String, Object> body = msg.getBody();
+        for (java.util.Map.Entry<String, Object> entry : body.entrySet()) {
+            String key = entry.getKey();
+
+            if (!key.matches("\\(\\d+,\\d+\\)")) continue;
+
+            String[] parts = key.substring(1, key.length() - 1).split(",");
+            int x = Integer.parseInt(parts[0]);
+            int y = Integer.parseInt(parts[1]);
+
+            int fishTypeIndex = msg.getIntFromBody(key);
+            FishType type = FishType.values()[fishTypeIndex];
+
+            Tile tile = game.getTile(x, y);
+            tile.put(new Fish(type));
+        }
+    }
+
+    private void handleGenerateCommonMinerals(Message msg) {
+        HashMap<String, Object> body = msg.getBody();
+        for (java.util.Map.Entry<String, Object> entry : body.entrySet()) {
+            String key = entry.getKey();
+
+            if (!key.matches("\\(\\d+,\\d+\\)")) continue;
+
+            String[] parts = key.substring(1, key.length() - 1).split(",");
+            int x = Integer.parseInt(parts[0]);
+            int y = Integer.parseInt(parts[1]);
+            Tile tile = game.getTile(x, y);
+
+            int typeIndex = msg.getIntFromBody(key);
+            if(typeIndex == 0) {
+                tile.put(new ForagingMineral(ForagingMineralType.COAL));
+            }
+            else if(typeIndex == 1) {
+                tile.put(new ForagingMineral(ForagingMineralType.COPPER));
+            }
+            else {
+                tile.put(new ForagingMineral(ForagingMineralType.IRON));
+            }
+        }
+    }
+
+    private void handleGenerateSpecialMinerals(Message msg) {
+        HashMap<String, Object> body = msg.getBody();
+        for (java.util.Map.Entry<String, Object> entry : body.entrySet()) {
+            String key = entry.getKey();
+
+            if (!key.matches("\\(\\d+,\\d+\\)")) continue;
+
+            String[] parts = key.substring(1, key.length() - 1).split(",");
+            int x = Integer.parseInt(parts[0]);
+            int y = Integer.parseInt(parts[1]);
+
+            int mineralTypeIndex = msg.getIntFromBody(key);
+            ForagingMineralType type = ForagingMineralType.values()[mineralTypeIndex];
+
+            Tile tile = game.getTile(x, y);
+            tile.put(new ForagingMineral(type));
+        }
+    }
+
     private void handleWeatherForecast(Message msg) {
         WeatherOption tomorrowWeather = msg.getFromBody("tomorrow_weather", WeatherOption.class);
         game.getWeather().setForecast(tomorrowWeather);
@@ -489,12 +558,25 @@ public class ClientGameListener {
             tile.unplow();
         }
         else if (pickaxeAction.equals("successful")) {
+            tile.empty();
             if (msg.getFromBody("foraging_mineral_type") != null) {
                 ForagingMineralType foragingMineralType = msg.getFromBody("foraging_mineral_type", ForagingMineralType.class);
                 int foragingMineralCount = msg.getIntFromBody("foraging_mineral_count");
 
                 player.addToBackPack(new ForagingMineral(foragingMineralType), foragingMineralCount);
             }
+        }
+    }
+
+    private void handlePutInTile(Message msg) {
+        int x = msg.getIntFromBody("x");
+        int y = msg.getIntFromBody("y");
+
+        String itemName = msg.getFromBody("item_name");
+
+        Tile tile = game.getTile(x, y);
+        if(ClientGameController.getItemByName(itemName) != null) {
+            tile.put(ClientGameController.getItemByName(itemName));
         }
     }
 

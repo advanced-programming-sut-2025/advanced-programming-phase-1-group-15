@@ -252,4 +252,7 @@ public enum ArtisanItemType {
     public Texture getTexture() {
         return texture;
     }
+    public String getName(){
+        return this.name().toLowerCase().replaceAll("_", " ");
+    }
 }

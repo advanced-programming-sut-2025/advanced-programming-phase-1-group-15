@@ -34,7 +34,7 @@ public enum FishType {
         this.basePrice = basePrice;
         this.sprite = sprite;
     }
-    public String getName(){
+    public String getName() {
         return this.name().toLowerCase().replaceAll("_", " ");
     }
 }

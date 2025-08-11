@@ -295,5 +295,8 @@ public enum TreeType {
     public ArrayList<Sprite> getSprites() {
         return sprites;
     }
+    public String getName() {
+        return this.name().toLowerCase().replaceAll("_", " ");
+    }
 }
 
