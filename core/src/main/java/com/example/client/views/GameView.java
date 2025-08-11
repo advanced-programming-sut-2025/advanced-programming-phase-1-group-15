@@ -233,7 +233,7 @@ public class GameView implements Screen {
         hudTable.add(toolsButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(sendMessage).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(groupQuestButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
-        hudTable.add(notificationLabel).expandX().bottom().center().padTop(600).row();
+        hudTable.add(notificationLabel).expandX().bottom().center().padTop(400).row();
     }
 
     private void setupInputHandling() {

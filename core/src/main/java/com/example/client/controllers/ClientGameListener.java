@@ -16,6 +16,8 @@ import com.example.common.farming.Seed;
 import com.example.common.farming.SeedType;
 import com.example.common.farming.Tree;
 import com.example.common.farming.TreeType;
+import com.example.common.foraging.ForagingMineral;
+import com.example.common.foraging.ForagingMineralType;
 import com.example.common.foraging.Stone;
 import com.example.common.map.Farm;
 import com.example.common.map.GreenHouse;
@@ -73,6 +75,8 @@ public class ClientGameListener {
             case "build_coop" -> handleBuildCoop(msg, senderUsername);
             case "eat_food" -> handleEatFood(msg, senderUsername);
             case "axe_use" -> handleAxeUse(msg, senderUsername);
+            case "hoe_use" -> handleHoeUse(msg, senderUsername);
+            case "pickaxe_use" -> handlePickaxeUse(msg, senderUsername);
         }
     }
 
@@ -444,6 +448,52 @@ public class ClientGameListener {
                 int seedCount = msg.getIntFromBody("seed_count");
 
                 player.addToBackPack(new Seed(seedType), seedCount);
+            }
+        }
+    }
+
+    private void handleHoeUse(Message msg, String senderUsername) {
+        Player player = game.getPlayerByUsername(senderUsername);
+
+        boolean success = msg.getFromBody("success");
+        int xUse = msg.getIntFromBody("x_use");
+        int yUse = msg.getIntFromBody("y_use");
+        double energy = msg.getFromBody("energy");
+
+        Tile tile = game.getTile(xUse, yUse);
+        player.setEnergy(energy);
+
+        if(success) {
+            tile.plow();
+        }
+    }
+
+    private void handlePickaxeUse(Message msg, String senderUsername) {
+        Player player = game.getPlayerByUsername(senderUsername);
+
+        String pickaxeAction = msg.getFromBody("pickaxe_action");
+        int xUse = msg.getIntFromBody("x_use");
+        int yUse = msg.getIntFromBody("y_use");
+        double energy = msg.getFromBody("energy");
+        int stone = msg.getIntFromBody("stone");
+        int miningAbility = msg.getIntFromBody("mining_ability");
+        int miningLevel = msg.getIntFromBody("mining_level");
+
+        Tile tile = game.getTile(xUse, yUse);
+        player.setEnergy(energy);
+        player.setStone(stone);
+        player.setMiningAbility(miningAbility);
+        player.setMiningLevel(miningLevel);
+
+        if (pickaxeAction.equals("unplow")) {
+            tile.unplow();
+        }
+        else if (pickaxeAction.equals("successful")) {
+            if (msg.getFromBody("foraging_mineral_type") != null) {
+                ForagingMineralType foragingMineralType = msg.getFromBody("foraging_mineral_type", ForagingMineralType.class);
+                int foragingMineralCount = msg.getIntFromBody("foraging_mineral_count");
+
+                player.addToBackPack(new ForagingMineral(foragingMineralType), foragingMineralCount);
             }
         }
     }

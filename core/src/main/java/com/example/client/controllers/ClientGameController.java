@@ -11,6 +11,7 @@ import com.example.common.Result;
 import com.example.common.animals.*;
 import com.example.common.enums.Direction;
 import com.example.common.farming.*;
+import com.example.common.foraging.ForagingMineralType;
 import com.example.common.map.*;
 import com.example.common.stores.Blacksmith;
 import com.example.common.stores.GeneralItem;
@@ -1539,6 +1540,35 @@ public class ClientGameController {
         cmdBody.put("wood", getCurrentPlayer().getWood());
         cmdBody.put("foraging_ability", getCurrentPlayer().getForagingAbility());
         cmdBody.put("foraging_level", getCurrentPlayer().getForagingLevel());
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendHoeUseMessage(boolean success, int xUse, int yUse) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "hoe_use");
+        cmdBody.put("username", getCurrentPlayer().getUsername());
+        cmdBody.put("success", success);
+        cmdBody.put("x_use", xUse);
+        cmdBody.put("y_use", yUse);
+        cmdBody.put("energy", getCurrentPlayer().getEnergy());
+
+        NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
+    }
+
+    public static void sendPickaxeUseMessage(String pickaxeAction, int xUse, int yUse,
+                                             ForagingMineralType foragingMineralType, int foragingMineralCount) {
+        HashMap<String,Object> cmdBody = new HashMap<>();
+        cmdBody.put("action", "pickaxe_use");
+        cmdBody.put("pickaxe_action", pickaxeAction);
+        cmdBody.put("x_use", xUse);
+        cmdBody.put("y_use", yUse);
+        cmdBody.put("foraging_mineral_type", foragingMineralType);
+        cmdBody.put("foraging_mineral_count", foragingMineralCount);
+        cmdBody.put("energy", getCurrentPlayer().getEnergy());
+        cmdBody.put("stone", getCurrentPlayer().getStone());
+        cmdBody.put("mining_ability", getCurrentPlayer().getMiningAbility());
+        cmdBody.put("mining_level", getCurrentPlayer().getMiningLevel());
 
         NetworkClient.get().sendMessage(new Message(cmdBody, Message.Type.COMMAND));
     }

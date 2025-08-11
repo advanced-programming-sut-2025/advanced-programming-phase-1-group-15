@@ -693,6 +693,9 @@ public class Player extends User implements TimeObserver {
         this.notifiedForMarriage = notifiedForMarriage;
     }
 
+    public void setMiningAbility(int miningAbility) {
+        this.miningAbility = miningAbility;
+    }
     public void setMiningLevel(int miningLevel) {
         this.miningLevel = miningLevel;
     }

@@ -1,6 +1,7 @@
 package com.example.common.tools;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.example.client.controllers.ClientGameController;
 import com.example.common.Player;
 import com.example.common.Result;
 import com.example.common.map.AreaType;
@@ -94,6 +95,8 @@ public class Hoe extends Tool {
         }
         else if(!tile.getAreaType().equals(AreaType.FARM) && !tile.getAreaType().equals(AreaType.GREENHOUSE)) {
             user.subtractEnergy(energyConsume);
+
+            ClientGameController.sendHoeUseMessage(false, tile.getPosition().x, tile.getPosition().y);
             return new Result(false, "you can only use hoe on your farm or greenhouse tiles.");
         }
         else if(tile.isPlowed()) {
@@ -105,6 +108,8 @@ public class Hoe extends Tool {
 
         tile.plow();
         user.subtractEnergy(energyConsume);
+
+        ClientGameController.sendHoeUseMessage(true, tile.getPosition().x, tile.getPosition().y);
         return new Result(true, "tile plowed!\n" + energyConsume + " energy has been consumed.");
     }
 

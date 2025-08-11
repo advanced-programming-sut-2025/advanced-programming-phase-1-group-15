@@ -32,4 +32,8 @@ public class ForagingMineral implements Tilable, BackPackable {
     public Sprite getSprite() {
         return foragingMineralType.sprite;
     }
+
+    public ForagingMineralType getForagingMineralType() {
+        return foragingMineralType;
+    }
 }

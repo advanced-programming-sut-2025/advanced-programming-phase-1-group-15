@@ -1,6 +1,7 @@
 package com.example.common.tools;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.example.client.controllers.ClientGameController;
 import com.example.common.Player;
 import com.example.common.Result;
 import com.example.common.foraging.ForagingMineral;
@@ -116,6 +117,9 @@ public class Pickaxe extends Tool {
         if(successfulAttempt(tile)) {
             if(tile.isPlowed()) {
                 tile.unplow();
+
+                ClientGameController.sendPickaxeUseMessage("unplow", tile.getPosition().x, tile.getPosition().y,
+                    null, 0);
                 return new Result(true, "tile unplowed.\n" + energyConsume + " energy has been consumed.");
             }
             else if(tile.getObjectInTile() instanceof ForagingMineral fm) {
@@ -125,10 +129,14 @@ public class Pickaxe extends Tool {
                 user.upgradeMiningAbility(10);
                 tile.empty();
 
+                ClientGameController.sendPickaxeUseMessage("successful", tile.getPosition().x, tile.getPosition().y,
+                    fm.getForagingMineralType(), count);
                 return new Result(true, count + " " + fm.getName() + " added to your inventory.\n" + energyConsume + " energy has been consumed.");
             }
         }
         else {
+            ClientGameController.sendPickaxeUseMessage("unsuccessful", tile.getPosition().x, tile.getPosition().y,
+                null, 0);
             return new Result(false, "unsuccessful attempt! " + energyConsume + " energy has been consumed.");
         }
 
