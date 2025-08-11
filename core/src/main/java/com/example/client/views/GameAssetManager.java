@@ -123,10 +123,14 @@ public class GameAssetManager {
     public static Sprite mushroom_tree_1,mushroom_tree_2,mushroom_tree_3,mushroom_tree_4,mushroom_tree_5;
     public static Sprite mystic_tree_1,mystic_tree_2,mystic_tree_3,mystic_tree_4,mystic_tree_5;
     public static Sprite angry,cry,laugh,love,party,smile,thumbs_up;
+
     // foraging crops
     public static Sprite daffodil,common_mushroom,dandelion,leek,morel,salmonberry,spring_union,wild_horseradish,
         fiddle_head_fern,foraging_grape,red_mushroom,spice_berry,sweet_pea,blackberry,
     chanterelle,hazelnut,purple_mushroom,wild_plum,crocus,crystal_fruit,holley,snow_yam,winter_root;
+
+    // foraging trees
+    //public static Sprite
 
 
     public static void load() {

@@ -21,19 +21,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.example.server.controllers.ServerController.*;
 
 public class GameServer {
-    private static final int PORT = 54555;
+    private static final int PORT = 54556;
     private static final AtomicInteger nextClientId = new AtomicInteger(1);
     private static final Map<Integer, ClientHandler> clients = new ConcurrentHashMap<>();
 
     public static void main(String[] args) throws IOException {
-        ServerSocket server = new ServerSocket(PORT);
-        System.out.println("Server listening on port " + PORT);
-        System.out.println("--------------------------------------------------------");
-        while (true) {
-            Socket socket = server.accept();
-            new Thread(new ClientHandler(socket)).start();
-            System.out.println("New client connected with address: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
+        try {
+            ServerSocket server = new ServerSocket(PORT);
+            System.out.println("Server listening on port " + PORT);
             System.out.println("--------------------------------------------------------");
+            while (true) {
+                Socket socket = server.accept();
+                new Thread(new ClientHandler(socket)).start();
+                System.out.println("New client connected with address: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
+                System.out.println("--------------------------------------------------------");
+            }
+        }catch(Exception e) {
+            e.printStackTrace();
         }
     }
 

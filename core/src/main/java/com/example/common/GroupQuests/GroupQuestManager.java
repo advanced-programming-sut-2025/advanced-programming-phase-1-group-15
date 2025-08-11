@@ -31,7 +31,7 @@ public class GroupQuestManager {
 
             new GroupQuest("STONE", "stone",
                 "Mine 300 stones for the new fortress walls",
-                4, 4, 300, 200, 5),
+                2, 2, 300, 200, 5),
 
             new GroupQuest("SALMON", "salmon",
                 "Catch 100 salmons to feed the hungry townspeople",
@@ -141,13 +141,6 @@ public class GroupQuestManager {
         }
     }
 
-    /**
-     * Delivers a specific amount of items for a quest
-     * @param questId The quest ID
-     * @param player The player delivering items
-     * @param amount The amount to deliver
-     * @return DeliveryResult indicating success, failure, or insufficient items
-     */
     public Result deliverItems(String questId, Player player, int amount) {
         GroupQuest quest = allQuests.get(questId);
         if (quest == null) {

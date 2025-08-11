@@ -17,7 +17,7 @@ public class Main extends Game {
         mainBatch = new SpriteBatch();
 
         try {
-            NetworkClient.get().connect("localhost", 54555);
+            NetworkClient.get().connect("localhost", 54556);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.example.client.models.ClientApp;
 import com.example.common.Player;
 import com.example.common.RandomGenerator;
+import com.example.common.Result;
 import com.example.common.map.Tile;
 import com.example.common.time.DateAndTime;
 import com.example.common.time.Season;
@@ -255,7 +256,8 @@ public class NPC implements TimeObserver {
     }
 
     public void addQuestTemplate(BackPackable quest, int questAmount, BackPackable reward, int rewardAmount, int level) {
-        questTemplates.put(new Quest(quest, reward, questAmount, rewardAmount), level);
+        Quest questObj = new Quest(quest, reward, questAmount, rewardAmount);
+        questTemplates.put(questObj, level);
     }
 
     public String showQuests(Player player) {
@@ -264,12 +266,16 @@ public class NPC implements TimeObserver {
         return "no quest for this player";
     }
 
-    public void finishQuest(Player player, BackPackable item) {
+    public String finishQuest(Player player, Quest quest) {
         NPCFriendShip fs = friendships.get(player);
         if (fs != null) {
-            String result = fs.finishQuest(item).getMessage();
-            recordInteraction(player, "Player completed quest with " + item.getName() + ". Result: " + result);
+            Result result = fs.finishQuest(quest);
+            String interaction = "Player completed quest: " + quest.getRequest().getName() +
+                ". Result: " + result.getMessage();
+            recordInteraction(player, interaction);
+            return result.getMessage();
         }
+        return "No friendship established with this player.";
     }
 
     public String getName() {
@@ -289,10 +295,12 @@ public class NPC implements TimeObserver {
                         BackPackable gift = favourites.get(RandomGenerator.getInstance().randomInt(0,favourites.size()-1));
                         fs.player.getInventory().addToBackPack(gift, 1);
                         fs.markDailyGiftReceived();
-
-                        // Record this interaction
                         recordInteraction(fs.player, name + " gave a daily gift: " + gift.getName());
                     }
+                }
+
+                if (fs.getLevel() >= 1 && fs.getActiveQuestCount() < 3) {
+                    fs.activateQuests();
                 }
             }
         }
@@ -337,10 +345,23 @@ public class NPC implements TimeObserver {
             summary.append("• Give a gift for extra points\n");
         }
 
-        long activeQuests = friendship.getPlayerQuests().values().stream()
-            .filter(active -> active).count();
+        int activeQuests = friendship.getActiveQuestCount();
         if (activeQuests > 0) {
             summary.append("• ").append(activeQuests).append(" quest(s) available\n");
+
+            int completable = 0;
+            for (Quest quest : friendship.getPlayerQuests().keySet()) {
+                if (friendship.getPlayerQuests().get(quest) && !quest.isDoneBySomeone()) {
+                    int playerHas = player.getInventory().getItemCount(quest.getRequest().getName());
+                    if (playerHas >= quest.getRequestAmount()) {
+                        completable++;
+                    }
+                }
+            }
+
+            if (completable > 0) {
+                summary.append("• ").append(completable).append(" quest(s) ready to complete!\n");
+            }
         }
 
         if (hasDailyGiftAvailable(player)) {

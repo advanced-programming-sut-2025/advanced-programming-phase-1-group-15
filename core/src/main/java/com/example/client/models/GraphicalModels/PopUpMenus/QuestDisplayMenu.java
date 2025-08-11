@@ -277,7 +277,7 @@ public class QuestDisplayMenu extends PopUpMenu {
     }
 
     private void completeQuest(Quest quest) {
-        Result result = targetNPC.getFriendships().get(currentPlayer).finishQuest(quest.getRequest());
+        String resultMessage = targetNPC.finishQuest(currentPlayer, quest);
 
         Dialog resultDialog = new Dialog("🎉 Quest Result", skin) {
             @Override
@@ -287,20 +287,24 @@ public class QuestDisplayMenu extends PopUpMenu {
         };
 
         Table contentTable = new Table();
-        Label messageLabel = new Label(result.message(), skin);
+        Label messageLabel = new Label(resultMessage, skin);
         messageLabel.setWrap(true);
         messageLabel.setAlignment(1);
 
-        if (result.success()) {
+        boolean success = !resultMessage.toLowerCase().contains("don't have") &&
+            !resultMessage.toLowerCase().contains("no available") &&
+            !resultMessage.toLowerCase().contains("no friendship");
+
+        if (success) {
             messageLabel.setColor(Color.GREEN);
         } else {
             messageLabel.setColor(Color.RED);
         }
 
-        contentTable.add(messageLabel).width(300).pad(20);
+        contentTable.add(messageLabel).width(350).pad(20);
 
         resultDialog.getContentTable().add(contentTable);
-        resultDialog.button("✅ OK", true);
+        resultDialog.button(" OK", true);
         resultDialog.show(stage);
 
         populateQuests();
