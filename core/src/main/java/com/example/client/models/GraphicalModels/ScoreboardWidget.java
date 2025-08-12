@@ -86,7 +86,7 @@ public class ScoreboardWidget extends Table {
         this.add(toggleButton).colspan(2).padTop(5);
 
         this.setSize(420, 350);
-        this.setPosition(25, 250);
+        this.setPosition(25, 150);
     }
 
     private void createSortButtons(Table buttonTable) {

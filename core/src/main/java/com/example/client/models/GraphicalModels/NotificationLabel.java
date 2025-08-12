@@ -24,7 +24,7 @@ public class NotificationLabel extends Label {
 
         addAction(Actions.sequence(
             Actions.fadeIn(0.4f),
-            Actions.delay(5f),
+            Actions.delay(6f),
             Actions.fadeOut(0.4f),
             Actions.run(() -> {
                 setVisible(false);

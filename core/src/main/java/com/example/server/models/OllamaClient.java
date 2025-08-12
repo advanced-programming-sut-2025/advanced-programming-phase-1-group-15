@@ -29,10 +29,6 @@ public class OllamaClient {
 
     private static final ExecutorService executor = Executors.newFixedThreadPool(4);
 
-    /**
-     * Generate an NPC dialog asynchronously. Returns a CompletableFuture that completes
-     * with the trimmed NPC response or completes exceptionally on failure.
-     */
     public static CompletableFuture<String> generateNPCDialogAsync(String npcName, String npcJob, String context) {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -77,9 +73,6 @@ public class OllamaClient {
         }, executor);
     }
 
-    /**
-     * Build a simple, human-friendly prompt. Kept concise to reduce token usage.
-     */
     private static String buildPrompt(String npcName, String npcJob, String context) {
 
         return "You are " + npcName + ", a " + npcJob + " in a farming game.\n\n" +
@@ -92,10 +85,6 @@ public class OllamaClient {
             npcName + " says:";
     }
 
-    /**
-     * Try to extract a response field, otherwise fall back to scanning lines for response objects.
-     * The result is normalized to a single-line string and truncated if excessively long.
-     */
     private static String parseOllamaResponse(String json) {
         try {
             JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
@@ -109,7 +98,6 @@ public class OllamaClient {
             e.printStackTrace();
         }
 
-        // Fallback: try reading line-by-line for JSON objects (streaming or multi-line responses).
         StringBuilder collected = new StringBuilder();
         for (String line : json.split("\n")) {
             if (line.trim().isEmpty()) continue;
@@ -120,7 +108,6 @@ public class OllamaClient {
                     if (el != null) collected.append(el.getAsString());
                 }
             } catch (Exception ignored) {
-                // ignore parse errors on individual lines
             }
         }
 

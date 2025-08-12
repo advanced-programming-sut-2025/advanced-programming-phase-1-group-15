@@ -49,11 +49,11 @@ public class WeatherManagement implements TimeObserver {
             case SPRING, SUMMER, AUTUMN -> {
                 possibleWeathers.add(WeatherOption.SUNNY);
                 possibleWeathers.add(WeatherOption.RAINY);
-                possibleWeathers.add(WeatherOption.STORM);
+                //possibleWeathers.add(WeatherOption.STORM);
             }
             case WINTER -> {
                 possibleWeathers.add(WeatherOption.SUNNY);
-                possibleWeathers.add(WeatherOption.SNOW);
+                //possibleWeathers.add(WeatherOption.SNOW);
             }
         }
 

@@ -1142,6 +1142,7 @@ public class GameView implements Screen {
             }
         };
         messageDialog.text(message);
+        messageDialog.setColor(Color.BLUE);
         messageDialog.button("OK");
         messageDialog.show(uiStage);
 

@@ -344,14 +344,18 @@ public class ClientGameListener {
 
         Player rater = game.getPlayerByUsername(raterUsername);
         Player sender = game.getPlayerByUsername(senderUsername);
-        PlayerFriendship friendship = game.getFriendshipByPlayers(sender, rater);
 
+        PlayerFriendship friendship = game.getFriendshipByPlayers(sender, rater);
         if (friendship != null && giftIndex >= 0 && giftIndex < friendship.getGifts(sender).size()) {
             PlayerFriendship.Gift gift = friendship.getGifts(sender).get(giftIndex);
             gift.setRate(rating);
             friendship.rateGift(rating);
+            sender.addNotification(new PlayerFriendship.Message(
+                rater, rater.getUsername() + " rated your gift (" + gift.getItem().getName() + ") with " + rating + "★"
+            ));
         }
     }
+
 
 
     private void handelHug(Message msg, String senderUsername) {

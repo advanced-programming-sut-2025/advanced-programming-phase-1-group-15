@@ -10,6 +10,7 @@ import com.example.common.animals.Coop;
 import com.example.common.animals.Fish;
 import com.example.common.crafting.CraftItem;
 import com.example.common.farming.GeneralPlants.*;
+import com.example.common.farming.Harvestable;
 import com.example.common.stores.*;
 import com.example.common.farming.Tree;
 import com.example.common.foraging.ForagingMineral;
@@ -280,6 +281,14 @@ public class Tile {
 
     public Sprite getObjectSprite() {
         if(objectInTile != null) {
+            if(objectInTile instanceof PloughedPlace) {
+                Sprite s = objectInTile.getSprite();
+                PlantState state = ((PloughedPlace) objectInTile).getCurrentState();
+                if(state instanceof PloughedState) {
+                    return s;
+                }
+                return s;
+            }
             return objectInTile.getSprite();
         }
 

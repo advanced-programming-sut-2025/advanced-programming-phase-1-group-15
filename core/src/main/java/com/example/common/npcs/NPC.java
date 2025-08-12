@@ -32,7 +32,7 @@ public class NPC implements TimeObserver {
     protected HashMap<Player, NPCFriendShip> friendships = new HashMap<>();
 
     private HashMap<Player, List<String>> interactionHistory = new HashMap<>();
-    private final boolean useLLM = false;
+    private final boolean useLLM = true;
     private int maxHistoryEntries = 10;
 
     public NPC(String name, String job, Tile homeLocation, TextureRegion sprite) {

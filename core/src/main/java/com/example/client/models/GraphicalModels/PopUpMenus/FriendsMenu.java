@@ -227,7 +227,7 @@ public class FriendsMenu extends PopUpMenu {
 
     private Table createInventoryItem(BackPackable item, Integer quantity) {
         Table itemTable = new Table();
-        itemTable.setBackground(createColoredBackground(new Color(0.8f, 0.8f, 0.8f, 0.5f)));
+        itemTable.setBackground(createColoredBackground(Color.DARK_GRAY));
 
         Label itemLabel = new Label(item.getName(), skin);
         itemLabel.setWrap(true);
@@ -303,8 +303,9 @@ public class FriendsMenu extends PopUpMenu {
         Table giftRow = new Table();
         giftRow.left();
         giftRow.add(new Label(gift.getItem().getName(), skin)).width(150f).left().padRight(10);
-        String ratingText = gift.getRate() > 0 ? "★".repeat(gift.getRate()) + " (" + gift.getRate() + "/5)" : "Not rated";
+        String ratingText = gift.getRate() > 0 ?  " (" + gift.getRate() + "/5)" : "Not rated";
         giftRow.add(new Label(ratingText, skin)).width(100f).center().padRight(10);
+        giftRow.setColor(Color.BLUE);
         TextButton rateButton = createRateButton(gift);
         giftRow.add(rateButton).width(100f).height(35f).center();
         return giftRow;
