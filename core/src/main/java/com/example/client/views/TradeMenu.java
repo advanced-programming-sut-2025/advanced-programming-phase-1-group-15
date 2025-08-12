@@ -292,10 +292,10 @@ public class TradeMenu {
         table.add(titleLabel).row();
         table.add(userField).width(700).row();
         table.add(wantedField).width(400);
-        table.add(wantedNumber).width(200).right().row();
+        table.add(wantedNumber).width(200).row();
         table.add(addWantItem).right().pad(10).row();
         table.add(itemField).width(400);
-        table.add(itemNumber).width(200).right().row();
+        table.add(itemNumber).width(200).row();
         table.add(addItem).right().pad(10).row();
         TextButton showWantedItem = new TextButton("show wanted item", skin);
         TextButton showItem = new TextButton("show item to sell", skin);
