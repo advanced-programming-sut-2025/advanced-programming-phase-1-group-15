@@ -143,6 +143,8 @@ public class TradeMenu {
                     body.put("username", game.getCurrentPlayer().getUsername());
                     body.put("target", game.getCurrentPlayer().getTradePlayer().getUsername());
                     NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
+                    String history = "You did Trade whit:" + game.getCurrentPlayer().getTradePlayer().getUsername();
+                    game.getCurrentPlayer().getTradeHistory().add(history);
                     game.getCurrentPlayer().setTradePlayer(null);
                     game.getCurrentPlayer().getWantedItems().clear();
                     game.getCurrentPlayer().getItems().clear();
@@ -151,6 +153,7 @@ public class TradeMenu {
                     return;
                 }
                 showError("You don't have enough items to Trade",errorLabel);
+                errorLabel.setColor(Color.RED);
             }
         });
         declineButton.addListener(new ClickListener() {
@@ -160,16 +163,12 @@ public class TradeMenu {
                 body.put("username", game.getCurrentPlayer().getUsername());
                 body.put("target", game.getCurrentPlayer().getTradePlayer().getUsername());
                 NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
-//                HashMap<String,Object> bod = new HashMap<>();
-//                bod.put("action", "decline");
-//                bod.put("username", game.getCurrentPlayer().getTradePlayer().getUsername());
-//                bod.put("target", game.getCurrentPlayer().getUsername());
-//                NetworkClient.get().sendMessage(new Message(bod , Message.Type.COMMAND));
                 game.getCurrentPlayer().getTradePlayer().getWantedItems().clear();
                 game.getCurrentPlayer().getTradePlayer().getItems().clear();
                 game.getCurrentPlayer().setTradePlayer(null);
                 game.getCurrentPlayer().setRefresh(true);
                 showError("Trade decline successfully",errorLabel);
+                errorLabel.setColor(Color.RED);
             }
         });
         Label wantedLabel = new Label("items you pay:" , skin);
@@ -451,8 +450,20 @@ public class TradeMenu {
     }
     private Table createHistoryContent() {
         Label titleLabel = new Label("History: ", skin); titleLabel.setColor(Color.FIREBRICK);
-
         Table table = new Table(skin);
+        if (game.getCurrentPlayer().getTradeHistory().isEmpty() || game.getCurrentPlayer().getWantedItems()==null) {
+            Label label = new Label("You don't have any Trade", skin);
+            label.setColor(Color.RED);
+            table.add(label).right().padTop(10).row();
+            return table;
+        }
+        table.add(titleLabel).right().padBottom(10).row();
+        int i = 1;
+        for (String s : game.getCurrentPlayer().getTradeHistory()) {
+            Label label = new Label(i+":   "+s, skin);
+            label.setColor(Color.BLACK);
+            table.add(label).center().row();
+        }
         return table;
     }
     public boolean isVisible() {
@@ -507,7 +518,6 @@ public class TradeMenu {
            else if (game.getCurrentPlayer().getInventory().getItemCount(s) < player.getWantedItems().get(s)) {
                return false;
            }
-
         }
         for (String s : player.getWantedItems().keySet()) {
             BackPackable temp = game.getCurrentPlayer().getInventory().getItemByName(s);

@@ -132,47 +132,21 @@ public class ClientGameListener {
     public void handelAccept(Message msg) {
         Player player = game.getPlayerByUsername(msg.getFromBody("username"));
         Player target = game.getPlayerByUsername(msg.getFromBody("target"));
-        String type = msg.getFromBody("type");
-        if (type.equals("main")) {
-            for (String s : target.getItems().keySet()) {
-                BackPackable temp = target.getInventory().getItemByName(s);
-                int num = target.getItems().get(s);
-                target.getInventory().removeCountFromBackPack(temp , num);
-            }
-            for (String s : target.getWantedItems().keySet()) {
-                BackPackable temp = game.findItem(s);
-                if(target.getInventory().getItemByName(s)!=null) {
-                    temp = target.getInventory().getItemByName(s);
-                }
-                target.getInventory().addToBackPack(temp , target.getWantedItems().get(s));
-            }
-            String history = "You did Trade whit: "+player.getUsername();
-            target.getTradeHistory().add(history);
-            target.setTradePlayer(null);
-            target.getItems().clear();
-            target.getWantedItems().clear();
-            target.setRefresh(true);
+        for (String s : target.getItems().keySet()) {
+            BackPackable temp = target.getInventory().getItemByName(s);
+            int num = target.getItems().get(s);
+            target.getInventory().removeCountFromBackPack(temp , num);
         }
-        else {
-            for (String s : target.getTradePlayer().getWantedItems().keySet()) {
-                BackPackable temp = target.getInventory().getItemByName(s);
-                int num = target.getTradePlayer().getWantedItems().get(s);
-                target.getInventory().removeCountFromBackPack(temp , num);
-            }
-            for (String s : target.getTradePlayer().getItems().keySet()) {
-                BackPackable temp = game.findItem(s);
-                if(target.getInventory().getItemByName(s)!=null) {
-                    temp = target.getInventory().getItemByName(s);
-                }
-                int num = target.getTradePlayer().getItems().get(s);
-                target.getInventory().addToBackPack(temp , num);
-            }
-            String history = "You did Trade whit: "+player.getUsername();
-            target.getTradeHistory().add(history);
-            target.getTradePlayer().getItems().clear();
-            target.getTradePlayer().getWantedItems().clear();
-            target.setTradePlayer(null);
+        for (String s : target.getWantedItems().keySet()) {
+            BackPackable temp = game.findItem(s);
+            target.getInventory().addToBackPack(temp , target.getWantedItems().get(s));
         }
+        String history = "You did Trade whit:"+player.getUsername();
+        target.getTradeHistory().add(history);
+        target.setTradePlayer(null);
+        target.getItems().clear();
+        target.getWantedItems().clear();
+        target.setRefresh(true);
     }
     public void handelRemove(Message msg) {
         Player player = game.getPlayerByUsername(msg.getFromBody("username"));
@@ -211,7 +185,6 @@ public class ClientGameListener {
         double miningLevel = msg.getFromBody("mining-level");
         double foragingLevel = msg.getFromBody("foraging-level");
         double fishingLevel = msg.getFromBody("fishing-level");
-
         player.setGold((int)gold);
         player.setEnergy(energy);
         player.setFarmingLevel((int)farmingLevel);
