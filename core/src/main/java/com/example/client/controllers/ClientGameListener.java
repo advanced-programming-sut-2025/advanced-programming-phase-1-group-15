@@ -124,9 +124,9 @@ public class ClientGameListener {
     public void handelDecline(Message msg) {
         Player player = game.getPlayerByUsername(msg.getFromBody("username"));
         Player target = game.getPlayerByUsername(msg.getFromBody("target"));
-        target.setTradePlayer(null);
         target.getWantedItems().clear();
         target.getItems().clear();
+        target.setTradePlayer(null);
         target.setRefresh(true);
     }
     public void handelAccept(Message msg) {
@@ -143,9 +143,11 @@ public class ClientGameListener {
         }
         String history = "You did Trade whit:"+player.getUsername();
         target.getTradeHistory().add(history);
-        target.setTradePlayer(null);
+        target.getTradePlayer().getItems().clear();
+        target.getTradePlayer().getWantedItems().clear();
         target.getItems().clear();
         target.getWantedItems().clear();
+        target.setTradePlayer(null);
         target.setRefresh(true);
     }
     public void handelRemove(Message msg) {

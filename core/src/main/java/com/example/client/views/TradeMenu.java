@@ -145,9 +145,9 @@ public class TradeMenu {
                     NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
                     String history = "You did Trade whit:" + game.getCurrentPlayer().getTradePlayer().getUsername();
                     game.getCurrentPlayer().getTradeHistory().add(history);
+                    game.getCurrentPlayer().getTradePlayer().getItems().clear();
+                    game.getCurrentPlayer().getTradePlayer().getWantedItems().clear();
                     game.getCurrentPlayer().setTradePlayer(null);
-                    game.getCurrentPlayer().getWantedItems().clear();
-                    game.getCurrentPlayer().getItems().clear();
                     game.getCurrentPlayer().setRefresh(true);
                     showError("Trade done successfully",errorLabel);
                     return;
