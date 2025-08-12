@@ -18,7 +18,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
+import com.example.client.NetworkClient;
 import com.example.common.Game;
+import com.example.common.Message;
 import com.example.common.animals.AnimalProduct;
 import com.example.common.animals.AnimalProductType;
 import com.example.common.cooking.Food;
@@ -48,6 +50,7 @@ import com.example.common.tools.TrashCan;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 
 public class JojaMartMenu{
     private final Stage stage;
@@ -156,6 +159,13 @@ public class JojaMartMenu{
             public void clicked(InputEvent event, float x, float y) {
                 if (temp[0] != null) {
                     if (isAvailable(temp[0] , num[0])) {
+                        HashMap<String , Object> body = new HashMap<>();
+                        body.put("action", "update_jojaMart");
+                        body.put("username", game.getCurrentPlayer().getUsername());
+                        body.put("item", temp[0].getName());
+                        String number = String.valueOf(num[0]);
+                        body.put("number", number);
+                        NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
                         showError("You buy it successfully" , errorLabel);
                         Final.setVisible(false);
                         num[0] = 1;

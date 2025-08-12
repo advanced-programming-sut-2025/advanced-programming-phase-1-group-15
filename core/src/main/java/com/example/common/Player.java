@@ -60,6 +60,34 @@ public class Player extends User implements TimeObserver {
     public final static double walkingEnergyConsume = 0.1;
     private boolean newTrade = false;
     private boolean refresh = false;
+    private boolean updateJoja = false;
+    private String JojaItem;
+    private int JojaNumber;
+
+    public int getJojaNumber() {
+        return JojaNumber;
+    }
+
+    public void setJojaNumber(int jojaNumber) {
+        JojaNumber = jojaNumber;
+    }
+
+    public String getJojaItem() {
+        return JojaItem;
+    }
+
+    public void setJojaItem(String jojaItem) {
+        JojaItem = jojaItem;
+    }
+
+    public boolean isUpdateJoja() {
+        return updateJoja;
+    }
+
+    public void setUpdateJoja(boolean updateJoja) {
+        this.updateJoja = updateJoja;
+    }
+
     public boolean isRefresh() {
         return refresh;
     }

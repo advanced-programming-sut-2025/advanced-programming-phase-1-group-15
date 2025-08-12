@@ -28,9 +28,12 @@ import com.example.common.map.Tile;
 import com.example.common.relation.PlayerFriendship;
 import com.example.common.stores.GeneralItem;
 import com.example.common.stores.GeneralItemsType;
+import com.example.common.stores.JojaMartItems;
 import com.example.common.tools.BackPackable;
 import com.example.common.weather.WeatherOption;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class ClientGameListener {
@@ -88,6 +91,16 @@ public class ClientGameListener {
             case "remove" -> handelRemove(msg);
             case "accept_trade" -> handelAccept(msg);
             case "decline" -> handelDecline(msg);
+            case "update_jojaMart" -> handelJojaMart(msg);
+        }
+    }
+    public void handelJojaMart(Message msg) {
+        String itemName = msg.getFromBody("item");
+        int number = (int)Double.parseDouble(msg.getFromBody("number"));
+        for (Player player : game.getPlayers()) {
+            player.setUpdateJoja(true);
+            player.setJojaNumber(number);
+            player.setJojaItem(itemName);
         }
     }
     public void handelDecline(Message msg) {

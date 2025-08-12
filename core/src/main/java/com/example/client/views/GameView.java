@@ -46,6 +46,7 @@ import com.example.common.time.Season;
 import com.example.common.weather.WeatherOption;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -294,6 +295,7 @@ public class GameView implements Screen {
         game.getDateAndTime().updateDateAndTime(delta);
         updateMessageEmoji(delta);
         updateTradeMessage(delta);
+        updateJoja();
         processNotifications(delta);
         processMarriageProposal(delta);
         SpriteBatch batch = main.getBatch();
@@ -354,6 +356,23 @@ public class GameView implements Screen {
         drawClock(batch);
 
         batch.end();
+    }
+    private void updateJoja() {
+        if (game.getCurrentPlayer().isUpdateJoja()){
+            ArrayList<JojaMartItems> foragingSeed = new ArrayList<>(Arrays.asList(JojaMartItems.values()));
+            JojaMartItems current = null;
+            for (JojaMartItems jojaMartItems : foragingSeed) {
+                if(game.getCurrentPlayer().getJojaItem().equalsIgnoreCase(jojaMartItems.getName())) {
+                    current = jojaMartItems;
+                    break;
+                }
+            }
+            current.setSold(game.getCurrentPlayer().getJojaNumber()+current.getSold());
+            if (current.getSold() >= current.dailyLimit){
+                current.setAvailable(false);
+            }
+            game.getCurrentPlayer().setUpdateJoja(false);
+        }
     }
     private void updateTradeMessage(float delta) {
         if (game.getCurrentPlayer().isRefresh()){
@@ -683,15 +702,23 @@ public class GameView implements Screen {
                     }
                     return true;
                 case Input.Keys.C:
-                    if (cookingMenu.isVisible()){
-                        craftingMenu.refresh();
-                        cookingMenu.setVisible(false , 0);
+//                    if (cookingMenu.isVisible()){
+//                        craftingMenu.refresh();
+//                        cookingMenu.setVisible(false , 0);
+//                        restoreGameInput();
+//                    }
+//                    else {
+//                        craftingMenu.refresh();
+//                        cookingMenu.setVisible(true, 1);
+//                        Gdx.input.setInputProcessor(cookingMenu.getStage());
+//                    }
+                    if (jojaMartMenu.isVisible()){
+                        jojaMartMenu.setVisible(false , 0);
                         restoreGameInput();
                     }
                     else {
-                        craftingMenu.refresh();
-                        cookingMenu.setVisible(true, 1);
-                        Gdx.input.setInputProcessor(cookingMenu.getStage());
+                        jojaMartMenu.setVisible(true, 1);
+                        Gdx.input.setInputProcessor(jojaMartMenu.getStage());
                     }
             }
             return false;
