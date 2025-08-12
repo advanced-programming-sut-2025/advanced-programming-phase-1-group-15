@@ -52,7 +52,6 @@ public class ClientGameListener {
         if(senderUsername != null && senderUsername.equals(player.getUsername())) {
             return;
         }
-        System.out.println("Received message: " + msg.getBody());
 
         switch (action) {
             case "set_randomizers" -> handleSetRandomizers(msg);

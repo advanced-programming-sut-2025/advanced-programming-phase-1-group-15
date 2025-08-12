@@ -87,7 +87,6 @@ public class DateAndTime {
             item.setAvailable(true);
         }
         nextDayOfWeek();
-        notifyObservers();
     }
     public void nextNDays(int n) {
         for(int i = 0; i < n; i++) {
@@ -96,7 +95,7 @@ public class DateAndTime {
     }
 
     public void nextHour(){
-        if(hour == 21) {
+        if(hour == 23) {
             hour = 9;
             nextDay();
         }
