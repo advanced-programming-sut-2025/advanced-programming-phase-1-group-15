@@ -325,7 +325,7 @@ public class TradeMenu {
         ScrollPane scrollPane = new ScrollPane(itemList, skin);
         scrollPane.setFadeScrollBars(false);
         scrollPane.setScrollingDisabled(true, false);
-        BackPackable[] current = new BackPackable[1];
+        String[] current = new String[1];
         itemList.addListener(new InputListener() {
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
@@ -334,7 +334,7 @@ public class TradeMenu {
                     String item = itemList.getItems().get(index);
                     if (item != null && !item.isEmpty()) {
                         String itemName = item.split(" x")[0];
-                        current[0] = game.getCurrentPlayer().getInventory().getItemByName(itemName);
+                        current[0] = itemName;
                         return true;
                     }
                 }
@@ -359,6 +359,7 @@ public class TradeMenu {
                 body.put("username", game.getCurrentPlayer().getUsername());
                 body.put("target", game.getCurrentPlayer().getTradePlayer().getUsername());
                 body.put("type", "item");
+                body.put("item" , current[0]);
                 NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
             }
         });
@@ -420,6 +421,7 @@ public class TradeMenu {
                 body.put("username", game.getCurrentPlayer().getUsername());
                 body.put("target", game.getCurrentPlayer().getTradePlayer().getUsername());
                 body.put("type", "wanted");
+                body.put("item" , current[0]);
                 NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
             }
         });

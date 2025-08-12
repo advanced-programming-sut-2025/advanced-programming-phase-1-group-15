@@ -144,7 +144,6 @@ public class ClientGameListener {
     public void handelTrade(Message msg) {
         Player player = game.getPlayerByUsername(msg.getFromBody("username"));
         Player target = game.getPlayerByUsername(msg.getFromBody("target"));
-        player.setTradePlayer(target);
         target.setNewTrade(true);
         target.setTradePlayer(player);
         String type = msg.getFromBody("type");
