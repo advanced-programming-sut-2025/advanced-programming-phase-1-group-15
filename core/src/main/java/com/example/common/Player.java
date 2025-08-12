@@ -65,6 +65,16 @@ public class Player extends User implements TimeObserver {
     private boolean newTrade = false;
     private boolean refresh = false;
     private boolean updateJoja = false;
+    private boolean updateMessage = false;
+
+    public boolean isUpdateMessage() {
+        return updateMessage;
+    }
+
+    public void setUpdateMessage(boolean updateMessage) {
+        this.updateMessage = updateMessage;
+    }
+
     private String JojaItem;
     private int JojaNumber;
 
@@ -146,6 +156,21 @@ public class Player extends User implements TimeObserver {
     private ArrayList<TradeWhitMoney> tradesWithMoneyHistory = new ArrayList<>();
     private HashMap<String , Integer> wantedItems = new HashMap<>();
     private HashMap<String , Integer> items = new HashMap<>();
+    private ArrayList<String> TradeHistory = new ArrayList<>();
+    private ArrayList<String> privateChat = new ArrayList<>();
+    private ArrayList<String> publicChat = new ArrayList<>();
+
+    public ArrayList<String> getPublicChat() {
+        return publicChat;
+    }
+
+    public ArrayList<String> getPrivateChat() {
+        return privateChat;
+    }
+
+    public ArrayList<String> getTradeHistory() {
+        return TradeHistory;
+    }
 
     public HashMap<String, Integer> getWantedItems() {
         return wantedItems;

@@ -70,6 +70,7 @@ public class GameView implements Screen {
     private Label Message;
     private Image image;
     private TextButton TradeMessage;
+    private TextButton ChatButton;
     private NotificationLabel notificationLabel;
     private boolean isNotificationShowing = false;
     private Runnable cancelShow = () -> {
@@ -101,6 +102,7 @@ public class GameView implements Screen {
     private final StarDropSaloonMenu starDropSaloonMenu;
     private final TradeMenu tradeMenu;
     private final ReActMenu reActMenu;
+    private final ChatMenu chatMenu;
     private ArrayList<ArtisanMenu> artisans = new ArrayList<>();
 
     float sinceLastInfoUpdate = 0;
@@ -132,6 +134,7 @@ public class GameView implements Screen {
         this.starDropSaloonMenu = new StarDropSaloonMenu(main, game, this::restoreGameInput);
         this.reActMenu = new ReActMenu(main , game , this::restoreGameInput);
         this.tradeMenu = new TradeMenu(main, game, this::restoreGameInput);
+        this.chatMenu = new ChatMenu(main, game, this::restoreGameInput);
         ClientApp.setCurrentGameView(this);
     }
 
@@ -161,6 +164,7 @@ public class GameView implements Screen {
         Message = new Label("", skin);
         image = new Image();
         TradeMessage = new TextButton("You have new Trade Request, Click to see" , skin);
+        ChatButton = new TextButton("Chat", skin);
         TradeMessage.setVisible(false);
         currentItemLabel.setColor(Color.FIREBRICK); currentItemLabel.setAlignment(Align.left);
         this.notificationLabel = new NotificationLabel(skin);
@@ -175,6 +179,18 @@ public class GameView implements Screen {
         TextButton TradeButton = new TextButton("Trade", skin);
         float buttonWidth = 200f;
         float buttonHeight = 60f;
+        ChatButton.addListener(new ClickListener(){
+            public void clicked(InputEvent event, float x, float y) {
+                if (chatMenu.isVisible()){
+                    chatMenu.setVisible(false , 0);
+                    restoreGameInput();
+                }
+                else {
+                    chatMenu.setVisible(true, 1);
+                    Gdx.input.setInputProcessor(chatMenu.getStage());
+                }
+            }
+        });
         TradeMessage.addListener(new ClickListener(){
             public void clicked(InputEvent event, float x, float y){
                 if (tradeMenu.isVisible()){
@@ -260,6 +276,7 @@ public class GameView implements Screen {
         hudTable.add(sendMessage).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(groupQuestButton).padTop(5).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(TradeButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
+        hudTable.add(ChatButton).padLeft(5).size(buttonWidth, buttonHeight).left().row();
         hudTable.add(Message).expandX().bottom().center().padTop(200).row();
         hudTable.add(image).expandX().bottom().center().row();
         hudTable.add(notificationLabel).expandX().bottom().center().row();
