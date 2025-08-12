@@ -140,9 +140,13 @@ public class TradeMenu {
                 if(isAvailable()){
                     HashMap<String,Object> body = new HashMap<>();
                     body.put("action", "accept_trade");
-                    body.put("username", game.getCurrentPlayer().getTradePlayer().getUsername());
-                    body.put("target", game.getCurrentPlayer().getUsername());
+                    body.put("username", game.getCurrentPlayer().getUsername());
+                    body.put("target", game.getCurrentPlayer().getTradePlayer().getUsername());
                     NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
+                    game.getCurrentPlayer().setTradePlayer(null);
+                    game.getCurrentPlayer().getWantedItems().clear();
+                    game.getCurrentPlayer().getItems().clear();
+                    game.getCurrentPlayer().setRefresh(true);
                     showError("Trade done successfully",errorLabel);
                     return;
                 }
@@ -153,10 +157,19 @@ public class TradeMenu {
             public void clicked(InputEvent event, float x, float y) {
                 HashMap<String,Object> body = new HashMap<>();
                 body.put("action", "decline");
-                body.put("username", game.getCurrentPlayer().getTradePlayer().getUsername());
-                body.put("target", game.getCurrentPlayer().getUsername());
+                body.put("username", game.getCurrentPlayer().getUsername());
+                body.put("target", game.getCurrentPlayer().getTradePlayer().getUsername());
                 NetworkClient.get().sendMessage(new Message(body , Message.Type.COMMAND));
-                showError("Trade done successfully",errorLabel);
+//                HashMap<String,Object> bod = new HashMap<>();
+//                bod.put("action", "decline");
+//                bod.put("username", game.getCurrentPlayer().getTradePlayer().getUsername());
+//                bod.put("target", game.getCurrentPlayer().getUsername());
+//                NetworkClient.get().sendMessage(new Message(bod , Message.Type.COMMAND));
+                game.getCurrentPlayer().getTradePlayer().getWantedItems().clear();
+                game.getCurrentPlayer().getTradePlayer().getItems().clear();
+                game.getCurrentPlayer().setTradePlayer(null);
+                game.getCurrentPlayer().setRefresh(true);
+                showError("Trade decline successfully",errorLabel);
             }
         });
         Label wantedLabel = new Label("items you pay:" , skin);
@@ -494,6 +507,11 @@ public class TradeMenu {
            else if (game.getCurrentPlayer().getInventory().getItemCount(s) < player.getWantedItems().get(s)) {
                return false;
            }
+
+        }
+        for (String s : player.getWantedItems().keySet()) {
+            BackPackable temp = game.getCurrentPlayer().getInventory().getItemByName(s);
+            game.getCurrentPlayer().getInventory().removeCountFromBackPack(temp , player.getWantedItems().get(s));
         }
         return true;
     }

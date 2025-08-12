@@ -107,27 +107,22 @@ public class ClientGameListener {
         Player player = game.getPlayerByUsername(msg.getFromBody("username"));
         Player target = game.getPlayerByUsername(msg.getFromBody("target"));
         target.setTradePlayer(null);
-        player.setTradePlayer(null);
-        player.getWantedItems().clear();
-        player.getItems().clear();
+        target.getWantedItems().clear();
+        target.getItems().clear();
         target.setRefresh(true);
-        player.setRefresh(true);
     }
     public void handelAccept(Message msg) {
         Player player = game.getPlayerByUsername(msg.getFromBody("username"));
         Player target = game.getPlayerByUsername(msg.getFromBody("target"));
-        for (String s : target.getTradePlayer().getWantedItems().keySet()) {
+        for (String s : target.getItems().keySet()) {
             BackPackable temp = target.getInventory().getItemByName(s);
-            int num = target.getTradePlayer().getWantedItems().get(s);
-            player.getInventory().addToBackPack(temp , num);
+            int num = target.getItems().get(s);
             target.getInventory().removeCountFromBackPack(temp , num);
         }
-
         target.setTradePlayer(null);
-        player.setTradePlayer(null);
-        player.getItems().clear();
+        target.getItems().clear();
+        target.getWantedItems().clear();
         target.setRefresh(true);
-        player.setRefresh(true);
     }
     public void handelRemove(Message msg) {
         Player player = game.getPlayerByUsername(msg.getFromBody("username"));
