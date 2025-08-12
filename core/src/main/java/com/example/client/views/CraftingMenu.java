@@ -160,14 +160,14 @@ public class CraftingMenu {
             if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) == null) {
                 return false;
             }
-            int num = craftItem.getCraftItemType().getIngredients().get(item.getName());
+            int num = craftItem.getCraftItemType().getIngredients().get(item);
             int total = game.getCurrentPlayer().getInventory().getItemCount(item.getName());
             if (total < num) {
                 return false;
             }
         }
         for (BackPackable item : craftItem.getCraftItemType().getIngredients().keySet()) {
-            int num = craftItem.getCraftItemType().getIngredients().get(item.getName());
+            int num = craftItem.getCraftItemType().getIngredients().get(item);
             game.getCurrentPlayer().getInventory().removeCountFromBackPack(item , num);
         }
         game.getCurrentPlayer().getInventory().addToBackPack(new CraftItem(craftItem.getCraftItemType()) , 1);

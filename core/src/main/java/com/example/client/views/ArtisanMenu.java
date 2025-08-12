@@ -42,6 +42,7 @@ public class ArtisanMenu {
     private TextButton getArtisanButton = new TextButton("Get Item", skin);
     private final Label madeLabel = new Label("", skin);
     private TextButton madeFast = new TextButton("Ready Fast", skin);
+    private TextButton cancelButton = new TextButton("Cancel", skin);
     Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
     private Stack progressStack = new Stack();
     Image background = new Image(skin.newDrawable("white", Color.DARK_GRAY));
@@ -92,6 +93,14 @@ public class ArtisanMenu {
         madeFast.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 ready = true;
+                refresh(madeLabel);
+            }
+        });
+        cancelButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                ready = false;
+                currentArtisanItem = null;
+                empty = true;
                 refresh(madeLabel);
             }
         });
@@ -183,6 +192,7 @@ public class ArtisanMenu {
         table.add(artisanButton).right().row();
         table.add(progressStack).width(200).height(20).pad(10).row();
         table.add(madeFast).right().row();
+        table.add(cancelButton).right().row();
         table.add(getArtisanButton).right().row();
         return table;
     }
@@ -317,16 +327,19 @@ public class ArtisanMenu {
             getArtisanButton.setVisible(true);
             madeFast.setVisible(false);
             progressStack.setVisible(false);
+            cancelButton.setVisible(false);
             return;
         }
         if (!empty){
             label.setText("You going to made "+currentArtisanItem.getName());
             getArtisanButton.setVisible(false);
+            cancelButton.setVisible(true);
             madeFast.setVisible(true);
             label.setVisible(true);
             label.setColor(Color.GREEN);
         }
         else {
+            cancelButton.setVisible(false);
             label.setVisible(false);
             getArtisanButton.setVisible(false);
             madeFast.setVisible(false);

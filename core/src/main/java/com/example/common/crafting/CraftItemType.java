@@ -5,6 +5,9 @@ import com.example.common.farming.Seed;
 import com.example.common.farming.SeedType;
 import com.example.common.foraging.ForagingMineral;
 import com.example.common.foraging.ForagingMineralType;
+import com.example.common.foraging.Stone;
+import com.example.common.stores.GeneralItem;
+import com.example.common.stores.GeneralItemsType;
 import com.example.common.tools.BackPackable;
 
 import java.util.HashMap;
@@ -59,35 +62,40 @@ public enum CraftItemType {
             50 , new Texture("Sprites/CraftItems/Iridium_Sprinkler.png")),
     CHARCOAL_KLIN("20 wood + 2 copper bar",
             new HashMap<>(){{
-                //put(ForagingMineralType.Wood,20);
+                put(new GeneralItem(GeneralItemsType.WOOD),20);
                 put(new ForagingMineral(ForagingMineralType.COPPER),2);
             }},
             Ability.foragingAbility,
             1,
             50 , new Texture("Sprites/CraftItems/Charcoal_Kiln.png")),
     FURNACE("20 copper ore + 25 stone",
-            new HashMap<>(),
+            new HashMap<>(){{
+                put(new Stone(),25);
+                put(new ForagingMineral(ForagingMineralType.COPPER),25);
+            }},
             null,
             0,
             50 , new Texture("Sprites/CraftItems/Furnace.png")),
-    SCARECROW("50 wood + 1 coal + 20 fiber",
-            new HashMap<>(),
+    SCARECROW("50 wood + 1 coal",
+            new HashMap<>(){{
+                put(new GeneralItem(GeneralItemsType.WOOD),50);
+                put(new ForagingMineral(ForagingMineralType.COAL),1);
+            }},
             null,
             0,
             50 , new Texture("Sprites/CraftItems/Scarecrow.png")),
-    DELUXE_SCARECROW("50 wood + 1 coal + 20 fiber + 1 iridium ore",
+    DELUXE_SCARECROW("50 wood + 1 coal + 1 iridium ore",
             new HashMap<>(){{
-                //put(ForagingMineralType.Wood,20);
+                put(new GeneralItem(GeneralItemsType.WOOD),20);
                 put(new ForagingMineral(ForagingMineralType.COAL),1);
                 put(new ForagingMineral(ForagingMineralType.IRIDIUM),1);
-                //put(ForagingMineralType.FIBER,1);
             }},
             Ability.farmingAbility,
             2,
             50 , new Texture("Sprites/CraftItems/Deluxe_Scarecrow.png")),
     BEE_HOUSE("40 wood + 8 coal + 1 iron bar",
             new HashMap<>(){{
-                //put(ForagingMineralType.Wood,20);
+                put(new GeneralItem(GeneralItemsType.WOOD),20);
                 put(new ForagingMineral(ForagingMineralType.COAL),8);
                 put(new ForagingMineral(ForagingMineralType.IRON),1);
             }},
@@ -96,8 +104,8 @@ public enum CraftItemType {
             50 , new Texture("Sprites/CraftItems/Bee_House.png")),
     CHEESE_PRESS("45 wood + 45 stone + 1 copper bar",
             new HashMap<>(){{
-                //put(ForagingMineralType.Wood,45);
-                //put(ForagingMineralType.Stone,45);
+                put(new GeneralItem(GeneralItemsType.WOOD),45);
+                put(new Stone(),45);
                 put(new ForagingMineral(ForagingMineralType.COPPER),1);
             }},
             Ability.farmingAbility,
@@ -105,22 +113,24 @@ public enum CraftItemType {
             50 , new Texture("Sprites/CraftItems/Cheese_Press.png")),
     KEG("30 wood + 1 copper bar + 1 iron bar",
             new HashMap<>(){{
-                //put(ForagingMineralType.Wood,20);
+                put(new GeneralItem(GeneralItemsType.WOOD),20);
                 put(new ForagingMineral(ForagingMineralType.COPPER),1);
                 put(new ForagingMineral(ForagingMineralType.IRON),1);
             }},
             Ability.farmingAbility,
             3,
             50 , new Texture("Sprites/CraftItems/Keg.png")),
-    LOOM("60 wood + 30 fiber",
-            new HashMap<>(),
+    LOOM("60 wood",
+            new HashMap<>(){{
+                put(new GeneralItem(GeneralItemsType.WOOD),60);
+            }},
             Ability.farmingAbility,
             3,
             50 , new Texture("Sprites/CraftItems/Loom.png")),
     MAYONNAISE_MACHINE("15 wood + 15 stone + 1 copper bar",
             new HashMap<>(){{
-                //put(ForagingMineralType.Wood,20);
-                //put(ForagingMineralType.Stone,20);
+                put(new GeneralItem(GeneralItemsType.WOOD),20);
+                put(new Stone(),20);
                 put(new ForagingMineral(ForagingMineralType.COPPER),1);
             }},
             null,
@@ -128,7 +138,7 @@ public enum CraftItemType {
             50 , new Texture("Sprites/CraftItems/Mayonnaise_Machine.png")),
     OIL_MAKER("100 wood + 1 gold bar + 1 iron bar",
             new HashMap<>(){{
-                //put(ForagingMineralType.Wood,20);
+                put(new GeneralItem(GeneralItemsType.WOOD),20);
                 put(new ForagingMineral(ForagingMineralType.GOLD),1);
                 put(new ForagingMineral(ForagingMineralType.IRON),1);
             }},
@@ -137,29 +147,34 @@ public enum CraftItemType {
             50 , new Texture("Sprites/CraftItems/Oil_Maker.png")),
     PRESERVES_JAR("50 wood + 40 stone + 8 coal",
             new HashMap<>(){{
-                //put(ForagingMineralType.Wood,20);
-                //put(ForagingMineralType.Stone,20);
+                put(new GeneralItem(GeneralItemsType.WOOD),20);
+                put(new Stone(),20);
                 put(new ForagingMineral(ForagingMineralType.COAL),8);
             }},
             Ability.farmingAbility,
             2,
             50 , new Texture("Sprites/CraftItems/Preserves_Jar.png")),
-    DEHYDRATOR("30 wood + 20 stone + 30 fiber",
-            new HashMap<>(),
+    DEHYDRATOR("30 wood + 20 stone",
+            new HashMap<>(){{
+                put(new GeneralItem(GeneralItemsType.WOOD),30);
+                put(new Stone(),20);
+            }},
             null,
             0,
             50 , new Texture("Sprites/CraftItems/Dehydrator.png")),
     FISH_SMOKER("50 wood + 3 iron bar + 10 coal",
             new HashMap<>(){{
-                //put(ForagingMineralType.Wood,50);
+                put(new GeneralItem(GeneralItemsType.WOOD),50);
                 put(new ForagingMineral(ForagingMineralType.IRON),3);
                 put(new ForagingMineral(ForagingMineralType.COAL),10);
             }},
             null,
             0,
             50 , new Texture("Sprites/CraftItems/Fish_Smoker.png")),
-    GRASS_STARTER("1 wood + 1 fiber",
-            new HashMap<>(),
+    GRASS_STARTER("1 wood",
+            new HashMap<>(){{
+                put(new GeneralItem(GeneralItemsType.WOOD) , 1);
+            }},
             null,
             0,
             50 , new Texture("Sprites/CraftItems/Grass_Starter.png")

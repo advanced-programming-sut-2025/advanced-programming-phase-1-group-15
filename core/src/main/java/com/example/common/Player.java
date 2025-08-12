@@ -16,8 +16,12 @@ import com.example.common.crafting.CraftItem;
 import com.example.common.crafting.CraftItemType;
 import com.example.common.enums.Direction;
 import com.example.common.enums.Gender;
+import com.example.common.farming.Crop;
+import com.example.common.farming.Crops;
 import com.example.common.farming.GeneralPlants.PloughedPlace;
 import com.example.common.farming.Tree;
+import com.example.common.foraging.ForagingMineral;
+import com.example.common.foraging.ForagingMineralType;
 import com.example.common.foraging.ForagingSeedsType;
 import com.example.common.foraging.Stone;
 import com.example.common.map.AreaType;
@@ -215,6 +219,15 @@ public class Player extends User implements TimeObserver {
         }
         createCraftListRecipe();
         createCookList();
+        for (CraftItem craftItem : availableCraftsRecipe) {
+           if (craftItem.getName().equalsIgnoreCase("keg")) {
+               craftItem.setAvailable(true);
+           }
+        }
+        addToBackPack(new ForagingMineral(ForagingMineralType.COPPER),2);
+        addToBackPack(new ForagingMineral(ForagingMineralType.IRON),2);
+        addToBackPack(new Crop(Crops.COFFEE_BEEN) , 10);
+        addToBackPack(new GeneralItem(GeneralItemsType.WOOD) , 40);
     }
 
     private void askForMarriage(Player player) {
