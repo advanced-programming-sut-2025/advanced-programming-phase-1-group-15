@@ -310,6 +310,7 @@ public class GameView implements Screen {
         game.getDateAndTime().updateDateAndTime(delta);
         updateMessageEmoji(delta);
         updateTradeMessage(delta);
+        updateMessage();
         updateJoja();
         processNotifications(delta);
         processMarriageProposal(delta);
@@ -342,6 +343,7 @@ public class GameView implements Screen {
         starDropSaloonMenu.draw(delta);
         reActMenu.draw(delta);
         tradeMenu.draw(delta);
+        chatMenu.draw(delta);
         for (ArtisanMenu artisan : artisans) {
             artisan.draw(delta);
         }
@@ -373,6 +375,12 @@ public class GameView implements Screen {
         drawClock(batch);
 
         batch.end();
+    }
+    private void updateMessage(){
+        if (game.getCurrentPlayer().isUpdateMessage()){
+            chatMenu.refresh();
+            game.getCurrentPlayer().setUpdateMessage(false);
+        }
     }
     private void updateJoja() {
         if (game.getCurrentPlayer().isUpdateJoja()){
@@ -556,6 +564,7 @@ public class GameView implements Screen {
         starDropSaloonMenu.dispose();
         reActMenu.dispose();
         tradeMenu.dispose();
+        chatMenu.dispose();
         for (ArtisanMenu artisan : artisans) {
             artisan.dispose();
         }

@@ -304,6 +304,9 @@ public class CookingMenu {
                     found = false;
                     game.getCurrentPlayer().getInventory().removeCountFromBackPack(game.getCurrentPlayer().getInventory().getItemByName(item.getName()) , temp);
                 }
+                else {
+                    game.getCurrentPlayer().getInventory().removeCountFromBackPack(game.getCurrentPlayer().getInventory().getItemByName(item.getName()) , num);
+                }
             }
             if (!found) {
                 game.getCurrentPlayer().getFridge().removeCountFromFridge(game.getCurrentPlayer().getFridge().getItemByName(item.getName()) , num-temp);

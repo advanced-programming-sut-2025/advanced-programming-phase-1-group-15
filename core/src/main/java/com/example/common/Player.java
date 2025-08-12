@@ -48,7 +48,7 @@ public class Player extends User implements TimeObserver {
     private Sprite activeEmoji = null;
     private String message = null;
     private float emojiTimer = 5f;
-    private float tradeTimer = 7f;
+    private float tradeTimer = 10f;
     TextureRegion face, faintedAnimation;
     Animation<TextureRegion> walkUpAnimation;
     Animation<TextureRegion> walkDownAnimation;
@@ -716,7 +716,7 @@ public class Player extends User implements TimeObserver {
             tradeTimer -= delta;
             if (tradeTimer <= 0) {
                 newTrade = false;
-                tradeTimer = 5f;
+                tradeTimer = 10f;
             }
         }
     }

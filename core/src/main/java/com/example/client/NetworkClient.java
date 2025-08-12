@@ -108,7 +108,7 @@ public class NetworkClient {
                         byte[] buf = new byte[len];
                         in.readFully(buf);
                         String receivedStr = new String(buf, StandardCharsets.UTF_8);
-                        System.out.println("RECV len=" + len + " json=" + receivedStr);
+                        // System.out.println("RECV len=" + len + " json=" + receivedStr);
 
                         Message msg;
                         try {

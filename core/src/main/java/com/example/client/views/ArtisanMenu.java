@@ -273,7 +273,7 @@ public class ArtisanMenu {
             }
         }
         if (player.getFridge().getItemByName(item.getName()) != null) {
-            if ((player.getFridge().getItemCount(item.getName()+num)<number)) {
+            if ((player.getFridge().getItemCount(item.getName())+num)<number) {
                 return false;
             }
             if (num == 0){

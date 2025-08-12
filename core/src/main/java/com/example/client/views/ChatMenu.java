@@ -16,11 +16,19 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
+import com.example.client.NetworkClient;
 import com.example.common.Game;
+import com.example.common.Message;
+import com.example.common.Player;
 import com.example.common.cooking.Food;
 import com.example.common.cooking.FoodType;
 import com.example.common.tools.BackPackable;
 import com.example.common.tools.Fridge;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 public class ChatMenu {
     private final Stage stage;
@@ -103,16 +111,73 @@ public class ChatMenu {
     }
     private Table createCookingContent() {
         Table table = new Table(skin);
-//        ScrollPane scrollPane = new ScrollPane(itemTable, skin);
-//        scrollPane.setFadeScrollBars(false);
-//        scrollPane.setScrollingDisabled(true, false);
+        ArrayList<String> publicChat = new ArrayList<>(game.getCurrentPlayer().getPublicChat());
+        Collections.reverse(publicChat);
+        List<String> itemList = new List<>(skin);
+        String[] items = publicChat.toArray(new String[0]);
+        itemList.setItems(items);
+        ScrollPane scrollPane = new ScrollPane(itemList, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        table.add(scrollPane).expand().fill().pad(10).row();
+        TextField Message = new TextField("Enter Message", skin);
+        Message.getStyle().fontColor = Color.BLACK;
+        table.add(Message).left().width(800).row();
+        TextButton sendButton = new TextButton("Send", skin);
+        sendButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                HashMap<String , Object> body = new HashMap<>();
+                body.put("action", "chat");
+                body.put("username", game.getCurrentPlayer().getUsername());
+                body.put("type", "public");
+                body.put("message" ,game.getCurrentPlayer().getUsername()+": "+ Message.getText());
+                NetworkClient.get().sendMessage(new Message(body , com.example.common.Message.Type.COMMAND));
+                game.getCurrentPlayer().getPublicChat().add(Message.getText());
+                game.getCurrentPlayer().setUpdateMessage(true);
+            }
+        });
+        table.add(sendButton).right().pad(10).row();
         return table;
     }
     private Table createFridgeContent() {
         Table table = new Table(skin);
-//        ScrollPane scrollPane = new ScrollPane(itemTable, skin);
-//        scrollPane.setFadeScrollBars(false);
-//        scrollPane.setScrollingDisabled(true, false);
+        Label errorLabel = new Label("", skin);
+        errorLabel.setColor(Color.RED);
+        ArrayList<String> privateChat = new ArrayList<>(game.getCurrentPlayer().getPrivateChat());
+        Collections.reverse(privateChat);
+        List<String> itemList = new List<>(skin);
+        String[] items = privateChat.toArray(new String[0]);
+        itemList.setItems(items);
+        ScrollPane scrollPane = new ScrollPane(itemList, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        table.add(scrollPane).expand().fill().pad(10).row();
+        TextField Message = new TextField("Enter Message", skin);
+        TextField Username = new TextField("Username", skin);
+        Message.getStyle().fontColor = Color.BLACK;
+        Username.getStyle().fontColor = Color.BLACK;
+        table.add(Message).left().width(800).row();
+        table.add(Username).left().width(400).row();
+        TextButton sendButton = new TextButton("Send", skin);
+        sendButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                Player player = game.getPlayerByUsername(Username.getText());
+                if (player != null) {
+                    showError("User not find" , errorLabel);
+                }
+                HashMap<String , Object> body = new HashMap<>();
+                body.put("action", "chat");
+                body.put("username", game.getCurrentPlayer().getUsername());
+                body.put("target", Username.getText());
+                body.put("type", "private");
+                body.put("message" , game.getCurrentPlayer().getUsername()+": "+Message.getText());
+                game.getCurrentPlayer().getPrivateChat().add(Message.getText()+"    to:"+Username.getText());
+                game.getCurrentPlayer().setUpdateMessage(true);
+                NetworkClient.get().sendMessage(new Message(body , com.example.common.Message.Type.COMMAND));
+            }
+        });
+        table.add(errorLabel).expand().fill().row();
+        table.add(sendButton).right().pad(10).row();
         return table;
     }
     public boolean isVisible() {
@@ -144,7 +209,7 @@ public class ChatMenu {
         stage.dispose();
         skin.dispose();
     }
-    private void refresh() {
+    public void refresh() {
         recipe.clear(); fridge.clear();
         recipe.add(createCookingContent()).expand().fill();
         fridge.add(createFridgeContent()).expand().fill();
@@ -153,53 +218,6 @@ public class ChatMenu {
         recipe.setVisible(false);
         fridge.setVisible(false);
         content.setVisible(true);
-    }
-    public boolean isAvailable(Food food) {
-        if (game.getCurrentPlayer().getInventory().checkFilled()) {
-            return false;
-        }
-        for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
-            boolean found = false;
-            int temp = 0;
-            int num  = food.getFoodType().getIngredients().get(item);
-            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
-                int total = game.getCurrentPlayer().getInventory().getItemCount(item.getName());
-                if(total >= num){
-                    found = true;
-                }
-                temp = total;
-            }
-            if (!found) {
-                if (game.getCurrentPlayer().getFridge().getItemByName(item.getName()) != null) {
-                    found = true;
-                    int total = game.getCurrentPlayer().getFridge().getItemCount(item.getName());
-                    if ((total+temp) < num) {
-                        return false;
-                    }
-                }
-            }
-            if (!found) {
-                return false;
-            }
-        }
-        for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
-            boolean found = false;
-            int num  = food.getFoodType().getIngredients().get(item);
-            int temp = 0;
-            if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
-                found = true;
-                temp = game.getCurrentPlayer().getInventory().getItemCount(item.getName());
-                if (temp< num) {
-                    found = false;
-                    game.getCurrentPlayer().getInventory().removeCountFromBackPack(game.getCurrentPlayer().getInventory().getItemByName(item.getName()) , temp);
-                }
-            }
-            if (!found) {
-                game.getCurrentPlayer().getFridge().removeCountFromFridge(game.getCurrentPlayer().getFridge().getItemByName(item.getName()) , num-temp);
-            }
-        }
-        game.getCurrentPlayer().getInventory().addToBackPack(food,1);
-        return true;
     }
     private void showError(String message, Label errorLabel) {
         errorLabel.setText(message);
