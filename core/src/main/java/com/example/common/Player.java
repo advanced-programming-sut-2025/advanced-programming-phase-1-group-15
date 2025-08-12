@@ -20,10 +20,7 @@ import com.example.common.farming.Crop;
 import com.example.common.farming.Crops;
 import com.example.common.farming.GeneralPlants.PloughedPlace;
 import com.example.common.farming.Tree;
-import com.example.common.foraging.ForagingMineral;
-import com.example.common.foraging.ForagingMineralType;
-import com.example.common.foraging.ForagingSeedsType;
-import com.example.common.foraging.Stone;
+import com.example.common.foraging.*;
 import com.example.common.map.AreaType;
 import com.example.common.map.Farm;
 import com.example.common.map.Map;
@@ -657,8 +654,13 @@ public class Player extends User implements TimeObserver {
                 if(tile.isPlowed()||tile.getAreaType() == AreaType.GREENHOUSE){
                     continue;
                 }
-                if(RandomGenerator.getInstance().randomInt(0,100)==1){
-                    ForagingSeedsType.getSeasonForagingSeed(ClientApp.currentGame.getDateAndTime().getSeason());
+//                if(RandomGenerator.getInstance().randomInt(0,100)<=2){
+//                    ForagingSeedsType f=  ForagingSeedsType.getSeasonForagingSeed(ClientApp.currentGame.getDateAndTime().getSeason());
+//                    tile.setObjectInTile(new ForagingSeeds(f));
+//                }
+                if(RandomGenerator.getInstance().randomInt(0,1000) == 1){
+                    ForagingCropsType f = ForagingCropsType.getSeasonForagingCrop(ClientApp.currentGame.getDateAndTime().getSeason());
+                    tile.setObjectInTile(new ForagingCrop(f));
                 }
             }
         }
@@ -830,4 +832,6 @@ public class Player extends User implements TimeObserver {
     public void setMarriageAsker(Player marriageAsker) {
         this.marriageAsker = marriageAsker;
     }
+
+
 }

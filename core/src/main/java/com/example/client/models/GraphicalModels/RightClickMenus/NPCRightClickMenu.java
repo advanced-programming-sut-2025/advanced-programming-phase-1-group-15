@@ -44,7 +44,7 @@ public class NPCRightClickMenu extends RightClickMenu {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 showTalkDialog();
-                hide();
+                //hide();
             }
         });
 

@@ -347,7 +347,7 @@ public class GameView implements Screen {
         }
 
         sinceLastInfoUpdate += delta;
-        if(sinceLastInfoUpdate >= 2){
+        if(sinceLastInfoUpdate >= 1){
             if(scoreboardWidget.isVisible()){
                 game.notifyOthersScoreInfo();
             }
@@ -596,6 +596,7 @@ public class GameView implements Screen {
         for(int row = 0; row < Map.ROWS; row++){
             for(int col = 0; col < Map.COLS; col++){
                 Tile toBePrinted = ClientApp.currentGame.getMap().getTile(row, col);
+
                 printTileArea(toBePrinted,
                     (col) * tileSideLength,
                     (row) * tileSideLength,

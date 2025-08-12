@@ -173,7 +173,7 @@ public enum ForagingCropsType {
                 possibleCrops.add(crop);
             }
         }
-        int randomIndex = RandomGenerator.getInstance().randomInt(0,possibleCrops.size());
+        int randomIndex = RandomGenerator.getInstance().randomInt(0,possibleCrops.size()-1);
         return possibleCrops.get(randomIndex);
     }
     public String getName(){

@@ -40,6 +40,39 @@ public class CheatCodeController {
 
             return CheatCodeController.cheatAdvanceDate(days);
         }
+        else if(CheatCodeCommands.SET_FARMING_ABILITY.matches(command)) {
+            Matcher matcher =  CheatCodeCommands.SET_FARMING_ABILITY.matcher(command);
+            matcher.matches();
+            String username = matcher.group("username");
+            int amount = Integer.parseInt(matcher.group("amount"));
+            ClientApp.currentGame.getPlayerByUsername(username).setFarmingLevel(amount);
+            return new Result(true,"ok");
+
+        }
+        else if(CheatCodeCommands.SET_FISHING_ABILITY.matches(command)){
+            Matcher matcher =  CheatCodeCommands.SET_FISHING_ABILITY.matcher(command);
+            matcher.matches();
+            String username = matcher.group("username");
+            int amount = Integer.parseInt(matcher.group("amount"));
+            ClientApp.currentGame.getPlayerByUsername(username).setFishingLevel(amount);
+            return new Result(true,"ok");
+        }
+        else if(CheatCodeCommands.SET_MINING_ABILITY.matches(command)) {
+            Matcher matcher =  CheatCodeCommands.SET_MINING_ABILITY.matcher(command);
+            matcher.matches();
+            String username = matcher.group("username");
+            int amount = Integer.parseInt(matcher.group("amount"));
+            ClientApp.currentGame.getPlayerByUsername(username).setMiningLevel(amount);
+            return new Result(true,"ok");
+        }
+        else if(CheatCodeCommands.SET_FORAGING_ABILITY.matches(command)) {
+            Matcher matcher =  CheatCodeCommands.SET_FISHING_ABILITY.matcher(command);
+            matcher.matches();
+            String username = matcher.group("username");
+            int amount = Integer.parseInt(matcher.group("amount"));
+            ClientApp.currentGame.getPlayerByUsername(username).setForagingLevel(amount);
+            return new Result(true,"ok");
+        }
         else if(CheatCodeCommands.WEATHER_SET_REGEX.matches(command)) {
             Matcher matcher = CheatCodeCommands.WEATHER_SET_REGEX.matcher(command);
 

@@ -130,7 +130,6 @@ public class GameAssetManager {
     chanterelle,hazelnut,purple_mushroom,wild_plum,crocus,crystal_fruit,holley,snow_yam,winter_root;
 
     // foraging trees
-    //public static Sprite
 
 
     public static void load() {
@@ -729,6 +728,7 @@ public class GameAssetManager {
         holley = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Holly.png")));
         snow_yam = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Snow_Yam.png")));
         winter_root = new Sprite(new Texture(Gdx.files.internal("Sprites/Foraging/Winter_Root.png")));
+
 
         //emoji
         angry = new Sprite(new Texture("Sprites/Emoji/angry.png"));

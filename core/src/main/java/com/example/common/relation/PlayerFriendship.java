@@ -40,7 +40,7 @@ public class PlayerFriendship implements TimeObserver {
     Player player1;
     Player player2;
     private int xp = 0;
-    private int level = 4;
+    private int level = 1;
     private boolean marry = false;
 
     boolean talkToday;
