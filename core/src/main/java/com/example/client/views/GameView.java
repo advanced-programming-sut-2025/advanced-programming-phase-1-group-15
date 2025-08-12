@@ -13,12 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.example.client.Main;
-import com.example.client.controllers.ClientGameListener;
 import com.example.client.models.GraphicalModels.*;
 import com.example.client.models.GraphicalModels.PopUpMenus.*;
 import com.example.common.map.Area;
@@ -331,11 +329,13 @@ public class GameView implements Screen {
             artisan.draw(delta);
         }
 
-//        sinceLastInfoUpdate += delta;
-//        if(sinceLastInfoUpdate >= 60){
-//            game.notifyOthersScoreInfo();
-//            sinceLastInfoUpdate = 0;
-//        }
+        sinceLastInfoUpdate += delta;
+        if(sinceLastInfoUpdate >= 2){
+            if(scoreboardWidget.isVisible()){
+                game.notifyOthersScoreInfo();
+            }
+            sinceLastInfoUpdate = 0;
+        }
     }
     private void renderMap(SpriteBatch batch) {
         mapCamera.setPlayer(game.getCurrentPlayer());
@@ -823,22 +823,30 @@ public class GameView implements Screen {
                     }
                     NPC clickedNPC = getNPCAtPosition(tileX, tileY);
                     if (clickedNPC != null && clickedNPC.hasMessageForToday(ClientApp.currentGame.getCurrentPlayer())) {
-                        String message = clickedNPC.meet(ClientApp.currentGame.getCurrentPlayer());
 
-                        Dialog messageDialog = new Dialog("Message from " + clickedNPC.getName(), skin) {
-                            @Override
-                            protected void result(Object object) {
-                                restoreGameInput();
+                        Dialog loadingDialog = new Dialog("", skin);
+                        loadingDialog.text("Talking to " + clickedNPC.getName() + "...");
+                        loadingDialog.show(uiStage);
+
+                        Gdx.input.setInputProcessor(loadingDialog.getStage());
+
+                        clickedNPC.meetAsync(ClientApp.currentGame.getCurrentPlayer(),
+                            (message ) -> {
+                                Gdx.app.postRunnable(() -> {
+                                    loadingDialog.hide();
+                                    showMessageDialog(clickedNPC.getName(), message);
+                                });
+                            },
+                            (error) -> {
+                                Gdx.app.postRunnable(() -> {
+                                    loadingDialog.hide();
+                                    showMessageDialog(clickedNPC.getName(), "Sorry, I can't talk right now. Try again later!");
+                                });
                             }
-                        };
-                        messageDialog.text(message);
-                        messageDialog.button("OK");
-                        messageDialog.show(uiStage);
+                        );
 
-                        Gdx.input.setInputProcessor(messageDialog.getStage());
                         return true;
                     }
-                    // Regular left-click handling for adjacent tiles
                     if(checkCursorInAdjacent()) {
                         if(clickedTile.getArea() instanceof GreenHouse greenHouse && !greenHouse.isBuilt()){
                             popUpMenu = new GreenHouseMenu(skin, "Repair GREENHOUSE", this::restoreGameInput);
@@ -922,12 +930,27 @@ public class GameView implements Screen {
                 }
                 NPC clickedNPC = getNPCAtPosition(tileX, tileY);
                 if (clickedNPC != null && clickedNPC.hasMessageForToday(ClientApp.currentGame.getCurrentPlayer())) {
-                    String message = clickedNPC.meet(ClientApp.currentGame.getCurrentPlayer());
 
-                    Dialog messageDialog = new Dialog("Message from " + clickedNPC.getName(), skin);
-                    messageDialog.text(message);
-                    messageDialog.button("OK");
-                    messageDialog.show(uiStage);
+                    Dialog loadingDialog = new Dialog("", skin);
+                    loadingDialog.text("Talking to " + clickedNPC.getName() + "...");
+                    loadingDialog.show(uiStage);
+
+                    Gdx.input.setInputProcessor(loadingDialog.getStage());
+
+                    clickedNPC.meetAsync(ClientApp.currentGame.getCurrentPlayer(),
+                        (message ) -> {
+                            Gdx.app.postRunnable(() -> {
+                                loadingDialog.hide();
+                                showMessageDialog(clickedNPC.getName(), message);
+                            });
+                        },
+                        (error) -> {
+                            Gdx.app.postRunnable(() -> {
+                                loadingDialog.hide();
+                                showMessageDialog(clickedNPC.getName(), "Sorry, I can't talk right now. Try again later!");
+                            });
+                        }
+                    );
 
                     return true;
                 }
@@ -1089,6 +1112,20 @@ public class GameView implements Screen {
 
         Player currentPlayer = game.getCurrentPlayer();
         currentPlayer.setNotifiedForMarriage(false);
+    }
+
+    private void showMessageDialog(String npcName, String message) {
+        Dialog messageDialog = new Dialog("Message from " + npcName, skin) {
+            @Override
+            protected void result(Object object) {
+                restoreGameInput();
+            }
+        };
+        messageDialog.text(message);
+        messageDialog.button("OK");
+        messageDialog.show(uiStage);
+
+        Gdx.input.setInputProcessor(messageDialog.getStage());
     }
 
     public void setPopUpMenu(PopUpMenu popUpMenu) {

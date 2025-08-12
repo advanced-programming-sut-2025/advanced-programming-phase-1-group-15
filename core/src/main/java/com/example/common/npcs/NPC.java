@@ -17,21 +17,22 @@ import com.example.server.models.OllamaClient;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class NPC implements TimeObserver {
     protected String name;
     protected String job;
-    private String personality;
+    private final String personality;
     private Tile homeLocation;
     private int lastDayUpdate = ClientApp.currentGame.getDateAndTime().getDay();
-    private TextureRegion sprite;
+    private final TextureRegion sprite;
 
     protected ArrayList<BackPackable> favourites = new ArrayList<>();
-    protected HashMap<Quest,Integer> questTemplates = new HashMap<>();
+    protected HashMap<Quest, Integer> questTemplates = new HashMap<>();
     protected HashMap<Player, NPCFriendShip> friendships = new HashMap<>();
 
     private HashMap<Player, List<String>> interactionHistory = new HashMap<>();
-    private boolean useLLM = true;
+    private final boolean useLLM = false;
     private int maxHistoryEntries = 10;
 
     public NPC(String name, String job, Tile homeLocation, TextureRegion sprite) {
@@ -64,29 +65,59 @@ public class NPC implements TimeObserver {
             interactionHistory.putIfAbsent(player, new ArrayList<>());
             return new NPCFriendShip(this, player);
         });
+
         boolean firstInteractionToday = !fs.hasTalkedToday();
         if (firstInteractionToday) {
             fs.addPoints(20);
             fs.markTalked();
         }
-        String response;
-        if (useLLM) {
-            response = generateLLMResponse(player, "talk");
-        } else {
-            response = generateTraditionalGreeting(fs);
-        }
+
+        String response = generateTraditionalGreeting(fs);
         recordInteraction(player, "Player talked to " + name + ". " + name + " responded: " + response);
         return response;
+    }
+
+    public void meetAsync(Player player, Consumer<String> onSuccess, Consumer<String> onError) {
+        NPCFriendShip fs = friendships.computeIfAbsent(player, k -> {
+            interactionHistory.putIfAbsent(player, new ArrayList<>());
+            return new NPCFriendShip(this, player);
+        });
+
+        boolean firstInteractionToday = !fs.hasTalkedToday();
+        if (firstInteractionToday) {
+            fs.addPoints(20);
+            fs.markTalked();
+        }
+
+        if (useLLM) {
+            String context = buildContextForLLM(player);
+            OllamaClient.generateNPCDialogAsync(name, job, context)
+                .whenComplete((response, throwable) -> {
+                    if (throwable != null) {
+                        System.err.println("Ollama API call failed: " + throwable.getMessage());
+                        onError.accept(generateTraditionalGreeting(fs));
+                    } else {
+                        recordInteraction(player, "Player talked to " + name + ". " + name + " responded: " + response);
+                        onSuccess.accept(response);
+                    }
+                });
+        } else {
+            String response = generateTraditionalGreeting(fs);
+            recordInteraction(player, "Player talked to " + name + ". " + name + " responded: " + response);
+            onSuccess.accept(response);
+        }
     }
 
     public String gift(Player player, BackPackable item) {
         if (item instanceof Tool) {
             return "Cannot gift tools to NPCs";
         }
+
         NPCFriendShip friendShip = friendships.computeIfAbsent(player, k -> {
             interactionHistory.putIfAbsent(player, new ArrayList<>());
             return new NPCFriendShip(this, player);
         });
+
         boolean firstGiftToday = !friendShip.hasGiftedToday();
         int pointsGained = 0;
 
@@ -101,14 +132,10 @@ public class NPC implements TimeObserver {
         }
 
         String response;
-        if (useLLM) {
-            response = generateLLMResponse(player, "gift:" + item.getName() + ":" + (favourites.contains(item) ? "favorite" : "normal"));
+        if (favourites.contains(item)) {
+            response = "Thank you for your gift! 200 points added to our friendship!";
         } else {
-            if (favourites.contains(item)) {
-                response = "Thank you for your gift! 200 points added to our friendship!";
-            } else {
-                response = "Thank you for your gift! 50 points added to our friendship!";
-            }
+            response = "Thank you for your gift! 50 points added to our friendship!";
         }
 
         recordInteraction(player, "Player gave " + item.getName() + " to " + name + ". " +
@@ -116,21 +143,7 @@ public class NPC implements TimeObserver {
         return response;
     }
 
-    private String generateLLMResponse(Player player, String interactionType) {
-        try {
-            String context = buildContextForLLM(player, interactionType);
-            return OllamaClient.generateNPCDialog(name, job, context);
-        } catch (Exception e) {
-            e.printStackTrace();
-            NPCFriendShip fs = friendships.get(player);
-            if (fs != null) {
-                return generateTraditionalGreeting(fs);
-            }
-            return "Hello there!";
-        }
-    }
-
-    private String buildContextForLLM(Player player, String interactionType) {
+    private String buildContextForLLM(Player player) {
         StringBuilder context = new StringBuilder();
 
         context.append("Character: You are ").append(name).append(", a ").append(job).append(".\n");
@@ -153,17 +166,6 @@ public class NPC implements TimeObserver {
             }
             if (friendship.hasGiftedToday()) {
                 context.append("This player has already given you a gift today.\n");
-            }
-        }
-
-        if (interactionType.startsWith("gift:")) {
-            String[] parts = interactionType.split(":");
-            String itemName = parts[1];
-            String giftType = parts[2];
-
-            context.append("The player is giving you a ").append(itemName).append(".\n");
-            if ("favorite".equals(giftType)) {
-                context.append("This is one of your favorite items!\n");
             }
         }
 
@@ -192,18 +194,15 @@ public class NPC implements TimeObserver {
     }
 
     private String generateTraditionalGreeting(NPCFriendShip fs) {
-        StringBuilder message = new StringBuilder();
 
-        message.append(getHiBasedOnFriendShipLevel(fs));
-        message.append("it's ")
-            .append(getWeatherDescriptor(ClientApp.currentGame.getWeather().getCurrentWeather()))
-            .append(" ")
-            .append(getTimeOfDayPhrase())
-            .append(" of ")
-            .append(getSeasonPhrase())
-            .append(", isn't it?");
-
-        return message.toString();
+        return getHiBasedOnFriendShipLevel(fs) +
+            "it's " +
+            getWeatherDescriptor(ClientApp.currentGame.getWeather().getCurrentWeather()) +
+            " " +
+            getTimeOfDayPhrase() +
+            " of " +
+            getSeasonPhrase() +
+            ", isn't it?";
     }
 
     private void recordInteraction(Player player, String interaction) {
@@ -224,22 +223,21 @@ public class NPC implements TimeObserver {
     }
 
     private String getHiBasedOnFriendShipLevel(NPCFriendShip fs) {
-        switch (fs.getLevel()) {
-            case 0: return "Hello, ";
-            case 1: return "Hi my friend, ";
-            case 2: return "Hi bro, ";
-            default: return "Hey bestie, ";
-        }
+        return switch (fs.getLevel()) {
+            case 0 -> "Hello, ";
+            case 1 -> "Hi my friend, ";
+            case 2 -> "Hi bro, ";
+            default -> "Hey bestie, ";
+        };
     }
 
     private String getWeatherDescriptor(WeatherOption weather) {
-        switch (weather) {
-            case SUNNY: return "a good sunny";
-            case SNOW:  return "a snowy";
-            case RAINY: return "a rainy";
-            case STORM: return "a stormy";
-            default:    return "nice";
-        }
+        return switch (weather) {
+            case SUNNY -> "a good sunny";
+            case SNOW -> "a snowy";
+            case RAINY -> "a rainy";
+            case STORM -> "a stormy";
+        };
     }
 
     private String getTimeOfDayPhrase() {
@@ -260,12 +258,6 @@ public class NPC implements TimeObserver {
         questTemplates.put(questObj, level);
     }
 
-    public String showQuests(Player player) {
-        NPCFriendShip fs = friendships.get(player);
-        if (fs != null) return fs.showQuests();
-        return "no quest for this player";
-    }
-
     public String finishQuest(Player player, Quest quest) {
         NPCFriendShip fs = friendships.get(player);
         if (fs != null) {
@@ -284,18 +276,20 @@ public class NPC implements TimeObserver {
 
     @Override
     public void update(DateAndTime dateAndTime) {
-        if(lastDayUpdate != dateAndTime.getDay()){
+        if (lastDayUpdate != dateAndTime.getDay()) {
             lastDayUpdate = dateAndTime.getDay();
 
-            for(NPCFriendShip fs : friendships.values()){
+            for (NPCFriendShip fs : friendships.values()) {
                 fs.resetDaily();
 
-                if(fs.getLevel() >= 3){
-                    if(RandomGenerator.getInstance().randomInt(0,21) % 2 == 0){
-                        BackPackable gift = favourites.get(RandomGenerator.getInstance().randomInt(0,favourites.size()-1));
-                        fs.player.getInventory().addToBackPack(gift, 1);
-                        fs.markDailyGiftReceived();
-                        recordInteraction(fs.player, name + " gave a daily gift: " + gift.getName());
+                if (fs.getLevel() >= 3) {
+                    if (RandomGenerator.getInstance().randomInt(0, 21) % 2 == 0) {
+                        if (!favourites.isEmpty()) {
+                            BackPackable gift = favourites.get(RandomGenerator.getInstance().randomInt(0, favourites.size() - 1));
+                            fs.player.getInventory().addToBackPack(gift, 1);
+                            fs.markDailyGiftReceived();
+                            recordInteraction(fs.player, name + " gave a daily gift: " + gift.getName());
+                        }
                     }
                 }
 
@@ -324,8 +318,7 @@ public class NPC implements TimeObserver {
         NPCFriendShip friendship = friendships.get(player);
         if (friendship == null) return true;
 
-        boolean hasntTalkedToday = !friendship.hasTalkedToday();
-        return hasntTalkedToday;
+        return !friendship.hasTalkedToday();
     }
 
     public String getInteractionSummary(Player player) {
@@ -374,31 +367,5 @@ public class NPC implements TimeObserver {
     public ArrayList<BackPackable> getFavourites() {
         return favourites;
     }
-    public void setUseLLM(boolean useLLM) {
-        this.useLLM = useLLM;
-    }
 
-    public boolean isUsingLLM() {
-        return useLLM;
-    }
-
-    public void setPersonality(String personality) {
-        this.personality = personality;
-    }
-
-    public String getPersonality() {
-        return personality;
-    }
-
-    public List<String> getInteractionHistory(Player player) {
-        return interactionHistory.getOrDefault(player, new ArrayList<>());
-    }
-
-    public void clearInteractionHistory(Player player) {
-        interactionHistory.remove(player);
-    }
-
-    public void setMaxHistoryEntries(int maxHistoryEntries) {
-        this.maxHistoryEntries = maxHistoryEntries;
-    }
 }

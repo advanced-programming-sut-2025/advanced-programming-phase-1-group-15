@@ -1,103 +1,145 @@
 package com.example.server.models;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+/**
+ * Thin wrapper around a local Ollama HTTP API.
+ * Calls are executed off the main thread and return CompletableFuture results.
+ */
 public class OllamaClient {
     private static final String OLLAMA_API_URL = "http://localhost:11434/api/generate";
-    private static final String MODEL = "llama3"; // or your custom fine-tuned model
+    private static final String MODEL = "llama3"; // replace with your model tag if needed
+
     private static final HttpClient client = HttpClient.newBuilder()
-        .connectTimeout(Duration.ofSeconds(10))
+        .connectTimeout(Duration.ofSeconds(60))
         .build();
+
     private static final Gson gson = new Gson();
 
-    public static String generateNPCDialog(String npcName, String npcJob, String context) {
-        try {
-            String prompt = buildPrompt(npcName, npcJob, context);
+    private static final ExecutorService executor = Executors.newFixedThreadPool(4);
 
-            JsonObject requestJson = new JsonObject();
-            requestJson.addProperty("model", MODEL);
-            requestJson.addProperty("prompt", prompt);
-            requestJson.addProperty("stream", false);
+    /**
+     * Generate an NPC dialog asynchronously. Returns a CompletableFuture that completes
+     * with the trimmed NPC response or completes exceptionally on failure.
+     */
+    public static CompletableFuture<String> generateNPCDialogAsync(String npcName, String npcJob, String context) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                System.out.println("Preparing prompt for " + npcName + "...");
+                String prompt = buildPrompt(npcName, npcJob, context);
+                System.out.println("Prompt length: " + prompt.length());
 
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(OLLAMA_API_URL))
-                .header("Content-Type", "application/json")
-                .timeout(Duration.ofSeconds(30))
-                .POST(HttpRequest.BodyPublishers.ofString(requestJson.toString()))
-                .build();
+                JsonObject requestJson = new JsonObject();
+                requestJson.addProperty("model", MODEL);
+                requestJson.addProperty("prompt", prompt);
+                requestJson.addProperty("stream", false);
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                requestJson.addProperty("num_predict", 50);
+                requestJson.addProperty("temperature", 0.7);
+                requestJson.addProperty("top_p", 0.9);
+                requestJson.addProperty("top_k", 40);
+                requestJson.addProperty("stop", "\n");
 
-            if (response.statusCode() == 200) {
-                return parseOllamaResponse(response.body());
-            } else {
-                System.err.println("Ollama API error: " + response.statusCode() + " - " + response.body());
-                return getFallbackResponse(npcName);
+                HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(OLLAMA_API_URL))
+                    .header("Content-Type", "application/json")
+                    .timeout(Duration.ofSeconds(60))
+                    .POST(HttpRequest.BodyPublishers.ofString(requestJson.toString()))
+                    .build();
+
+                System.out.println("Sending request to Ollama...");
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() == 200) {
+                    System.out.println("Ollama responded successfully.");
+                    return parseOllamaResponse(response.body());
+                } else {
+                    String errorMsg = "Ollama API error: " + response.statusCode() + " - " + response.body();
+                    System.err.println(errorMsg);
+                    throw new RuntimeException(errorMsg);
+                }
+            } catch (Exception e) {
+                System.err.println("Exception during Ollama call: " + e.getMessage());
+                e.printStackTrace();
+                throw new RuntimeException("Failed to generate dialog", e);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return getFallbackResponse(npcName);
-        }
+        }, executor);
     }
 
+    /**
+     * Build a simple, human-friendly prompt. Kept concise to reduce token usage.
+     */
     private static String buildPrompt(String npcName, String npcJob, String context) {
-        StringBuilder prompt = new StringBuilder();
 
-        prompt.append("You are role playing as ").append(npcName).append(", a ")
-            .append(npcJob).append(" in a farming/life simulation game.\n\n");
-        prompt.append("CONTEXT:\n").append(context).append("\n\n");
-        prompt.append("RESPONSE RULES:\n");
-        prompt.append("1. Stay in character as ").append(npcName).append("\n");
-        prompt.append("2. Respond naturally based on the given context\n");
-        prompt.append("3. Keep responses conversational and engaging\n");
-        prompt.append("4. Reference the weather, time, season, or relationship level when appropriate\n");
-        prompt.append("5. Show personality and emotion\n");
-        prompt.append("6. Keep the response between 10-25 words\n");
-        prompt.append("7. Do not break character or mention you are an AI\n");
-        prompt.append("8. If receiving a gift, react appropriately (excited for favorites, grateful for others)\n\n");
-        prompt.append("Respond as ").append(npcName).append(":");
-
-        return prompt.toString();
+        return "You are " + npcName + ", a " + npcJob + " in a farming game.\n\n" +
+            "Context: " + context + "\n\n" +
+            "Guidelines:\n" +
+            "- Keep responses short (roughly 10-25 words).\n" +
+            "- Stay in character as " + npcName + ".\n" +
+            "- Be friendly and natural.\n" +
+            "- Use the context when it helps the reply.\n\n" +
+            npcName + " says:";
     }
 
-
+    /**
+     * Try to extract a response field, otherwise fall back to scanning lines for response objects.
+     * The result is normalized to a single-line string and truncated if excessively long.
+     */
     private static String parseOllamaResponse(String json) {
         try {
             JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
-            if (jsonObject.has("response")) {
+            if (jsonObject != null && jsonObject.has("response")) {
                 String response = jsonObject.get("response").getAsString().trim();
-
-                response = response.replaceAll("^[\"']|[\"']$", "");
-                response = response.replaceAll("\\n+", " ");
-                response = response.replaceAll("\\s+", " ");
-
+                response = normalizeResponse(response);
                 return response.isEmpty() ? getFallbackResponse("NPC") : response;
             }
         } catch (Exception e) {
-            System.err.println("Error parsing Ollama response: " + e.getMessage());
+            System.err.println("Error parsing top-level Ollama response: " + e.getMessage());
+            e.printStackTrace();
         }
 
-        StringBuilder sb = new StringBuilder();
+        // Fallback: try reading line-by-line for JSON objects (streaming or multi-line responses).
+        StringBuilder collected = new StringBuilder();
         for (String line : json.split("\n")) {
             if (line.trim().isEmpty()) continue;
             try {
                 JsonObject lineJson = gson.fromJson(line, JsonObject.class);
-                if (lineJson.has("response")) {
-                    sb.append(lineJson.get("response").getAsString());
+                if (lineJson != null && lineJson.has("response")) {
+                    JsonElement el = lineJson.get("response");
+                    if (el != null) collected.append(el.getAsString());
                 }
             } catch (Exception ignored) {
+                // ignore parse errors on individual lines
             }
         }
 
-        String result = sb.toString().trim();
+        String result = normalizeResponse(collected.toString());
         return result.isEmpty() ? getFallbackResponse("NPC") : result;
+    }
+
+    private static String normalizeResponse(String response) {
+        if (response == null) return "";
+        response = response.replaceAll("^[\"']|[\"']$", "");
+        response = response.replaceAll("\\n+", " ");
+        response = response.replaceAll("\\s+", " ").trim();
+
+        if (response.length() > 150) {
+            int lastSpace = response.substring(0, 150).lastIndexOf(' ');
+            response = response.substring(0, lastSpace > 0 ? lastSpace : 150) + "...";
+        }
+
+        return response;
     }
 
     private static String getFallbackResponse(String npcName) {
@@ -116,49 +158,55 @@ public class OllamaClient {
         return fallbacks[index];
     }
 
-    public static boolean testConnection() {
+    public static void warmUpModel() {
+        System.out.println("Warming up model " + MODEL + "...");
         try {
+            generateNPCDialogAsync("Test", "villager", "This is a warmup request.")
+                .thenAccept(response -> System.out.println("Model warmup complete with response: " + response))
+                .exceptionally(ex -> {
+                    System.err.println("Model warmup failed: " + ex.getMessage());
+                    return null;
+                }).join();
+        } catch (Exception e) {
+            System.err.println("Model warmup failed unexpectedly: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private static String generateNPCDialog(String npcName, String npcJob, String context) {
+        try {
+            System.out.println("Building the prompt for synchronous call...");
+            String prompt = buildPrompt(npcName, npcJob, context);
+
             JsonObject requestJson = new JsonObject();
             requestJson.addProperty("model", MODEL);
-            requestJson.addProperty("prompt", "Hello");
+            requestJson.addProperty("prompt", prompt);
             requestJson.addProperty("stream", false);
+
+            requestJson.addProperty("num_predict", 50);
+            requestJson.addProperty("temperature", 0.7);
+            requestJson.addProperty("top_p", 0.9);
+            requestJson.addProperty("top_k", 40);
+            requestJson.addProperty("stop", "\n");
 
             HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(OLLAMA_API_URL))
                 .header("Content-Type", "application/json")
-                .timeout(Duration.ofSeconds(10))
+                .timeout(Duration.ofSeconds(60))
                 .POST(HttpRequest.BodyPublishers.ofString(requestJson.toString()))
-                .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.statusCode() == 200;
-        } catch (Exception e) {
-            System.err.println("Ollama connection test failed: " + e.getMessage());
-            return false;
-        }
-    }
-
-    public static String[] getAvailableModels() {
-        try {
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:11434/api/tags"))
-                .header("Content-Type", "application/json")
-                .timeout(Duration.ofSeconds(10))
-                .GET()
                 .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
-                JsonObject jsonObject = gson.fromJson(response.body(), JsonObject.class);
-                if (jsonObject.has("models")) {
-                    return gson.fromJson(jsonObject.get("models"), String[].class);
-                }
+                return parseOllamaResponse(response.body());
+            } else {
+                System.err.println("Ollama API error: " + response.statusCode() + " - " + response.body());
+                return getFallbackResponse(npcName);
             }
         } catch (Exception e) {
-            System.err.println("Failed to get available models: " + e.getMessage());
+            e.printStackTrace();
+            return getFallbackResponse(npcName);
         }
-
-        return new String[]{MODEL};
     }
 }

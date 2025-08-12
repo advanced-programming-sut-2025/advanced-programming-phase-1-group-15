@@ -108,45 +108,36 @@ public class NPCRightClickMenu extends RightClickMenu {
 
     private void showGiftMenu() {
         hide();
-        GiftSelectionMenu giftMenu = new GiftSelectionMenu(
+        activePopupMenu = new GiftSelectionMenu(
             skin,
             " Give Gift to " + targetNPC.getName(),
-            () -> {
-                activePopupMenu = null;
-            },
+            () -> activePopupMenu = null,
             targetNPC
         );
-        activePopupMenu = giftMenu;
         registerPopupMenu(activePopupMenu);
         activePopupMenu.show();
     }
 
     private void showQuestMenu() {
         hide();
-        QuestDisplayMenu questMenu = new QuestDisplayMenu(
+        activePopupMenu = new QuestDisplayMenu(
             skin,
             " Quests from " + targetNPC.getName(),
-            () -> {
-                activePopupMenu = null;
-            },
+            () -> activePopupMenu = null,
             targetNPC
         );
-        activePopupMenu = questMenu;
         registerPopupMenu(activePopupMenu);
         activePopupMenu.show();
     }
 
     private void showFriendshipMenu() {
         hide();
-        FriendshipStatusMenu friendshipMenu = new FriendshipStatusMenu(
+        activePopupMenu = new FriendshipStatusMenu(
             skin,
             " Friendship Status with " + targetNPC.getName(),
-            () -> {
-                activePopupMenu = null;
-            },
+            () -> activePopupMenu = null,
             targetNPC
         );
-        activePopupMenu = friendshipMenu;
         registerPopupMenu(activePopupMenu);
         activePopupMenu.show();
     }

@@ -5,6 +5,7 @@ import com.example.common.Message;
 import com.example.server.controllers.ServerController;
 import com.example.server.controllers.ServerGameController;
 import com.example.server.controllers.ServerLobbyController;
+import com.example.server.models.OllamaClient;
 import com.example.server.models.ServerApp;
 
 import java.io.*;
@@ -30,6 +31,7 @@ public class GameServer {
             ServerSocket server = new ServerSocket(PORT);
             System.out.println("Server listening on port " + PORT);
             System.out.println("--------------------------------------------------------");
+            //OllamaClient.warmUpModel();
             while (true) {
                 Socket socket = server.accept();
                 new Thread(new ClientHandler(socket)).start();
