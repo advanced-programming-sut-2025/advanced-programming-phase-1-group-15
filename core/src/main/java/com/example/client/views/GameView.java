@@ -681,10 +681,12 @@ public class GameView implements Screen {
                     return true;
                 case Input.Keys.M:
                     if (pauseMenuOverlay.isVisible()) {
+                        pauseMenuOverlay.refresh();
                         pauseMenuOverlay.setVisible(false, 0);
                         restoreGameInput();
                     }
                     else {
+                        pauseMenuOverlay.refresh();
                         pauseMenuOverlay.setVisible(true, 4);
                         Gdx.input.setInputProcessor(pauseMenuOverlay.getStage());
                     }

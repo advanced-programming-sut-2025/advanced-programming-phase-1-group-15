@@ -168,7 +168,7 @@ public class CraftingMenu {
         }
         for (BackPackable item : craftItem.getCraftItemType().getIngredients().keySet()) {
             int num = craftItem.getCraftItemType().getIngredients().get(item);
-            game.getCurrentPlayer().getInventory().removeCountFromBackPack(item , num);
+            game.getCurrentPlayer().getInventory().removeCountFromBackPack(game.getCurrentPlayer().getInventory().getItemByName(item.getName()) , num);
         }
         game.getCurrentPlayer().getInventory().addToBackPack(new CraftItem(craftItem.getCraftItemType()) , 1);
         return true;

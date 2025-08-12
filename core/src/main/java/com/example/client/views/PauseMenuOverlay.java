@@ -617,7 +617,7 @@ public class PauseMenuOverlay {
         return table;
     }
 
-    private void refresh() {
+    public void refresh() {
         inventoryContent.clear();
         skillsContent.clear();
         friendshipContent.clear();

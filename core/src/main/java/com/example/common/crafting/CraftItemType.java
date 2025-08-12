@@ -113,7 +113,7 @@ public enum CraftItemType {
             50 , new Texture("Sprites/CraftItems/Cheese_Press.png")),
     KEG("30 wood + 1 copper bar + 1 iron bar",
             new HashMap<>(){{
-                put(new GeneralItem(GeneralItemsType.WOOD),20);
+                put(new GeneralItem(GeneralItemsType.WOOD),30);
                 put(new ForagingMineral(ForagingMineralType.COPPER),1);
                 put(new ForagingMineral(ForagingMineralType.IRON),1);
             }},

@@ -257,20 +257,32 @@ public class ArtisanMenu {
         if (player.getInventory().checkFilled()){
             return false;
         }
+        int num = 0;
         if (player.getInventory().getItemByName(item.getName()) != null) {
-            if (player.getInventory().getItemCount(item.getName())<number) {
-                return false;
+            if (player.getInventory().getItemCount(item.getName())<number){
+                num = player.getInventory().getItemCount(item.getName());
             }
-            artisanItem.setHour(game.getDateAndTime().getHour());
-            artisanItem.setDay(game.getDateAndTime().getDay());
-            player.getArtisanItems().add(artisanItem);
-            empty = false;
-            currentArtisanItem = artisanItem;
-            return true;
+            else if (player.getInventory().getItemCount(item.getName())>=number) {
+                player.getInventory().removeCountFromBackPack(game.getCurrentPlayer().getInventory().getItemByName(item.getName()) , number);
+                artisanItem.setHour(game.getDateAndTime().getHour());
+                artisanItem.setDay(game.getDateAndTime().getDay());
+                player.getArtisanItems().add(artisanItem);
+                empty = false;
+                currentArtisanItem = artisanItem;
+                return true;
+            }
         }
         if (player.getFridge().getItemByName(item.getName()) != null) {
-            if (player.getFridge().getItemCount(item.getName())<number) {
+            if ((player.getFridge().getItemCount(item.getName()+num)<number)) {
                 return false;
+            }
+            if (num == 0){
+                player.getFridge().removeCountFromFridge(game.getCurrentPlayer().getFridge().getItemByName(item.getName()) , number);
+            }
+            else{
+                player.getInventory().removeCountFromBackPack(game.getCurrentPlayer().getInventory().getItemByName(item.getName()) , num);
+                player.getFridge().removeCountFromFridge(game.getCurrentPlayer().getFridge().getItemByName(item.getName()) , number-num);
+
             }
             artisanItem.setHour(game.getDateAndTime().getHour());
             artisanItem.setDay(game.getDateAndTime().getDay());

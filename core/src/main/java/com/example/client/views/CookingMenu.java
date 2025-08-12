@@ -271,19 +271,20 @@ public class CookingMenu {
         }
         for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
             boolean found = false;
+            int temp = 0;
             int num  = food.getFoodType().getIngredients().get(item);
             if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
-                found = true;
                 int total = game.getCurrentPlayer().getInventory().getItemCount(item.getName());
-                if (total < num) {
-                    return false;
+                if(total >= num){
+                  found = true;
                 }
+                temp = total;
             }
             if (!found) {
                 if (game.getCurrentPlayer().getFridge().getItemByName(item.getName()) != null) {
                     found = true;
                     int total = game.getCurrentPlayer().getFridge().getItemCount(item.getName());
-                    if (total < num) {
+                    if ((total+temp) < num) {
                         return false;
                     }
                 }
@@ -295,12 +296,17 @@ public class CookingMenu {
         for (BackPackable item : food.getFoodType().getIngredients().keySet()) {
             boolean found = false;
             int num  = food.getFoodType().getIngredients().get(item);
+            int temp = 0;
             if (game.getCurrentPlayer().getInventory().getItemByName(item.getName()) != null) {
                 found = true;
-                game.getCurrentPlayer().getInventory().removeCountFromBackPack(item , num);
+                temp = game.getCurrentPlayer().getInventory().getItemCount(item.getName());
+                if (temp< num) {
+                    found = false;
+                    game.getCurrentPlayer().getInventory().removeCountFromBackPack(game.getCurrentPlayer().getInventory().getItemByName(item.getName()) , temp);
+                }
             }
             if (!found) {
-                game.getCurrentPlayer().getFridge().removeCountFromFridge(item , num);
+                game.getCurrentPlayer().getFridge().removeCountFromFridge(game.getCurrentPlayer().getFridge().getItemByName(item.getName()) , num-temp);
             }
         }
         game.getCurrentPlayer().getInventory().addToBackPack(food,1);
