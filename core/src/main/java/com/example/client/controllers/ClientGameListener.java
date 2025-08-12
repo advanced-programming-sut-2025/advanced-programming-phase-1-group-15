@@ -92,6 +92,24 @@ public class ClientGameListener {
             case "accept_trade" -> handelAccept(msg);
             case "decline" -> handelDecline(msg);
             case "update_jojaMart" -> handelJojaMart(msg);
+            case "chat" -> handelChat(msg);
+        }
+    }
+    public void handelChat(Message msg){
+        String playerName = msg.getFromBody("username");
+        String type = msg.getFromBody("type");
+        if (type.equals("public")){
+            for (Player player : game.getPlayers()) {
+                String Message = msg.getFromBody("message");
+                player.getPublicChat().add(Message);
+                player.setUpdateMessage(true);
+            }
+        }
+        else {
+            Player target = game.getPlayerByUsername(msg.getFromBody("target"));
+            String Message = msg.getFromBody("message");
+            target.getPrivateChat().add(Message);
+            target.setUpdateMessage(true);
         }
     }
     public void handelJojaMart(Message msg) {
@@ -114,19 +132,47 @@ public class ClientGameListener {
     public void handelAccept(Message msg) {
         Player player = game.getPlayerByUsername(msg.getFromBody("username"));
         Player target = game.getPlayerByUsername(msg.getFromBody("target"));
-        for (String s : target.getItems().keySet()) {
-            BackPackable temp = target.getInventory().getItemByName(s);
-            int num = target.getItems().get(s);
-            target.getInventory().removeCountFromBackPack(temp , num);
+        String type = msg.getFromBody("type");
+        if (type.equals("main")) {
+            for (String s : target.getItems().keySet()) {
+                BackPackable temp = target.getInventory().getItemByName(s);
+                int num = target.getItems().get(s);
+                target.getInventory().removeCountFromBackPack(temp , num);
+            }
+            for (String s : target.getWantedItems().keySet()) {
+                BackPackable temp = game.findItem(s);
+                if(target.getInventory().getItemByName(s)!=null) {
+                    temp = target.getInventory().getItemByName(s);
+                }
+                target.getInventory().addToBackPack(temp , target.getWantedItems().get(s));
+            }
+            String history = "You did Trade whit: "+player.getUsername();
+            target.getTradeHistory().add(history);
+            target.setTradePlayer(null);
+            target.getItems().clear();
+            target.getWantedItems().clear();
+            target.setRefresh(true);
         }
-        for (String s : target.getWantedItems().keySet()) {
-            BackPackable temp = game.findItem(s);
-            target.getInventory().addToBackPack(temp , target.getWantedItems().get(s));
+        else {
+            for (String s : target.getTradePlayer().getWantedItems().keySet()) {
+                BackPackable temp = target.getInventory().getItemByName(s);
+                int num = target.getTradePlayer().getWantedItems().get(s);
+                target.getInventory().removeCountFromBackPack(temp , num);
+            }
+            for (String s : target.getTradePlayer().getItems().keySet()) {
+                BackPackable temp = game.findItem(s);
+                if(target.getInventory().getItemByName(s)!=null) {
+                    temp = target.getInventory().getItemByName(s);
+                }
+                int num = target.getTradePlayer().getItems().get(s);
+                target.getInventory().addToBackPack(temp , num);
+            }
+            String history = "You did Trade whit: "+player.getUsername();
+            target.getTradeHistory().add(history);
+            target.getTradePlayer().getItems().clear();
+            target.getTradePlayer().getWantedItems().clear();
+            target.setTradePlayer(null);
         }
-        target.setTradePlayer(null);
-        target.getItems().clear();
-        target.getWantedItems().clear();
-        target.setRefresh(true);
     }
     public void handelRemove(Message msg) {
         Player player = game.getPlayerByUsername(msg.getFromBody("username"));
