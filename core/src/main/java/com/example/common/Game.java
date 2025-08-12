@@ -4,6 +4,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.example.client.controllers.ClientGameController;
 import com.example.client.models.ClientApp;
 import com.example.common.GroupQuests.GroupQuestManager;
+import com.example.common.cooking.Food;
+import com.example.common.cooking.FoodType;
+import com.example.common.farming.Fruit;
+import com.example.common.farming.FruitType;
+import com.example.common.foraging.ForagingCrop;
+import com.example.common.foraging.ForagingCropsType;
+import com.example.common.foraging.ForagingMineral;
+import com.example.common.foraging.ForagingMineralType;
 import com.example.common.map.Map;
 import com.example.common.map.Position;
 import com.example.common.map.Tile;
@@ -12,14 +20,17 @@ import com.example.common.npcs.NPC;
 import com.example.common.relation.PlayerFriendship;
 import com.example.common.time.DateAndTime;
 import com.example.common.time.TimeObserver;
+import com.example.common.tools.*;
 import com.example.common.weather.WeatherManagement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
 public class Game implements TimeObserver {
     private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<BackPackable> allBackPackables = new ArrayList<>();
     private Player adminPlayer;
     private Player currentPlayer;
     private boolean isAdmin;
@@ -37,6 +48,7 @@ public class Game implements TimeObserver {
     private boolean finished = false;
 
     public Game(Lobby lobby, User currentUser) {
+        crateBackPackable();
         ArrayList<Player> players = new ArrayList<>();
         for(User user : lobby.getUsers()) {
             Player player = new Player(user);
@@ -185,5 +197,36 @@ public class Game implements TimeObserver {
 
     public ArrayList<ArrayList<Tile>> getMapTiles() {
         return mapTiles;
+    }
+    private void crateBackPackable(){
+        ArrayList<ForagingCropsType> foragingCropsTypes = new ArrayList<>(Arrays.asList(ForagingCropsType.values()));
+        for (ForagingCropsType item : foragingCropsTypes) {
+            allBackPackables.add(new ForagingCrop(item));
+        }
+        ArrayList<FoodType> foodTypes = new ArrayList<>(Arrays.asList(FoodType.values()));
+        for (FoodType item : foodTypes) {
+            allBackPackables.add(new Food(item));
+        }
+        allBackPackables.add(new Axe());
+        allBackPackables.add(new Hoe());
+        allBackPackables.add(new MilkPail());
+        allBackPackables.add(new Pickaxe());
+        allBackPackables.add(new Shear());
+        ArrayList<ForagingMineralType> foragingMineralTypes = new ArrayList<>(Arrays.asList(ForagingMineralType.values()));
+        for (ForagingMineralType item : foragingMineralTypes) {
+            allBackPackables.add(new ForagingMineral(item));
+        }
+        ArrayList<FruitType> fruitTypes = new ArrayList<>(Arrays.asList(FruitType.values()));
+        for (FruitType item : fruitTypes) {
+            allBackPackables.add(new Fruit(item));
+        }
+    }
+    public BackPackable findItem(String name){
+        for (BackPackable item : allBackPackables) {
+            if (item.getName().equalsIgnoreCase(name)) {
+                return item;
+            }
+        }
+        return null;
     }
 }

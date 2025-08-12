@@ -119,6 +119,10 @@ public class ClientGameListener {
             int num = target.getItems().get(s);
             target.getInventory().removeCountFromBackPack(temp , num);
         }
+        for (String s : target.getWantedItems().keySet()) {
+            BackPackable temp = game.findItem(s);
+            target.getInventory().addToBackPack(temp , target.getWantedItems().get(s));
+        }
         target.setTradePlayer(null);
         target.getItems().clear();
         target.getWantedItems().clear();

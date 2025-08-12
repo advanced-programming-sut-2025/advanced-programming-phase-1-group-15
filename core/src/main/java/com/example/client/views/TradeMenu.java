@@ -513,6 +513,10 @@ public class TradeMenu {
             BackPackable temp = game.getCurrentPlayer().getInventory().getItemByName(s);
             game.getCurrentPlayer().getInventory().removeCountFromBackPack(temp , player.getWantedItems().get(s));
         }
+        for (String s : player.getItems().keySet()) {
+            BackPackable temp = game.findItem(s);
+            game.getCurrentPlayer().getInventory().addToBackPack(temp , player.getItems().get(s));
+        }
         return true;
     }
     private void showError(String message, Label errorLabel) {
